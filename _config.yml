@@ -4,7 +4,7 @@
 
 # Site
 title: blog for yuqirong
-subtitle:
+subtitle: 
 description: 向前跑 迎着冷眼和嘲笑
 author: 俞其荣
 language: zh-Hans
@@ -17,14 +17,26 @@ baidu_analytics: cb7fb9301d60e7ca4f45f2361955bd8f
 # swiftype全文检索
 swiftype_key: GJmq6vNRTLcsty9zcvJW
 # 多说热评文章 true 或者 false
-duoshuo_hotartical: true
+# duoshuo_hotartical: true
 since: 2015
+rss: /atom.xml #rss地址  默认即可
 
 # hexo sitemap网站地图
 sitemap:
 path: sitemap.xml
 baidusitemap:
 path: baidusitemap.xml
+
+# Extensions
+Plugins:
+- hexo-generator-feed
+- hexo-generator-sitemap
+
+#Feed Atom
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
 
 
 # Social links
