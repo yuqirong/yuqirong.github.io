@@ -19,6 +19,7 @@ swiftype_key: GJmq6vNRTLcsty9zcvJW
 # 多说热评文章 true 或者 false
 # duoshuo_hotartical: true
 since: 2015
+rss: /atom.xml #rss地址  默认即可
 
 # hexo sitemap网站地图
 sitemap:
