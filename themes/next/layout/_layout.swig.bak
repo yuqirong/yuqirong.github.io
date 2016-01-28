@@ -67,15 +67,5 @@
   {% block comment_system %}{% endblock %}
   {% include '_scripts/baidushare.swig' %}
 
-<script type="text/javascript" src="js/jquery-2.2.0-min.js"></script>
-<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery-lazyload/1.9.5/jquery.lazyload.min.js"></script>
-    <script type="text/javascript">
-      jQuery(function() {          
-          jQuery("img").lazyload({
-            placeholder:"http://exp.bdstatic.com/static/common-jquery/widget/search-box/img/logo_83ae7e2.png",
-              effect:"fadeIn"
-            });
-          });
-  </script>
 </body>
 </html>
