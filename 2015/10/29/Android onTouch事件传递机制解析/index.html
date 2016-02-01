@@ -1,0 +1,1086 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,源码解析," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="blog for yuqirong" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事件传递的机制了，顺便写一篇博客来记录一下。下面就让我们来看看吧。
+大家都知道一般我们使用的UI控件都是继承自共同的父类——Vi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android onTouch事件传递机制解析">
+<meta property="og:url" content="http://yuqirong.github.io/2015/10/29/Android onTouch事件传递机制解析/index.html">
+<meta property="og:site_name" content="blog for yuqirong">
+<meta property="og:description" content="记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事件传递的机制了，顺便写一篇博客来记录一下。下面就让我们来看看吧。
+大家都知道一般我们使用的UI控件都是继承自共同的父类——Vi">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20151029/20151029230937.png">
+<meta property="og:updated_time" content="2016-01-30T14:15:37.497Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android onTouch事件传递机制解析">
+<meta name="twitter:description" content="记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事件传递的机制了，顺便写一篇博客来记录一下。下面就让我们来看看吧。
+大家都知道一般我们使用的UI控件都是继承自共同的父类——Vi">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always',
+    motion: true
+  };
+</script>
+
+  <title> Android onTouch事件传递机制解析 | blog for yuqirong </title>
+  <meta name="baidu-site-verification" content="MBYnGIEEPN" />
+  <meta name="google-site-verification" content="_hYRHLLoBRM6L31myWhOPTxzGtawe9z1zmCqcJ-aHA0" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">blog for yuqirong</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-question-circle fa-fw"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '8ZRfk21kUz89L8Xi6hZm','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Android onTouch事件传递机制解析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-10-29T22:56:09+08:00" content="2015-10-29">
+              2015-10-29
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+                
+                
+  								<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
+								
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/10/29/Android onTouch事件传递机制解析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/29/Android onTouch事件传递机制解析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事件传递的机制了，顺便写一篇博客来记录一下。下面就让我们来看看吧。</p>
+<p>大家都知道一般我们使用的UI控件都是继承自共同的父类——View。所以View这个类应该掌管着onTouch事件的相关处理。那就让我们去看看：在View中寻找Touch相关的方法，其中一个很容易地引起了我们的注意：dispatchTouchEvent(MotionEvent event)。根据方法名的意思应该是负责分发触摸事件的，下面给出了源码：</p>
+<pre><code>/**
+ * Pass the touch screen motion event down to the target view, or this
+ * view if it is the target.
+ *
+ * @param event The motion event to be dispatched.
+ * @return True if the event was handled by the view, false otherwise.
+ */
+ public boolean dispatchTouchEvent(MotionEvent event) {
+    // If the event should be handled by accessibility focus first.
+    if (event.isTargetAccessibilityFocus()) {
+        // We don&apos;t have focus or no virtual descendant has it, do not handle the event.
+        if (!isAccessibilityFocusedViewOrHost()) {
+            return false;
+        }
+        // We have focus and got the event, then use normal event dispatch.
+        event.setTargetAccessibilityFocus(false);
+    }
+
+    boolean result = false;
+
+    if (mInputEventConsistencyVerifier != null) {
+        mInputEventConsistencyVerifier.onTouchEvent(event, 0);
+    }
+
+    final int actionMasked = event.getActionMasked();
+    if (actionMasked == MotionEvent.ACTION_DOWN) {
+        // Defensive cleanup for new gesture
+        stopNestedScroll();
+    }
+
+    if (onFilterTouchEventForSecurity(event)) {
+        //noinspection SimplifiableIfStatement
+        ListenerInfo li = mListenerInfo;
+        if (li != null &amp;&amp; li.mOnTouchListener != null
+                &amp;&amp; (mViewFlags &amp; ENABLED_MASK) == ENABLED
+                &amp;&amp; li.mOnTouchListener.onTouch(this, event)) {
+            result = true;
+        }
+
+        if (!result &amp;&amp; onTouchEvent(event)) {
+            result = true;
+        }
+    }
+
+    if (!result &amp;&amp; mInputEventConsistencyVerifier != null) {
+        mInputEventConsistencyVerifier.onUnhandledEvent(event, 0);
+    }
+
+    // Clean up after nested scrolls if this is the end of a gesture;
+    // also cancel it if we tried an ACTION_DOWN but we didn&apos;t want the rest
+    // of the gesture.
+    if (actionMasked == MotionEvent.ACTION_UP ||
+            actionMasked == MotionEvent.ACTION_CANCEL ||
+            (actionMasked == MotionEvent.ACTION_DOWN &amp;&amp; !result)) {
+        stopNestedScroll();
+    }
+
+    return result;
+}
+</code></pre><p>源码有点长，但我们不必每一行都看。首先注意到dispatchTouchEvent的返回值是boolean类型的，注释上的解释：<code>@return True if the event was handled by the view, false otherwise.</code>也就是说如果该触摸事件被这个View消费了就返回true，否则返回false。在方法中首先判断了该event是否是否得到了焦点，如果没有得到焦点直接返回false。然后让我们把目光转向<code>if (li != null &amp;&amp; li.mOnTouchListener != null&amp;&amp; (mViewFlags &amp; ENABLED_MASK) == ENABLED&amp;&amp; li.mOnTouchListener.onTouch(this, event))</code>这个片段，看到这里有一个名为li的局部变量，属于 ListenerInfo 类，经 mListenerInfo 赋值得到。ListenerInfo只是一个包装类，里面封装了大量的监听器。再在 View 类中去寻找 mListenerInfo ，可以看到下面的代码：</p>
+<pre><code>  ListenerInfo getListenerInfo() {
+    if (mListenerInfo != null) {
+        return mListenerInfo;
+    }
+    mListenerInfo = new ListenerInfo();
+    return mListenerInfo;
+}
+</code></pre><p>因此我们可以知道mListenerInfo是不为空的，所以li也不是空，第一个判断为true，然后看到li.mOnTouchListener，前面说过ListenerInfo是一个监听器的封装类，所以我们同样去追踪mOnTouchListener：</p>
+<pre><code>/**
+ * Register a callback to be invoked when a touch event is sent to this view.
+ * @param l the touch listener to attach to this view
+ */
+public void setOnTouchListener(OnTouchListener l) {
+    getListenerInfo().mOnTouchListener = l;
+}
+</code></pre><p>正是通过上面的方法来设置 mOnTouchListener 的，我想上面的方法大家肯定都很熟悉吧，正是我们平时经常用的 xxx.setOnTouchListener ，好了我们从中得知如果设置了OnTouchListener则第二个判断也为true，第三个判断为如果该View是否为enable，默认都是enable的，所以同样为true。还剩最后一个：<code>li.mOnTouchListener.onTouch(this, event)</code>，显然是回调了第二个判断中监听器的onTouch()方法，如果onTouch()方法返回true,则上面四个判断全部为true,dispatchTouchEvent()方法会返回true，并且不会执行<code>if (!result &amp;&amp; onTouchEvent(event))</code>这个判断；而在这个判断中我们又看到了一个熟悉的方法：onTouchEvent()。所以想要执行onTouchEvent，则在上面的四个判断中必须至少有一个false。</p>
+<p>那就假定我们在onTouch()方法中返回的是false，这样就顺利地执行了onTouchEvent，那就看看onTouchEvent的源码吧：</p>
+<pre><code>/**
+ * Implement this method to handle touch screen motion events.
+ * &lt;p&gt;
+ * If this method is used to detect click actions, it is recommended that
+ * the actions be performed by implementing and calling
+ * {@link #performClick()}. This will ensure consistent system behavior,
+ * including:
+ * &lt;ul&gt;
+ * &lt;li&gt;obeying click sound preferences
+ * &lt;li&gt;dispatching OnClickListener calls
+ * &lt;li&gt;handling {@link AccessibilityNodeInfo#ACTION_CLICK ACTION_CLICK} when
+ * accessibility features are enabled
+ * &lt;/ul&gt;
+ *
+ * @param event The motion event.
+ * @return True if the event was handled, false otherwise.
+ */
+public boolean onTouchEvent(MotionEvent event) {
+    final float x = event.getX();
+    final float y = event.getY();
+    final int viewFlags = mViewFlags;
+    final int action = event.getAction();
+
+    if ((viewFlags &amp; ENABLED_MASK) == DISABLED) {
+        if (action == MotionEvent.ACTION_UP &amp;&amp; (mPrivateFlags &amp; PFLAG_PRESSED) != 0) {
+            setPressed(false);
+        }
+        // A disabled view that is clickable still consumes the touch
+        // events, it just doesn&apos;t respond to them.
+        return (((viewFlags &amp; CLICKABLE) == CLICKABLE
+                || (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE)
+                || (viewFlags &amp; CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE);
+    }
+
+    if (mTouchDelegate != null) {
+        if (mTouchDelegate.onTouchEvent(event)) {
+            return true;
+        }
+    }
+
+    if (((viewFlags &amp; CLICKABLE) == CLICKABLE ||
+            (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE) ||
+            (viewFlags &amp; CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE) {
+        switch (action) {
+            case MotionEvent.ACTION_UP:
+                boolean prepressed = (mPrivateFlags &amp; PFLAG_PREPRESSED) != 0;
+                if ((mPrivateFlags &amp; PFLAG_PRESSED) != 0 || prepressed) {
+                    // take focus if we don&apos;t have it already and we should in
+                    // touch mode.
+                    boolean focusTaken = false;
+                    if (isFocusable() &amp;&amp; isFocusableInTouchMode() &amp;&amp; !isFocused()) {
+                        focusTaken = requestFocus();
+                    }
+
+                    if (prepressed) {
+                        // The button is being released before we actually
+                        // showed it as pressed.  Make it show the pressed
+                        // state now (before scheduling the click) to ensure
+                        // the user sees it.
+                        setPressed(true, x, y);
+                   }
+
+                    if (!mHasPerformedLongPress &amp;&amp; !mIgnoreNextUpEvent) {
+                        // This is a tap, so remove the longpress check
+                        removeLongPressCallback();
+
+                        // Only perform take click actions if we were in the pressed state
+                        if (!focusTaken) {
+                            // Use a Runnable and post this rather than calling
+                            // performClick directly. This lets other visual state
+                            // of the view update before click actions start.
+                            if (mPerformClick == null) {
+                                mPerformClick = new PerformClick();
+                            }
+                            if (!post(mPerformClick)) {
+                                performClick();
+                            }
+                        }
+                    }
+
+                    if (mUnsetPressedState == null) {
+                        mUnsetPressedState = new UnsetPressedState();
+                    }
+
+                    if (prepressed) {
+                        postDelayed(mUnsetPressedState,
+                                ViewConfiguration.getPressedStateDuration());
+                    } else if (!post(mUnsetPressedState)) {
+                        // If the post failed, unpress right now
+                        mUnsetPressedState.run();
+                    }
+
+                    removeTapCallback();
+                }
+                mIgnoreNextUpEvent = false;
+                break;
+
+            case MotionEvent.ACTION_DOWN:
+                mHasPerformedLongPress = false;
+
+                if (performButtonActionOnTouchDown(event)) {
+                    break;
+                }
+
+                // Walk up the hierarchy to determine if we&apos;re inside a scrolling container.
+                boolean isInScrollingContainer = isInScrollingContainer();
+
+                // For views inside a scrolling container, delay the pressed feedback for
+                // a short period in case this is a scroll.
+                if (isInScrollingContainer) {
+                    mPrivateFlags |= PFLAG_PREPRESSED;
+                    if (mPendingCheckForTap == null) {
+                        mPendingCheckForTap = new CheckForTap();
+                    }
+                    mPendingCheckForTap.x = event.getX();
+                    mPendingCheckForTap.y = event.getY();
+                    postDelayed(mPendingCheckForTap, ViewConfiguration.getTapTimeout());
+                } else {
+                    // Not inside a scrolling container, so show the feedback right away
+                    setPressed(true, x, y);
+                    checkForLongClick(0);
+                }
+                break;
+
+            case MotionEvent.ACTION_CANCEL:
+                setPressed(false);
+                removeTapCallback();
+                removeLongPressCallback();
+                mInContextButtonPress = false;
+                mHasPerformedLongPress = false;
+                mIgnoreNextUpEvent = false;
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                drawableHotspotChanged(x, y);
+
+                // Be lenient about moving outside of buttons
+                if (!pointInView(x, y, mTouchSlop)) {
+                    // Outside button
+                    removeTapCallback();
+                    if ((mPrivateFlags &amp; PFLAG_PRESSED) != 0) {
+                        // Remove any future long press/tap checks
+                        removeLongPressCallback();
+
+                        setPressed(false);
+                    }
+                }
+                break;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+</code></pre><p>这段源码比 dispatchTouchEvent 的还要长，不过同样我们挑重点的看：<br><code>if (((viewFlags &amp; CLICKABLE) == CLICKABLE || (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE) || (viewFlags &amp; CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE)</code><br>看到这句话就大概知道了主要是判断该view是否是可点击的，如果可以点击则接着执行，否则直接返回false。可以看到if里面用switch来判断是哪种触摸事件，但在最后都是返回true的。还有一点要注意：在 ACTION_UP 中会执行 performClick() 方法：</p>
+<pre><code>public boolean performClick() {
+    final boolean result;
+    final ListenerInfo li = mListenerInfo;
+    if (li != null &amp;&amp; li.mOnClickListener != null) {
+        playSoundEffect(SoundEffectConstants.CLICK);
+        li.mOnClickListener.onClick(this);
+        result = true;
+    } else {
+        result = false;
+    }
+
+    sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);
+    return result;
+}
+</code></pre><p>可以看到上面的<code>li.mOnClickListener.onClick(this);</code>，没错，我们好像又有了新的发现。根据上面的经验，这句代码会去回调我们设置好的点击事件监听器。也就是我们平常用的xxx.setOnClickListener(listener);</p>
+<pre><code>/**
+ * Register a callback to be invoked when this view is clicked. If this view is not
+ * clickable, it becomes clickable.
+ *
+ * @param l The callback that will run
+ *
+ * @see #setClickable(boolean)
+ */
+public void setOnClickListener(@Nullable OnClickListener l) {
+    if (!isClickable()) {
+        setClickable(true);
+    }
+    getListenerInfo().mOnClickListener = l;
+}
+</code></pre><p>我们可以看到上面方法设置正是mListenerInfo的点击监听器，验证了上面的猜想。到了这里onTouch事件的传递机制基本已经分析完成了,也算是告一段落了。</p>
+<p>好了，这下我们可以解决开头的问题了，顺便我们再来小结一下：在dispatchTouchEvent中，如果设置了OnTouchListener并且View是enable的，那么首先被执行的是OnTouchListener中的<code>onTouch(View v, MotionEvent event)</code>。若onTouch返回true,则dispatchTouchEvent不再往下执行并且返回true；不然会执行onTouchEvent，在onTouchEvent中若View是可点击的，则返回true，不然为false。还有在onTouchEvent中若View是可点击以及当前触摸事件为ACTION_UP，会执行performClick()，回调OnClickListener的onClick方法。下面是我画的一张草图：<br><img src="/uploads/20151029/20151029230937.png" alt="这里写图片描述"></p>
+<p>还有一点值得注意的地方是：假如当前事件是ACTION_DOWN，只有dispatchTouchEvent返回true了之后该View才会接收到接下来的ACTION_MOVE,ACTION_UP事件，也就是说只有事件被消费了才能接收接下来的事件。</p>
+<p>好了，今天就到这里了，如果有什么问题可以在下面留言。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/源码解析/" rel="tag">#源码解析</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/23/自定义View之实现文字百分比进度条/" rel="next" title="自定义View之实现文字百分比进度条">
+                <i class="fa fa-chevron-left"></i> 自定义View之实现文字百分比进度条
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/12/简单实现满屏表情下落的动画效果，你也可以/" rel="prev" title="简单实现满屏表情下落的动画效果，你也可以">
+                简单实现满屏表情下落的动画效果，你也可以 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/10/29/Android onTouch事件传递机制解析/"
+           data-title="Android onTouch事件传递机制解析" data-url="http://yuqirong.github.io/2015/10/29/Android onTouch事件传递机制解析/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar/27073358153.jpg" alt="俞其荣" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Google+
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i> Twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Instagram
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> 知乎
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/2949821927" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣
+   
+   &nbsp;&nbsp;|&nbsp;&nbsp;
+  <script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/sitemap.xml">Google网站地图</a></span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/baidusitemap.xml">百度网站地图</a></span>
+  
+  </span>
+</div>
+
+<div class="powered-by">
+	由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+	<a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>
+</div>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;本站总点击 <span id="busuanzi_value_site_pv"></span> 次
+&nbsp;&nbsp;|&nbsp;&nbsp;您是第 <span id="busuanzi_value_site_uv"></span> 位访客
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"yuqirong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
