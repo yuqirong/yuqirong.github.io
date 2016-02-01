@@ -66,7 +66,7 @@ gif的效果可能有点过快，在真机上运行的效果会更好一些。�
         totalLength = downLength + upLength;
     }
 
-一开始是测量了SmoothCheckBox的宽、高度，默认的宽高度随便定义了一个，当然你们可以自己去修改和完善它。然后就是设置半径之类的，最后的startPoint、breakPoint、endPoint分别对应着选中时对勾的三个点;downLength就是startPoint和breakPoint的距离，而相对应的upLength就是breakPoint和endPoint的距离。即以下图示：
+一开始是测量了SmoothCheckBox的宽、高度，默认的宽高度随便定义了一个，当然你们可以自己去修改和完善它。然后就是设置半径之类的，最后的startPoint、breakPoint、endPoint分别对应着选中时对勾的三个点(至于为何是这几个数字，那完全是经验值);downLength就是startPoint和breakPoint的距离，而相对应的upLength就是breakPoint和endPoint的距离。即以下图示：
 
 ![这里写图片描述](/uploads/20151205/20151205000130.png)
 

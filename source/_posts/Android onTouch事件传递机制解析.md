@@ -1,7 +1,7 @@
 title: Android onTouch事件传递机制解析
 date: 2015-10-29 22:56:09
 categories: Android
-tags: [Android]
+tags: [Android,源码解析]
 ---
 记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事件传递的机制了，顺便写一篇博客来记录一下。下面就让我们来看看吧。
 
