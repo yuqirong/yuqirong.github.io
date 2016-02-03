@@ -945,6 +945,262 @@ public class DropLookView extends View {
   </entry>
   
   <entry>
+    <title><![CDATA[史上最简单粗暴实现侧滑菜单]]></title>
+    <link href="http://yuqirong.github.io/2015/11/04/%E5%8F%B2%E4%B8%8A%E6%9C%80%E7%AE%80%E5%8D%95%E7%B2%97%E6%9A%B4%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91%E8%8F%9C%E5%8D%95/"/>
+    <id>http://yuqirong.github.io/2015/11/04/史上最简单粗暴实现侧滑菜单/</id>
+    <published>2015-11-04T12:47:16.000Z</published>
+    <updated>2016-02-03T03:57:09.538Z</updated>
+    <content type="html"><![CDATA[<p>在Android开发中，相信侧滑菜单大家都不陌生吧，几乎是每个app都必备的。从早期的 <a href="https://github.com/jfeinstein10/SlidingMenu" target="_blank" rel="external">SlidingMenu</a> 再到           <a href="https://github.com/SpecialCyCi/AndroidResideMenu" target="_blank" rel="external">AndroidResideMenu</a> 最后到Android自带的DrawerLayout，无处不体现着侧滑菜单的诱人魅力。侧滑菜单可以拓展app的内容，充分利用手机屏幕，增加程序的可玩性。既然有这么多可供选择的侧滑菜单使用，那为什么我们还要自己写呢？我觉得我们在使用侧滑菜单的时候应该要懂得其中的原理，更好的，可以自己写一个侧滑菜单来加深体会。</p>
+<p>好了，话不多说。来看看我们所谓“史上最简单粗暴实现的侧滑菜单”的产物吧：</p>
+<p><img src="/uploads/20151104/20151104205135.gif" alt="这里写图片描述"></p>
+<p>看完了上面的gif，想不想自己也写一个呢，那还等什么，一起来看看喽。</p>
+<p>首先来说一下侧滑菜单实现的思路：侧滑菜单的布局为MenuLayout，还有主页的布局为MainLayout。MenuLayout在MainLayout的左边，当手指向右滑动的时候，MainLayout就向右滑动，同时MenuLayout跟着向右滑动，于是就显示出了侧滑菜单。以下是示意图：</p>
+<p><img src="/uploads/20151104/20151104000149.png" alt="这里写图片描述"></p>
+<p>大概地了解思路以后，我们先来看看布局文件。</p>
+<p>layout_slidemenu.xml(侧滑菜单的布局)：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;300dp&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:background=&quot;@drawable/menu_bg&quot;
+    android:orientation=&quot;vertical&quot;&gt;
+
+    &lt;ListView
+        android:id=&quot;@+id/lv_menu&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:cacheColorHint=&quot;@null&quot; /&gt;
+&lt;/LinearLayout&gt;
+</code></pre><p>layout_activity_main.xml(主界面的布局)：</p>
+<pre><code>&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+android:layout_width=&quot;match_parent&quot;
+android:layout_height=&quot;match_parent&quot;
+android:background=&quot;#55666666&quot;
+android:orientation=&quot;vertical&quot; &gt;
+
+    &lt;LinearLayout
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;60dp&quot;
+        android:background=&quot;@drawable/top_bar_bg&quot;
+        android:gravity=&quot;center_vertical&quot; &gt;
+
+        &lt;ImageView
+            android:id=&quot;@+id/iv_menu&quot;
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:layout_margin=&quot;10dp&quot;
+            android:layout_gravity=&quot;center_vertical&quot;
+            android:background=&quot;@drawable/img_menu&quot; /&gt;
+
+        &lt;TextView
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:layout_marginLeft=&quot;15dp&quot;
+            android:text=&quot;SlidingMenu&quot;
+            android:layout_gravity=&quot;center_vertical&quot;
+            android:textColor=&quot;#ffffff&quot;
+            android:textSize=&quot;22sp&quot; /&gt;
+    &lt;/LinearLayout&gt;
+
+&lt;/LinearLayout&gt;
+</code></pre><p>layout_main.xml(activity的布局)，注意，主界面的布局一定要放在菜单布局的后面：</p>
+<pre><code>&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+android:layout_width=&quot;match_parent&quot;
+android:layout_height=&quot;match_parent&quot; &gt;
+
+    &lt;com.yuqirong.slidingmenu.view.SlidingMenu
+        android:id=&quot;@+id/slideMenu1&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot; &gt;
+
+        &lt;!-- 菜单界面的布局 --&gt;
+
+        &lt;include layout=&quot;@layout/layout_slidemenu&quot; /&gt;
+
+        &lt;!-- 主界面的布局 --&gt;
+
+        &lt;include layout=&quot;@layout/layout_activity_main&quot; /&gt;
+    &lt;/com.yuqirong.slidingmenu.view.SlidingMenu&gt;
+
+&lt;/RelativeLayout&gt;
+</code></pre><p>看完了布局文件，下面我们就来看看代码(以下为部分代码，并非全部)：</p>
+<pre><code>public class SlidingMenu extends FrameLayout {
+
+    private ViewDragHelper mdDragHelper;
+
+    public SlidingMenu(Context context) {
+        this(context, null);
+    }
+
+    public SlidingMenu(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public SlidingMenu(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        mdDragHelper = ViewDragHelper.create(this, callback);
+    }
+}
+</code></pre><p>我们创建一个类名叫SlidingMenu，继承自FrameLayout，然后重写构造器。在构造器中新建了一个ViewDragHelper的对象。如果你还不知道ViewDragHelper为何物，建议你去看看<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的<a href="http://blog.csdn.net/lmj623565791/article/details/46858663" target="_blank" rel="external">Android ViewDragHelper完全解析 自定义ViewGroup神器</a>，这里就不展开叙述了。在<code>ViewDragHelper.create(Context context,ViewDragHelper.Callback callback)</code>里我们传入了一个回调callback，那接下来就来看看这个callback：</p>
+<pre><code> Callback callback = new Callback() {
+
+    @Override
+    public boolean tryCaptureView(View view, int arg1) {
+        return true;
+    }
+
+    public int getViewHorizontalDragRange(View child) {
+        return menuWidth;
+    }
+
+    @Override
+    public int clampViewPositionHorizontal(View child, int left, int dx) {
+        if (child == mainView) {
+            if (left &lt; 0)
+                return 0;
+            else if (left &gt; menuWidth)
+                return menuWidth;
+            else
+                return left;
+        } else if (child == menuView) {
+            if (left &gt; 0)
+                return 0;
+            else if (left &gt; menuWidth)
+                return menuWidth;
+            else
+                return left;
+        }
+        return 0;
+    }
+
+    public void onViewPositionChanged(View changedView, int left, int top,
+                                      int dx, int dy) {
+        if (changedView == mainView)
+            menuView.offsetLeftAndRight(dx);
+        else
+            mainView.offsetLeftAndRight(dx);
+        invalidate();
+    }
+
+    ;
+
+    public void onViewReleased(View releasedChild, float xvel, float yvel) {
+        if (releasedChild == mainView) {
+            if (status == Status.Open) {
+                // 关闭侧滑菜单
+                close();
+                return;
+            }
+            if (xvel == 0
+                    &amp;&amp; Math.abs(mainView.getLeft()) &gt; menuWidth / 2.0f) {
+                // 打开侧滑菜单
+                open();
+            } else if (xvel &gt; 0) {
+                open();
+            } else {
+                close();
+            }
+        } else {
+            if (xvel == 0
+                    &amp;&amp; Math.abs(mainView.getLeft()) &gt; menuWidth / 2.0f) {
+                // 打开侧滑菜单
+                open();
+            }else if (xvel &gt; 0) {
+                open();
+            } else {
+                // 关闭侧滑菜单
+                close();
+            }
+        }
+    }
+
+};
+</code></pre><p>我们发现在callback中几乎完成了绝大部分的逻辑。首先在<code>tryCaptureView(View view, int arg1)</code>直接返回了true，因为无论在mainView(主View)还是在menuView(菜单View)都应该去捕获，而<code>getViewHorizontalDragRange(View child)</code>返回的应该是menuView的宽度，也就是说滑动的时候最多能滑menuWidth的距离。而menuWidth是在<code>onFinishInflate()</code>中得到的。至于<code>clampViewPositionHorizontal(View child, int left, int dx)</code>和<code>onViewPositionChanged(View changedView, int left, int top,int dx, int dy)</code>两个方法逻辑很简单，相信大家都看得懂。最后在<code>onViewReleased(View releasedChild, float xvel, float yvel)</code>方法中判断了菜单打开或关闭的逻辑，比如在菜单关闭的情况下，只要手指向右滑或是停止滑动时侧滑菜单在屏幕中的宽度大于menuWidth/2这两种情况下，侧滑菜单都是执行open()方法，其它的情况以此类推。下面就来看看open()和close()方法。</p>
+<pre><code>/**
+ * 打开菜单
+ */
+public void open() {
+    if (mdDragHelper.smoothSlideViewTo(mainView, menuWidth, 0)) {
+        ViewCompat.postInvalidateOnAnimation(this);
+    }
+    preStatus = status;
+    status = Status.Open;
+    if (listener != null &amp;&amp; preStatus == Status.Close) {
+        listener.statusChanged(status);
+    }
+}
+
+/**
+ * 关闭菜单
+ */
+public void close() {
+    if (mdDragHelper.smoothSlideViewTo(mainView, 0, 0)) {
+        ViewCompat.postInvalidateOnAnimation(this);
+    }
+    preStatus = status;
+    status = Status.Close;
+    if (listener != null &amp;&amp; preStatus == Status.Open) {
+        listener.statusChanged(status);
+    }
+}
+
+/**
+ * 切换菜单状态
+ */
+public void toggle() {
+    if (status == Status.Close) {
+        open();
+    } else {
+        close();
+    }
+} 
+
+@Override
+public void computeScroll() {
+    super.computeScroll();
+    // 开始执行动画
+    if (mdDragHelper.continueSettling(true)) {
+        ViewCompat.postInvalidateOnAnimation(this);
+    }
+}
+</code></pre><p>我们发现在<code>open()</code>和<code>close()</code>两个方法中都调用了<code>ViewCompat.postInvalidateOnAnimation(this);</code>而<code>postInvalidateOnAnimation(View view)</code>需要重写<code>computeScroll()</code>来实现平滑滚动的效果，一般的写法都如上代码所示，不需要改动。再重新回到<code>open()</code>和<code>close()</code>两个方法，其中的listener就是菜单开关状态的监听器，当状态改变的时候都会回调listener的<code>statusChanged(Status status)</code>方法。</p>
+<p>最后的最后，别忘了在<code>onLayout(boolean changed, int left, int top, int right, int bottom)</code>中把menuView设置在mainView的左边。而menuView和mainView都是在<code>onFinishInflate()</code>中得到的。</p>
+<pre><code>@Override
+protected void onFinishInflate() {
+    super.onFinishInflate();
+    if(getChildCount()!=2){
+        throw new IllegalArgumentException(&quot;子view的数量必须为2个&quot;);
+    }
+    menuView = getChildAt(0);
+    mainView = getChildAt(1);
+    menuWidth = menuView.getLayoutParams().width;
+}
+
+@Override
+protected void onLayout(boolean changed, int left, int top, int right,
+                        int bottom) {
+    menuView.layout(-menuWidth, 0, 0, menuView.getMeasuredHeight());
+    mainView.layout(0, 0, right, bottom);
+}
+</code></pre><p>好了，讲解了这么多，差不多把SlidingMenu的代码逻辑讲解完成了。如果有什么疑问，可以在下面留言。</p>
+<p>国际惯例，下面贴出源码下载链接：</p>
+<p><a href="/uploads/20151104/SlidingMenu.rar">SlidingMenu.rar</a></p>
+<p>~have fun!~</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>在Android开发中，相信侧滑菜单大家都不陌生吧，几乎是每个app都必备的。从早期的 <a href="https://github.com/jfeinstein10/SlidingMenu" target="_blank" rel="external">SlidingM]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
+    
+      <category term="自定义View" scheme="http://yuqirong.github.io/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
+    
+      <category term="Android" scheme="http://yuqirong.github.io/categories/Android/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Android onTouch事件传递机制解析]]></title>
     <link href="http://yuqirong.github.io/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/"/>
     <id>http://yuqirong.github.io/2015/10/29/Android onTouch事件传递机制解析/</id>
@@ -1236,8 +1492,8 @@ public void setOnClickListener(@Nullable OnClickListener l) {
     <link href="http://yuqirong.github.io/2015/10/23/%E8%87%AA%E5%AE%9A%E4%B9%89View%E4%B9%8B%E5%AE%9E%E7%8E%B0%E6%96%87%E5%AD%97%E7%99%BE%E5%88%86%E6%AF%94%E8%BF%9B%E5%BA%A6%E6%9D%A1/"/>
     <id>http://yuqirong.github.io/2015/10/23/自定义View之实现文字百分比进度条/</id>
     <published>2015-10-23T15:26:56.000Z</published>
-    <updated>2016-01-26T17:08:09.988Z</updated>
-    <content type="html"><![CDATA[<p>之前在学习自定义View的时候看到鸿洋的 <a href="http://blog.csdn.net/lmj623565791/article/details/43371299" target="_blank" rel="external">《Android 打造形形色色的进度条 实现可以如此简单》</a> 中自带百分比的进度条，于是照着例子自己实现了一下。下面是View的样子：<br><img src="/uploads/20151023/20151023211913.gif" alt="这里写图片描述"></p>
+    <updated>2016-02-02T16:12:26.354Z</updated>
+    <content type="html"><![CDATA[<p>之前在学习自定义View的时候看到<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的 <a href="http://blog.csdn.net/lmj623565791/article/details/43371299" target="_blank" rel="external">《Android 打造形形色色的进度条 实现可以如此简单》</a> 中自带百分比的进度条，于是照着例子自己实现了一下。下面是View的样子：<br><img src="/uploads/20151023/20151023211913.gif" alt="这里写图片描述"></p>
 <p>大家都知道自定义View的主要步骤：  </p>
 <ol>
 <li>自定义View的一些属性  </li>
@@ -1397,7 +1653,7 @@ protected void onDraw(Canvas canvas) {
 <p>以下是完整代码下载地址：<br><a href="/uploads/20151023/PercentProgressView.rar">PercentProgressView.rar</a></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>之前在学习自定义View的时候看到鸿洋的 <a href="http://blog.csdn.net/lmj623565791/article/details/43371299" target="_blank" rel="external">《Android 打造形形色色的]]>
+    <![CDATA[<p>之前在学习自定义View的时候看到<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的 <a href="http://blog.csdn.net/lmj62356]]>
     </summary>
     
       <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
@@ -1485,14 +1741,68 @@ protected void onDraw(Canvas canvas) {
   </entry>
   
   <entry>
+    <title><![CDATA[Hexo入门指南(二)]]></title>
+    <link href="http://yuqirong.github.io/2015/07/18/Hexo%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E4%BA%8C/"/>
+    <id>http://yuqirong.github.io/2015/07/18/Hexo入门指南二/</id>
+    <published>2015-07-18T11:09:24.000Z</published>
+    <updated>2016-02-02T12:22:32.014Z</updated>
+    <content type="html"><![CDATA[<p>在<a href="/2015/07/12/Hexo%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E4%B8%80">Hexo入门指南(一)</a>中我们已经初步地搭建了我们的博客，但是我们发现Hexo另一大特点我们还没有尝试过——主题。下面我们就来试试更换<a href="https://hexo.io/themes/" target="_blank" rel="external">Hexo的主题</a>吧。</p>
+<p><a href="https://hexo.io/themes/" target="_blank" rel="external">Hexo的主题</a>非常多，有各式各样的，基本满足了大家的审美需求。其中我们就以<a href="http://theme-next.iissnan.com/" target="_blank" rel="external">NexT主题</a>为例吧。<a href="http://theme-next.iissnan.com/" target="_blank" rel="external">NexT主题</a>很简约，但有非常多的人用。</p>
+<h1 id="u4E0B_u8F7D_NexT__u4E3B_u9898"><a href="#u4E0B_u8F7D_NexT__u4E3B_u9898" class="headerlink" title="下载 NexT 主题"></a>下载 NexT 主题</h1><p>在终端窗口下，定位到 Hexo 站点目录下</p>
+<pre><code>$ cd your-hexo-site
+$ git clone https://github.com/iissnan/hexo-theme-next themes/next
+</code></pre><h1 id="u542F_u7528_NexT__u4E3B_u9898"><a href="#u542F_u7528_NexT__u4E3B_u9898" class="headerlink" title="启用 NexT 主题"></a>启用 NexT 主题</h1><p>克隆/下载 完成后，打开站点配置文件(也就是xxx.github.io/_config.yml)，找到 theme 字段，并将其值更改为 next。</p>
+<h1 id="u9A8C_u8BC1_u4E3B_u9898_u662F_u5426_u542F_u7528"><a href="#u9A8C_u8BC1_u4E3B_u9898_u662F_u5426_u542F_u7528" class="headerlink" title="验证主题是否启用"></a>验证主题是否启用</h1><p>运行 hexo s –debug，并访问 <a href="http://localhost:4000，确保站点正确运行。" target="_blank" rel="external">http://localhost:4000，确保站点正确运行。</a></p>
+<p>关于其它<a href="http://theme-next.iissnan.com/five-minutes-setup.html" target="_blank" rel="external">主题设定</a>等，这里就不过多叙述了，官方文档讲得很详细。可以参考<a href="http://theme-next.iissnan.com/" target="_blank" rel="external">NexT官方文档</a>。</p>
+<h1 id="u589E_u52A0_u7559_u8A00_u677F"><a href="#u589E_u52A0_u7559_u8A00_u677F" class="headerlink" title="增加留言板"></a>增加留言板</h1><p>该功能的实现的前提必须是Next已安装了第三方评论系统，如多说等。如你的网站并未安装第三方评论，请<a href="http://theme-next.iissnan.com/third-party-services.html" target="_blank" rel="external">点击此处</a>。然后执行以下命令：</p>
+<pre><code>$ hexo new page guestbook
+</code></pre><p>我们会发现在xxx.github.io/source/里生成了一个名叫guestbook的文件夹，那就是我们想要的留言板。打开guestbook/index.md，设置<code>comments: true</code>，如下图所示：</p>
+<p><img src="/uploads/20150718/20150718193734.png" alt="这里写图片描述"></p>
+<p>然后找到你NexT主题中的<code>_config.yml</code>(即xxx.github.io/themes/next/_config.yml)，在menu中添加guestbook，即：</p>
+<pre><code>menu:
+  home: /
+  categories: /categories
+  archives: /archives
+  tags: /tags
+  guestbook: /guestbook
+  about: /about
+</code></pre><p>再找到你NexT主题zh-Hans.yml文件（如果你的网站是其它语言的，请选择相对应的语言文件），文件路径xxx.github.io/themes/next/languages/zh-Hans.yml，添加<code>guestbook: 留言板</code>，即：</p>
+<pre><code>menu:
+  home: 首页
+  archives: 归档
+  categories: 分类
+  tags: 标签
+  about: 关于
+  search: 搜索
+  guestbook: 留言板
+  commonweal: 公益404
+</code></pre><p>重新部署网站，你会发现在menu中多了一项“留言板”功能，这样就可以在留言板上留言了。</p>
+<h1 id="u4FEE_u6539_u5E95_u680F"><a href="#u4FEE_u6539_u5E95_u680F" class="headerlink" title="修改底栏"></a>修改底栏</h1><p>关于修改底栏增加站长统计及访客记录等可参考此处 <a href="http://lovenight.github.io/2015/11/10/Hexo-3-1-1-%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/" target="_blank" rel="external">Hexo 3.1.1 静态博客搭建指南</a> 。</p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a href="http://theme-nekxt.iissnan.com/" target="_blank" rel="external">NexT官方文档</a></li>
+<li><a href="http://www.arao.me/2015/hexo-next-theme-optimize-base/" target="_blank" rel="external">动动手指，NexT主题与Hexo更搭哦（基础篇）</a></li>
+<li><a href="http://lovenight.github.io/2015/11/10/Hexo-3-1-1-%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/" target="_blank" rel="external">Hexo 3.1.1 静态博客搭建指南</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>在<a href="/2015/07/12/Hexo%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E4%B8%80">Hexo入门指南(一)</a>中我们已经初步地搭建了我们的博客，但是我们发现Hexo另一大特点我们还没有尝试过——主题。下面我们]]>
+    </summary>
+    
+      <category term="Hexo" scheme="http://yuqirong.github.io/tags/Hexo/"/>
+    
+      <category term="Hexo" scheme="http://yuqirong.github.io/categories/Hexo/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Hexo入门指南(一)]]></title>
-    <link href="http://yuqirong.github.io/2015/07/12/Hexo%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97(%E4%B8%80)/"/>
-    <id>http://yuqirong.github.io/2015/07/12/Hexo入门指南(一)/</id>
+    <link href="http://yuqirong.github.io/2015/07/12/Hexo%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E4%B8%80/"/>
+    <id>http://yuqirong.github.io/2015/07/12/Hexo入门指南一/</id>
     <published>2015-07-12T12:37:29.000Z</published>
-    <updated>2016-02-01T16:42:33.638Z</updated>
+    <updated>2016-02-02T12:01:43.529Z</updated>
     <content type="html"><![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>对于一个程序员而言，我想GitHub和个人博客应该程序员的“标配”吧，在个人博客上可以记载一路上的酸甜苦辣，回过头来看看，何尝不是一种享受呢。想不想拥有一个属于自己的博客？接下来本篇博文就来教你如何搭建一款属于自己的博客。</p>
 <p>在开讲之前，需要我们自己有一个GitHub的账号(相信大多数的程序员都有)，然后在GitHub上创建一个新的Repo,名字叫xxx.github.io(xxx为自己GitHub的用户名，如我的GitHub的用户名叫yuqirong,则要创建repo名就是<a href="https://github.com/yuqirong/yuqirong.github.io" target="_blank" rel="external">yuqirong.github.io</a>),搞定了这个我们就做好了第一步。</p>
-<p>经过上面步骤，我们已经拥有了一个初步域名：<a href="http://xxx.github.io,而服务器就是用的是GitHub的。所以下面我们就要精心地装扮一下我们的博客了。这里介绍一下[Hexo](https://hexo.io/zh-cn/docs/index.html)，[Hexo](https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="external">http://xxx.github.io,而服务器就是用的是GitHub的。所以下面我们就要精心地装扮一下我们的博客了。这里介绍一下[Hexo](https://hexo.io/zh-cn/docs/index.html)，[Hexo](https://hexo.io/zh-cn/docs/index.html</a>) 是一个快速、简洁且高效的博客框架。<a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="external">Hexo</a> 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。也就是说你不需要去写一大堆的html，js，css等，Hexo会帮你实现所有。听完这句话是不是很激动呢，那下面就开始安装Hexo。</p>
+<p>经过上面步骤，我们已经拥有了一个初步域名：<code>http://xxx.github.io</code>,而服务器就是用的是GitHub的。所以下面我们就要精心地装扮一下我们的博客了。这里介绍一下<a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="external">Hexo</a>，<a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="external">Hexo</a> 是一个快速、简洁且高效的博客框架。<a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="external">Hexo</a> 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。也就是说你不需要去写一大堆的html，js，css等，Hexo会帮你实现所有。听完这句话是不是很激动呢，那下面就开始安装Hexo。</p>
 <h1 id="u5B89_u88C5_u524D_u63D0"><a href="#u5B89_u88C5_u524D_u63D0" class="headerlink" title="安装前提"></a>安装前提</h1><p>安装 Hexo 相当简单。但是Hexo是基于Node.js的，所以在安装前，必须安装Node.js：</p>
 <p><a href="http://nodejs.org/" target="_blank" rel="external">Node.js</a></p>
 <p>装完了Node.js还有一个必须也要有，那就是Git(相信大多数程序员的电脑都都有安装)：</p>
@@ -1557,7 +1867,7 @@ deploy:
 </code></pre><p>上面repo中的xxx就是你的GitHub账号的用户名，branch设置成master。message就是你每次push到GitHub时的备注。</p>
 <p>到了这里，就可以真正地部署了：</p>
 <pre><code>$ hexo deploy
-</code></pre><p>执行完后你再打开<a href="http://xxx.github.io，你会惊喜地发现一个完全属于你自己的个人网站诞生了！" target="_blank" rel="external">http://xxx.github.io，你会惊喜地发现一个完全属于你自己的个人网站诞生了！</a></p>
+</code></pre><p>执行完后你再打开<code>http://xxx.github.io</code>，你会惊喜地发现一个完全属于你自己的个人网站诞生了！</p>
 <p>Hexo的初步入门就差不多到这里了，后面还将会有关于Hexo的博文更新，敬请关注。</p>
 <h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
 <li><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">Hexo官方文档</a></li>

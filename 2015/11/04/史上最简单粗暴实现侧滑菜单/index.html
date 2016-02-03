@@ -1,0 +1,1053 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,自定义View," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="blog for yuqirong" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="在Android开发中，相信侧滑菜单大家都不陌生吧，几乎是每个app都必备的。从早期的 SlidingMenu 再到           AndroidResideMenu 最后到Android自带的DrawerLayout，无处不体现着侧滑菜单的诱人魅力。侧滑菜单可以拓展app的内容，充分利用手机屏幕，增加程序的可玩性。既然有这么多可供选择的侧滑菜单使用，那为什么我们还要自己写呢？我觉得我们在使">
+<meta property="og:type" content="article">
+<meta property="og:title" content="史上最简单粗暴实现侧滑菜单">
+<meta property="og:url" content="http://yuqirong.github.io/2015/11/04/史上最简单粗暴实现侧滑菜单/index.html">
+<meta property="og:site_name" content="blog for yuqirong">
+<meta property="og:description" content="在Android开发中，相信侧滑菜单大家都不陌生吧，几乎是每个app都必备的。从早期的 SlidingMenu 再到           AndroidResideMenu 最后到Android自带的DrawerLayout，无处不体现着侧滑菜单的诱人魅力。侧滑菜单可以拓展app的内容，充分利用手机屏幕，增加程序的可玩性。既然有这么多可供选择的侧滑菜单使用，那为什么我们还要自己写呢？我觉得我们在使">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20151104/20151104205135.gif">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20151104/20151104000149.png">
+<meta property="og:updated_time" content="2016-02-03T03:57:09.538Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="史上最简单粗暴实现侧滑菜单">
+<meta name="twitter:description" content="在Android开发中，相信侧滑菜单大家都不陌生吧，几乎是每个app都必备的。从早期的 SlidingMenu 再到           AndroidResideMenu 最后到Android自带的DrawerLayout，无处不体现着侧滑菜单的诱人魅力。侧滑菜单可以拓展app的内容，充分利用手机屏幕，增加程序的可玩性。既然有这么多可供选择的侧滑菜单使用，那为什么我们还要自己写呢？我觉得我们在使">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always',
+    motion: true
+  };
+</script>
+
+  <title> 史上最简单粗暴实现侧滑菜单 | blog for yuqirong </title>
+  <meta name="baidu-site-verification" content="MBYnGIEEPN" />
+  <meta name="google-site-verification" content="_hYRHLLoBRM6L31myWhOPTxzGtawe9z1zmCqcJ-aHA0" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">blog for yuqirong</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-question-circle fa-fw"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '8ZRfk21kUz89L8Xi6hZm','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                史上最简单粗暴实现侧滑菜单
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-11-04T20:47:16+08:00" content="2015-11-04">
+              2015-11-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+                
+                
+  								<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
+								
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/11/04/史上最简单粗暴实现侧滑菜单/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/04/史上最简单粗暴实现侧滑菜单/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>在Android开发中，相信侧滑菜单大家都不陌生吧，几乎是每个app都必备的。从早期的 <a href="https://github.com/jfeinstein10/SlidingMenu" target="_blank" rel="external">SlidingMenu</a> 再到           <a href="https://github.com/SpecialCyCi/AndroidResideMenu" target="_blank" rel="external">AndroidResideMenu</a> 最后到Android自带的DrawerLayout，无处不体现着侧滑菜单的诱人魅力。侧滑菜单可以拓展app的内容，充分利用手机屏幕，增加程序的可玩性。既然有这么多可供选择的侧滑菜单使用，那为什么我们还要自己写呢？我觉得我们在使用侧滑菜单的时候应该要懂得其中的原理，更好的，可以自己写一个侧滑菜单来加深体会。</p>
+<p>好了，话不多说。来看看我们所谓“史上最简单粗暴实现的侧滑菜单”的产物吧：</p>
+<p><img src="/uploads/20151104/20151104205135.gif" alt="这里写图片描述"></p>
+<p>看完了上面的gif，想不想自己也写一个呢，那还等什么，一起来看看喽。</p>
+<p>首先来说一下侧滑菜单实现的思路：侧滑菜单的布局为MenuLayout，还有主页的布局为MainLayout。MenuLayout在MainLayout的左边，当手指向右滑动的时候，MainLayout就向右滑动，同时MenuLayout跟着向右滑动，于是就显示出了侧滑菜单。以下是示意图：</p>
+<p><img src="/uploads/20151104/20151104000149.png" alt="这里写图片描述"></p>
+<p>大概地了解思路以后，我们先来看看布局文件。</p>
+<p>layout_slidemenu.xml(侧滑菜单的布局)：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;300dp&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:background=&quot;@drawable/menu_bg&quot;
+    android:orientation=&quot;vertical&quot;&gt;
+
+    &lt;ListView
+        android:id=&quot;@+id/lv_menu&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:cacheColorHint=&quot;@null&quot; /&gt;
+&lt;/LinearLayout&gt;
+</code></pre><p>layout_activity_main.xml(主界面的布局)：</p>
+<pre><code>&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+android:layout_width=&quot;match_parent&quot;
+android:layout_height=&quot;match_parent&quot;
+android:background=&quot;#55666666&quot;
+android:orientation=&quot;vertical&quot; &gt;
+
+    &lt;LinearLayout
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;60dp&quot;
+        android:background=&quot;@drawable/top_bar_bg&quot;
+        android:gravity=&quot;center_vertical&quot; &gt;
+
+        &lt;ImageView
+            android:id=&quot;@+id/iv_menu&quot;
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:layout_margin=&quot;10dp&quot;
+            android:layout_gravity=&quot;center_vertical&quot;
+            android:background=&quot;@drawable/img_menu&quot; /&gt;
+
+        &lt;TextView
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:layout_marginLeft=&quot;15dp&quot;
+            android:text=&quot;SlidingMenu&quot;
+            android:layout_gravity=&quot;center_vertical&quot;
+            android:textColor=&quot;#ffffff&quot;
+            android:textSize=&quot;22sp&quot; /&gt;
+    &lt;/LinearLayout&gt;
+
+&lt;/LinearLayout&gt;
+</code></pre><p>layout_main.xml(activity的布局)，注意，主界面的布局一定要放在菜单布局的后面：</p>
+<pre><code>&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+android:layout_width=&quot;match_parent&quot;
+android:layout_height=&quot;match_parent&quot; &gt;
+
+    &lt;com.yuqirong.slidingmenu.view.SlidingMenu
+        android:id=&quot;@+id/slideMenu1&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot; &gt;
+
+        &lt;!-- 菜单界面的布局 --&gt;
+
+        &lt;include layout=&quot;@layout/layout_slidemenu&quot; /&gt;
+
+        &lt;!-- 主界面的布局 --&gt;
+
+        &lt;include layout=&quot;@layout/layout_activity_main&quot; /&gt;
+    &lt;/com.yuqirong.slidingmenu.view.SlidingMenu&gt;
+
+&lt;/RelativeLayout&gt;
+</code></pre><p>看完了布局文件，下面我们就来看看代码(以下为部分代码，并非全部)：</p>
+<pre><code>public class SlidingMenu extends FrameLayout {
+
+    private ViewDragHelper mdDragHelper;
+
+    public SlidingMenu(Context context) {
+        this(context, null);
+    }
+
+    public SlidingMenu(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public SlidingMenu(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        mdDragHelper = ViewDragHelper.create(this, callback);
+    }
+}
+</code></pre><p>我们创建一个类名叫SlidingMenu，继承自FrameLayout，然后重写构造器。在构造器中新建了一个ViewDragHelper的对象。如果你还不知道ViewDragHelper为何物，建议你去看看<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的<a href="http://blog.csdn.net/lmj623565791/article/details/46858663" target="_blank" rel="external">Android ViewDragHelper完全解析 自定义ViewGroup神器</a>，这里就不展开叙述了。在<code>ViewDragHelper.create(Context context,ViewDragHelper.Callback callback)</code>里我们传入了一个回调callback，那接下来就来看看这个callback：</p>
+<pre><code> Callback callback = new Callback() {
+
+    @Override
+    public boolean tryCaptureView(View view, int arg1) {
+        return true;
+    }
+
+    public int getViewHorizontalDragRange(View child) {
+        return menuWidth;
+    }
+
+    @Override
+    public int clampViewPositionHorizontal(View child, int left, int dx) {
+        if (child == mainView) {
+            if (left &lt; 0)
+                return 0;
+            else if (left &gt; menuWidth)
+                return menuWidth;
+            else
+                return left;
+        } else if (child == menuView) {
+            if (left &gt; 0)
+                return 0;
+            else if (left &gt; menuWidth)
+                return menuWidth;
+            else
+                return left;
+        }
+        return 0;
+    }
+
+    public void onViewPositionChanged(View changedView, int left, int top,
+                                      int dx, int dy) {
+        if (changedView == mainView)
+            menuView.offsetLeftAndRight(dx);
+        else
+            mainView.offsetLeftAndRight(dx);
+        invalidate();
+    }
+
+    ;
+
+    public void onViewReleased(View releasedChild, float xvel, float yvel) {
+        if (releasedChild == mainView) {
+            if (status == Status.Open) {
+                // 关闭侧滑菜单
+                close();
+                return;
+            }
+            if (xvel == 0
+                    &amp;&amp; Math.abs(mainView.getLeft()) &gt; menuWidth / 2.0f) {
+                // 打开侧滑菜单
+                open();
+            } else if (xvel &gt; 0) {
+                open();
+            } else {
+                close();
+            }
+        } else {
+            if (xvel == 0
+                    &amp;&amp; Math.abs(mainView.getLeft()) &gt; menuWidth / 2.0f) {
+                // 打开侧滑菜单
+                open();
+            }else if (xvel &gt; 0) {
+                open();
+            } else {
+                // 关闭侧滑菜单
+                close();
+            }
+        }
+    }
+
+};
+</code></pre><p>我们发现在callback中几乎完成了绝大部分的逻辑。首先在<code>tryCaptureView(View view, int arg1)</code>直接返回了true，因为无论在mainView(主View)还是在menuView(菜单View)都应该去捕获，而<code>getViewHorizontalDragRange(View child)</code>返回的应该是menuView的宽度，也就是说滑动的时候最多能滑menuWidth的距离。而menuWidth是在<code>onFinishInflate()</code>中得到的。至于<code>clampViewPositionHorizontal(View child, int left, int dx)</code>和<code>onViewPositionChanged(View changedView, int left, int top,int dx, int dy)</code>两个方法逻辑很简单，相信大家都看得懂。最后在<code>onViewReleased(View releasedChild, float xvel, float yvel)</code>方法中判断了菜单打开或关闭的逻辑，比如在菜单关闭的情况下，只要手指向右滑或是停止滑动时侧滑菜单在屏幕中的宽度大于menuWidth/2这两种情况下，侧滑菜单都是执行open()方法，其它的情况以此类推。下面就来看看open()和close()方法。</p>
+<pre><code>/**
+ * 打开菜单
+ */
+public void open() {
+    if (mdDragHelper.smoothSlideViewTo(mainView, menuWidth, 0)) {
+        ViewCompat.postInvalidateOnAnimation(this);
+    }
+    preStatus = status;
+    status = Status.Open;
+    if (listener != null &amp;&amp; preStatus == Status.Close) {
+        listener.statusChanged(status);
+    }
+}
+
+/**
+ * 关闭菜单
+ */
+public void close() {
+    if (mdDragHelper.smoothSlideViewTo(mainView, 0, 0)) {
+        ViewCompat.postInvalidateOnAnimation(this);
+    }
+    preStatus = status;
+    status = Status.Close;
+    if (listener != null &amp;&amp; preStatus == Status.Open) {
+        listener.statusChanged(status);
+    }
+}
+
+/**
+ * 切换菜单状态
+ */
+public void toggle() {
+    if (status == Status.Close) {
+        open();
+    } else {
+        close();
+    }
+} 
+
+@Override
+public void computeScroll() {
+    super.computeScroll();
+    // 开始执行动画
+    if (mdDragHelper.continueSettling(true)) {
+        ViewCompat.postInvalidateOnAnimation(this);
+    }
+}
+</code></pre><p>我们发现在<code>open()</code>和<code>close()</code>两个方法中都调用了<code>ViewCompat.postInvalidateOnAnimation(this);</code>而<code>postInvalidateOnAnimation(View view)</code>需要重写<code>computeScroll()</code>来实现平滑滚动的效果，一般的写法都如上代码所示，不需要改动。再重新回到<code>open()</code>和<code>close()</code>两个方法，其中的listener就是菜单开关状态的监听器，当状态改变的时候都会回调listener的<code>statusChanged(Status status)</code>方法。</p>
+<p>最后的最后，别忘了在<code>onLayout(boolean changed, int left, int top, int right, int bottom)</code>中把menuView设置在mainView的左边。而menuView和mainView都是在<code>onFinishInflate()</code>中得到的。</p>
+<pre><code>@Override
+protected void onFinishInflate() {
+    super.onFinishInflate();
+    if(getChildCount()!=2){
+        throw new IllegalArgumentException(&quot;子view的数量必须为2个&quot;);
+    }
+    menuView = getChildAt(0);
+    mainView = getChildAt(1);
+    menuWidth = menuView.getLayoutParams().width;
+}
+
+@Override
+protected void onLayout(boolean changed, int left, int top, int right,
+                        int bottom) {
+    menuView.layout(-menuWidth, 0, 0, menuView.getMeasuredHeight());
+    mainView.layout(0, 0, right, bottom);
+}
+</code></pre><p>好了，讲解了这么多，差不多把SlidingMenu的代码逻辑讲解完成了。如果有什么疑问，可以在下面留言。</p>
+<p>国际惯例，下面贴出源码下载链接：</p>
+<p><a href="/uploads/20151104/SlidingMenu.rar">SlidingMenu.rar</a></p>
+<p>~have fun!~</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/自定义View/" rel="tag">#自定义View</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/29/Android onTouch事件传递机制解析/" rel="next" title="Android onTouch事件传递机制解析">
+                <i class="fa fa-chevron-left"></i> Android onTouch事件传递机制解析
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/12/简单实现满屏表情下落的动画效果，你也可以/" rel="prev" title="简单实现满屏表情下落的动画效果，你也可以">
+                简单实现满屏表情下落的动画效果，你也可以 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/11/04/史上最简单粗暴实现侧滑菜单/"
+           data-title="史上最简单粗暴实现侧滑菜单" data-url="http://yuqirong.github.io/2015/11/04/史上最简单粗暴实现侧滑菜单/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar/27073358153.jpg" alt="俞其荣" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Google+
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i> Twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Instagram
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> 知乎
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/2949821927" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣
+   
+   &nbsp;&nbsp;|&nbsp;&nbsp;
+  <script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/sitemap.xml">Google网站地图</a></span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/baidusitemap.xml">百度网站地图</a></span>
+  
+  </span>
+</div>
+
+<div class="powered-by">
+	由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+	<a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>
+</div>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;本站总点击 <span id="busuanzi_value_site_pv"></span> 次
+&nbsp;&nbsp;|&nbsp;&nbsp;您是第 <span id="busuanzi_value_site_uv"></span> 位访客
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"yuqirong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
