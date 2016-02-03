@@ -3,7 +3,7 @@ date: 2015-10-23 23:26:56
 categories: Android
 tags: [Android,自定义View]
 ---
-之前在学习自定义View的时候看到鸿洋的 [《Android 打造形形色色的进度条 实现可以如此简单》](http://blog.csdn.net/lmj623565791/article/details/43371299) 中自带百分比的进度条，于是照着例子自己实现了一下。下面是View的样子：  
+之前在学习自定义View的时候看到[鸿洋_](http://my.csdn.net/lmj623565791)的 [《Android 打造形形色色的进度条 实现可以如此简单》](http://blog.csdn.net/lmj623565791/article/details/43371299) 中自带百分比的进度条，于是照着例子自己实现了一下。下面是View的样子：  
 ![这里写图片描述](/uploads/20151023/20151023211913.gif)
 
 大家都知道自定义View的主要步骤：  

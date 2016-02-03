@@ -2,11 +2,16 @@ title: about
 date: 2015-12-16 21:19:34
 comments: false
 ---
+{% centerquote %}Hey,it's me{% endcenterquote %}
+
 ## 个人介绍
-Hey，我是俞其荣。是一名Android开发者。如果你有兴趣想和我交流，下面有我的联系方式。
+* 俞其荣 / 男 / 1993
+* 杭州 / 中国计量大学
+* Android / Java
 
 ## 版权说明
 本站原创文章使用 [署名-非商业性使用-相同方式共享 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 协议发布，转载请标注作者和文章链接，不得用于商业目的。
+
 ## 联系方式
 * GitHub : https://github.com/yuqirong
 * Twitter: https://twitter.com/yyyuqirong
