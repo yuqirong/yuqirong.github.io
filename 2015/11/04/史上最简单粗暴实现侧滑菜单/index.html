@@ -61,7 +61,7 @@
 <meta property="og:description" content="在Android开发中，相信侧滑菜单大家都不陌生吧，几乎是每个app都必备的。从早期的 SlidingMenu 再到           AndroidResideMenu 最后到Android自带的DrawerLayout，无处不体现着侧滑菜单的诱人魅力。侧滑菜单可以拓展app的内容，充分利用手机屏幕，增加程序的可玩性。既然有这么多可供选择的侧滑菜单使用，那为什么我们还要自己写呢？我觉得我们在使">
 <meta property="og:image" content="http://yuqirong.github.io/uploads/20151104/20151104205135.gif">
 <meta property="og:image" content="http://yuqirong.github.io/uploads/20151104/20151104000149.png">
-<meta property="og:updated_time" content="2016-02-03T03:57:09.538Z">
+<meta property="og:updated_time" content="2016-02-03T16:17:55.659Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="史上最简单粗暴实现侧滑菜单">
 <meta name="twitter:description" content="在Android开发中，相信侧滑菜单大家都不陌生吧，几乎是每个app都必备的。从早期的 SlidingMenu 再到           AndroidResideMenu 最后到Android自带的DrawerLayout，无处不体现着侧滑菜单的诱人魅力。侧滑菜单可以拓展app的内容，充分利用手机屏幕，增加程序的可玩性。既然有这么多可供选择的侧滑菜单使用，那为什么我们还要自己写呢？我觉得我们在使">
@@ -410,7 +410,7 @@ android:layout_height=&quot;match_parent&quot; &gt;
         mdDragHelper = ViewDragHelper.create(this, callback);
     }
 }
-</code></pre><p>我们创建一个类名叫SlidingMenu，继承自FrameLayout，然后重写构造器。在构造器中新建了一个ViewDragHelper的对象。如果你还不知道ViewDragHelper为何物，建议你去看看<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的<a href="http://blog.csdn.net/lmj623565791/article/details/46858663" target="_blank" rel="external">Android ViewDragHelper完全解析 自定义ViewGroup神器</a>，这里就不展开叙述了。在<code>ViewDragHelper.create(Context context,ViewDragHelper.Callback callback)</code>里我们传入了一个回调callback，那接下来就来看看这个callback：</p>
+</code></pre><p>我们创建一个类名叫SlidingMenu，继承自FrameLayout，然后重写构造器。在构造器中新建了一个ViewDragHelper的对象。如果你还不知道ViewDragHelper为何物，建议你去看看<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的<a href="http://blog.csdn.net/lmj623565791/article/details/46858663" target="_blank" rel="external">《Android ViewDragHelper完全解析 自定义ViewGroup神器》</a>，这里就不展开叙述了。在<code>ViewDragHelper.create(Context context,ViewDragHelper.Callback callback)</code>里我们传入了一个回调callback，那接下来就来看看这个callback：</p>
 <pre><code> Callback callback = new Callback() {
 
     @Override
@@ -656,7 +656,7 @@ protected void onLayout(boolean changed, int left, int top, int right,
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">11</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

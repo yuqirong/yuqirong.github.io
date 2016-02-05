@@ -1,0 +1,1246 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,自定义View," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="blog for yuqirong" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="又到了更新博客的时间了，今天给大家带来的是ListView侧滑出现删除等按钮的效果。相信大家在平时玩app的时候都接触过这种效果吧。比如说QQ聊天列表侧滑就会出现“置顶”、“标为已读”、“删除”等按钮。这篇博文将用ViewDragHelper这个神器来实现侧滑效果。友情链接一下之前写的博文使用ViewDragHelper来实现侧滑菜单的，点击此处跳转。如果你对ViewDragHelper不熟悉，你">
+<meta property="og:type" content="article">
+<meta property="og:title" content="让你的ListView更炫酷，实现侧滑删除效果">
+<meta property="og:url" content="http://yuqirong.github.io/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/index.html">
+<meta property="og:site_name" content="blog for yuqirong">
+<meta property="og:description" content="又到了更新博客的时间了，今天给大家带来的是ListView侧滑出现删除等按钮的效果。相信大家在平时玩app的时候都接触过这种效果吧。比如说QQ聊天列表侧滑就会出现“置顶”、“标为已读”、“删除”等按钮。这篇博文将用ViewDragHelper这个神器来实现侧滑效果。友情链接一下之前写的博文使用ViewDragHelper来实现侧滑菜单的，点击此处跳转。如果你对ViewDragHelper不熟悉，你">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20151213/20151213140251.gif">
+<meta property="og:updated_time" content="2016-02-05T07:01:51.720Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="让你的ListView更炫酷，实现侧滑删除效果">
+<meta name="twitter:description" content="又到了更新博客的时间了，今天给大家带来的是ListView侧滑出现删除等按钮的效果。相信大家在平时玩app的时候都接触过这种效果吧。比如说QQ聊天列表侧滑就会出现“置顶”、“标为已读”、“删除”等按钮。这篇博文将用ViewDragHelper这个神器来实现侧滑效果。友情链接一下之前写的博文使用ViewDragHelper来实现侧滑菜单的，点击此处跳转。如果你对ViewDragHelper不熟悉，你">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always',
+    motion: true
+  };
+</script>
+
+  <title> 让你的ListView更炫酷，实现侧滑删除效果 | blog for yuqirong </title>
+  <meta name="baidu-site-verification" content="MBYnGIEEPN" />
+  <meta name="google-site-verification" content="_hYRHLLoBRM6L31myWhOPTxzGtawe9z1zmCqcJ-aHA0" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">blog for yuqirong</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-question-circle fa-fw"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '8ZRfk21kUz89L8Xi6hZm','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                让你的ListView更炫酷，实现侧滑删除效果
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-12-13T23:54:48+08:00" content="2015-12-13">
+              2015-12-13
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+                
+                
+  								<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
+								
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>又到了更新博客的时间了，今天给大家带来的是ListView侧滑出现删除等按钮的效果。相信大家在平时玩app的时候都接触过这种效果吧。比如说QQ聊天列表侧滑就会出现“置顶”、“标为已读”、“删除”等按钮。这篇博文将用ViewDragHelper这个神器来实现侧滑效果。友情链接一下之前写的博文使用ViewDragHelper来实现侧滑菜单的，<a href="/2015/11/04/史上最简单粗暴实现侧滑菜单/">点击此处跳转</a>。如果你对ViewDragHelper不熟悉，你可以去看看<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的<a href="http://blog.csdn.net/lmj623565791/article/details/46858663" target="_blank" rel="external">《Android ViewDragHelper完全解析 自定义ViewGroup神器》</a>。</p>
+<p>好了，话说的那么多，先来看看我们实现的效果图吧：</p>
+<p><img src="/uploads/20151213/20151213140251.gif" alt="这里填写图片描述"></p>
+<p>可以看出来，我们实现的和QQ的效果相差无几。下面就是源码时间了。</p>
+<p>先来看一下ListView的item的<code>slip_item_layout.xml</code>：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;com.yuqirong.swipelistview.view.SwipeListLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+android:id=&quot;@+id/sll_main&quot;
+android:layout_width=&quot;match_parent&quot;
+android:layout_height=&quot;wrap_content&quot; &gt;
+
+    &lt;LinearLayout
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:layout_gravity=&quot;center_vertical&quot;
+        android:orientation=&quot;horizontal&quot; &gt;
+
+        &lt;TextView
+            android:id=&quot;@+id/tv_top&quot;
+            android:layout_width=&quot;80dp&quot;
+            android:layout_height=&quot;match_parent&quot;
+            android:background=&quot;#66ff0000&quot;
+            android:gravity=&quot;center&quot;
+            android:text=&quot;置顶&quot; /&gt;
+
+        &lt;TextView
+            android:id=&quot;@+id/tv_delete&quot;
+            android:layout_width=&quot;80dp&quot;
+            android:layout_height=&quot;match_parent&quot;
+            android:background=&quot;#330000ff&quot;
+            android:gravity=&quot;center&quot;
+            android:text=&quot;删除&quot; /&gt;
+    &lt;/LinearLayout&gt;
+
+    &lt;LinearLayout
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:layout_gravity=&quot;center_vertical&quot;
+        android:background=&quot;#66ffffff&quot;
+        android:orientation=&quot;horizontal&quot; &gt;
+
+        &lt;ImageView
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;match_parent&quot;
+            android:layout_margin=&quot;10dp&quot;
+            android:src=&quot;@drawable/head_1&quot; /&gt;
+
+        &lt;TextView
+            android:id=&quot;@+id/tv_name&quot;
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;match_parent&quot;
+            android:layout_marginLeft=&quot;10dp&quot;
+            android:gravity=&quot;center_vertical&quot;
+            android:text=&quot;hello&quot; /&gt;
+    &lt;/LinearLayout&gt;
+
+&lt;/com.yuqirong.swipelistview.view.SwipeListLayout&gt;
+</code></pre><p>我们可以看出，要先把侧滑出的按钮布局放在SwipeListLayout的第一层，而item的布局放在第二层。还有一点要注意的是，侧滑出的按钮如果有两个或两个以上，那么必须用ViewGroup作为父布局。要整体保持SwipeListLayout的直接子View为2个。</p>
+<p>而activity的布局文件里就是一个ListView，这里就不再给出了。</p>
+<p>下面我们直接来看看SwipeListLayout的内容：</p>
+<pre><code>public SwipeListLayout(Context context) {
+    this(context, null);
+}
+
+public SwipeListLayout(Context context, AttributeSet attrs) {
+    super(context, attrs);
+    mDragHelper = ViewDragHelper.create(this, callback);
+}
+
+// ViewDragHelper的回调
+Callback callback = new Callback() {
+
+    @Override
+    public boolean tryCaptureView(View view, int arg1) {
+        return view == itemView;
+    }
+
+    @Override
+    public int clampViewPositionHorizontal(View child, int left, int dx) {
+        if (child == itemView) {
+            if (left &gt; 0) {
+                return 0;
+            } else {
+                left = Math.max(left, -hiddenViewWidth);
+                return left;
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public int getViewHorizontalDragRange(View child) {
+        return hiddenViewWidth;
+    }
+
+    @Override
+    public void onViewPositionChanged(View changedView, int left, int top,
+            int dx, int dy) {
+        if (itemView == changedView) {
+            hiddenView.offsetLeftAndRight(dx);
+        }
+        // 有时候滑动很快的话 会出现隐藏按钮的linearlayout没有绘制的问题
+        // 为了确保绘制成功 调用 invalidate
+        invalidate();
+    }
+
+    public void onViewReleased(View releasedChild, float xvel, float yvel) {
+        // 向右滑xvel为正 向左滑xvel为负
+        if (releasedChild == itemView) {
+            if (xvel == 0
+                    &amp;&amp; Math.abs(itemView.getLeft()) &gt; hiddenViewWidth / 2.0f) {
+                open(smooth);
+            } else if (xvel &lt; 0) {
+                open(smooth);
+            } else {
+                close(smooth);
+            }
+        }
+    }
+
+};
+</code></pre><p>我们主要来看callback，首先在<code>tryCaptureView(View view, int arg1)</code>里设置了只有是itemView的时候才能被捕获，也就是说当你去滑动“删除”、“置顶”等按钮的时候，侧滑按钮是不会被关闭的，因为根本就没捕获。(当然你也可以设置都捕获，那样的话下面的逻辑要调整了)，剩余的几个函数中的逻辑较为简单，在<code>onView
+Released(View releasedChild, float xvel, float yvel)</code>也是判断了当手指抬起时itemView所处的位置。如果向左滑或者停止滑动时按钮已经显示出1/2的宽度，则打开；其余情况下都将关闭按钮。</p>
+<p>以下分别是close()和open()的方法：</p>
+<pre><code>/**
+ * 侧滑关闭
+ * 
+ * @param smooth
+ *            为true则有平滑的过渡动画
+ */
+private void close(boolean smooth) {
+    preStatus = status;
+    status = Status.Close;
+    if (smooth) {
+        if (mDragHelper.smoothSlideViewTo(itemView, 0, 0)) {
+            if (listener != null) {
+                Log.i(TAG, &quot;start close animation&quot;);
+                listener.onStartCloseAnimation();
+            }
+            ViewCompat.postInvalidateOnAnimation(this);
+        }
+    } else {
+        layout(status);
+    }
+    if (listener != null &amp;&amp; preStatus == Status.Open) {
+        Log.i(TAG, &quot;close&quot;);
+        listener.onStatusChanged(status);
+    }
+}
+
+/**
+ * 侧滑打开
+ * 
+ * @param smooth
+ *            为true则有平滑的过渡动画
+ */
+private void open(boolean smooth) {
+    preStatus = status;
+    status = Status.Open;
+    if (smooth) {
+        if (mDragHelper.smoothSlideViewTo(itemView, -hiddenViewWidth, 0)) {
+            if (listener != null) {
+                Log.i(TAG, &quot;start open animation&quot;);
+                listener.onStartOpenAnimation();
+            }
+            ViewCompat.postInvalidateOnAnimation(this);
+        }
+    } else {
+        layout(status);
+    }
+    if (listener != null &amp;&amp; preStatus == Status.Close) {
+        Log.i(TAG, &quot;open&quot;);
+        listener.onStatusChanged(status);
+    }
+}
+</code></pre><p>SwipeListLayout大致的代码就这些，相信对于熟悉ViewDragHelper的同学们来说应该是不成问题的。其实整体的逻辑和之前用ViewDragHelper来实现侧滑菜单大同小异。</p>
+<p>顺便下面贴出SwipeListLayout的全部代码：</p>
+<pre><code>/**
+ * 侧滑Layout
+ */
+public class SwipeListLayout extends FrameLayout {
+
+    private View hiddenView;
+    private View itemView;
+    private int hiddenViewWidth;
+    private ViewDragHelper mDragHelper;
+    private int hiddenViewHeight;
+    private int itemWidth;
+    private int itemHeight;
+    private OnSwipeStatusListener listener;
+    private Status status = Status.Close;
+    private boolean smooth = true;
+
+    public static final String TAG = &quot;SlipListLayout&quot;;
+
+    // 状态
+    public enum Status {
+        Open, Close
+    }
+
+    /**
+     * 设置侧滑状态
+     * 
+     * @param status
+     *            状态 Open or Close
+     * @param smooth
+     *            若为true则有过渡动画，否则没有
+     */
+    public void setStatus(Status status, boolean smooth) {
+        this.status = status;
+        if (status == Status.Open) {
+            open(smooth);
+        } else {
+            close(smooth);
+        }
+    }
+
+    public void setOnSwipeStatusListener(OnSwipeStatusListener listener) {
+        this.listener = listener;
+    }
+
+    /**
+     * 是否设置过渡动画
+     * 
+     * @param smooth
+     */
+    public void setSmooth(boolean smooth) {
+        this.smooth = smooth;
+    }
+
+    public interface OnSwipeStatusListener {
+
+        /**
+         * 当状态改变时回调
+         * 
+         * @param status
+         */
+        void onStatusChanged(Status status);
+
+        /**
+         * 开始执行Open动画
+         */
+        void onStartCloseAnimation();
+
+        /**
+         * 开始执行Close动画
+         */
+        void onStartOpenAnimation();
+
+    }
+
+    public SwipeListLayout(Context context) {
+        this(context, null);
+    }
+
+    public SwipeListLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        mDragHelper = ViewDragHelper.create(this, callback);
+    }
+
+    // ViewDragHelper的回调
+    Callback callback = new Callback() {
+
+        @Override
+        public boolean tryCaptureView(View view, int arg1) {
+            return view == itemView;
+        }
+
+        @Override
+        public int clampViewPositionHorizontal(View child, int left, int dx) {
+            if (child == itemView) {
+                if (left &gt; 0) {
+                    return 0;
+                } else {
+                    left = Math.max(left, -hiddenViewWidth);
+                    return left;
+                }
+            }
+            return 0;
+        }
+
+        @Override
+        public int getViewHorizontalDragRange(View child) {
+            return hiddenViewWidth;
+        }
+
+        @Override
+        public void onViewPositionChanged(View changedView, int left, int top,
+                int dx, int dy) {
+            if (itemView == changedView) {
+                hiddenView.offsetLeftAndRight(dx);
+            }
+            // 有时候滑动很快的话 会出现隐藏按钮的linearlayout没有绘制的问题
+            // 为了确保绘制成功 调用 invalidate
+            invalidate();
+        }
+
+        public void onViewReleased(View releasedChild, float xvel, float yvel) {
+            // 向右滑xvel为正 向左滑xvel为负
+            if (releasedChild == itemView) {
+                if (xvel == 0
+                        &amp;&amp; Math.abs(itemView.getLeft()) &gt; hiddenViewWidth / 2.0f) {
+                    open(smooth);
+                } else if (xvel &lt; 0) {
+                    open(smooth);
+                } else {
+                    close(smooth);
+                }
+            }
+        }
+
+    };
+    private Status preStatus = Status.Close;
+
+    /**
+     * 侧滑关闭
+     * 
+     * @param smooth
+     *            为true则有平滑的过渡动画
+     */
+    private void close(boolean smooth) {
+        preStatus = status;
+        status = Status.Close;
+        if (smooth) {
+            if (mDragHelper.smoothSlideViewTo(itemView, 0, 0)) {
+                if (listener != null) {
+                    Log.i(TAG, &quot;start close animation&quot;);
+                    listener.onStartCloseAnimation();
+                }
+                ViewCompat.postInvalidateOnAnimation(this);
+            }
+        } else {
+            layout(status);
+        }
+        if (listener != null &amp;&amp; preStatus == Status.Open) {
+            Log.i(TAG, &quot;close&quot;);
+            listener.onStatusChanged(status);
+        }
+    }
+
+    /**
+     * 
+     * @param status
+     */
+    private void layout(Status status) {
+        if (status == Status.Close) {
+            hiddenView.layout(itemWidth, 0, itemWidth + hiddenViewWidth,
+                    itemHeight);
+            itemView.layout(0, 0, itemWidth, itemHeight);
+        } else {
+            hiddenView.layout(itemWidth - hiddenViewWidth, 0, itemWidth,
+                    itemHeight);
+            itemView.layout(-hiddenViewWidth, 0, itemWidth - hiddenViewWidth,
+                    itemHeight);
+        }
+    }
+
+    /**
+     * 侧滑打开
+     * 
+     * @param smooth
+     *            为true则有平滑的过渡动画
+     */
+    private void open(boolean smooth) {
+        preStatus = status;
+        status = Status.Open;
+        if (smooth) {
+            if (mDragHelper.smoothSlideViewTo(itemView, -hiddenViewWidth, 0)) {
+                if (listener != null) {
+                    Log.i(TAG, &quot;start open animation&quot;);
+                    listener.onStartOpenAnimation();
+                }
+                ViewCompat.postInvalidateOnAnimation(this);
+            }
+        } else {
+            layout(status);
+        }
+        if (listener != null &amp;&amp; preStatus == Status.Close) {
+            Log.i(TAG, &quot;open&quot;);
+            listener.onStatusChanged(status);
+        }
+    }
+
+    @Override
+    public void computeScroll() {
+        super.computeScroll();
+        // 开始执行动画
+        if (mDragHelper.continueSettling(true)) {
+            ViewCompat.postInvalidateOnAnimation(this);
+        }
+    }
+
+    // 让ViewDragHelper来处理触摸事件
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        final int action = ev.getAction();
+        if (action == MotionEvent.ACTION_CANCEL) {
+            mDragHelper.cancel();
+            return false;
+        }
+        return mDragHelper.shouldInterceptTouchEvent(ev);
+    }
+
+    // 让ViewDragHelper来处理触摸事件
+    public boolean onTouchEvent(MotionEvent event) {
+        mDragHelper.processTouchEvent(event);
+        return true;
+    };
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        hiddenView = getChildAt(0); // 得到隐藏按钮的linearlayout
+        itemView = getChildAt(1); // 得到最上层的linearlayout
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        // 测量子View的长和宽
+        itemWidth = itemView.getMeasuredWidth();
+        itemHeight = itemView.getMeasuredHeight();
+        hiddenViewWidth = hiddenView.getMeasuredWidth();
+        hiddenViewHeight = hiddenView.getMeasuredHeight();
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right,
+            int bottom) {
+        layout(Status.Close);
+    }
+
+}
+</code></pre><p>最后，提供SwipeListLayout的源码下载：</p>
+<p><a href="/uploads/20151213/SwipeListView.rar">SwipeListView.rar</a></p>
+<p>~have fun!~</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/自定义View/" rel="tag">#自定义View</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/05/实现炫酷的CheckBox，就这么简单/" rel="next" title="实现炫酷的CheckBox，就这么简单">
+                <i class="fa fa-chevron-left"></i> 实现炫酷的CheckBox，就这么简单
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/"
+           data-title="让你的ListView更炫酷，实现侧滑删除效果" data-url="http://yuqirong.github.io/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar/27073358153.jpg" alt="俞其荣" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Google+
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i> Twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Instagram
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> 知乎
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/2949821927" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣
+   
+   &nbsp;&nbsp;|&nbsp;&nbsp;
+  <script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/sitemap.xml">Google网站地图</a></span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/baidusitemap.xml">百度网站地图</a></span>
+  
+  </span>
+</div>
+
+<div class="powered-by">
+	由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+	<a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>
+</div>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;本站总点击 <span id="busuanzi_value_site_pv"></span> 次
+&nbsp;&nbsp;|&nbsp;&nbsp;您是第 <span id="busuanzi_value_site_uv"></span> 位访客
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"yuqirong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
