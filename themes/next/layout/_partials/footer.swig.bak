@@ -10,9 +10,7 @@
    &nbsp;&nbsp;|&nbsp;&nbsp;
   <script type="text/javascript">
   var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-  document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript 
-  src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' 
-  type='text/javascript'%3E%3C/script%3E"));
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
   </script>
 
   &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/sitemap.xml">Google网站地图</a></span>
@@ -38,6 +36,7 @@
 <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
 
+<script type="text/javascript" src="/js/jquery-2.2.0-min.js"></script>
 <script>
 (function(){
     var bp = document.createElement('script');
