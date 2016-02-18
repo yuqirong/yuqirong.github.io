@@ -56,7 +56,7 @@
 <meta name="description" content="向前跑 迎着冷眼和嘲笑">
 <meta property="og:type" content="website">
 <meta property="og:title" content="blog for yuqirong">
-<meta property="og:url" content="http://yuqirong.github.io/index.html">
+<meta property="og:url" content="http://yuqirong.me/index.html">
 <meta property="og:site_name" content="blog for yuqirong">
 <meta property="og:description" content="向前跑 迎着冷眼和嘲笑">
 <meta name="twitter:card" content="summary">
@@ -243,6 +243,15 @@
     
 
     
+    
+      
+      
+        
+        
+        
+      
+
+      
     
 
     
@@ -1178,8 +1187,8 @@ public class DropLook {
             
               
                 
-                <a class="post-title-link" href="/2015/09/29/探究Android异步消息的处理之Handler详解/" itemprop="url">
-                  探究Android异步消息的处理之Handler详解
+                <a class="post-title-link" href="/2015/10/19/给你的ScrollView设置滑动距离监听器/" itemprop="url">
+                  给你的ScrollView设置滑动距离监听器
                 </a>
               
             
@@ -1189,8 +1198,8 @@ public class DropLook {
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-09-29T13:19:12+08:00" content="2015-09-29">
-              2015-09-29
+            <time itemprop="dateCreated" datetime="2015-10-19T19:44:21+08:00" content="2015-10-19">
+              2015-10-19
             </time>
           </span>
 
@@ -1199,8 +1208,8 @@ public class DropLook {
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/Android-Tips/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Tips</span>
                   </a>
                 </span>
                 
@@ -1217,8 +1226,8 @@ public class DropLook {
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/09/29/探究Android异步消息的处理之Handler详解/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/29/探究Android异步消息的处理之Handler详解/" itemprop="commentsCount"></span>
+                <a href="/2015/10/19/给你的ScrollView设置滑动距离监听器/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/19/给你的ScrollView设置滑动距离监听器/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1240,12 +1249,17 @@ public class DropLook {
         
           <span itemprop="articleBody">
             
-            在学习Android的路上，大家肯定会遇到异步消息处理，Android提供给我们一个类来处理相关的问题，那就是Handler。相信大家大多都用过Handler了，下面我们就来看看Handler最简单的用法：
-123456789101112131415161718192021222324252627282930public class FirstActivity extends AppCompatActivity &#123;    public static final String TAG = "FirstActivity";    private static Handler handle
+            ScrollView是我们经常使用的一个UI控件，也许你在使用ScrollView的过程中会发现，当你想监听ScrollView滑动的距离时却没有合适的监听器！当然在API 23中有setOnScrollChangeListener(View.OnScrollChangeListener l)可以使用，但是并不兼容低版本的API。那怎么办呢？只好重写ScrollView来实现对滑动距离的监听了。
+话不多说，直接上代码：
+public class MyScrollView extends ScrollView {
+
+    private OnScrollListener listener;
+
+
             ...
           </span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/09/29/探究Android异步消息的处理之Handler详解/#more" rel="contents">
+            <a class="btn" href="/2015/10/19/给你的ScrollView设置滑动距离监听器/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1288,8 +1302,8 @@ public class DropLook {
             
               
                 
-                <a class="post-title-link" href="/2015/08/26/关于Activity生命周期的小结/" itemprop="url">
-                  关于Activity生命周期的小结
+                <a class="post-title-link" href="/2015/10/17/ScrollView嵌套ListView问题的解决办法/" itemprop="url">
+                  ScrollView嵌套ListView问题的解决办法
                 </a>
               
             
@@ -1299,8 +1313,8 @@ public class DropLook {
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-08-26T22:13:31+08:00" content="2015-08-26">
-              2015-08-26
+            <time itemprop="dateCreated" datetime="2015-10-17T19:16:03+08:00" content="2015-10-17">
+              2015-10-17
             </time>
           </span>
 
@@ -1309,8 +1323,8 @@ public class DropLook {
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/Android-Tips/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Tips</span>
                   </a>
                 </span>
                 
@@ -1327,8 +1341,8 @@ public class DropLook {
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/08/26/关于Activity生命周期的小结/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/26/关于Activity生命周期的小结/" itemprop="commentsCount"></span>
+                <a href="/2015/10/17/ScrollView嵌套ListView问题的解决办法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/17/ScrollView嵌套ListView问题的解决办法/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1350,14 +1364,18 @@ public class DropLook {
         
           <span itemprop="articleBody">
             
-            开头先说一下写这篇博客的初衷，由于博主在找实习的过程中面试经常被问到Activity生命周期有关的问题，所以特此写一篇博客来记一下。 
-Activity作为四大组件之一，几乎是每个人开始学习Android最先接触到的。常见的生命周期方法大家肯定都是非常熟悉的，所以Activity生命周期的顺序在这就不必过多叙述了。今天讲一下由FirstActivity启动SecondActivity而调用生命周期方法的顺序问题。
-首先我们创建一个如下图的FirstActivity:很简单，LinearLayout里只有一个Button，用于启动SecondActivity。
-以下为FirstActivity的
+            在平常的Android开发中我们经常会碰到ScrollView嵌套ListView或者是GridView的情况，若按照一般的流程我们会发现在ScrollView中的ListView显示不全的问题，其实我们可以重写ListView的onMeasure(int widthMeasureSpec, int heightMeasureSpec)方法来解决。
+以下是重写ListView的代码：
+/**
+ * 重写ListView，解决与ScrollView的冲突
+ */
+public class MyListView extends ListView {
+
+    public MyListView(C
             ...
           </span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/08/26/关于Activity生命周期的小结/#more" rel="contents">
+            <a class="btn" href="/2015/10/17/ScrollView嵌套ListView问题的解决办法/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1425,21 +1443,21 @@ Activity作为四大组件之一，几乎是每个人开始学习Android最先�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">14</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">3</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
