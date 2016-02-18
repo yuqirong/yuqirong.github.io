@@ -21,7 +21,7 @@ hexo 博客专用，向百度站长平台提交所有网址
 """
 
 
-url = 'http://data.zz.baidu.com/urls?site=www.yuqirong.me&token=XHXx3HpuCHKb0wos'
+url = 'http://data.zz.baidu.com/urls?site=yuqirong.me&token=XHXx3HpuCHKb0wos&type=original'
 baidu_sitemap = os.path.join(sys.path[0], 'public', 'baidusitemap.xml')
 google_sitemap = os.path.join(sys.path[0], 'public', 'sitemap.xml')
 sitemap = [baidu_sitemap, google_sitemap]
