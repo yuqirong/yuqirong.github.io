@@ -2,9 +2,9 @@ title: about
 date: 2015-12-16 21:19:34
 comments: false
 ---
-{% centerquote %}Hey,it is me{% endcenterquote %}
+{% centerquote %}Hey,it is me!{% endcenterquote %}
 
-<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="http://music.163.com/outchain/player?type=2&id=355992&auto=0&height=66"></iframe>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="http://music.163.com/outchain/player?type=2&id=355992&auto=1&height=66"></iframe>
 
 ## 个人介绍
 * 俞其荣 / 男 / 1993
