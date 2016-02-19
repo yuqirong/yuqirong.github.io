@@ -2,6 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yuqirong.me/about/index.html</loc>
+    <lastmod>2016-02-19T14:15:52.543Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/01/01/%E5%86%8D%E8%A7%812015%EF%BC%8C%E4%BD%A0%E5%A5%BD2016/</loc>
+    <lastmod>2016-02-19T14:15:29.787Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2016-02-19T12:47:09.603Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://yuqirong.me/2015/10/19/%E7%BB%99%E4%BD%A0%E7%9A%84ScrollView%E8%AE%BE%E7%BD%AE%E6%BB%91%E5%8A%A8%E8%B7%9D%E7%A6%BB%E7%9B%91%E5%90%AC%E5%99%A8/</loc>
     <lastmod>2016-02-18T12:15:43.233Z</lastmod>
   </url>
@@ -14,11 +29,6 @@
   <url>
     <loc>http://yuqirong.me/2015/12/27/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0%E6%B0%B4%E6%B3%A2%E7%BA%B9%E5%8A%A8%E7%94%BB%EF%BC%8C%E8%AE%A9%E4%BD%A0%E7%9A%84app%E4%B8%8D%E5%86%8D%E5%8D%95%E8%B0%83/</loc>
     <lastmod>2016-02-17T12:15:21.492Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/about/index.html</loc>
-    <lastmod>2016-02-10T15:55:22.535Z</lastmod>
   </url>
   
   <url>

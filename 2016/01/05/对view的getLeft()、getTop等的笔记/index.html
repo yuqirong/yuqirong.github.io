@@ -35,7 +35,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Android,源码解析," />
+  <meta name="keywords" content="Android," />
 
 
 
@@ -53,20 +53,23 @@
 
 
 
-<meta name="description" content="记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事件传递的机制了，顺便写一篇博客来记录一下。下面就让我们来看看吧。
-大家都知道一般我们使用的UI控件都是继承自共同的父类——Vi">
+<meta name="description" content="在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用view.getTop()来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：
+&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;
+&amp;lt;LinearLayout xmlns:android=&amp;quot;htt">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android onTouch事件传递机制解析">
-<meta property="og:url" content="http://yuqirong.me/2015/10/29/Android onTouch事件传递机制解析/index.html">
+<meta property="og:title" content="对view的getLeft()、getTop等的笔记">
+<meta property="og:url" content="http://yuqirong.me/2016/01/05/对view的getLeft()、getTop等的笔记/index.html">
 <meta property="og:site_name" content="blog for yuqirong">
-<meta property="og:description" content="记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事件传递的机制了，顺便写一篇博客来记录一下。下面就让我们来看看吧。
-大家都知道一般我们使用的UI控件都是继承自共同的父类——Vi">
-<meta property="og:image" content="http://yuqirong.me/uploads/20151029/20151029230937.png">
-<meta property="og:updated_time" content="2016-01-30T14:15:37.497Z">
+<meta property="og:description" content="在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用view.getTop()来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：
+&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;
+&amp;lt;LinearLayout xmlns:android=&amp;quot;htt">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160105/20160105202531.png">
+<meta property="og:updated_time" content="2016-02-19T12:47:09.603Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android onTouch事件传递机制解析">
-<meta name="twitter:description" content="记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事件传递的机制了，顺便写一篇博客来记录一下。下面就让我们来看看吧。
-大家都知道一般我们使用的UI控件都是继承自共同的父类——Vi">
+<meta name="twitter:title" content="对view的getLeft()、getTop等的笔记">
+<meta name="twitter:description" content="在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用view.getTop()来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：
+&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;
+&amp;lt;LinearLayout xmlns:android=&amp;quot;htt">
 
 
 
@@ -78,7 +81,7 @@
   };
 </script>
 
-  <title> Android onTouch事件传递机制解析 | blog for yuqirong </title>
+  <title> 对view的getLeft()、getTop等的笔记 | blog for yuqirong </title>
   <meta name="baidu-site-verification" content="MBYnGIEEPN" />
   <meta name="baidu-site-verification" content="1Hx0jVHsgl" />
   <meta name="baidu-site-verification" content="L0MgAErI0s" />
@@ -263,7 +266,7 @@
             
             
               
-                Android onTouch事件传递机制解析
+                对view的getLeft()、getTop等的笔记
               
             
           </h1>
@@ -272,8 +275,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-10-29T22:56:09+08:00" content="2015-10-29">
-              2015-10-29
+            <time itemprop="dateCreated" datetime="2016-01-05T20:01:48+08:00" content="2016-01-05">
+              2016-01-05
             </time>
           </span>
 
@@ -282,8 +285,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/Android-Tips/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Tips</span>
                   </a>
                 </span>
                 
@@ -302,8 +305,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/10/29/Android onTouch事件传递机制解析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/29/Android onTouch事件传递机制解析/" itemprop="commentsCount"></span>
+                <a href="/2016/01/05/对view的getLeft()、getTop等的笔记/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/对view的getLeft()、getTop等的笔记/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -322,274 +325,49 @@
       
 
       
-        <span itemprop="articleBody"><p>记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事件传递的机制了，顺便写一篇博客来记录一下。下面就让我们来看看吧。</p>
-<p>大家都知道一般我们使用的UI控件都是继承自共同的父类——View。所以View这个类应该掌管着onTouch事件的相关处理。那就让我们去看看：在View中寻找Touch相关的方法，其中一个很容易地引起了我们的注意：dispatchTouchEvent(MotionEvent event)。根据方法名的意思应该是负责分发触摸事件的，下面给出了源码：</p>
-<pre><code>/**
- * Pass the touch screen motion event down to the target view, or this
- * view if it is the target.
- *
- * @param event The motion event to be dispatched.
- * @return True if the event was handled by the view, false otherwise.
- */
- public boolean dispatchTouchEvent(MotionEvent event) {
-    // If the event should be handled by accessibility focus first.
-    if (event.isTargetAccessibilityFocus()) {
-        // We don&apos;t have focus or no virtual descendant has it, do not handle the event.
-        if (!isAccessibilityFocusedViewOrHost()) {
-            return false;
-        }
-        // We have focus and got the event, then use normal event dispatch.
-        event.setTargetAccessibilityFocus(false);
-    }
+        <span itemprop="articleBody"><p>在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用<code>view.getTop()</code>来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:orientation=&quot;vertical&quot;&gt;
 
-    boolean result = false;
 
-    if (mInputEventConsistencyVerifier != null) {
-        mInputEventConsistencyVerifier.onTouchEvent(event, 0);
-    }
+    &lt;LinearLayout
+        android:id=&quot;@+id/ll_01&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;60dp&quot;
+        android:orientation=&quot;vertical&quot;
+        android:background=&quot;@android:color/holo_green_light&quot;&gt;
 
-    final int actionMasked = event.getActionMasked();
-    if (actionMasked == MotionEvent.ACTION_DOWN) {
-        // Defensive cleanup for new gesture
-        stopNestedScroll();
-    }
+        &lt;TextView
+            android:id=&quot;@+id/tv_01&quot;
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:text=&quot;我是第一行文字&quot; /&gt;
+    &lt;/LinearLayout&gt;
 
-    if (onFilterTouchEventForSecurity(event)) {
-        //noinspection SimplifiableIfStatement
-        ListenerInfo li = mListenerInfo;
-        if (li != null &amp;&amp; li.mOnTouchListener != null
-                &amp;&amp; (mViewFlags &amp; ENABLED_MASK) == ENABLED
-                &amp;&amp; li.mOnTouchListener.onTouch(this, event)) {
-            result = true;
-        }
+    &lt;LinearLayout
+        android:id=&quot;@+id/ll_02&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;60dp&quot;
+        android:orientation=&quot;vertical&quot;
+        android:background=&quot;@android:color/holo_blue_light&quot;&gt;
 
-        if (!result &amp;&amp; onTouchEvent(event)) {
-            result = true;
-        }
-    }
+        &lt;TextView
+            android:id=&quot;@+id/tv_02&quot;
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:text=&quot;我是第二行文字&quot; /&gt;
+    &lt;/LinearLayout&gt;
 
-    if (!result &amp;&amp; mInputEventConsistencyVerifier != null) {
-        mInputEventConsistencyVerifier.onUnhandledEvent(event, 0);
-    }
-
-    // Clean up after nested scrolls if this is the end of a gesture;
-    // also cancel it if we tried an ACTION_DOWN but we didn&apos;t want the rest
-    // of the gesture.
-    if (actionMasked == MotionEvent.ACTION_UP ||
-            actionMasked == MotionEvent.ACTION_CANCEL ||
-            (actionMasked == MotionEvent.ACTION_DOWN &amp;&amp; !result)) {
-        stopNestedScroll();
-    }
-
-    return result;
-}
-</code></pre><p>源码有点长，但我们不必每一行都看。首先注意到dispatchTouchEvent的返回值是boolean类型的，注释上的解释：<code>@return True if the event was handled by the view, false otherwise.</code>也就是说如果该触摸事件被这个View消费了就返回true，否则返回false。在方法中首先判断了该event是否是否得到了焦点，如果没有得到焦点直接返回false。然后让我们把目光转向<code>if (li != null &amp;&amp; li.mOnTouchListener != null&amp;&amp; (mViewFlags &amp; ENABLED_MASK) == ENABLED&amp;&amp; li.mOnTouchListener.onTouch(this, event))</code>这个片段，看到这里有一个名为li的局部变量，属于 ListenerInfo 类，经 mListenerInfo 赋值得到。ListenerInfo只是一个包装类，里面封装了大量的监听器。再在 View 类中去寻找 mListenerInfo ，可以看到下面的代码：</p>
-<pre><code>  ListenerInfo getListenerInfo() {
-    if (mListenerInfo != null) {
-        return mListenerInfo;
-    }
-    mListenerInfo = new ListenerInfo();
-    return mListenerInfo;
-}
-</code></pre><p>因此我们可以知道mListenerInfo是不为空的，所以li也不是空，第一个判断为true，然后看到li.mOnTouchListener，前面说过ListenerInfo是一个监听器的封装类，所以我们同样去追踪mOnTouchListener：</p>
-<pre><code>/**
- * Register a callback to be invoked when a touch event is sent to this view.
- * @param l the touch listener to attach to this view
- */
-public void setOnTouchListener(OnTouchListener l) {
-    getListenerInfo().mOnTouchListener = l;
-}
-</code></pre><p>正是通过上面的方法来设置 mOnTouchListener 的，我想上面的方法大家肯定都很熟悉吧，正是我们平时经常用的 xxx.setOnTouchListener ，好了我们从中得知如果设置了OnTouchListener则第二个判断也为true，第三个判断为如果该View是否为enable，默认都是enable的，所以同样为true。还剩最后一个：<code>li.mOnTouchListener.onTouch(this, event)</code>，显然是回调了第二个判断中监听器的onTouch()方法，如果onTouch()方法返回true,则上面四个判断全部为true,dispatchTouchEvent()方法会返回true，并且不会执行<code>if (!result &amp;&amp; onTouchEvent(event))</code>这个判断；而在这个判断中我们又看到了一个熟悉的方法：onTouchEvent()。所以想要执行onTouchEvent，则在上面的四个判断中必须至少有一个false。</p>
-<p>那就假定我们在onTouch()方法中返回的是false，这样就顺利地执行了onTouchEvent，那就看看onTouchEvent的源码吧：</p>
-<pre><code>/**
- * Implement this method to handle touch screen motion events.
- * &lt;p&gt;
- * If this method is used to detect click actions, it is recommended that
- * the actions be performed by implementing and calling
- * {@link #performClick()}. This will ensure consistent system behavior,
- * including:
- * &lt;ul&gt;
- * &lt;li&gt;obeying click sound preferences
- * &lt;li&gt;dispatching OnClickListener calls
- * &lt;li&gt;handling {@link AccessibilityNodeInfo#ACTION_CLICK ACTION_CLICK} when
- * accessibility features are enabled
- * &lt;/ul&gt;
- *
- * @param event The motion event.
- * @return True if the event was handled, false otherwise.
- */
-public boolean onTouchEvent(MotionEvent event) {
-    final float x = event.getX();
-    final float y = event.getY();
-    final int viewFlags = mViewFlags;
-    final int action = event.getAction();
-
-    if ((viewFlags &amp; ENABLED_MASK) == DISABLED) {
-        if (action == MotionEvent.ACTION_UP &amp;&amp; (mPrivateFlags &amp; PFLAG_PRESSED) != 0) {
-            setPressed(false);
-        }
-        // A disabled view that is clickable still consumes the touch
-        // events, it just doesn&apos;t respond to them.
-        return (((viewFlags &amp; CLICKABLE) == CLICKABLE
-                || (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE)
-                || (viewFlags &amp; CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE);
-    }
-
-    if (mTouchDelegate != null) {
-        if (mTouchDelegate.onTouchEvent(event)) {
-            return true;
-        }
-    }
-
-    if (((viewFlags &amp; CLICKABLE) == CLICKABLE ||
-            (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE) ||
-            (viewFlags &amp; CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE) {
-        switch (action) {
-            case MotionEvent.ACTION_UP:
-                boolean prepressed = (mPrivateFlags &amp; PFLAG_PREPRESSED) != 0;
-                if ((mPrivateFlags &amp; PFLAG_PRESSED) != 0 || prepressed) {
-                    // take focus if we don&apos;t have it already and we should in
-                    // touch mode.
-                    boolean focusTaken = false;
-                    if (isFocusable() &amp;&amp; isFocusableInTouchMode() &amp;&amp; !isFocused()) {
-                        focusTaken = requestFocus();
-                    }
-
-                    if (prepressed) {
-                        // The button is being released before we actually
-                        // showed it as pressed.  Make it show the pressed
-                        // state now (before scheduling the click) to ensure
-                        // the user sees it.
-                        setPressed(true, x, y);
-                   }
-
-                    if (!mHasPerformedLongPress &amp;&amp; !mIgnoreNextUpEvent) {
-                        // This is a tap, so remove the longpress check
-                        removeLongPressCallback();
-
-                        // Only perform take click actions if we were in the pressed state
-                        if (!focusTaken) {
-                            // Use a Runnable and post this rather than calling
-                            // performClick directly. This lets other visual state
-                            // of the view update before click actions start.
-                            if (mPerformClick == null) {
-                                mPerformClick = new PerformClick();
-                            }
-                            if (!post(mPerformClick)) {
-                                performClick();
-                            }
-                        }
-                    }
-
-                    if (mUnsetPressedState == null) {
-                        mUnsetPressedState = new UnsetPressedState();
-                    }
-
-                    if (prepressed) {
-                        postDelayed(mUnsetPressedState,
-                                ViewConfiguration.getPressedStateDuration());
-                    } else if (!post(mUnsetPressedState)) {
-                        // If the post failed, unpress right now
-                        mUnsetPressedState.run();
-                    }
-
-                    removeTapCallback();
-                }
-                mIgnoreNextUpEvent = false;
-                break;
-
-            case MotionEvent.ACTION_DOWN:
-                mHasPerformedLongPress = false;
-
-                if (performButtonActionOnTouchDown(event)) {
-                    break;
-                }
-
-                // Walk up the hierarchy to determine if we&apos;re inside a scrolling container.
-                boolean isInScrollingContainer = isInScrollingContainer();
-
-                // For views inside a scrolling container, delay the pressed feedback for
-                // a short period in case this is a scroll.
-                if (isInScrollingContainer) {
-                    mPrivateFlags |= PFLAG_PREPRESSED;
-                    if (mPendingCheckForTap == null) {
-                        mPendingCheckForTap = new CheckForTap();
-                    }
-                    mPendingCheckForTap.x = event.getX();
-                    mPendingCheckForTap.y = event.getY();
-                    postDelayed(mPendingCheckForTap, ViewConfiguration.getTapTimeout());
-                } else {
-                    // Not inside a scrolling container, so show the feedback right away
-                    setPressed(true, x, y);
-                    checkForLongClick(0);
-                }
-                break;
-
-            case MotionEvent.ACTION_CANCEL:
-                setPressed(false);
-                removeTapCallback();
-                removeLongPressCallback();
-                mInContextButtonPress = false;
-                mHasPerformedLongPress = false;
-                mIgnoreNextUpEvent = false;
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                drawableHotspotChanged(x, y);
-
-                // Be lenient about moving outside of buttons
-                if (!pointInView(x, y, mTouchSlop)) {
-                    // Outside button
-                    removeTapCallback();
-                    if ((mPrivateFlags &amp; PFLAG_PRESSED) != 0) {
-                        // Remove any future long press/tap checks
-                        removeLongPressCallback();
-
-                        setPressed(false);
-                    }
-                }
-                break;
-        }
-
-        return true;
-    }
-
-    return false;
-}
-</code></pre><p>这段源码比 dispatchTouchEvent 的还要长，不过同样我们挑重点的看：<br><code>if (((viewFlags &amp; CLICKABLE) == CLICKABLE || (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE) || (viewFlags &amp; CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE)</code><br>看到这句话就大概知道了主要是判断该view是否是可点击的，如果可以点击则接着执行，否则直接返回false。可以看到if里面用switch来判断是哪种触摸事件，但在最后都是返回true的。还有一点要注意：在 ACTION_UP 中会执行 performClick() 方法：</p>
-<pre><code>public boolean performClick() {
-    final boolean result;
-    final ListenerInfo li = mListenerInfo;
-    if (li != null &amp;&amp; li.mOnClickListener != null) {
-        playSoundEffect(SoundEffectConstants.CLICK);
-        li.mOnClickListener.onClick(this);
-        result = true;
-    } else {
-        result = false;
-    }
-
-    sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);
-    return result;
-}
-</code></pre><p>可以看到上面的<code>li.mOnClickListener.onClick(this);</code>，没错，我们好像又有了新的发现。根据上面的经验，这句代码会去回调我们设置好的点击事件监听器。也就是我们平常用的xxx.setOnClickListener(listener);</p>
-<pre><code>/**
- * Register a callback to be invoked when this view is clicked. If this view is not
- * clickable, it becomes clickable.
- *
- * @param l The callback that will run
- *
- * @see #setClickable(boolean)
- */
-public void setOnClickListener(@Nullable OnClickListener l) {
-    if (!isClickable()) {
-        setClickable(true);
-    }
-    getListenerInfo().mOnClickListener = l;
-}
-</code></pre><p>我们可以看到上面方法设置正是mListenerInfo的点击监听器，验证了上面的猜想。到了这里onTouch事件的传递机制基本已经分析完成了,也算是告一段落了。</p>
-<p>好了，这下我们可以解决开头的问题了，顺便我们再来小结一下：在dispatchTouchEvent中，如果设置了OnTouchListener并且View是enable的，那么首先被执行的是OnTouchListener中的<code>onTouch(View v, MotionEvent event)</code>。若onTouch返回true,则dispatchTouchEvent不再往下执行并且返回true；不然会执行onTouchEvent，在onTouchEvent中若View是可点击的，则返回true，不然为false。还有在onTouchEvent中若View是可点击以及当前触摸事件为ACTION_UP，会执行performClick()，回调OnClickListener的onClick方法。下面是我画的一张草图：<br><img src="/uploads/20151029/20151029230937.png" alt="这里写图片描述"></p>
-<p>还有一点值得注意的地方是：假如当前事件是ACTION_DOWN，只有dispatchTouchEvent返回true了之后该View才会接收到接下来的ACTION_MOVE,ACTION_UP事件，也就是说只有事件被消费了才能接收接下来的事件。</p>
-<p>好了，今天就到这里了，如果有什么问题可以在下面留言。</p>
+&lt;/LinearLayout&gt;
+</code></pre><p>上面是一个很简单的布局，UI效果图如下：</p>
+<p><img src="/uploads/20160105/20160105202531.png" alt="这里填写图片的描述"></p>
+<p>当我们用<code>tv_01.getTop()</code>的时候，得到的返回值是0，符合我的想象。但是用<code>tv_02.getTop()</code>，得到的值也为0。而我原以为<code>tv_02.getTop()</code>的值为<code>ll_01</code>的高度，也就是<code>tv_02</code>距离屏幕顶部的长度。但是结果和我的想象不一致。</p>
+<p>后来我才知道原来<code>getTop()</code>方法返回的是该view距离<strong>父容器顶部</strong>的距离，所以理所应当<code>tv_02.getTop()</code>距离<code>ll_02</code>顶部的距离也为0了，同样的<code>getLeft()</code>、<code>getBottom()</code>、<code>getRight()</code>也是一个道理，以此类推。</p>
+<p>那么问题来了，如何按我之前的想法一样，得到<code>tv_02</code>距离<strong>屏幕顶部</strong>的值呢？很简单，我们只要<code>tv_02.getTop() + ll_02.getTop()</code>就好了。相信聪明的你已经懂了。</p>
+<p>看来在开发中还有不少的细节需要我们注意，特此一记。</p>
 </span>
       
     </div>
@@ -600,8 +378,6 @@ public void setOnClickListener(@Nullable OnClickListener l) {
           
             <a href="/tags/Android/" rel="tag">#Android</a>
           
-            <a href="/tags/源码解析/" rel="tag">#源码解析</a>
-          
         </div>
       
 
@@ -609,17 +385,13 @@ public void setOnClickListener(@Nullable OnClickListener l) {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/10/23/自定义View之实现文字百分比进度条/" rel="next" title="自定义View之实现文字百分比进度条">
-                <i class="fa fa-chevron-left"></i> 自定义View之实现文字百分比进度条
+              <a href="/2016/01/01/再见2015，你好2016/" rel="next" title="再见2015，你好2016">
+                <i class="fa fa-chevron-left"></i> 再见2015，你好2016
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/11/04/史上最简单粗暴实现侧滑菜单/" rel="prev" title="史上最简单粗暴实现侧滑菜单">
-                史上最简单粗暴实现侧滑菜单 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -646,8 +418,8 @@ public void setOnClickListener(@Nullable OnClickListener l) {
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/10/29/Android onTouch事件传递机制解析/"
-           data-title="Android onTouch事件传递机制解析" data-url="http://yuqirong.me/2015/10/29/Android onTouch事件传递机制解析/">
+      <div class="ds-thread" data-thread-key="2016/01/05/对view的getLeft()、getTop等的笔记/"
+           data-title="对view的getLeft()、getTop等的笔记" data-url="http://yuqirong.me/2016/01/05/对view的getLeft()、getTop等的笔记/">
       </div>
     
   </div>

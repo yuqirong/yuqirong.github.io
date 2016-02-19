@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-02-17T12:15:21.492Z</updated>
+  <updated>2016-02-19T12:47:09.603Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -13,6 +13,95 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[对view的getLeft()、getTop等的笔记]]></title>
+    <link href="http://yuqirong.me/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/"/>
+    <id>http://yuqirong.me/2016/01/05/对view的getLeft()、getTop等的笔记/</id>
+    <published>2016-01-05T12:01:48.000Z</published>
+    <updated>2016-02-19T12:47:09.603Z</updated>
+    <content type="html"><![CDATA[<p>在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用<code>view.getTop()</code>来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:orientation=&quot;vertical&quot;&gt;
+
+
+    &lt;LinearLayout
+        android:id=&quot;@+id/ll_01&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;60dp&quot;
+        android:orientation=&quot;vertical&quot;
+        android:background=&quot;@android:color/holo_green_light&quot;&gt;
+
+        &lt;TextView
+            android:id=&quot;@+id/tv_01&quot;
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:text=&quot;我是第一行文字&quot; /&gt;
+    &lt;/LinearLayout&gt;
+
+    &lt;LinearLayout
+        android:id=&quot;@+id/ll_02&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;60dp&quot;
+        android:orientation=&quot;vertical&quot;
+        android:background=&quot;@android:color/holo_blue_light&quot;&gt;
+
+        &lt;TextView
+            android:id=&quot;@+id/tv_02&quot;
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:text=&quot;我是第二行文字&quot; /&gt;
+    &lt;/LinearLayout&gt;
+
+&lt;/LinearLayout&gt;
+</code></pre><p>上面是一个很简单的布局，UI效果图如下：</p>
+<p><img src="/uploads/20160105/20160105202531.png" alt="这里填写图片的描述"></p>
+<p>当我们用<code>tv_01.getTop()</code>的时候，得到的返回值是0，符合我的想象。但是用<code>tv_02.getTop()</code>，得到的值也为0。而我原以为<code>tv_02.getTop()</code>的值为<code>ll_01</code>的高度，也就是<code>tv_02</code>距离屏幕顶部的长度。但是结果和我的想象不一致。</p>
+<p>后来我才知道原来<code>getTop()</code>方法返回的是该view距离<strong>父容器顶部</strong>的距离，所以理所应当<code>tv_02.getTop()</code>距离<code>ll_02</code>顶部的距离也为0了，同样的<code>getLeft()</code>、<code>getBottom()</code>、<code>getRight()</code>也是一个道理，以此类推。</p>
+<p>那么问题来了，如何按我之前的想法一样，得到<code>tv_02</code>距离<strong>屏幕顶部</strong>的值呢？很简单，我们只要<code>tv_02.getTop() + ll_02.getTop()</code>就好了。相信聪明的你已经懂了。</p>
+<p>看来在开发中还有不少的细节需要我们注意，特此一记。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用<code>view.getTop()</code>来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：</p>
+<pre><code>&lt;?xml versi]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="Android Tips" scheme="http://yuqirong.me/categories/Android-Tips/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[再见2015，你好2016]]></title>
+    <link href="http://yuqirong.me/2016/01/01/%E5%86%8D%E8%A7%812015%EF%BC%8C%E4%BD%A0%E5%A5%BD2016/"/>
+    <id>http://yuqirong.me/2016/01/01/再见2015，你好2016/</id>
+    <published>2016-01-01T12:54:54.000Z</published>
+    <updated>2016-02-19T14:15:29.787Z</updated>
+    <content type="html"><![CDATA[<blockquote class="blockquote-center"><p>夕阳下的奔跑，那是我逝去的青春</p>
+</blockquote>
+<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>转眼间2015年悄然流走，而2016年已经来临。蓦然回首，在2015年里经历了太多。</p>
+<p>在这短短的一年里，得到了很多，同时也失去了很多。</p>
+<h1 id="u518D_u89C12015"><a href="#u518D_u89C12015" class="headerlink" title="再见2015"></a>再见2015</h1><p>2015，完成了我从大三到大四的转变，同时也是抉择人生道路的重要时刻。和其他人一样，在考研和就业的分叉路上也纠结了很久。但是在2015年里，努力地学习编程，幻想着有一天能够成为大牛，这似乎离考研的路越走越远。</p>
+<p>细细回想似乎写程序也已经满一年多了，从一开始的Java到现在的Android，这中间也弯弯曲曲地走了不少的弯路。还记得刚开始学习Android时，对于一切知识都急于求成，但却似乎忘了基础；以为自己什么都懂，其实只是一只“纸老虎”。最关键的是，把心慢下来，一点一滴积累才是正道，学习的路上没有捷径。</p>
+<h1 id="u4F60_u597D2016"><a href="#u4F60_u597D2016" class="headerlink" title="你好2016"></a>你好2016</h1><p>至于2016的到来，真的是“手足无措”。时间总是在不经意间流逝，而当你幡然醒悟时，只能扼腕叹息。其实更重要的是，在2016年的6月，我们要毕业了。离开同学，离开老师，离开校园。这其中纵然有千万缕不舍，但是人终究要面临着成长。之前从没想象过毕业，总以为离我们很遥远，但其实却很近。我们都已经习惯了在校园里慵懒的生活，闲暇之余可以和同学之间玩玩游戏，在草地上晒晒太阳，在图书馆安静地看看书。而这一切在2016都要发生重大的转变，这似乎就是我不愿意2016到来的原因了。</p>
+<p>人们总是在展望未来，却忘了把握当下。最无厘头的一句话“我在2016年的新年目标就是完成2015年那些本该在2014年完成的我在2013年就信誓旦旦要完成的2012年制定的目标…”。当然希望每个人都要脚踏实地，认认真真地完成自己订下的目标。也希望自己在新的一年里积累更多的知识，技术节节高升，早日走向人生的巅峰。</p>
+<p>最后，献上一首《同学的你》，纪念即将告别的校园生活。</p>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="http://music.163.com/outchain/player?type=2&id=28387594&auto=1&height=66"></iframe>]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote class="blockquote-center"><p>夕阳下的奔跑，那是我逝去的青春</p>
+</blockquote>
+<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" ti]]>
+    </summary>
+    
+      <category term="岁月如歌" scheme="http://yuqirong.me/tags/%E5%B2%81%E6%9C%88%E5%A6%82%E6%AD%8C/"/>
+    
+      <category term="岁月如歌" scheme="http://yuqirong.me/categories/%E5%B2%81%E6%9C%88%E5%A6%82%E6%AD%8C/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[自定义实现水波纹动画，让你的app不再单调]]></title>
