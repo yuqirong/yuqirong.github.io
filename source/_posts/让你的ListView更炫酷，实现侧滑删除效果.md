@@ -1,6 +1,6 @@
 title: 让你的ListView更炫酷，实现侧滑删除效果
 date: 2015-12-13 23:54:48
-categories: Android
+categories: Android Blog
 tags: [Android,自定义View]
 ---
 又到了更新博客的时间了，今天给大家带来的是ListView侧滑出现删除等按钮的效果。相信大家在平时玩app的时候都接触过这种效果吧。比如说QQ聊天列表侧滑就会出现“置顶”、“标为已读”、“删除”等按钮。这篇博文将用ViewDragHelper这个神器来实现侧滑效果。友情链接一下之前写的博文使用ViewDragHelper来实现侧滑菜单的，[点击此处跳转](/2015/11/04/史上最简单粗暴实现侧滑菜单/)。如果你对ViewDragHelper不熟悉，你可以去看看[鸿洋_](http://my.csdn.net/lmj623565791)的[《Android ViewDragHelper完全解析 自定义ViewGroup神器》](http://blog.csdn.net/lmj623565791/article/details/46858663)。

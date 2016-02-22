@@ -1,6 +1,6 @@
 title: 关于Activity生命周期的小结
 date: 2015-08-26 22:13:31
-categories: Android
+categories: Android Blog
 tags: [Android,Activity]
 ---
 开头先说一下写这篇博客的初衷，由于博主在找实习的过程中面试经常被问到Activity生命周期有关的问题，所以特此写一篇博客来记一下。 

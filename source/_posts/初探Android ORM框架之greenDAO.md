@@ -1,6 +1,6 @@
 title: 初探Android ORM框架之greenDAO
 date: 2015-11-24 21:14:30
-categories: Android
+categories: Android Blog
 tags: [greenDAO]
 ---
 在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(>﹏<)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、ActiveAndroid、ormlite等。说到ORM，相信有过J2EE开发经验的童鞋对此并不陌生，在web开发中就有Hibernate、MyBatis等框架提供使用。那么今天就来介绍一下主角：greenDAO。

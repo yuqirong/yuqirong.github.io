@@ -1,6 +1,6 @@
 title: 实现炫酷的CheckBox，就这么简单
 date: 2015-12-05 23:10:32
-categories: Android
+categories: Android Blog
 tags: [Android,自定义View]
 ---
 今天给大家带来的是一款全新的CheckBox，是不是对系统自带的CheckBox产生乏味感了呢，那就来看看下面的CheckBox吧！

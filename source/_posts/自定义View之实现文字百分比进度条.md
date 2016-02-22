@@ -1,6 +1,6 @@
 title: 自定义View之实现文字百分比进度条
 date: 2015-10-23 23:26:56
-categories: Android
+categories: Android Blog
 tags: [Android,自定义View]
 ---
 之前在学习自定义View的时候看到[鸿洋_](http://my.csdn.net/lmj623565791)的 [《Android 打造形形色色的进度条 实现可以如此简单》](http://blog.csdn.net/lmj623565791/article/details/43371299) 中自带百分比的进度条，于是照着例子自己实现了一下。下面是View的样子：  

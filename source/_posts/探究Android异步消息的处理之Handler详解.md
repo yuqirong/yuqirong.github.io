@@ -1,6 +1,6 @@
 title: 探究Android异步消息的处理之Handler详解
 date: 2015-09-29 13:19:12
-categories: Android
+categories: Android Blog
 tags: [Android,源码解析]
 ---
 在学习Android的路上，大家肯定会遇到异步消息处理，Android提供给我们一个类来处理相关的问题，那就是Handler。相信大家大多都用过Handler了，下面我们就来看看Handler最简单的用法：
