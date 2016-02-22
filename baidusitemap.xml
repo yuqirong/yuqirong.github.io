@@ -3,6 +3,264 @@
 
 
     
+  <url>
+    <loc>http://yuqirong.me/2016/01/12/%E8%BD%BB%E6%9D%BE%E5%AE%9E%E7%8E%B0app%E4%B8%AD%E7%9A%84%E5%AF%BC%E8%88%AATab%E6%A0%8F%E6%82%AC%E6%B5%AE%E5%8A%9F%E8%83%BD/</loc>
+    <lastmod>2016-02-22T12:45:22.651Z</lastmod>
+    <data>
+        <display>
+        <title>轻松实现app中的导航Tab栏悬浮功能</title>
+        <pubTime>2016-01-12T13:59:29.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2015/12/27/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0%E6%B0%B4%E6%B3%A2%E7%BA%B9%E5%8A%A8%E7%94%BB%EF%BC%8C%E8%AE%A9%E4%BD%A0%E7%9A%84app%E4%B8%8D%E5%86%8D%E5%8D%95%E8%B0%83/</loc>
+    <lastmod>2016-02-21T14:21:00.308Z</lastmod>
+    <data>
+        <display>
+        <title>自定义实现水波纹动画，让你的app不再单调</title>
+        <pubTime>2015-12-27T15:05:17.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>自定义View</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2015/10/23/%E8%87%AA%E5%AE%9A%E4%B9%89View%E4%B9%8B%E5%AE%9E%E7%8E%B0%E6%96%87%E5%AD%97%E7%99%BE%E5%88%86%E6%AF%94%E8%BF%9B%E5%BA%A6%E6%9D%A1/</loc>
+    <lastmod>2016-02-21T14:20:55.950Z</lastmod>
+    <data>
+        <display>
+        <title>自定义View之实现文字百分比进度条</title>
+        <pubTime>2015-10-23T15:26:56.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>自定义View</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2015/09/29/%E6%8E%A2%E7%A9%B6Android%E5%BC%82%E6%AD%A5%E6%B6%88%E6%81%AF%E7%9A%84%E5%A4%84%E7%90%86%E4%B9%8BHandler%E8%AF%A6%E8%A7%A3/</loc>
+    <lastmod>2016-02-21T14:20:49.855Z</lastmod>
+    <data>
+        <display>
+        <title>探究Android异步消息的处理之Handler详解</title>
+        <pubTime>2015-09-29T05:19:12.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2015/11/04/%E5%8F%B2%E4%B8%8A%E6%9C%80%E7%AE%80%E5%8D%95%E7%B2%97%E6%9A%B4%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91%E8%8F%9C%E5%8D%95/</loc>
+    <lastmod>2016-02-21T14:20:45.816Z</lastmod>
+    <data>
+        <display>
+        <title>史上最简单粗暴实现侧滑菜单</title>
+        <pubTime>2015-11-04T12:47:16.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>自定义View</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2015/12/05/%E5%AE%9E%E7%8E%B0%E7%82%AB%E9%85%B7%E7%9A%84CheckBox%EF%BC%8C%E5%B0%B1%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/</loc>
+    <lastmod>2016-02-21T14:20:40.302Z</lastmod>
+    <data>
+        <display>
+        <title>实现炫酷的CheckBox，就这么简单</title>
+        <pubTime>2015-12-05T15:10:32.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>自定义View</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2015/12/13/%E8%AE%A9%E4%BD%A0%E7%9A%84ListView%E6%9B%B4%E7%82%AB%E9%85%B7%EF%BC%8C%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91%E5%88%A0%E9%99%A4%E6%95%88%E6%9E%9C/</loc>
+    <lastmod>2016-02-21T14:20:35.426Z</lastmod>
+    <data>
+        <display>
+        <title>让你的ListView更炫酷，实现侧滑删除效果</title>
+        <pubTime>2015-12-13T15:54:48.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>自定义View</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2015/11/12/%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%BB%A1%E5%B1%8F%E8%A1%A8%E6%83%85%E4%B8%8B%E8%90%BD%E7%9A%84%E5%8A%A8%E7%94%BB%E6%95%88%E6%9E%9C%EF%BC%8C%E4%BD%A0%E4%B9%9F%E5%8F%AF%E4%BB%A5/</loc>
+    <lastmod>2016-02-21T14:20:31.424Z</lastmod>
+    <data>
+        <display>
+        <title>简单实现满屏表情下落的动画效果，你也可以</title>
+        <pubTime>2015-11-12T14:39:14.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>自定义View</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2015/08/26/%E5%85%B3%E4%BA%8EActivity%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E5%B0%8F%E7%BB%93/</loc>
+    <lastmod>2016-02-21T14:20:25.768Z</lastmod>
+    <data>
+        <display>
+        <title>关于Activity生命周期的小结</title>
+        <pubTime>2015-08-26T14:13:31.000Z</pubTime>
+        
+        <tag>Activity</tag>
+         
+        <tag>Android</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2015/11/24/%E5%88%9D%E6%8E%A2Android%20ORM%E6%A1%86%E6%9E%B6%E4%B9%8BgreenDAO/</loc>
+    <lastmod>2016-02-21T14:20:16.913Z</lastmod>
+    <data>
+        <display>
+        <title>初探Android ORM框架之greenDAO</title>
+        <pubTime>2015-11-24T13:14:30.000Z</pubTime>
+        
+        <tag>greenDAO</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2016-02-21T14:20:08.513Z</lastmod>
+    <data>
+        <display>
+        <title>Android onTouch事件传递机制解析</title>
+        <pubTime>2015-10-29T14:56:09.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop()%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2016-02-19T14:24:47.890Z</lastmod>
+    <data>
+        <display>
+        <title>对view的getLeft()、getTop()等的笔记</title>
+        <pubTime>2016-01-05T12:01:48.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Tips" url="http://yuqirong.me/categories/Android-Tips/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
     
   <url>
     <loc>http://yuqirong.me/2016/01/01/%E5%86%8D%E8%A7%812015%EF%BC%8C%E4%BD%A0%E5%A5%BD2016/</loc>
@@ -18,26 +276,6 @@
            
              
               <breadCrumb title="岁月如歌" url="http://yuqirong.me/categories/%E5%B2%81%E6%9C%88%E5%A6%82%E6%AD%8C/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2016-02-19T12:47:09.603Z</lastmod>
-    <data>
-        <display>
-        <title>对view的getLeft()、getTop等的笔记</title>
-        <pubTime>2016-01-05T12:01:48.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Tips" url="http://yuqirong.me/categories/Android-Tips/"/>
           
         </display>
     </data>
@@ -88,94 +326,6 @@
     </url>
 
     
-  <url>
-    <loc>http://yuqirong.me/2015/12/27/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0%E6%B0%B4%E6%B3%A2%E7%BA%B9%E5%8A%A8%E7%94%BB%EF%BC%8C%E8%AE%A9%E4%BD%A0%E7%9A%84app%E4%B8%8D%E5%86%8D%E5%8D%95%E8%B0%83/</loc>
-    <lastmod>2016-02-17T12:15:21.492Z</lastmod>
-    <data>
-        <display>
-        <title>自定义实现水波纹动画，让你的app不再单调</title>
-        <pubTime>2015-12-27T15:05:17.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>自定义View</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android" url="http://yuqirong.me/categories/Android/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2015/12/13/%E8%AE%A9%E4%BD%A0%E7%9A%84ListView%E6%9B%B4%E7%82%AB%E9%85%B7%EF%BC%8C%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91%E5%88%A0%E9%99%A4%E6%95%88%E6%9E%9C/</loc>
-    <lastmod>2016-02-05T07:01:51.720Z</lastmod>
-    <data>
-        <display>
-        <title>让你的ListView更炫酷，实现侧滑删除效果</title>
-        <pubTime>2015-12-13T15:54:48.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>自定义View</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android" url="http://yuqirong.me/categories/Android/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2015/11/04/%E5%8F%B2%E4%B8%8A%E6%9C%80%E7%AE%80%E5%8D%95%E7%B2%97%E6%9A%B4%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91%E8%8F%9C%E5%8D%95/</loc>
-    <lastmod>2016-02-03T16:17:55.659Z</lastmod>
-    <data>
-        <display>
-        <title>史上最简单粗暴实现侧滑菜单</title>
-        <pubTime>2015-11-04T12:47:16.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>自定义View</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android" url="http://yuqirong.me/categories/Android/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2015/10/23/%E8%87%AA%E5%AE%9A%E4%B9%89View%E4%B9%8B%E5%AE%9E%E7%8E%B0%E6%96%87%E5%AD%97%E7%99%BE%E5%88%86%E6%AF%94%E8%BF%9B%E5%BA%A6%E6%9D%A1/</loc>
-    <lastmod>2016-02-02T16:12:26.354Z</lastmod>
-    <data>
-        <display>
-        <title>自定义View之实现文字百分比进度条</title>
-        <pubTime>2015-10-23T15:26:56.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>自定义View</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android" url="http://yuqirong.me/categories/Android/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
     
   <url>
     <loc>http://yuqirong.me/2015/07/18/Hexo%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E4%BA%8C/</loc>
@@ -217,135 +367,5 @@
     </url>
 
     
-  <url>
-    <loc>http://yuqirong.me/2015/12/05/%E5%AE%9E%E7%8E%B0%E7%82%AB%E9%85%B7%E7%9A%84CheckBox%EF%BC%8C%E5%B0%B1%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/</loc>
-    <lastmod>2016-02-01T14:59:37.599Z</lastmod>
-    <data>
-        <display>
-        <title>实现炫酷的CheckBox，就这么简单</title>
-        <pubTime>2015-12-05T15:10:32.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>自定义View</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android" url="http://yuqirong.me/categories/Android/"/>
-          
-        </display>
-    </data>
-    </url>
-
     
-  <url>
-    <loc>http://yuqirong.me/2015/09/29/%E6%8E%A2%E7%A9%B6Android%E5%BC%82%E6%AD%A5%E6%B6%88%E6%81%AF%E7%9A%84%E5%A4%84%E7%90%86%E4%B9%8BHandler%E8%AF%A6%E8%A7%A3/</loc>
-    <lastmod>2016-01-30T14:16:24.441Z</lastmod>
-    <data>
-        <display>
-        <title>探究Android异步消息的处理之Handler详解</title>
-        <pubTime>2015-09-29T05:19:12.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android" url="http://yuqirong.me/categories/Android/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2016-01-30T14:15:37.497Z</lastmod>
-    <data>
-        <display>
-        <title>Android onTouch事件传递机制解析</title>
-        <pubTime>2015-10-29T14:56:09.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android" url="http://yuqirong.me/categories/Android/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-    
-    
-  <url>
-    <loc>http://yuqirong.me/2015/11/12/%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%BB%A1%E5%B1%8F%E8%A1%A8%E6%83%85%E4%B8%8B%E8%90%BD%E7%9A%84%E5%8A%A8%E7%94%BB%E6%95%88%E6%9E%9C%EF%BC%8C%E4%BD%A0%E4%B9%9F%E5%8F%AF%E4%BB%A5/</loc>
-    <lastmod>2016-01-26T17:08:09.987Z</lastmod>
-    <data>
-        <display>
-        <title>简单实现满屏表情下落的动画效果，你也可以</title>
-        <pubTime>2015-11-12T14:39:14.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>自定义View</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android" url="http://yuqirong.me/categories/Android/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2015/11/24/%E5%88%9D%E6%8E%A2Android%20ORM%E6%A1%86%E6%9E%B6%E4%B9%8BgreenDAO/</loc>
-    <lastmod>2016-01-26T17:08:09.986Z</lastmod>
-    <data>
-        <display>
-        <title>初探Android ORM框架之greenDAO</title>
-        <pubTime>2015-11-24T13:14:30.000Z</pubTime>
-        
-        <tag>greenDAO</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android" url="http://yuqirong.me/categories/Android/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2015/08/26/%E5%85%B3%E4%BA%8EActivity%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E5%B0%8F%E7%BB%93/</loc>
-    <lastmod>2016-01-26T17:08:09.985Z</lastmod>
-    <data>
-        <display>
-        <title>关于Activity生命周期的小结</title>
-        <pubTime>2015-08-26T14:13:31.000Z</pubTime>
-        
-        <tag>Activity</tag>
-         
-        <tag>Android</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android" url="http://yuqirong.me/categories/Android/"/>
-          
-        </display>
-    </data>
-    </url>
-
 </urlset>

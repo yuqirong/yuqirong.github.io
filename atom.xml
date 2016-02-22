@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-02-19T12:47:09.603Z</updated>
+  <updated>2016-02-22T12:45:22.651Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -15,11 +15,289 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[对view的getLeft()、getTop等的笔记]]></title>
-    <link href="http://yuqirong.me/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/"/>
-    <id>http://yuqirong.me/2016/01/05/对view的getLeft()、getTop等的笔记/</id>
+    <title><![CDATA[轻松实现app中的导航Tab栏悬浮功能]]></title>
+    <link href="http://yuqirong.me/2016/01/12/%E8%BD%BB%E6%9D%BE%E5%AE%9E%E7%8E%B0app%E4%B8%AD%E7%9A%84%E5%AF%BC%E8%88%AATab%E6%A0%8F%E6%82%AC%E6%B5%AE%E5%8A%9F%E8%83%BD/"/>
+    <id>http://yuqirong.me/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/</id>
+    <published>2016-01-12T13:59:29.000Z</published>
+    <updated>2016-02-22T12:45:22.651Z</updated>
+    <content type="html"><![CDATA[<p>又到了更博的时间了，今天给大家带来的就是“导航Tab栏悬浮功能”了。通常大家在玩手机的过程中应该会注意到很多的app都有这种功能，比如说外卖达人常用的“饿了么”。下面就给出了“饿了么”导航Tab栏悬浮的效果图。</p>
+<p><img src="/uploads/20160112/20160112210653.gif" alt="这里填写图片的描述"></p>
+<p>可以看到上图中的“分类”、“排序”、“筛选”会悬浮在app的顶部，状态随着ScrollView(也可能不是ScrollView，在这里姑且把这滑动的UI控件当作ScrollView吧)的滚动而变化。像这种导航Tab栏悬浮的作用相信大家都能体会到，Tab栏不会随着ScrollView等的滚动而被滑出屏幕外，增加了与用户之间的交互性和方便性。</p>
+<p>看到上面的效果，相信大家都跃跃欲试了，那就让我们开始吧。</p>
+<p>首先大家要明白一点：Tab栏的状态变化是要监听ScrollView滑动距离的。至于如何得到ScrollView的滑动距离？可以看看我的一篇Tip：<a href="/2015/10/19/给你的ScrollView设置滑动距离监听器/">《给你的ScrollView设置滑动距离监听器》</a>，这里就不过多叙述了。</p>
+<p>好了，根据上面的就得到了对ScrollView滑动的监听了。接下来要思考的问题就是如何让Tab栏实现悬浮的效果呢？这里给出的方法有两种，第一种就是使用WindowManager来动态地添加一个View悬浮在顶部；第二种就是随着ScrollView的滑动不断重新设置Tab栏的布局位置。</p>
+<p>我们先来看看第一种实现方法，首先是xml布局了。</p>
+<p>Activity的布局，activity_main.xml：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:orientation=&quot;vertical&quot;&gt;
+
+    &lt;RelativeLayout
+        android:id=&quot;@+id/rl_title&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;50dp&quot;
+        android:background=&quot;@color/colorPrimary&quot;&gt;
+
+        &lt;ImageView
+            android:id=&quot;@+id/iv_back&quot;
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:layout_centerVertical=&quot;true&quot;
+            android:layout_marginLeft=&quot;10dp&quot;
+            android:src=&quot;@drawable/new_img_back&quot; /&gt;
+
+        &lt;TextView
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:layout_centerInParent=&quot;true&quot;
+            android:text=&quot;@string/app_name&quot;
+            android:textColor=&quot;@android:color/white&quot;
+            android:textSize=&quot;18sp&quot; /&gt;
+
+    &lt;/RelativeLayout&gt;
+
+    &lt;com.yuqirong.tabsuspenddemo.view.MyScrollView
+        android:id=&quot;@+id/mScrollView&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;match_parent&quot;&gt;
+
+        &lt;LinearLayout
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:background=&quot;#cccccc&quot;
+            android:orientation=&quot;vertical&quot;&gt;
+
+            &lt;ImageView
+                android:id=&quot;@+id/iv_pic&quot;
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;180dp&quot;
+                android:scaleType=&quot;centerCrop&quot;
+                android:src=&quot;@drawable/ic_bg_personal_page&quot; /&gt;
+
+            &lt;include layout=&quot;@layout/tab_layout&quot; /&gt;
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;90dp&quot;
+                android:layout_marginBottom=&quot;5dp&quot;
+                android:layout_marginLeft=&quot;15dp&quot;
+                android:layout_marginRight=&quot;15dp&quot;
+                android:layout_marginTop=&quot;15dp&quot;
+                android:background=&quot;@android:color/white&quot;
+                android:orientation=&quot;horizontal&quot;&gt;
+
+            &lt;/LinearLayout&gt;
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;90dp&quot;
+                android:layout_marginBottom=&quot;5dp&quot;
+                android:layout_marginLeft=&quot;15dp&quot;
+                android:layout_marginRight=&quot;15dp&quot;
+                android:layout_marginTop=&quot;15dp&quot;
+                android:background=&quot;@android:color/white&quot;
+                android:orientation=&quot;horizontal&quot;&gt;
+
+            &lt;/LinearLayout&gt;
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;90dp&quot;
+                android:layout_marginBottom=&quot;5dp&quot;
+                android:layout_marginLeft=&quot;15dp&quot;
+                android:layout_marginRight=&quot;15dp&quot;
+                android:layout_marginTop=&quot;15dp&quot;
+                android:background=&quot;@android:color/white&quot;
+                android:orientation=&quot;horizontal&quot;&gt;
+
+            &lt;/LinearLayout&gt;
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;90dp&quot;
+                android:layout_marginBottom=&quot;5dp&quot;
+                android:layout_marginLeft=&quot;15dp&quot;
+                android:layout_marginRight=&quot;15dp&quot;
+                android:layout_marginTop=&quot;15dp&quot;
+                android:background=&quot;@android:color/white&quot;
+                android:orientation=&quot;horizontal&quot;&gt;
+
+            &lt;/LinearLayout&gt;
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;90dp&quot;
+                android:layout_marginBottom=&quot;5dp&quot;
+                android:layout_marginLeft=&quot;15dp&quot;
+                android:layout_marginRight=&quot;15dp&quot;
+                android:layout_marginTop=&quot;15dp&quot;
+                android:background=&quot;@android:color/white&quot;
+                android:orientation=&quot;horizontal&quot;&gt;
+
+            &lt;/LinearLayout&gt;
+
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;90dp&quot;
+                android:layout_marginBottom=&quot;5dp&quot;
+                android:layout_marginLeft=&quot;15dp&quot;
+                android:layout_marginRight=&quot;15dp&quot;
+                android:layout_marginTop=&quot;15dp&quot;
+                android:background=&quot;@android:color/white&quot;
+                android:orientation=&quot;horizontal&quot;&gt;
+
+            &lt;/LinearLayout&gt;
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;90dp&quot;
+                android:layout_marginBottom=&quot;5dp&quot;
+                android:layout_marginLeft=&quot;15dp&quot;
+                android:layout_marginRight=&quot;15dp&quot;
+                android:layout_marginTop=&quot;15dp&quot;
+                android:background=&quot;@android:color/white&quot;
+                android:orientation=&quot;horizontal&quot;&gt;
+
+            &lt;/LinearLayout&gt;
+
+        &lt;/LinearLayout&gt;
+    &lt;/com.yuqirong.tabsuspenddemo.view.MyScrollView&gt;
+&lt;/LinearLayout&gt;
+</code></pre><p>Tab栏的布局，tab_layout.xml：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:id=&quot;@+id/ll_tab&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;40dp&quot;
+    android:background=&quot;@color/colorPrimary&quot;
+    android:orientation=&quot;horizontal&quot;&gt;
+
+    &lt;TextView
+        android:layout_width=&quot;0dp&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:layout_weight=&quot;1&quot;
+        android:gravity=&quot;center&quot;
+        android:text=&quot;分类&quot;
+        android:textColor=&quot;@android:color/white&quot;
+        android:textSize=&quot;18sp&quot; /&gt;
+
+    &lt;TextView
+        android:layout_width=&quot;0dp&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:layout_weight=&quot;1&quot;
+        android:gravity=&quot;center&quot;
+        android:text=&quot;排序&quot;
+        android:textColor=&quot;@android:color/white&quot;
+        android:textSize=&quot;18sp&quot; /&gt;
+
+    &lt;TextView
+        android:layout_width=&quot;0dp&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:layout_weight=&quot;1&quot;
+        android:gravity=&quot;center&quot;
+        android:text=&quot;筛选&quot;
+        android:textColor=&quot;@android:color/white&quot;
+        android:textSize=&quot;18sp&quot; /&gt;
+
+&lt;/LinearLayout&gt;
+</code></pre><p>上面布局中的很多空白LinearLayout主要是拉长ScrollView，效果图就是这样的：</p>
+<p><img src="/uploads/20160112/20160112201753.png" alt="这里填写图片的描述"></p>
+<p>然后我们来看看<code>onCreate(Bundle savedInstanceState)</code>：</p>
+<pre><code>@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    getSupportActionBar().hide();
+    setContentView(R.layout.activity_main);
+    mScrollView = (MyScrollView) findViewById(R.id.mScrollView);
+    mScrollView.setOnScrollListener(this);
+    ll_tab = (LinearLayout) findViewById(R.id.ll_tab);
+    windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+}
+</code></pre><p>我们先在<code>onCreate(Bundle savedInstanceState)</code>中给ScrollView添加了滑动距离监听器以及得到了一个windowManager的对象。还有一点需要注意的是：我们调用了<code>getSupportActionBar().hide();</code>去掉了标题栏(MainActivity继承了AppCompatActivity)。这是因为标题栏的存在导致了在计算悬浮窗y轴的值时要额外加上标题栏的高度(当然你也可以保留标题栏，然后计算时再加上标题栏的高度^_^!)。</p>
+<p>然后在onWindowFocusChanged(boolean hasFocus)得到Tab栏的高度、getTop()值等，以便下面备用。如果你对getLeft()、getTop()、getRight()和getBottom()还不了解的话，可以看看我的另一篇Tip： <a href="/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop()%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/">《对view的getLeft()、getTop()等的笔记》</a>。</p>
+<pre><code>@Override
+public void onWindowFocusChanged(boolean hasFocus) {
+    super.onWindowFocusChanged(hasFocus);
+    if (hasFocus) {
+        tabHeight = ll_tab.getHeight();
+        tabTop = ll_tab.getTop();
+        scrollTop = mScrollView.getTop();
+    }
+}
+</code></pre><p>之后在滑动监听器的回调方法<code>onScroll(int scrollY)</code>中来控制显示还是隐藏悬浮窗。</p>
+<pre><code> @Override
+public void onScroll(int scrollY) {
+    Log.i(TAG, &quot;scrollY = &quot; + scrollY + &quot;, tabTop = &quot; + tabTop);
+    if (scrollY &gt; tabTop) {
+        // 如果没显示
+        if (!isShowWindow) {
+            showWindow();
+        }
+    } else {
+        // 如果显示了
+        if (isShowWindow) {
+            removeWindow();
+        }
+    }
+}
+</code></pre><p>上面的代码比较简单，不用我过多叙述了。下面是removeWindow()、showWindow()两个方法：</p>
+<pre><code>// 显示window
+private void removeWindow() {
+    if (ll_tab_temp != null)
+        windowManager.removeView(ll_tab_temp);
+    isShowWindow = false;
+}
+
+// 移除window
+private void showWindow() {
+    if (ll_tab_temp == null) {
+        ll_tab_temp = LayoutInflater.from(this).inflate(R.layout.tab_layout, null);
+    }
+    if (layoutParams == null) {
+        layoutParams = new WindowManager.LayoutParams();
+        layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE; //悬浮窗的类型，一般设为2002，表示在所有应用程序之上，但在状态栏之下
+        layoutParams.format = PixelFormat.RGBA_8888;
+        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;  //悬浮窗的行为，比如说不可聚焦，非模态对话框等等
+        layoutParams.gravity = Gravity.TOP;  //悬浮窗的对齐方式
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.height = tabHeight;
+        layoutParams.x = 0;  //悬浮窗X的位置
+        layoutParams.y = scrollTop;  //悬浮窗Y的位置
+    }
+    windowManager.addView(ll_tab_temp, layoutParams);
+    isShowWindow = true;
+}
+</code></pre><p>这两个方法也很简单，而且有注释，相信大家可以看懂。</p>
+<p>最后，不要忘了在AndroidManifest.xml里申请显示悬浮窗的权限：</p>
+<pre><code>&lt;uses-permission android:name=&quot;android.permission.SYSTEM_ALERT_WINDOW&quot; /&gt;
+</code></pre><p>到这里，整体的代码就这些了。一起来看看效果吧：</p>
+<p><img src="/uploads/20160112/20160112204356.gif" alt="这里填写图片的描述"></p>
+<p>但是用这种方法来实现Tab栏悬浮功能有一个缺点，那就是如果该app没有被赋予显示悬浮窗的权限，那么该功能就变成鸡肋了。当然还有第二种方法来实现，不过只能等到下一篇博文再讲了。</p>
+<p>本Demo源码下载：</p>
+<p><a href="/uploads/20160112/TabSuspendDemo.rar">TabSuspendDemo.rar</a></p>
+<p>have a nice day~</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>又到了更博的时间了，今天给大家带来的就是“导航Tab栏悬浮功能”了。通常大家在玩手机的过程中应该会注意到很多的app都有这种功能，比如说外卖达人常用的“饿了么”。下面就给出了“饿了么”导航Tab栏悬浮的效果图。</p>
+<p><img src="/uploads/20160]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[对view的getLeft()、getTop()等的笔记]]></title>
+    <link href="http://yuqirong.me/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop()%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/"/>
+    <id>http://yuqirong.me/2016/01/05/对view的getLeft()、getTop()等的笔记/</id>
     <published>2016-01-05T12:01:48.000Z</published>
-    <updated>2016-02-19T12:47:09.603Z</updated>
+    <updated>2016-02-19T14:24:47.890Z</updated>
     <content type="html"><![CDATA[<p>在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用<code>view.getTop()</code>来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：</p>
 <pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
@@ -108,7 +386,7 @@
     <link href="http://yuqirong.me/2015/12/27/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0%E6%B0%B4%E6%B3%A2%E7%BA%B9%E5%8A%A8%E7%94%BB%EF%BC%8C%E8%AE%A9%E4%BD%A0%E7%9A%84app%E4%B8%8D%E5%86%8D%E5%8D%95%E8%B0%83/"/>
     <id>http://yuqirong.me/2015/12/27/自定义实现水波纹动画，让你的app不再单调/</id>
     <published>2015-12-27T15:05:17.000Z</published>
-    <updated>2016-02-17T12:15:21.492Z</updated>
+    <updated>2016-02-21T14:21:00.308Z</updated>
     <content type="html"><![CDATA[<p>在开发Android应用的过程中，动画是一个很重要的点。好的动画可以给用户一种耳目一新的感觉。比如说京东app里下拉刷新中的动画是一个奔跑的快递员，这样用户会有一种耳目一新的感觉。所以我们何尝不提供一种新的动画方式呢？而今天给大家带来的就是水波纹动画。</p>
 <p>至于效果怎样，我们一起来看看：</p>
 <p><img src="/uploads/20151227/20151227231546.gif" alt="这里填写图片描述"></p>
@@ -232,7 +510,7 @@ protected void onDraw(Canvas canvas) {
     
       <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
-      <category term="Android" scheme="http://yuqirong.me/categories/Android/"/>
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
   </entry>
   
@@ -241,7 +519,7 @@ protected void onDraw(Canvas canvas) {
     <link href="http://yuqirong.me/2015/12/13/%E8%AE%A9%E4%BD%A0%E7%9A%84ListView%E6%9B%B4%E7%82%AB%E9%85%B7%EF%BC%8C%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91%E5%88%A0%E9%99%A4%E6%95%88%E6%9E%9C/"/>
     <id>http://yuqirong.me/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/</id>
     <published>2015-12-13T15:54:48.000Z</published>
-    <updated>2016-02-05T07:01:51.720Z</updated>
+    <updated>2016-02-21T14:20:35.426Z</updated>
     <content type="html"><![CDATA[<p>又到了更新博客的时间了，今天给大家带来的是ListView侧滑出现删除等按钮的效果。相信大家在平时玩app的时候都接触过这种效果吧。比如说QQ聊天列表侧滑就会出现“置顶”、“标为已读”、“删除”等按钮。这篇博文将用ViewDragHelper这个神器来实现侧滑效果。友情链接一下之前写的博文使用ViewDragHelper来实现侧滑菜单的，<a href="/2015/11/04/史上最简单粗暴实现侧滑菜单/">点击此处跳转</a>。如果你对ViewDragHelper不熟悉，你可以去看看<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的<a href="http://blog.csdn.net/lmj623565791/article/details/46858663" target="_blank" rel="external">《Android ViewDragHelper完全解析 自定义ViewGroup神器》</a>。</p>
 <p>好了，话说的那么多，先来看看我们实现的效果图吧：</p>
 <p><img src="/uploads/20151213/20151213140251.gif" alt="这里填写图片描述"></p>
@@ -686,7 +964,7 @@ public class SwipeListLayout extends FrameLayout {
     
       <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
-      <category term="Android" scheme="http://yuqirong.me/categories/Android/"/>
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
   </entry>
   
@@ -695,7 +973,7 @@ public class SwipeListLayout extends FrameLayout {
     <link href="http://yuqirong.me/2015/12/05/%E5%AE%9E%E7%8E%B0%E7%82%AB%E9%85%B7%E7%9A%84CheckBox%EF%BC%8C%E5%B0%B1%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/"/>
     <id>http://yuqirong.me/2015/12/05/实现炫酷的CheckBox，就这么简单/</id>
     <published>2015-12-05T15:10:32.000Z</published>
-    <updated>2016-02-01T14:59:37.599Z</updated>
+    <updated>2016-02-21T14:20:40.302Z</updated>
     <content type="html"><![CDATA[<p>今天给大家带来的是一款全新的CheckBox，是不是对系统自带的CheckBox产生乏味感了呢，那就来看看下面的CheckBox吧！</p>
 <p>之前在逛GitHub的时候看到一款比较新颖的CheckBox：<a href="https://github.com/andyxialm/SmoothCheckBox" target="_blank" rel="external">SmoothCheckBox</a>，它的效果预览触动到我了，于是趁着今天有空就试着自己写一写。尽管效果可能不如SmoothCheckBox那样动感，但是基本的效果还是实现了。按照惯例，下面就贴出我写的CheckBox的gif： </p>
 <p><img src="/uploads/20151205/20151205234652.gif" alt="这里写图片描述"></p>
@@ -1190,7 +1468,7 @@ private void drawTrim(Canvas canvas) {
     
       <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
-      <category term="Android" scheme="http://yuqirong.me/categories/Android/"/>
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
   </entry>
   
@@ -1199,7 +1477,7 @@ private void drawTrim(Canvas canvas) {
     <link href="http://yuqirong.me/2015/11/24/%E5%88%9D%E6%8E%A2Android%20ORM%E6%A1%86%E6%9E%B6%E4%B9%8BgreenDAO/"/>
     <id>http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/</id>
     <published>2015-11-24T13:14:30.000Z</published>
-    <updated>2016-01-26T17:08:09.986Z</updated>
+    <updated>2016-02-21T14:20:16.913Z</updated>
     <content type="html"><![CDATA[<p>在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&gt;﹏&lt;)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、ActiveAndroid、ormlite等。说到ORM，相信有过J2EE开发经验的童鞋对此并不陌生，在web开发中就有Hibernate、MyBatis等框架提供使用。那么今天就来介绍一下主角：greenDAO。</p>
 <p>根据 <a href="http://greenrobot.org/" target="_blank" rel="external">greenrobot</a> 官方的介绍，greenDAO是一款轻量，快速，适用于Android数据库的ORM框架。具有很高的性能以及消耗很少的内存。其他的优点和特性就不在这里一一介绍了，想要了解的同学可以去访问它的项目地址：<a href="https://github.com/greenrobot/greenDAO" target="_blank" rel="external">https://github.com/greenrobot/greenDAO</a>。</p>
 <p>说了这么多，下面就开始我们的正题吧。</p>
@@ -1306,7 +1584,7 @@ locationDao.insert(local);
     
       <category term="greenDAO" scheme="http://yuqirong.me/tags/greenDAO/"/>
     
-      <category term="Android" scheme="http://yuqirong.me/categories/Android/"/>
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
   </entry>
   
@@ -1315,7 +1593,7 @@ locationDao.insert(local);
     <link href="http://yuqirong.me/2015/11/12/%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%BB%A1%E5%B1%8F%E8%A1%A8%E6%83%85%E4%B8%8B%E8%90%BD%E7%9A%84%E5%8A%A8%E7%94%BB%E6%95%88%E6%9E%9C%EF%BC%8C%E4%BD%A0%E4%B9%9F%E5%8F%AF%E4%BB%A5/"/>
     <id>http://yuqirong.me/2015/11/12/简单实现满屏表情下落的动画效果，你也可以/</id>
     <published>2015-11-12T14:39:14.000Z</published>
-    <updated>2016-01-26T17:08:09.987Z</updated>
+    <updated>2016-02-21T14:20:31.424Z</updated>
     <content type="html"><![CDATA[<p>首先我相信大家一定玩过微信吧。之前在玩微信的时候，给好友发一句“圣诞快乐”就会有满屏的圣诞树往下掉，当时觉得这个动画好酷。正好在公司的项目中需要用到这样的动画效果。于是写了一个小Demo,就有了这篇文章。</p>
 <p>下图是做出的相关效果： </p>
 <p><img src="/uploads/20151112/20151112224542.gif" alt="这里写图片描述"></p>
@@ -1616,7 +1894,7 @@ public class DropLookView extends View {
     
       <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
-      <category term="Android" scheme="http://yuqirong.me/categories/Android/"/>
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
   </entry>
   
@@ -1625,7 +1903,7 @@ public class DropLookView extends View {
     <link href="http://yuqirong.me/2015/11/04/%E5%8F%B2%E4%B8%8A%E6%9C%80%E7%AE%80%E5%8D%95%E7%B2%97%E6%9A%B4%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91%E8%8F%9C%E5%8D%95/"/>
     <id>http://yuqirong.me/2015/11/04/史上最简单粗暴实现侧滑菜单/</id>
     <published>2015-11-04T12:47:16.000Z</published>
-    <updated>2016-02-03T16:17:55.659Z</updated>
+    <updated>2016-02-21T14:20:45.816Z</updated>
     <content type="html"><![CDATA[<p>在Android开发中，相信侧滑菜单大家都不陌生吧，几乎是每个app都必备的。从早期的 <a href="https://github.com/jfeinstein10/SlidingMenu" target="_blank" rel="external">SlidingMenu</a> 再到           <a href="https://github.com/SpecialCyCi/AndroidResideMenu" target="_blank" rel="external">AndroidResideMenu</a> 最后到Android自带的DrawerLayout，无处不体现着侧滑菜单的诱人魅力。侧滑菜单可以拓展app的内容，充分利用手机屏幕，增加程序的可玩性。既然有这么多可供选择的侧滑菜单使用，那为什么我们还要自己写呢？我觉得我们在使用侧滑菜单的时候应该要懂得其中的原理，更好的，可以自己写一个侧滑菜单来加深体会。</p>
 <p>好了，话不多说。来看看我们所谓“史上最简单粗暴实现的侧滑菜单”的产物吧：</p>
 <p><img src="/uploads/20151104/20151104205135.gif" alt="这里写图片描述"></p>
@@ -1872,7 +2150,7 @@ protected void onLayout(boolean changed, int left, int top, int right,
     
       <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
-      <category term="Android" scheme="http://yuqirong.me/categories/Android/"/>
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
   </entry>
   
@@ -1881,7 +2159,7 @@ protected void onLayout(boolean changed, int left, int top, int right,
     <link href="http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/"/>
     <id>http://yuqirong.me/2015/10/29/Android onTouch事件传递机制解析/</id>
     <published>2015-10-29T14:56:09.000Z</published>
-    <updated>2016-01-30T14:15:37.497Z</updated>
+    <updated>2016-02-21T14:20:08.513Z</updated>
     <content type="html"><![CDATA[<p>记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事件传递的机制了，顺便写一篇博客来记录一下。下面就让我们来看看吧。</p>
 <p>大家都知道一般我们使用的UI控件都是继承自共同的父类——View。所以View这个类应该掌管着onTouch事件的相关处理。那就让我们去看看：在View中寻找Touch相关的方法，其中一个很容易地引起了我们的注意：dispatchTouchEvent(MotionEvent event)。根据方法名的意思应该是负责分发触摸事件的，下面给出了源码：</p>
 <pre><code>/**
@@ -2159,7 +2437,7 @@ public void setOnClickListener(@Nullable OnClickListener l) {
     
       <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="Android" scheme="http://yuqirong.me/categories/Android/"/>
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
   </entry>
   
@@ -2168,7 +2446,7 @@ public void setOnClickListener(@Nullable OnClickListener l) {
     <link href="http://yuqirong.me/2015/10/23/%E8%87%AA%E5%AE%9A%E4%B9%89View%E4%B9%8B%E5%AE%9E%E7%8E%B0%E6%96%87%E5%AD%97%E7%99%BE%E5%88%86%E6%AF%94%E8%BF%9B%E5%BA%A6%E6%9D%A1/"/>
     <id>http://yuqirong.me/2015/10/23/自定义View之实现文字百分比进度条/</id>
     <published>2015-10-23T15:26:56.000Z</published>
-    <updated>2016-02-02T16:12:26.354Z</updated>
+    <updated>2016-02-21T14:20:55.950Z</updated>
     <content type="html"><![CDATA[<p>之前在学习自定义View的时候看到<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的 <a href="http://blog.csdn.net/lmj623565791/article/details/43371299" target="_blank" rel="external">《Android 打造形形色色的进度条 实现可以如此简单》</a> 中自带百分比的进度条，于是照着例子自己实现了一下。下面是View的样子：<br><img src="/uploads/20151023/20151023211913.gif" alt="这里写图片描述"></p>
 <p>大家都知道自定义View的主要步骤：  </p>
 <ol>
@@ -2336,7 +2614,7 @@ protected void onDraw(Canvas canvas) {
     
       <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
-      <category term="Android" scheme="http://yuqirong.me/categories/Android/"/>
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
   </entry>
   
@@ -2518,7 +2796,7 @@ public class MyGridView extends GridView {
     <link href="http://yuqirong.me/2015/09/29/%E6%8E%A2%E7%A9%B6Android%E5%BC%82%E6%AD%A5%E6%B6%88%E6%81%AF%E7%9A%84%E5%A4%84%E7%90%86%E4%B9%8BHandler%E8%AF%A6%E8%A7%A3/"/>
     <id>http://yuqirong.me/2015/09/29/探究Android异步消息的处理之Handler详解/</id>
     <published>2015-09-29T05:19:12.000Z</published>
-    <updated>2016-01-30T14:16:24.441Z</updated>
+    <updated>2016-02-21T14:20:49.855Z</updated>
     <content type="html"><![CDATA[<p>在学习Android的路上，大家肯定会遇到异步消息处理，Android提供给我们一个类来处理相关的问题，那就是Handler。相信大家大多都用过Handler了，下面我们就来看看Handler最简单的用法：</p>
 <figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FirstActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"FirstActivity"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Handler <span class="keyword">handler</span> = <span class="keyword">new</span> Handler() &#123;</span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">switch</span> (msg.what) &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                    Log.i(TAG, <span class="string">"handler receive msg.what = "</span> + msg.what);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_first);</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="comment">//这里做相关操作</span></span><br><span class="line">                <span class="keyword">handler</span>.sendEmptyMessage(<span class="number">0</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面代码实现了在子线程中发出一个消息，然后在主线程中接收消息。Handler其他类似的用法在这就不过多叙述了。下面我们来看看Handler到底是怎么实现异步消息处理的吧！</p>
@@ -2546,7 +2824,7 @@ public class MyGridView extends GridView {
     
       <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="Android" scheme="http://yuqirong.me/categories/Android/"/>
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
   </entry>
   
@@ -2555,7 +2833,7 @@ public class MyGridView extends GridView {
     <link href="http://yuqirong.me/2015/08/26/%E5%85%B3%E4%BA%8EActivity%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E5%B0%8F%E7%BB%93/"/>
     <id>http://yuqirong.me/2015/08/26/关于Activity生命周期的小结/</id>
     <published>2015-08-26T14:13:31.000Z</published>
-    <updated>2016-01-26T17:08:09.985Z</updated>
+    <updated>2016-02-21T14:20:25.768Z</updated>
     <content type="html"><![CDATA[<p>开头先说一下写这篇博客的初衷，由于博主在找实习的过程中面试经常被问到Activity生命周期有关的问题，所以特此写一篇博客来记一下。 </p>
 <p>Activity作为四大组件之一，几乎是每个人开始学习Android最先接触到的。常见的生命周期方法大家肯定都是非常熟悉的，所以Activity生命周期的顺序在这就不必过多叙述了。今天讲一下由FirstActivity启动SecondActivity而调用生命周期方法的顺序问题。</p>
 <p>首先我们创建一个如下图的FirstActivity:<br><img src="/uploads/20150826/20150826213244536.jpg" alt="这里写图片描述"><br>很简单，LinearLayout里只有一个Button，用于启动SecondActivity。</p>
@@ -2585,7 +2863,7 @@ public class MyGridView extends GridView {
     
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
     
-      <category term="Android" scheme="http://yuqirong.me/categories/Android/"/>
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
   </entry>
   

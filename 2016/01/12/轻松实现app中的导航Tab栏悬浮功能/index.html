@@ -1,0 +1,1079 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="blog for yuqirong" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="又到了更博的时间了，今天给大家带来的就是“导航Tab栏悬浮功能”了。通常大家在玩手机的过程中应该会注意到很多的app都有这种功能，比如说外卖达人常用的“饿了么”。下面就给出了“饿了么”导航Tab栏悬浮的效果图。
+
+可以看到上图中的“分类”、“排序”、“筛选”会悬浮在app的顶部，状态随着ScrollView(也可能不是ScrollView，在这里姑且把这滑动的UI控件当作ScrollView吧)的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="轻松实现app中的导航Tab栏悬浮功能">
+<meta property="og:url" content="http://yuqirong.me/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/index.html">
+<meta property="og:site_name" content="blog for yuqirong">
+<meta property="og:description" content="又到了更博的时间了，今天给大家带来的就是“导航Tab栏悬浮功能”了。通常大家在玩手机的过程中应该会注意到很多的app都有这种功能，比如说外卖达人常用的“饿了么”。下面就给出了“饿了么”导航Tab栏悬浮的效果图。
+
+可以看到上图中的“分类”、“排序”、“筛选”会悬浮在app的顶部，状态随着ScrollView(也可能不是ScrollView，在这里姑且把这滑动的UI控件当作ScrollView吧)的">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160112/20160112210653.gif">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160112/20160112201753.png">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160112/20160112204356.gif">
+<meta property="og:updated_time" content="2016-02-22T12:45:22.651Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="轻松实现app中的导航Tab栏悬浮功能">
+<meta name="twitter:description" content="又到了更博的时间了，今天给大家带来的就是“导航Tab栏悬浮功能”了。通常大家在玩手机的过程中应该会注意到很多的app都有这种功能，比如说外卖达人常用的“饿了么”。下面就给出了“饿了么”导航Tab栏悬浮的效果图。
+
+可以看到上图中的“分类”、“排序”、“筛选”会悬浮在app的顶部，状态随着ScrollView(也可能不是ScrollView，在这里姑且把这滑动的UI控件当作ScrollView吧)的">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always',
+    motion: true
+  };
+</script>
+
+  <title> 轻松实现app中的导航Tab栏悬浮功能 | blog for yuqirong </title>
+  <meta name="baidu-site-verification" content="MBYnGIEEPN" />
+  <meta name="baidu-site-verification" content="1Hx0jVHsgl" />
+  <meta name="baidu-site-verification" content="L0MgAErI0s" />
+  <meta name="google-site-verification" content="_hYRHLLoBRM6L31myWhOPTxzGtawe9z1zmCqcJ-aHA0" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">blog for yuqirong</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-question-circle fa-fw"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '8ZRfk21kUz89L8Xi6hZm','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                轻松实现app中的导航Tab栏悬浮功能
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-01-12T21:59:29+08:00" content="2016-01-12">
+              2016-01-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+                
+                
+  								<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
+								
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/12/轻松实现app中的导航Tab栏悬浮功能/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>又到了更博的时间了，今天给大家带来的就是“导航Tab栏悬浮功能”了。通常大家在玩手机的过程中应该会注意到很多的app都有这种功能，比如说外卖达人常用的“饿了么”。下面就给出了“饿了么”导航Tab栏悬浮的效果图。</p>
+<p><img src="/uploads/20160112/20160112210653.gif" alt="这里填写图片的描述"></p>
+<p>可以看到上图中的“分类”、“排序”、“筛选”会悬浮在app的顶部，状态随着ScrollView(也可能不是ScrollView，在这里姑且把这滑动的UI控件当作ScrollView吧)的滚动而变化。像这种导航Tab栏悬浮的作用相信大家都能体会到，Tab栏不会随着ScrollView等的滚动而被滑出屏幕外，增加了与用户之间的交互性和方便性。</p>
+<p>看到上面的效果，相信大家都跃跃欲试了，那就让我们开始吧。</p>
+<p>首先大家要明白一点：Tab栏的状态变化是要监听ScrollView滑动距离的。至于如何得到ScrollView的滑动距离？可以看看我的一篇Tip：<a href="/2015/10/19/给你的ScrollView设置滑动距离监听器/">《给你的ScrollView设置滑动距离监听器》</a>，这里就不过多叙述了。</p>
+<p>好了，根据上面的就得到了对ScrollView滑动的监听了。接下来要思考的问题就是如何让Tab栏实现悬浮的效果呢？这里给出的方法有两种，第一种就是使用WindowManager来动态地添加一个View悬浮在顶部；第二种就是随着ScrollView的滑动不断重新设置Tab栏的布局位置。</p>
+<p>我们先来看看第一种实现方法，首先是xml布局了。</p>
+<p>Activity的布局，activity_main.xml：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:orientation=&quot;vertical&quot;&gt;
+
+    &lt;RelativeLayout
+        android:id=&quot;@+id/rl_title&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;50dp&quot;
+        android:background=&quot;@color/colorPrimary&quot;&gt;
+
+        &lt;ImageView
+            android:id=&quot;@+id/iv_back&quot;
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:layout_centerVertical=&quot;true&quot;
+            android:layout_marginLeft=&quot;10dp&quot;
+            android:src=&quot;@drawable/new_img_back&quot; /&gt;
+
+        &lt;TextView
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:layout_centerInParent=&quot;true&quot;
+            android:text=&quot;@string/app_name&quot;
+            android:textColor=&quot;@android:color/white&quot;
+            android:textSize=&quot;18sp&quot; /&gt;
+
+    &lt;/RelativeLayout&gt;
+
+    &lt;com.yuqirong.tabsuspenddemo.view.MyScrollView
+        android:id=&quot;@+id/mScrollView&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;match_parent&quot;&gt;
+
+        &lt;LinearLayout
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:background=&quot;#cccccc&quot;
+            android:orientation=&quot;vertical&quot;&gt;
+
+            &lt;ImageView
+                android:id=&quot;@+id/iv_pic&quot;
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;180dp&quot;
+                android:scaleType=&quot;centerCrop&quot;
+                android:src=&quot;@drawable/ic_bg_personal_page&quot; /&gt;
+
+            &lt;include layout=&quot;@layout/tab_layout&quot; /&gt;
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;90dp&quot;
+                android:layout_marginBottom=&quot;5dp&quot;
+                android:layout_marginLeft=&quot;15dp&quot;
+                android:layout_marginRight=&quot;15dp&quot;
+                android:layout_marginTop=&quot;15dp&quot;
+                android:background=&quot;@android:color/white&quot;
+                android:orientation=&quot;horizontal&quot;&gt;
+
+            &lt;/LinearLayout&gt;
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;90dp&quot;
+                android:layout_marginBottom=&quot;5dp&quot;
+                android:layout_marginLeft=&quot;15dp&quot;
+                android:layout_marginRight=&quot;15dp&quot;
+                android:layout_marginTop=&quot;15dp&quot;
+                android:background=&quot;@android:color/white&quot;
+                android:orientation=&quot;horizontal&quot;&gt;
+
+            &lt;/LinearLayout&gt;
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;90dp&quot;
+                android:layout_marginBottom=&quot;5dp&quot;
+                android:layout_marginLeft=&quot;15dp&quot;
+                android:layout_marginRight=&quot;15dp&quot;
+                android:layout_marginTop=&quot;15dp&quot;
+                android:background=&quot;@android:color/white&quot;
+                android:orientation=&quot;horizontal&quot;&gt;
+
+            &lt;/LinearLayout&gt;
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;90dp&quot;
+                android:layout_marginBottom=&quot;5dp&quot;
+                android:layout_marginLeft=&quot;15dp&quot;
+                android:layout_marginRight=&quot;15dp&quot;
+                android:layout_marginTop=&quot;15dp&quot;
+                android:background=&quot;@android:color/white&quot;
+                android:orientation=&quot;horizontal&quot;&gt;
+
+            &lt;/LinearLayout&gt;
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;90dp&quot;
+                android:layout_marginBottom=&quot;5dp&quot;
+                android:layout_marginLeft=&quot;15dp&quot;
+                android:layout_marginRight=&quot;15dp&quot;
+                android:layout_marginTop=&quot;15dp&quot;
+                android:background=&quot;@android:color/white&quot;
+                android:orientation=&quot;horizontal&quot;&gt;
+
+            &lt;/LinearLayout&gt;
+
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;90dp&quot;
+                android:layout_marginBottom=&quot;5dp&quot;
+                android:layout_marginLeft=&quot;15dp&quot;
+                android:layout_marginRight=&quot;15dp&quot;
+                android:layout_marginTop=&quot;15dp&quot;
+                android:background=&quot;@android:color/white&quot;
+                android:orientation=&quot;horizontal&quot;&gt;
+
+            &lt;/LinearLayout&gt;
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;90dp&quot;
+                android:layout_marginBottom=&quot;5dp&quot;
+                android:layout_marginLeft=&quot;15dp&quot;
+                android:layout_marginRight=&quot;15dp&quot;
+                android:layout_marginTop=&quot;15dp&quot;
+                android:background=&quot;@android:color/white&quot;
+                android:orientation=&quot;horizontal&quot;&gt;
+
+            &lt;/LinearLayout&gt;
+
+        &lt;/LinearLayout&gt;
+    &lt;/com.yuqirong.tabsuspenddemo.view.MyScrollView&gt;
+&lt;/LinearLayout&gt;
+</code></pre><p>Tab栏的布局，tab_layout.xml：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:id=&quot;@+id/ll_tab&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;40dp&quot;
+    android:background=&quot;@color/colorPrimary&quot;
+    android:orientation=&quot;horizontal&quot;&gt;
+
+    &lt;TextView
+        android:layout_width=&quot;0dp&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:layout_weight=&quot;1&quot;
+        android:gravity=&quot;center&quot;
+        android:text=&quot;分类&quot;
+        android:textColor=&quot;@android:color/white&quot;
+        android:textSize=&quot;18sp&quot; /&gt;
+
+    &lt;TextView
+        android:layout_width=&quot;0dp&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:layout_weight=&quot;1&quot;
+        android:gravity=&quot;center&quot;
+        android:text=&quot;排序&quot;
+        android:textColor=&quot;@android:color/white&quot;
+        android:textSize=&quot;18sp&quot; /&gt;
+
+    &lt;TextView
+        android:layout_width=&quot;0dp&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:layout_weight=&quot;1&quot;
+        android:gravity=&quot;center&quot;
+        android:text=&quot;筛选&quot;
+        android:textColor=&quot;@android:color/white&quot;
+        android:textSize=&quot;18sp&quot; /&gt;
+
+&lt;/LinearLayout&gt;
+</code></pre><p>上面布局中的很多空白LinearLayout主要是拉长ScrollView，效果图就是这样的：</p>
+<p><img src="/uploads/20160112/20160112201753.png" alt="这里填写图片的描述"></p>
+<p>然后我们来看看<code>onCreate(Bundle savedInstanceState)</code>：</p>
+<pre><code>@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    getSupportActionBar().hide();
+    setContentView(R.layout.activity_main);
+    mScrollView = (MyScrollView) findViewById(R.id.mScrollView);
+    mScrollView.setOnScrollListener(this);
+    ll_tab = (LinearLayout) findViewById(R.id.ll_tab);
+    windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+}
+</code></pre><p>我们先在<code>onCreate(Bundle savedInstanceState)</code>中给ScrollView添加了滑动距离监听器以及得到了一个windowManager的对象。还有一点需要注意的是：我们调用了<code>getSupportActionBar().hide();</code>去掉了标题栏(MainActivity继承了AppCompatActivity)。这是因为标题栏的存在导致了在计算悬浮窗y轴的值时要额外加上标题栏的高度(当然你也可以保留标题栏，然后计算时再加上标题栏的高度^_^!)。</p>
+<p>然后在onWindowFocusChanged(boolean hasFocus)得到Tab栏的高度、getTop()值等，以便下面备用。如果你对getLeft()、getTop()、getRight()和getBottom()还不了解的话，可以看看我的另一篇Tip： <a href="/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop()%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/">《对view的getLeft()、getTop()等的笔记》</a>。</p>
+<pre><code>@Override
+public void onWindowFocusChanged(boolean hasFocus) {
+    super.onWindowFocusChanged(hasFocus);
+    if (hasFocus) {
+        tabHeight = ll_tab.getHeight();
+        tabTop = ll_tab.getTop();
+        scrollTop = mScrollView.getTop();
+    }
+}
+</code></pre><p>之后在滑动监听器的回调方法<code>onScroll(int scrollY)</code>中来控制显示还是隐藏悬浮窗。</p>
+<pre><code> @Override
+public void onScroll(int scrollY) {
+    Log.i(TAG, &quot;scrollY = &quot; + scrollY + &quot;, tabTop = &quot; + tabTop);
+    if (scrollY &gt; tabTop) {
+        // 如果没显示
+        if (!isShowWindow) {
+            showWindow();
+        }
+    } else {
+        // 如果显示了
+        if (isShowWindow) {
+            removeWindow();
+        }
+    }
+}
+</code></pre><p>上面的代码比较简单，不用我过多叙述了。下面是removeWindow()、showWindow()两个方法：</p>
+<pre><code>// 显示window
+private void removeWindow() {
+    if (ll_tab_temp != null)
+        windowManager.removeView(ll_tab_temp);
+    isShowWindow = false;
+}
+
+// 移除window
+private void showWindow() {
+    if (ll_tab_temp == null) {
+        ll_tab_temp = LayoutInflater.from(this).inflate(R.layout.tab_layout, null);
+    }
+    if (layoutParams == null) {
+        layoutParams = new WindowManager.LayoutParams();
+        layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE; //悬浮窗的类型，一般设为2002，表示在所有应用程序之上，但在状态栏之下
+        layoutParams.format = PixelFormat.RGBA_8888;
+        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;  //悬浮窗的行为，比如说不可聚焦，非模态对话框等等
+        layoutParams.gravity = Gravity.TOP;  //悬浮窗的对齐方式
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.height = tabHeight;
+        layoutParams.x = 0;  //悬浮窗X的位置
+        layoutParams.y = scrollTop;  //悬浮窗Y的位置
+    }
+    windowManager.addView(ll_tab_temp, layoutParams);
+    isShowWindow = true;
+}
+</code></pre><p>这两个方法也很简单，而且有注释，相信大家可以看懂。</p>
+<p>最后，不要忘了在AndroidManifest.xml里申请显示悬浮窗的权限：</p>
+<pre><code>&lt;uses-permission android:name=&quot;android.permission.SYSTEM_ALERT_WINDOW&quot; /&gt;
+</code></pre><p>到这里，整体的代码就这些了。一起来看看效果吧：</p>
+<p><img src="/uploads/20160112/20160112204356.gif" alt="这里填写图片的描述"></p>
+<p>但是用这种方法来实现Tab栏悬浮功能有一个缺点，那就是如果该app没有被赋予显示悬浮窗的权限，那么该功能就变成鸡肋了。当然还有第二种方法来实现，不过只能等到下一篇博文再讲了。</p>
+<p>本Demo源码下载：</p>
+<p><a href="/uploads/20160112/TabSuspendDemo.rar">TabSuspendDemo.rar</a></p>
+<p>have a nice day~</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/01/05/对view的getLeft()、getTop()等的笔记/" rel="next" title="对view的getLeft()、getTop()等的笔记">
+                <i class="fa fa-chevron-left"></i> 对view的getLeft()、getTop()等的笔记
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/01/12/轻松实现app中的导航Tab栏悬浮功能/"
+           data-title="轻松实现app中的导航Tab栏悬浮功能" data-url="http://yuqirong.me/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar/27073358153.jpg" alt="俞其荣" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Google+
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i> Twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Instagram
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> 知乎
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/2949821927" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣
+   
+   &nbsp;&nbsp;|&nbsp;&nbsp;
+  <script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/sitemap.xml">Google网站地图</a></span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/baidusitemap.xml">百度网站地图</a></span>
+  
+  </span>
+</div>
+
+<div class="powered-by">
+	由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+	<a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>
+</div>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;本站总点击 <span id="busuanzi_value_site_pv"></span> 次
+&nbsp;&nbsp;|&nbsp;&nbsp;您是第 <span id="busuanzi_value_site_uv"></span> 位访客
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"yuqirong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '/js/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
