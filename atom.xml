@@ -3129,11 +3129,11 @@ public class MyGridView extends GridView {
   
   <entry>
     <title><![CDATA[Hexo入门指南(二)]]></title>
-    <link href="http://yuqirong.me/2015/07/18/Hexo%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E4%BA%8C/"/>
-    <id>http://yuqirong.me/2015/07/18/Hexo入门指南二/</id>
+    <link href="http://yuqirong.me/2015/07/18/Hexo%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97(%E4%BA%8C)/"/>
+    <id>http://yuqirong.me/2015/07/18/Hexo入门指南(二)/</id>
     <published>2015-07-18T11:09:24.000Z</published>
-    <updated>2016-02-02T12:22:32.014Z</updated>
-    <content type="html"><![CDATA[<p>在<a href="/2015/07/12/Hexo%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E4%B8%80">Hexo入门指南(一)</a>中我们已经初步地搭建了我们的博客，但是我们发现Hexo另一大特点我们还没有尝试过——主题。下面我们就来试试更换<a href="https://hexo.io/themes/" target="_blank" rel="external">Hexo的主题</a>吧。</p>
+    <updated>2016-02-23T14:49:46.257Z</updated>
+    <content type="html"><![CDATA[<p>在<a href="/2015/07/12/Hexo入门指南(一)/">Hexo入门指南(一)</a>中我们已经初步地搭建了我们的博客，但是我们发现Hexo另一大特点我们还没有尝试过——主题。下面我们就来试试更换<a href="https://hexo.io/themes/" target="_blank" rel="external">Hexo的主题</a>吧。</p>
 <p><a href="https://hexo.io/themes/" target="_blank" rel="external">Hexo的主题</a>非常多，有各式各样的，基本满足了大家的审美需求。其中我们就以<a href="http://theme-next.iissnan.com/" target="_blank" rel="external">NexT主题</a>为例吧。<a href="http://theme-next.iissnan.com/" target="_blank" rel="external">NexT主题</a>很简约，但有非常多的人用。</p>
 <h1 id="u4E0B_u8F7D_NexT__u4E3B_u9898"><a href="#u4E0B_u8F7D_NexT__u4E3B_u9898" class="headerlink" title="下载 NexT 主题"></a>下载 NexT 主题</h1><p>在终端窗口下，定位到 Hexo 站点目录下</p>
 <pre><code>$ cd your-hexo-site
@@ -3172,7 +3172,7 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
 </ul>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>在<a href="/2015/07/12/Hexo%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E4%B8%80">Hexo入门指南(一)</a>中我们已经初步地搭建了我们的博客，但是我们发现Hexo另一大特点我们还没有尝试过——主题。下面我们]]>
+    <![CDATA[<p>在<a href="/2015/07/12/Hexo入门指南(一)/">Hexo入门指南(一)</a>中我们已经初步地搭建了我们的博客，但是我们发现Hexo另一大特点我们还没有尝试过——主题。下面我们就来试试更换<a href="https://hexo.io/themes]]>
     </summary>
     
       <category term="Hexo" scheme="http://yuqirong.me/tags/Hexo/"/>
@@ -3183,8 +3183,8 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
   
   <entry>
     <title><![CDATA[Hexo入门指南(一)]]></title>
-    <link href="http://yuqirong.me/2015/07/12/Hexo%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E4%B8%80/"/>
-    <id>http://yuqirong.me/2015/07/12/Hexo入门指南一/</id>
+    <link href="http://yuqirong.me/2015/07/12/Hexo%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97(%E4%B8%80)/"/>
+    <id>http://yuqirong.me/2015/07/12/Hexo入门指南(一)/</id>
     <published>2015-07-12T12:37:29.000Z</published>
     <updated>2016-02-02T12:01:43.529Z</updated>
     <content type="html"><![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>对于一个程序员而言，我想GitHub和个人博客应该程序员的“标配”吧，在个人博客上可以记载一路上的酸甜苦辣，回过头来看看，何尝不是一种享受呢。想不想拥有一个属于自己的博客？接下来本篇博文就来教你如何搭建一款属于自己的博客。</p>
