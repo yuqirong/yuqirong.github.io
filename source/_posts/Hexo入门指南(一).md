@@ -10,7 +10,7 @@ tags: [Hexo]
 
 在开讲之前，需要我们自己有一个GitHub的账号(相信大多数的程序员都有)，然后在GitHub上创建一个新的Repo,名字叫xxx.github.io(xxx为自己GitHub的用户名，如我的GitHub的用户名叫yuqirong,则要创建repo名就是[yuqirong.github.io](https://github.com/yuqirong/yuqirong.github.io)),搞定了这个我们就做好了第一步。
 
-经过上面步骤，我们已经拥有了一个初步域名：http://xxx.github.io,而服务器就是用的是GitHub的。所以下面我们就要精心地装扮一下我们的博客了。这里介绍一下[Hexo](https://hexo.io/zh-cn/docs/index.html)，[Hexo](https://hexo.io/zh-cn/docs/index.html) 是一个快速、简洁且高效的博客框架。[Hexo](https://hexo.io/zh-cn/docs/index.html) 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。也就是说你不需要去写一大堆的html，js，css等，Hexo会帮你实现所有。听完这句话是不是很激动呢，那下面就开始安装Hexo。
+经过上面步骤，我们已经拥有了一个初步域名：`http://xxx.github.io`,而服务器就是用的是GitHub的。所以下面我们就要精心地装扮一下我们的博客了。这里介绍一下[Hexo](https://hexo.io/zh-cn/docs/index.html)，[Hexo](https://hexo.io/zh-cn/docs/index.html) 是一个快速、简洁且高效的博客框架。[Hexo](https://hexo.io/zh-cn/docs/index.html) 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。也就是说你不需要去写一大堆的html，js，css等，Hexo会帮你实现所有。听完这句话是不是很激动呢，那下面就开始安装Hexo。
 
 安装前提
 =========
@@ -115,7 +115,7 @@ tags: [Hexo]
 
 	$ hexo deploy
 
-执行完后你再打开http://xxx.github.io，你会惊喜地发现一个完全属于你自己的个人网站诞生了！
+执行完后你再打开`http://xxx.github.io`，你会惊喜地发现一个完全属于你自己的个人网站诞生了！
 
 Hexo的初步入门就差不多到这里了，后面还将会有关于Hexo的博文更新，敬请关注。
 
