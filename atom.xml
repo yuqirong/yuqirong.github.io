@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-02-23T14:41:25.629Z</updated>
+  <updated>2016-02-24T14:15:31.817Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -15,11 +15,222 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[自定义ViewGroup打造流式布局]]></title>
+    <link href="http://yuqirong.me/2016/01/22/%E8%87%AA%E5%AE%9A%E4%B9%89ViewGroup%E6%89%93%E9%80%A0%E6%B5%81%E5%BC%8F%E5%B8%83%E5%B1%80/"/>
+    <id>http://yuqirong.me/2016/01/22/自定义ViewGroup打造流式布局/</id>
+    <published>2016-01-22T12:31:37.000Z</published>
+    <updated>2016-02-24T14:15:31.817Z</updated>
+    <content type="html"><![CDATA[<p>前几天看了<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的<a href="http://blog.csdn.net/lmj623565791/article/details/38352503" target="_blank" rel="external">《Android 自定义ViewGroup 实战篇 -&gt; 实现FlowLayout》</a>，觉得文中的FlowLayout很多地方都可以用到。于是自己按照思路实现了一遍，这就是本片博文诞生的原因了。</p>
+<p>首先流式布局相信大家都见到过，比如说下图中的京东热搜就是流式布局的应用。还有更多应用的地方在这里就不一一举例了。</p>
+<p><img src="/uploads/20160222/20160222205447.png" alt="这里写图片描述"></p>
+<p>下面我们就来看看是如何实现的。首先新建一个class，继承自ViewGroup。在<code>generateLayoutParams(AttributeSet attrs)</code>里直接返回MarginLayoutParams就行了。</p>
+<pre><code> @Override
+public LayoutParams generateLayoutParams(AttributeSet attrs) {
+    return new MarginLayoutParams(getContext(), attrs);
+}
+</code></pre><p>然后就是<code>onLayout(boolean changed, int l, int t, int r, int b)</code>了，大部分的代码都添加了注释，相信大家都能看懂。</p>
+<pre><code>@Override
+protected void onLayout(boolean changed, int l, int t, int r, int b) {
+    int count = getChildCount();
+    int cWidth;
+    int cHeight;
+    MarginLayoutParams params;
+    // 用来统计总宽度，初始值设为paddingLeft
+    int lastWidth = getPaddingLeft();
+    int lastHeight = getPaddingTop();
+
+    for (int i = 0; i &lt; count; i++) {
+        // 得到当前View
+        View childView = getChildAt(i);
+        // 测量得到当前View的宽度
+        cWidth = childView.getMeasuredWidth();
+        // 测量得到当前View的高度
+        cHeight = childView.getMeasuredHeight();
+        params = (MarginLayoutParams) childView.getLayoutParams();
+        // 宽度加上margin
+        int width = cWidth + params.leftMargin + params.rightMargin;
+        // 高度加上margin
+        int height = cHeight + params.topMargin + params.bottomMargin;
+        // 判断流式布局里的item总长度是否超过FlowLayout的宽度，如果是则需要换行  
+        if (width + lastWidth &gt; r - getPaddingRight()) {
+            // 如果超过，重置lastWidth
+            lastWidth = getPaddingLeft();
+            // lastHeight加上一个item的高度
+            lastHeight += height;
+        }
+        // 给View布局
+        childView.layout(lastWidth, lastHeight, lastWidth + cWidth, lastHeight + cHeight);
+        //累加总宽度
+        lastWidth += width;
+    }
+}
+</code></pre><p>之后就是<code>onMeasure(int widthMeasureSpec, int heightMeasureSpec)</code>。</p>
+<pre><code>@Override
+protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+    int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+
+    int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+    int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+
+    int totalWidth = getPaddingLeft() + getPaddingRight();
+    int maxWidth = getPaddingLeft() + getPaddingRight();
+    int maxHeight = getPaddingBottom() + getPaddingTop();
+    int count = getChildCount();
+    // 测量子view
+    measureChildren(widthMeasureSpec, heightMeasureSpec);
+
+    int cWidth;
+    int cHeight;
+    MarginLayoutParams params;
+    int width;
+    int height;
+    for (int i = 0; i &lt; count; i++) {
+        View childView = getChildAt(i);
+        cWidth = childView.getMeasuredWidth();
+        cHeight = childView.getMeasuredHeight();
+        params = (MarginLayoutParams) childView.getLayoutParams();
+
+        width = cWidth + params.leftMargin + params.rightMargin;
+        height = cHeight + params.topMargin + params.bottomMargin;
+
+        if (i == 0) {
+            // 第一行时最大高度设为height
+            maxHeight += height;
+        }
+
+        // 如果需要换行
+        if (width + totalWidth &gt; widthSize) {
+            // 得到最大的值作为setMeasuredDimension()的宽度
+            maxWidth = Math.max(maxWidth, totalWidth);
+            totalWidth = getPaddingLeft() + getPaddingRight();
+            totalWidth += width;
+            // 高度就是累加到最后
+            maxHeight += height;
+        } else {
+            // 不换行就总长度累加
+            totalWidth += width;
+        }
+        Log.i(TAG, &quot;i = &quot; + i + &quot;, width = &quot; + width + &quot;, totalWidth = &quot; + totalWidth + &quot;, widthSize = &quot; + widthSize + ((TextView) childView).getText());
+        Log.i(TAG, &quot;height = &quot; + height);
+        Log.i(TAG, &quot;i = &quot; + i + &quot;, maxHeight = &quot; + maxHeight);
+
+    }
+    // 设置宽高度
+    setMeasuredDimension(widthMode == MeasureSpec.EXACTLY ? widthSize : maxWidth,
+            heightMode == MeasureSpec.EXACTLY ? heightSize : maxHeight);
+
+}
+</code></pre><p>在<code>onMeasure(int widthMeasureSpec, int heightMeasureSpec)</code>中，如果测量模式是MeasureSpec.EXACTLY，则直接设置测量出来的宽和高；否则需要测量每个子View，根据item的行数来得到宽和高。</p>
+<p>这样，FlowLayout就写好了，那就让我们来看看效果吧。当<code>android:layout_width=&quot;wrap_content&quot;</code>时</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;com.yuqirong.viewgroup.view.FlowLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;wrap_content&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:background=&quot;#ddd&quot;
+    android:padding=&quot;20dp&quot;&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;杭州&quot; /&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;宁波&quot; /&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;上海&quot; /&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;北京&quot; /&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;重庆&quot; /&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;南昌&quot; /&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;苏州&quot; /&gt;
+
+&lt;/com.yuqirong.viewgroup.view.FlowLayout&gt;
+</code></pre><p>运行的效果图：</p>
+<p><img src="/uploads/20160222/20160122220305.png" alt="这里写图片描述"></p>
+<p>当<code>android:layout_width=&quot;300dp&quot;</code>时：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;com.yuqirong.viewgroup.view.FlowLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;300dp&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:background=&quot;#ddd&quot;
+    android:padding=&quot;20dp&quot;&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;杭州&quot; /&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;哈尔滨&quot; /&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;宁波&quot; /&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;呼和浩特&quot; /&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;上海&quot; /&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;北京&quot; /&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;重庆&quot; /&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;南昌&quot; /&gt;
+
+    &lt;TextView
+        style=&quot;@style/text_flag_01&quot;
+        android:text=&quot;苏州&quot; /&gt;
+
+&lt;/com.yuqirong.viewgroup.view.FlowLayout&gt;
+</code></pre><p>运行的效果图：</p>
+<p><img src="/uploads/20160222/20160122220718.png" alt="这里写图片描述"></p>
+<p>最后，提供源码下载：</p>
+<p><a href="/uploads/20160222/FlowLayout.rar">FlowLayout.rar</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>前几天看了<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的<a href="http://blog.csdn.net/lmj623565791/article/]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
+    
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[实现导航Tab栏悬浮功能之改进版]]></title>
     <link href="http://yuqirong.me/2016/01/14/%E5%AE%9E%E7%8E%B0%E5%AF%BC%E8%88%AATab%E6%A0%8F%E6%82%AC%E6%B5%AE%E5%8A%9F%E8%83%BD%E4%B9%8B%E6%94%B9%E8%BF%9B%E7%89%88/"/>
     <id>http://yuqirong.me/2016/01/14/实现导航Tab栏悬浮功能之改进版/</id>
     <published>2016-01-14T12:34:25.000Z</published>
-    <updated>2016-02-23T14:41:25.629Z</updated>
+    <updated>2016-02-24T14:16:17.719Z</updated>
     <content type="html"><![CDATA[<p>在上一篇博文中，我们用WindowManager的方法实现了Tab栏的悬浮功能。如果你没有看过上篇博文，请点击<a href="/2016/01/12/%E8%BD%BB%E6%9D%BE%E5%AE%9E%E7%8E%B0app%E4%B8%AD%E7%9A%84%E5%AF%BC%E8%88%AATab%E6%A0%8F%E6%82%AC%E6%B5%AE%E5%8A%9F%E8%83%BD/">《轻松实现app中的导航Tab栏悬浮功能》</a>。</p>
 <p>当然，用WindowManager来实现由一个缺点就是当没有显示悬浮窗的权限时，该功能就无法体现出来。而在本篇博文中，我们用第二种方法，也就是不断地重新设置Tab栏的布局位置来实现悬浮功能，弥补了第一种方法的缺点。效果图这里就不放了，相信大家都看过啦。</p>
 <p>不废话了，直接上代码。</p>
