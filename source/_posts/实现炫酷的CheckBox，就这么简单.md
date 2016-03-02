@@ -506,3 +506,7 @@ gif的效果可能有点过快，在真机上运行的效果会更好一些。�
 下面是SmoothCheckBox的源码下载，如果有问题可以在下面留言来交流：
 
 [SmoothCheckBox.rar](/uploads/20151205/SmoothCheckBox.rar)
+
+GitHub:
+
+[SmoothCheckBox](https://github.com/yuqirong/SmoothCheckBox)

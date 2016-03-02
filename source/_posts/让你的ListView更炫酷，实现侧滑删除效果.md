@@ -455,4 +455,8 @@ SwipeListLayout大致的代码就这些，相信对于熟悉ViewDragHelper的同
 
 [SwipeListView.rar](/uploads/20151213/SwipeListView.rar)
 
+GitHub：
+
+[SwipeListView](https://github.com/yuqirong/SwipeListView)
+
 ~have fun!~
