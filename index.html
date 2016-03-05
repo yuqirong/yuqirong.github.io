@@ -267,6 +267,119 @@
             
               
                 
+                <a class="post-title-link" href="/2016/02/26/使用RecyclerView实现仿喵街效果/" itemprop="url">
+                  使用RecyclerView实现仿喵街效果
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-02-26T19:50:18+08:00" content="2016-02-26">
+              2016-02-26
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+                
+                
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/26/使用RecyclerView实现仿喵街效果/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/26/使用RecyclerView实现仿喵街效果/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            又到更新博客的时间了，本次给大家带来的是在RecyclerView的基础上实现喵街的效果。那么喵街是什么效果呢？下面就贴出效果图：
+
+值得一提的是，这是旧版本的特效，新版本的喵街已经去掉了这种效果。
+看完了效果，接下来就是动手的时间了。
+我们先来分析一下思路：我们先给RecyclerView添加一个OnScrollListener，然后分别去获得firstVisiblePosition和firstCompletelyVisiblePosition。这里要注意一下，firstVisiblePosition是第一个在屏幕中可见的itemView对应的position，而firstCompletel
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/02/26/使用RecyclerView实现仿喵街效果/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/02/15/带你一步步实现可拖拽的GridView控件/" itemprop="url">
                   带你一步步实现可拖拽的GridView控件
                 </a>
@@ -1261,118 +1374,6 @@ activity_main.xml：
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/" itemprop="url">
-                  让你的ListView更炫酷，实现侧滑删除效果
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2015-12-13T23:54:48+08:00" content="2015-12-13">
-              2015-12-13
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
-                
-                
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            又到了更新博客的时间了，今天给大家带来的是ListView侧滑出现删除等按钮的效果。相信大家在平时玩app的时候都接触过这种效果吧。比如说QQ聊天列表侧滑就会出现“置顶”、“标为已读”、“删除”等按钮。这篇博文将用ViewDragHelper这个神器来实现侧滑效果。友情链接一下之前写的博文使用ViewDragHelper来实现侧滑菜单的，点击此处跳转。如果你对ViewDragHelper不熟悉，你可以去看看鸿洋_的《Android ViewDragHelper完全解析 自定义ViewGroup神器》。
-好了，话说的那么多，先来看看我们实现的效果图吧：
-
-可以看出来，我们实现的和QQ的效果相差无
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
 
   </section>
 
@@ -1419,7 +1420,7 @@ activity_main.xml：
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-count">23</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
