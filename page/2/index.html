@@ -272,6 +272,118 @@
             
               
                 
+                <a class="post-title-link" href="/2015/12/27/自定义实现水波纹动画，让你的app不再单调/" itemprop="url">
+                  自定义实现水波纹动画，让你的app不再单调
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-12-27T23:05:17+08:00" content="2015-12-27">
+              2015-12-27
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+                
+                
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/12/27/自定义实现水波纹动画，让你的app不再单调/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/27/自定义实现水波纹动画，让你的app不再单调/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            在开发Android应用的过程中，动画是一个很重要的点。好的动画可以给用户一种耳目一新的感觉。比如说京东app里下拉刷新中的动画是一个奔跑的快递员，这样用户会有一种耳目一新的感觉。所以我们何尝不提供一种新的动画方式呢？而今天给大家带来的就是水波纹动画。
+至于效果怎样，我们一起来看看：
+
+是不是觉得有新意多了呢？那就一起来看看吧，先简单讲述一下思路：首先波浪的形状主要是根据三角函数决定的。三角函数相信大家在中学的课程中学习过吧。通用公式就是f(x)=Asin(ωx+φ) + b。其中A就是波浪的振幅，ω与时间周期有关，x就是屏幕宽度的像素点，φ是初相，可以让波浪产生偏移，最后的b就是水位的高度了
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/12/27/自定义实现水波纹动画，让你的app不再单调/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/" itemprop="url">
                   让你的ListView更炫酷，实现侧滑删除效果
                 </a>
@@ -1281,116 +1393,6 @@ public class MyListView extends ListView {
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/09/29/探究Android异步消息的处理之Handler详解/" itemprop="url">
-                  探究Android异步消息的处理之Handler详解
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2015-09-29T13:19:12+08:00" content="2015-09-29">
-              2015-09-29
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
-                
-                
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/09/29/探究Android异步消息的处理之Handler详解/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/29/探究Android异步消息的处理之Handler详解/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            在学习Android的路上，大家肯定会遇到异步消息处理，Android提供给我们一个类来处理相关的问题，那就是Handler。相信大家大多都用过Handler了，下面我们就来看看Handler最简单的用法：
-123456789101112131415161718192021222324252627282930public class FirstActivity extends AppCompatActivity &#123;    public static final String TAG = "FirstActivity";    private static Handler handle
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/09/29/探究Android异步消息的处理之Handler详解/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
 
   </section>
 
@@ -1437,21 +1439,21 @@ public class MyListView extends ListView {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">5</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

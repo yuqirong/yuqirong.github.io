@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://yuqirong.me/2016/03/07/page/</loc>
+    <lastmod>2016-03-07T15:04:30.507Z</lastmod>
+    <data>
+        <display>
+        <title>实现WebView中JS和App之间的交互</title>
+        <pubTime>2016-03-07T11:53:12.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>WebView</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Tips" url="http://yuqirong.me/categories/Android-Tips/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yuqirong.me/2016/02/26/%E4%BD%BF%E7%94%A8RecyclerView%E5%AE%9E%E7%8E%B0%E4%BB%BF%E5%96%B5%E8%A1%97%E6%95%88%E6%9E%9C/</loc>
     <lastmod>2016-03-05T09:45:43.291Z</lastmod>
     <data>

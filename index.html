@@ -267,6 +267,120 @@
             
               
                 
+                <a class="post-title-link" href="/2016/03/07/page/" itemprop="url">
+                  实现WebView中JS和App之间的交互
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-03-07T19:53:12+08:00" content="2016-03-07">
+              2016-03-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Tips/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Tips</span>
+                  </a>
+                </span>
+                
+                
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/07/page/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/07/page/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。
+
+之后在脑海中回想到 WebView 中的JS可以和app产生交互，于是搜索了一下，果然网上有类似的实现效果。看了一下，在这里就做一个简单的笔记了以便之后查看。
+在 WebView 中想要JS和app产生交互，就不得不提一个方法，那就是addJavascriptInterface(Object object, String name)：
+
+第一个
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/03/07/page/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/02/26/使用RecyclerView实现仿喵街效果/" itemprop="url">
                   使用RecyclerView实现仿喵街效果
                 </a>
@@ -1262,118 +1376,6 @@ activity_main.xml：
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/12/27/自定义实现水波纹动画，让你的app不再单调/" itemprop="url">
-                  自定义实现水波纹动画，让你的app不再单调
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2015-12-27T23:05:17+08:00" content="2015-12-27">
-              2015-12-27
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
-                
-                
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/12/27/自定义实现水波纹动画，让你的app不再单调/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/27/自定义实现水波纹动画，让你的app不再单调/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            在开发Android应用的过程中，动画是一个很重要的点。好的动画可以给用户一种耳目一新的感觉。比如说京东app里下拉刷新中的动画是一个奔跑的快递员，这样用户会有一种耳目一新的感觉。所以我们何尝不提供一种新的动画方式呢？而今天给大家带来的就是水波纹动画。
-至于效果怎样，我们一起来看看：
-
-是不是觉得有新意多了呢？那就一起来看看吧，先简单讲述一下思路：首先波浪的形状主要是根据三角函数决定的。三角函数相信大家在中学的课程中学习过吧。通用公式就是f(x)=Asin(ωx+φ) + b。其中A就是波浪的振幅，ω与时间周期有关，x就是屏幕宽度的像素点，φ是初相，可以让波浪产生偏移，最后的b就是水位的高度了
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/12/27/自定义实现水波纹动画，让你的app不再单调/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
 
   </section>
 
@@ -1420,21 +1422,21 @@ activity_main.xml：
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">5</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
