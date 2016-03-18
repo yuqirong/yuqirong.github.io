@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-03-07T15:04:30.507Z</updated>
+  <updated>2016-03-18T05:15:53.169Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -15,9 +15,108 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[夜半一忆]]></title>
+    <link href="http://yuqirong.me/2016/03/17/%E5%A4%9C%E5%8D%8A%E4%B8%80%E5%BF%86/"/>
+    <id>http://yuqirong.me/2016/03/17/夜半一忆/</id>
+    <published>2016-03-17T15:13:58.000Z</published>
+    <updated>2016-03-18T05:15:53.169Z</updated>
+    <content type="html"><![CDATA[<blockquote class="blockquote-center"><p>素什锦年，稍纵即逝<br>半载青春，流转指间</p>
+</blockquote>
+<p>冬去春来，又一载。</p>
+<p>曾几何时，一身白衣，穿行多少过往；几经周转，茫与人海之中。</p>
+<p>奈何岁月，流于昨日。雁过一鸣，惊于何人？花开花谢，润土无声。</p>
+<p>繁华落尽，只道是人间凄凉。穷极一生，只为还清一世业障。</p>
+<p>高山流水，静谧成寂。秋风落叶，随风飘散。</p>
+<p>别时易，相逢难，烈酒灼心，忆似水年华。</p>
+<p>乍暖还寒，大梦初醒，此夜无眠。</p>
+<p>仰天大笑，岂是蓬蒿人？</p>
+<p>————记于开题答辩之日</p>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="http://music.163.com/outchain/player?type=2&id=29436904&auto=1&height=66"></iframe>]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote class="blockquote-center"><p>素什锦年，稍纵即逝<br>半载青春，流转指间</p>
+</blockquote>
+<p>冬去春来，又一载。</p>
+<p>曾几何时，一身白衣，穿行多少过往；几经周转，茫与人海之中。</p>
+<p>奈]]>
+    </summary>
+    
+      <category term="岁月如歌" scheme="http://yuqirong.me/tags/%E5%B2%81%E6%9C%88%E5%A6%82%E6%AD%8C/"/>
+    
+      <category term="岁月如歌" scheme="http://yuqirong.me/categories/%E5%B2%81%E6%9C%88%E5%A6%82%E6%AD%8C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[《Android群英传》笔记]]></title>
+    <link href="http://yuqirong.me/2016/03/08/%E3%80%8AAndroid%E7%BE%A4%E8%8B%B1%E4%BC%A0%E3%80%8B%E7%AC%94%E8%AE%B0/"/>
+    <id>http://yuqirong.me/2016/03/08/《Android群英传》笔记/</id>
+    <published>2016-03-08T12:22:27.000Z</published>
+    <updated>2016-03-18T05:17:29.869Z</updated>
+    <content type="html"><![CDATA[<h1 id="u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><a href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7" class="headerlink" title="第六章：Android绘图机制与处理技巧"></a>第六章：Android绘图机制与处理技巧</h1><h2 id="6-4_Android_u7ED8_u56FE_u6280_u5DE7"><a href="#6-4_Android_u7ED8_u56FE_u6280_u5DE7" class="headerlink" title="6.4 Android绘图技巧"></a>6.4 Android绘图技巧</h2><ul>
+<li><p>Canvas.save():保存画布。它的作用就是将之前的所有已绘制图像保存起来，让后续的操作就好像在一个新的图层上操作一样。</p>
+</li>
+<li><p>Canvas.restore():合并图层操作。它的作用就是将我们在save()之后绘制的所有图像与save()之前的图像进行合并。</p>
+</li>
+<li><p>Canvas.translate():画布平移，可理解为坐标系的平移。如在之前绘制的坐标系原点在(0,0)。在translate(x,y)之后，坐标原点在(x,y)。</p>
+</li>
+<li><p>Canvas.rotate():画布翻转，可理解为坐标系的翻转。canvas.rotate(30);为按照坐标系的原点顺时针旋转30度。canvas.rotate(30,x,y);为按照坐标系的(x,y)点顺时针旋转30度。</p>
+</li>
+<li><p>Canvas.saveLayer()、Canvas.saveLayerAlpha():将一个图层入栈。</p>
+</li>
+<li><p>Canvas.restore()、Canvas.restoreToCount():将一个图层出栈。</p>
+</li>
+</ul>
+<h2 id="6-5_Android_u56FE_u50CF_u5904_u7406_u4E4B_u8272_u5F69_u7279_u6548_u5904_u7406"><a href="#6-5_Android_u56FE_u50CF_u5904_u7406_u4E4B_u8272_u5F69_u7279_u6548_u5904_u7406" class="headerlink" title="6.5 Android图像处理之色彩特效处理"></a>6.5 Android图像处理之色彩特效处理</h2><ul>
+<li><p>色调：<code>setRotate(int axis,float degree)</code>设置颜色的色调。第一个参数，系统分别使用0、1、2来代表Red、Green、Blue三种颜色的处理。而第二个参数就是需要处理的值。</p>
+<pre><code>ColorMatrix hueMatrix = new ColorMatrix();
+hueMatrix.setRotate(0, hue0);
+hueMatrix.setRotate(1, hue1);
+hueMatrix.setRotate(2, hue2);
+</code></pre></li>
+</ul>
+<p>通过上面的方法，可以为RGB三种颜色分量分别重新设置了不同的色调值。</p>
+<ul>
+<li><p>饱和度：<code>setSaturation(float sat)</code>方法来设置颜色的饱和度，参数即代表设置颜色饱和度的值，代码如下所示。当饱和度为0时，图像就变成灰色图像了。</p>
+<pre><code>ColorMatrix saturationMatrix = new ColorMatrix();
+saturationMatrix.setSaturation(saturation);
+</code></pre></li>
+<li><p>亮度：当三原色以相同的比例进行混合的时候，就会显示出白色。系统也正是使用这个原理来改变一个图像的亮度的，代码如下所示。当亮度为0时，图像就变成全黑了。</p>
+<pre><code>ColorMatrix lumMatrix = new ColorMatrix();
+lumMatrix.setScale(lum,lum,lum,1);
+</code></pre></li>
+<li><p><code>postConcat()</code>方法将矩阵的作用效果混合，从而叠加处理效果，代码如下：</p>
+<pre><code>ColorMatrix imageMatrix = new ColorMatrix();
+imageMatrix.postConcat(hueMatrix);
+imageMatrix.postConcat(saturationMatrix);
+imageMatrix.postConcat(lumMatrix);
+</code></pre></li>
+</ul>
+<h2 id="6-6_Android_u56FE_u50CF_u5904_u7406_u4E4B_u56FE_u5F62_u7279_u6548_u5904_u7406"><a href="#6-6_Android_u56FE_u50CF_u5904_u7406_u4E4B_u56FE_u5F62_u7279_u6548_u5904_u7406" class="headerlink" title="6.6 Android图像处理之图形特效处理"></a>6.6 Android图像处理之图形特效处理</h2><ul>
+<li>matrix.setRotate()——旋转变换</li>
+<li>matrix.setTranslate()——平移变换</li>
+<li>matrix.setScale()——缩放变换</li>
+<li>matrix.setSkew()——错切变换</li>
+<li>pre()和post()——提供矩阵的前乘和后乘运算</li>
+</ul>
+<h2 id="6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406"><a href="#6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406" class="headerlink" title="6.7 Android图像处理之画笔特效处理"></a>6.7 Android图像处理之画笔特效处理</h2><pre><code>mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+</code></pre><p>可以实现圆形ImageView。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><a href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="《Android群英传》" scheme="http://yuqirong.me/tags/%E3%80%8AAndroid%E7%BE%A4%E8%8B%B1%E4%BC%A0%E3%80%8B/"/>
+    
+      <category term="Book Note" scheme="http://yuqirong.me/categories/Book-Note/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[实现WebView中JS和App之间的交互]]></title>
-    <link href="http://yuqirong.me/2016/03/07/page/"/>
-    <id>http://yuqirong.me/2016/03/07/page/</id>
+    <link href="http://yuqirong.me/2016/03/07/%E5%AE%9E%E7%8E%B0WebView%E4%B8%ADJS%E5%92%8CApp%E4%B9%8B%E9%97%B4%E7%9A%84%E4%BA%A4%E4%BA%92/"/>
+    <id>http://yuqirong.me/2016/03/07/实现WebView中JS和App之间的交互/</id>
     <published>2016-03-07T11:53:12.000Z</published>
     <updated>2016-03-07T15:04:30.507Z</updated>
     <content type="html"><![CDATA[<p>今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。</p>
@@ -3860,179 +3959,6 @@ protected void onDraw(Canvas canvas) {
       <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[给你的ScrollView设置滑动距离监听器]]></title>
-    <link href="http://yuqirong.me/2015/10/19/%E7%BB%99%E4%BD%A0%E7%9A%84ScrollView%E8%AE%BE%E7%BD%AE%E6%BB%91%E5%8A%A8%E8%B7%9D%E7%A6%BB%E7%9B%91%E5%90%AC%E5%99%A8/"/>
-    <id>http://yuqirong.me/2015/10/19/给你的ScrollView设置滑动距离监听器/</id>
-    <published>2015-10-19T11:44:21.000Z</published>
-    <updated>2016-02-18T12:15:43.233Z</updated>
-    <content type="html"><![CDATA[<p>ScrollView是我们经常使用的一个UI控件，也许你在使用ScrollView的过程中会发现，当你想监听ScrollView滑动的距离时却没有合适的监听器！当然在API 23中有<code>setOnScrollChangeListener(View.OnScrollChangeListener l)</code>可以使用，但是并不兼容低版本的API。那怎么办呢？只好重写ScrollView来实现对滑动距离的监听了。</p>
-<p>话不多说，直接上代码：</p>
-<pre><code>public class MyScrollView extends ScrollView {
-
-    private OnScrollListener listener;
-
-    /**
-     * 设置滑动距离监听器
-     */
-    public void setOnScrollListener(OnScrollListener listener) {
-        this.listener = listener;
-    }
-
-    public MyScrollView(Context context) {
-        super(context);
-    }
-
-    public MyScrollView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public MyScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    // 滑动距离监听器
-    public interface OnScrollListener{
-
-        /**
-         * 在滑动的时候调用，scrollY为已滑动的距离
-         */
-        void onScroll(int scrollY);
-    }
-
-    @Override
-    public void computeScroll() {
-        super.computeScroll();
-        if(listener!=null){
-            listener.onScroll(getScrollY());
-        }
-    }
-}
-</code></pre><p>上面重写的MyScrollView是在<code>computeScroll()</code>实现监听，因为ScrollView内部是通过Scroller来实现的，当滑动的时候会去调用<code>computeScroll()</code>方法，从而达到监听的效果。</p>
-<p>当然还有另一种方法，就是在<code>onScrollChanged(int l, int t, int oldl, int oldt)</code>去监听，最后的效果是一样的：</p>
-<pre><code>public class MyScrollView extends ScrollView {
-
-    private OnScrollListener listener;
-
-    public void setOnScrollListener(OnScrollListener listener) {
-        this.listener = listener;
-    }
-
-    public MyScrollView(Context context) {
-        super(context);
-    }
-
-    public MyScrollView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public MyScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    public interface OnScrollListener{
-        void onScroll(int scrollY);
-    }
-
-     @Override  
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {  
-        super.onScrollChanged(l, t, oldl, oldt);  
-        if(listener != null){  
-            listener.onScroll(t);  
-        }  
-    }  
-}
-</code></pre><p>下面提供MyScrollView的源码下载：</p>
-<p><a href="/uploads/20151019/MyScrollView.java">MyScrollView.java(通过computeScroll监听)</a></p>
-<p><a href="/uploads/20151019/MyScrollView2.java">MyScrollView.java(通过onScrollChanged监听)</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>ScrollView是我们经常使用的一个UI控件，也许你在使用ScrollView的过程中会发现，当你想监听ScrollView滑动的距离时却没有合适的监听器！当然在API 23中有<code>setOnScrollChangeListener(View.OnScrollC]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="ScrollView" scheme="http://yuqirong.me/tags/ScrollView/"/>
-    
-      <category term="Android Tips" scheme="http://yuqirong.me/categories/Android-Tips/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[ScrollView嵌套ListView问题的解决办法]]></title>
-    <link href="http://yuqirong.me/2015/10/17/ScrollView%E5%B5%8C%E5%A5%97ListView%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/"/>
-    <id>http://yuqirong.me/2015/10/17/ScrollView嵌套ListView问题的解决办法/</id>
-    <published>2015-10-17T11:16:03.000Z</published>
-    <updated>2016-02-18T11:52:40.750Z</updated>
-    <content type="html"><![CDATA[<p>在平常的Android开发中我们经常会碰到ScrollView嵌套ListView或者是GridView的情况，若按照一般的流程我们会发现在ScrollView中的ListView显示不全的问题，其实我们可以重写ListView的<code>onMeasure(int widthMeasureSpec, int heightMeasureSpec)</code>方法来解决。</p>
-<p>以下是重写ListView的代码：</p>
-<pre><code>/**
- * 重写ListView，解决与ScrollView的冲突
- */
-public class MyListView extends ListView {
-
-    public MyListView(Context context) {
-        super(context);
-    }
-
-    public MyListView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public MyListView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE &gt;&gt; 2,
-                MeasureSpec.AT_MOST);
-        super.onMeasure(widthMeasureSpec, expandSpec);
-    }
-}
-</code></pre><p>同样的，GridView也可以通过重写来解决：</p>
-<pre><code>/**
- * 重写GridView，解决与ScrollView的冲突
- */
-public class MyGridView extends GridView {
-
-    public MyGridView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public MyGridView(Context context) {
-        super(context);
-    }
-
-    public MyGridView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
-    @Override
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE &gt;&gt; 2,
-                MeasureSpec.AT_MOST);
-        super.onMeasure(widthMeasureSpec, expandSpec);
-    }
-
-}
-</code></pre><p>下面提供MyListView、MyGridView的源码下载：</p>
-<p><a href="/uploads/20151017/MyListView.java">MyListView.java</a></p>
-<p><a href="/uploads/20151017/MyGridView.java">MyGridView.java</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>在平常的Android开发中我们经常会碰到ScrollView嵌套ListView或者是GridView的情况，若按照一般的流程我们会发现在ScrollView中的ListView显示不全的问题，其实我们可以重写ListView的<code>onMeasure(int wi]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="ScrollView" scheme="http://yuqirong.me/tags/ScrollView/"/>
-    
-      <category term="Android Tips" scheme="http://yuqirong.me/categories/Android-Tips/"/>
     
   </entry>
   

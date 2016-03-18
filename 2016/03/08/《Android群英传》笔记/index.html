@@ -35,7 +35,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Android,WebView," />
+  <meta name="keywords" content="Android,《Android群英传》," />
 
 
 
@@ -53,24 +53,31 @@
 
 
 
-<meta name="description" content="今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。
+<meta name="description" content="第六章：Android绘图机制与处理技巧6.4 Android绘图技巧
+Canvas.save():保存画布。它的作用就是将之前的所有已绘制图像保存起来，让后续的操作就好像在一个新的图层上操作一样。
 
-之后在脑海中回想到 WebView 中的JS可以和app产生交互，于是搜索了一下，果然网上有类似的实现效果。看了一下，在这里就做一个简单的笔记了以">
+Canvas.restore():合并图层操作。它的作用就是将我们在save()之后绘制的所有图像与save()之前的图像进行合并。
+
+Canvas.translate():画布平移，可理解为坐标系">
 <meta property="og:type" content="article">
-<meta property="og:title" content="实现WebView中JS和App之间的交互">
-<meta property="og:url" content="http://yuqirong.me/2016/03/07/page/index.html">
+<meta property="og:title" content="《Android群英传》笔记">
+<meta property="og:url" content="http://yuqirong.me/2016/03/08/《Android群英传》笔记/index.html">
 <meta property="og:site_name" content="blog for yuqirong">
-<meta property="og:description" content="今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。
+<meta property="og:description" content="第六章：Android绘图机制与处理技巧6.4 Android绘图技巧
+Canvas.save():保存画布。它的作用就是将之前的所有已绘制图像保存起来，让后续的操作就好像在一个新的图层上操作一样。
 
-之后在脑海中回想到 WebView 中的JS可以和app产生交互，于是搜索了一下，果然网上有类似的实现效果。看了一下，在这里就做一个简单的笔记了以">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160307/20160307200816.png">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160307/20160307225743.gif">
-<meta property="og:updated_time" content="2016-03-07T15:04:30.507Z">
+Canvas.restore():合并图层操作。它的作用就是将我们在save()之后绘制的所有图像与save()之前的图像进行合并。
+
+Canvas.translate():画布平移，可理解为坐标系">
+<meta property="og:updated_time" content="2016-03-18T05:17:29.869Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="实现WebView中JS和App之间的交互">
-<meta name="twitter:description" content="今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。
+<meta name="twitter:title" content="《Android群英传》笔记">
+<meta name="twitter:description" content="第六章：Android绘图机制与处理技巧6.4 Android绘图技巧
+Canvas.save():保存画布。它的作用就是将之前的所有已绘制图像保存起来，让后续的操作就好像在一个新的图层上操作一样。
 
-之后在脑海中回想到 WebView 中的JS可以和app产生交互，于是搜索了一下，果然网上有类似的实现效果。看了一下，在这里就做一个简单的笔记了以">
+Canvas.restore():合并图层操作。它的作用就是将我们在save()之后绘制的所有图像与save()之前的图像进行合并。
+
+Canvas.translate():画布平移，可理解为坐标系">
 
 
 
@@ -82,7 +89,7 @@
   };
 </script>
 
-  <title> 实现WebView中JS和App之间的交互 | blog for yuqirong </title>
+  <title> 《Android群英传》笔记 | blog for yuqirong </title>
   <meta name="baidu-site-verification" content="MBYnGIEEPN" />
   <meta name="baidu-site-verification" content="1Hx0jVHsgl" />
   <meta name="baidu-site-verification" content="L0MgAErI0s" />
@@ -267,7 +274,7 @@
             
             
               
-                实现WebView中JS和App之间的交互
+                《Android群英传》笔记
               
             
           </h1>
@@ -276,8 +283,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2016-03-07T19:53:12+08:00" content="2016-03-07">
-              2016-03-07
+            <time itemprop="dateCreated" datetime="2016-03-08T20:22:27+08:00" content="2016-03-08">
+              2016-03-08
             </time>
           </span>
 
@@ -286,8 +293,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android-Tips/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Tips</span>
+                  <a href="/categories/Book-Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Book Note</span>
                   </a>
                 </span>
                 
@@ -306,8 +313,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/03/07/page/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/07/page/" itemprop="commentsCount"></span>
+                <a href="/2016/03/08/《Android群英传》笔记/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/08/《Android群英传》笔记/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -326,101 +333,54 @@
       
 
       
-        <span itemprop="articleBody"><p>今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。</p>
-<p><img src="/uploads/20160307/20160307200816.png" alt="这里写图片的描述"></p>
-<p>之后在脑海中回想到 WebView 中的JS可以和app产生交互，于是搜索了一下，果然网上有类似的实现效果。看了一下，在这里就做一个简单的笔记了以便之后查看。</p>
-<p>在 WebView 中想要JS和app产生交互，就不得不提一个方法，那就是<code>addJavascriptInterface(Object object, String name)</code>：</p>
-<ul>
-<li>第一个参数：绑定到 JavaScript 的类实例。</li>
-<li>第二个参数：用来显示 JavaScript 中的实例的名称。</li>
+        <span itemprop="articleBody"><h1 id="u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><a href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7" class="headerlink" title="第六章：Android绘图机制与处理技巧"></a>第六章：Android绘图机制与处理技巧</h1><h2 id="6-4_Android_u7ED8_u56FE_u6280_u5DE7"><a href="#6-4_Android_u7ED8_u56FE_u6280_u5DE7" class="headerlink" title="6.4 Android绘图技巧"></a>6.4 Android绘图技巧</h2><ul>
+<li><p>Canvas.save():保存画布。它的作用就是将之前的所有已绘制图像保存起来，让后续的操作就好像在一个新的图层上操作一样。</p>
+</li>
+<li><p>Canvas.restore():合并图层操作。它的作用就是将我们在save()之后绘制的所有图像与save()之前的图像进行合并。</p>
+</li>
+<li><p>Canvas.translate():画布平移，可理解为坐标系的平移。如在之前绘制的坐标系原点在(0,0)。在translate(x,y)之后，坐标原点在(x,y)。</p>
+</li>
+<li><p>Canvas.rotate():画布翻转，可理解为坐标系的翻转。canvas.rotate(30);为按照坐标系的原点顺时针旋转30度。canvas.rotate(30,x,y);为按照坐标系的(x,y)点顺时针旋转30度。</p>
+</li>
+<li><p>Canvas.saveLayer()、Canvas.saveLayerAlpha():将一个图层入栈。</p>
+</li>
+<li><p>Canvas.restore()、Canvas.restoreToCount():将一个图层出栈。</p>
+</li>
 </ul>
-<p>这里只是给出了参数的解释，如果你没看懂，那接下来就告诉你答案。</p>
-<p>那就开始吧，在创建新的 project 之前，我们先把要加载的 test.html 写好，放在 assets 目录下：</p>
-<pre><code>&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;WebView Test&lt;/title&gt;
-        &lt;script type=&quot;text/javascript&quot;&gt;
-        function btnShowToast(){
-            window.testJS.showToast();
-        }
-
-        function btnGoActivity(){
-            window.testJS.goActivity();
-        }
-        &lt;/script&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;This is a website&lt;/p&gt;
-        &lt;br&gt;
-        &lt;button onclick=&apos;btnShowToast();&apos;&gt;show Toast&lt;/button&gt;
-        &lt;button onclick=&apos;btnGoActivity();&apos;&gt;go Activity&lt;/button&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre><p>上面的 html 很简单，相信有点基础的同学都能看得懂。要注意的是在JS函数中的 testJS 是要和 WebView 约定好的，这里就取名叫 testJS 吧，在下面会用到。还有<code>showToast()</code>和<code>goActivity()</code>也是约定好的函数名。我们预期的效果是点击 show Toast 按钮会显示Toast，而点击 go Activity 按钮会跳转到另外一个 Activity 上。</p>
-<p>下面创建了一个 project ，名叫 WebViewDemo ，工程中 MainActivity 的 layout.xml 就只有一个 WebView 了：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;
-    tools:context=&quot;com.yuqirong.webviewdemo.MainActivity&quot;&gt;
-
-    &lt;WebView
-        android:id=&quot;@+id/mWebView&quot;
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;match_parent&quot; /&gt;
-
-&lt;/RelativeLayout&gt;
-</code></pre><p>MainActivity 的代码很短，就直接贴出来了：</p>
-<pre><code>public class MainActivity extends AppCompatActivity {
-
-    private WebView mWebView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mWebView = (WebView) findViewById(R.id.mWebView);
-        // 设置支持JS
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        // 增加JS交互的接口
-        mWebView.addJavascriptInterface(new AndroidJSInterface(this), &quot;testJS&quot;);
-        mWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return false;
-            }
-        });
-        String url = &quot;file:///android_asset/test.html&quot;;
-        mWebView.loadUrl(url);
-    }
-}
-</code></pre><p>我们可以看到，如果想要和JS交互，那么<code>mWebView.getSettings().setJavaScriptEnabled(true);</code>这句是必不可少的，再看到下面一行代码：<code>mWebView.addJavascriptInterface(new AndroidJSInterface(this), &quot;testJS&quot;);</code>，这里注意一下第二个参数，没错，就是在 html 中的 testJS ！</p>
-<p>再看回第一个参数，发现 new 了一个 AndroidJSInterface 类，下面就是 AndroidJSInterface 的代码：</p>
-<pre><code>public class AndroidJSInterface {
-
-    private Context context;
-
-    public AndroidJSInterface(Context context) {
-        this.context = context;
-    }
-
-    @JavascriptInterface
-    public void goActivity() {
-        context.startActivity(new Intent(context, SecondActivity.class));
-    }
-
-    @JavascriptInterface
-    public void showToast() {
-        Toast.makeText(context, &quot;hello js&quot;, Toast.LENGTH_SHORT).show();
-    }
-
-}
-</code></pre><p>我们可以看到上面的<code>showToast()</code>和<code>goActivity()</code>方法名和 html 里面的一定要一样，不然无法触发了。然后在方法的内部实现你想要的逻辑。</p>
-<p>经过上面的步骤，就可以实现和JS交互了，一起来看看效果吧：</p>
-<p><img src="/uploads/20160307/20160307225743.gif" alt="这里写图片的描述"></p>
-<p>源码下载：</p>
-<p><a href="/uploads/20160307/WebViewDemo.rar">WebViewDemo.rar</a></p>
+<h2 id="6-5_Android_u56FE_u50CF_u5904_u7406_u4E4B_u8272_u5F69_u7279_u6548_u5904_u7406"><a href="#6-5_Android_u56FE_u50CF_u5904_u7406_u4E4B_u8272_u5F69_u7279_u6548_u5904_u7406" class="headerlink" title="6.5 Android图像处理之色彩特效处理"></a>6.5 Android图像处理之色彩特效处理</h2><ul>
+<li><p>色调：<code>setRotate(int axis,float degree)</code>设置颜色的色调。第一个参数，系统分别使用0、1、2来代表Red、Green、Blue三种颜色的处理。而第二个参数就是需要处理的值。</p>
+<pre><code>ColorMatrix hueMatrix = new ColorMatrix();
+hueMatrix.setRotate(0, hue0);
+hueMatrix.setRotate(1, hue1);
+hueMatrix.setRotate(2, hue2);
+</code></pre></li>
+</ul>
+<p>通过上面的方法，可以为RGB三种颜色分量分别重新设置了不同的色调值。</p>
+<ul>
+<li><p>饱和度：<code>setSaturation(float sat)</code>方法来设置颜色的饱和度，参数即代表设置颜色饱和度的值，代码如下所示。当饱和度为0时，图像就变成灰色图像了。</p>
+<pre><code>ColorMatrix saturationMatrix = new ColorMatrix();
+saturationMatrix.setSaturation(saturation);
+</code></pre></li>
+<li><p>亮度：当三原色以相同的比例进行混合的时候，就会显示出白色。系统也正是使用这个原理来改变一个图像的亮度的，代码如下所示。当亮度为0时，图像就变成全黑了。</p>
+<pre><code>ColorMatrix lumMatrix = new ColorMatrix();
+lumMatrix.setScale(lum,lum,lum,1);
+</code></pre></li>
+<li><p><code>postConcat()</code>方法将矩阵的作用效果混合，从而叠加处理效果，代码如下：</p>
+<pre><code>ColorMatrix imageMatrix = new ColorMatrix();
+imageMatrix.postConcat(hueMatrix);
+imageMatrix.postConcat(saturationMatrix);
+imageMatrix.postConcat(lumMatrix);
+</code></pre></li>
+</ul>
+<h2 id="6-6_Android_u56FE_u50CF_u5904_u7406_u4E4B_u56FE_u5F62_u7279_u6548_u5904_u7406"><a href="#6-6_Android_u56FE_u50CF_u5904_u7406_u4E4B_u56FE_u5F62_u7279_u6548_u5904_u7406" class="headerlink" title="6.6 Android图像处理之图形特效处理"></a>6.6 Android图像处理之图形特效处理</h2><ul>
+<li>matrix.setRotate()——旋转变换</li>
+<li>matrix.setTranslate()——平移变换</li>
+<li>matrix.setScale()——缩放变换</li>
+<li>matrix.setSkew()——错切变换</li>
+<li>pre()和post()——提供矩阵的前乘和后乘运算</li>
+</ul>
+<h2 id="6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406"><a href="#6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406" class="headerlink" title="6.7 Android图像处理之画笔特效处理"></a>6.7 Android图像处理之画笔特效处理</h2><pre><code>mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+</code></pre><p>可以实现圆形ImageView。</p>
 </span>
       
     </div>
@@ -431,7 +391,7 @@
           
             <a href="/tags/Android/" rel="tag">#Android</a>
           
-            <a href="/tags/WebView/" rel="tag">#WebView</a>
+            <a href="/tags/《Android群英传》/" rel="tag">#《Android群英传》</a>
           
         </div>
       
@@ -440,13 +400,17 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/02/26/使用RecyclerView实现仿喵街效果/" rel="next" title="使用RecyclerView实现仿喵街效果">
-                <i class="fa fa-chevron-left"></i> 使用RecyclerView实现仿喵街效果
+              <a href="/2016/03/07/实现WebView中JS和App之间的交互/" rel="next" title="实现WebView中JS和App之间的交互">
+                <i class="fa fa-chevron-left"></i> 实现WebView中JS和App之间的交互
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/17/夜半一忆/" rel="prev" title="夜半一忆">
+                夜半一忆 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -473,8 +437,8 @@
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/03/07/page/"
-           data-title="实现WebView中JS和App之间的交互" data-url="http://yuqirong.me/2016/03/07/page/">
+      <div class="ds-thread" data-thread-key="2016/03/08/《Android群英传》笔记/"
+           data-title="《Android群英传》笔记" data-url="http://yuqirong.me/2016/03/08/《Android群英传》笔记/">
       </div>
     
   </div>
@@ -518,7 +482,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">26</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -532,7 +496,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -621,7 +585,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><span class="nav-number">1.</span> <span class="nav-text">第六章：Android绘图机制与处理技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-4_Android_u7ED8_u56FE_u6280_u5DE7"><span class="nav-number">1.1.</span> <span class="nav-text">6.4 Android绘图技巧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-5_Android_u56FE_u50CF_u5904_u7406_u4E4B_u8272_u5F69_u7279_u6548_u5904_u7406"><span class="nav-number">1.2.</span> <span class="nav-text">6.5 Android图像处理之色彩特效处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-6_Android_u56FE_u50CF_u5904_u7406_u4E4B_u56FE_u5F62_u7279_u6548_u5904_u7406"><span class="nav-number">1.3.</span> <span class="nav-text">6.6 Android图像处理之图形特效处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406"><span class="nav-number">1.4.</span> <span class="nav-text">6.7 Android图像处理之画笔特效处理</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
