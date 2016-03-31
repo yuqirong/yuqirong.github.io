@@ -244,6 +244,348 @@
 
     
     
+      
+      
+
+      
+    
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/02/03/对LayoutInflater的深入解析/" itemprop="url">
+                  对LayoutInflater的深入解析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-02-03T19:19:12+08:00" content="2016-02-03">
+              2016-02-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+                
+                
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/03/对LayoutInflater的深入解析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/03/对LayoutInflater的深入解析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            前言今天要讲的主角就是LayoutInflater，相信大家都用过吧。在动态地加载布局时，经常可以看见它的身影。比如说在Fragment的onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)方法里，就需要我们返回Fragment的View。这时就可以用inflater.inflate(R.layout.fragment_view, container, false)来加载视图。那么下面就来探究一下LayoutInflater的真面目吧。
+from(Context context
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/02/03/对LayoutInflater的深入解析/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/22/自定义ViewGroup打造流式布局/" itemprop="url">
+                  自定义ViewGroup打造流式布局
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-01-22T20:31:37+08:00" content="2016-01-22">
+              2016-01-22
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+                
+                
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/22/自定义ViewGroup打造流式布局/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/22/自定义ViewGroup打造流式布局/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            前几天看了鸿洋_的《Android 自定义ViewGroup 实战篇 -&gt; 实现FlowLayout》，觉得文中的FlowLayout很多地方都可以用到。于是自己按照思路实现了一遍，这就是本片博文诞生的原因了。
+首先流式布局相信大家都见到过，比如说下图中的京东热搜就是流式布局的应用。还有更多应用的地方在这里就不一一举例了。
+
+下面我们就来看看是如何实现的。首先新建一个class，继承自ViewGroup。在generateLayoutParams(AttributeSet attrs)里直接返回MarginLayoutParams就行了。
+ @Override
+public Layout
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/01/22/自定义ViewGroup打造流式布局/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/14/实现导航Tab栏悬浮功能之改进版/" itemprop="url">
+                  实现导航Tab栏悬浮功能之改进版
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-01-14T20:34:25+08:00" content="2016-01-14">
+              2016-01-14
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+                
+                
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/14/实现导航Tab栏悬浮功能之改进版/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/14/实现导航Tab栏悬浮功能之改进版/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            在上一篇博文中，我们用WindowManager的方法实现了Tab栏的悬浮功能。如果你没有看过上篇博文，请点击《轻松实现app中的导航Tab栏悬浮功能》。
+当然，用WindowManager来实现由一个缺点就是当没有显示悬浮窗的权限时，该功能就无法体现出来。而在本篇博文中，我们用第二种方法，也就是不断地重新设置Tab栏的布局位置来实现悬浮功能，弥补了第一种方法的缺点。效果图这里就不放了，相信大家都看过啦。
+不废话了，直接上代码。
+activity_main.xml：
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/01/14/实现导航Tab栏悬浮功能之改进版/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
 
     
       
@@ -1030,352 +1372,6 @@ gif的效果可能有点过快，在真机上运行的效果会更好一些。�
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/11/12/简单实现满屏表情下落的动画效果，你也可以/" itemprop="url">
-                  简单实现满屏表情下落的动画效果，你也可以
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2015-11-12T22:39:14+08:00" content="2015-11-12">
-              2015-11-12
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
-                
-                
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/11/12/简单实现满屏表情下落的动画效果，你也可以/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/12/简单实现满屏表情下落的动画效果，你也可以/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            首先我相信大家一定玩过微信吧。之前在玩微信的时候，给好友发一句“圣诞快乐”就会有满屏的圣诞树往下掉，当时觉得这个动画好酷。正好在公司的项目中需要用到这样的动画效果。于是写了一个小Demo,就有了这篇文章。
-下图是做出的相关效果： 
-
-看完上面的效果图，大家一定都迫不及待地想要试一试了，那就让我们来动手吧。
-首先我们定义一个实体类DropLook:
-/**
- * 下落的表情
- */
-public class DropLook {
-
-    // x轴坐标
-    private float x;
-    // y轴坐标
-    private float y;
-    // 初始旋转角度
-   
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/11/12/简单实现满屏表情下落的动画效果，你也可以/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/11/04/史上最简单粗暴实现侧滑菜单/" itemprop="url">
-                  史上最简单粗暴实现侧滑菜单
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2015-11-04T20:47:16+08:00" content="2015-11-04">
-              2015-11-04
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
-                
-                
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/11/04/史上最简单粗暴实现侧滑菜单/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/04/史上最简单粗暴实现侧滑菜单/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            在Android开发中，相信侧滑菜单大家都不陌生吧，几乎是每个app都必备的。从早期的 SlidingMenu 再到           AndroidResideMenu 最后到Android自带的DrawerLayout，无处不体现着侧滑菜单的诱人魅力。侧滑菜单可以拓展app的内容，充分利用手机屏幕，增加程序的可玩性。既然有这么多可供选择的侧滑菜单使用，那为什么我们还要自己写呢？我觉得我们在使用侧滑菜单的时候应该要懂得其中的原理，更好的，可以自己写一个侧滑菜单来加深体会。
-好了，话不多说。来看看我们所谓“史上最简单粗暴实现的侧滑菜单”的产物吧：
-
-看完了上面的gif，想不想自己也写一个呢，
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/11/04/史上最简单粗暴实现侧滑菜单/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/10/29/Android onTouch事件传递机制解析/" itemprop="url">
-                  Android onTouch事件传递机制解析
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2015-10-29T22:56:09+08:00" content="2015-10-29">
-              2015-10-29
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
-                
-                
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/10/29/Android onTouch事件传递机制解析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/29/Android onTouch事件传递机制解析/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事件传递的机制了，顺便写一篇博客来记录一下。下面就让我们来看看吧。
-大家都知道一般我们使用的UI控件都是继承自共同的父类——View。所以View这个类应该掌管着onTouch事件的相关处理。那就让我们去看看：在View中寻找Touch相关的方法，其中一个很容易地引起了我们的注意：dispatchTouchEvent(Moti
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/29/Android onTouch事件传递机制解析/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
 
   </section>
 
@@ -1422,21 +1418,21 @@ public class DropLook {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">11</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

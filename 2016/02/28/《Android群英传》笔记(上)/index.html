@@ -1,0 +1,1253 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,《Android群英传》," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="blog for yuqirong" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="第三章：Android控件架构与自定义控件详解3.1 Android控件架构控件分为两类：View和ViewGroup，通过ViewGroup整个界面形成一个树形结构，并且ViewGroup负责对子View的测量与绘制以及传递交互事件。通常在Activity中使用的findViewById()方法，就是在控件树中以树的深度优先遍历来查找对应元素。在每颗控件树的顶部，都有一个ViewParent对象">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Android群英传》笔记(上)">
+<meta property="og:url" content="http://yuqirong.me/2016/02/28/《Android群英传》笔记(上)/index.html">
+<meta property="og:site_name" content="blog for yuqirong">
+<meta property="og:description" content="第三章：Android控件架构与自定义控件详解3.1 Android控件架构控件分为两类：View和ViewGroup，通过ViewGroup整个界面形成一个树形结构，并且ViewGroup负责对子View的测量与绘制以及传递交互事件。通常在Activity中使用的findViewById()方法，就是在控件树中以树的深度优先遍历来查找对应元素。在每颗控件树的顶部，都有一个ViewParent对象">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160228/20160228230641.png">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160228/20160228232837.png">
+<meta property="og:updated_time" content="2016-03-31T06:28:41.641Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《Android群英传》笔记(上)">
+<meta name="twitter:description" content="第三章：Android控件架构与自定义控件详解3.1 Android控件架构控件分为两类：View和ViewGroup，通过ViewGroup整个界面形成一个树形结构，并且ViewGroup负责对子View的测量与绘制以及传递交互事件。通常在Activity中使用的findViewById()方法，就是在控件树中以树的深度优先遍历来查找对应元素。在每颗控件树的顶部，都有一个ViewParent对象">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always',
+    motion: true
+  };
+</script>
+
+  <title> 《Android群英传》笔记(上) | blog for yuqirong </title>
+  <meta name="baidu-site-verification" content="MBYnGIEEPN" />
+  <meta name="baidu-site-verification" content="1Hx0jVHsgl" />
+  <meta name="baidu-site-verification" content="L0MgAErI0s" />
+  <meta name="google-site-verification" content="_hYRHLLoBRM6L31myWhOPTxzGtawe9z1zmCqcJ-aHA0" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">blog for yuqirong</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-question-circle fa-fw"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '8ZRfk21kUz89L8Xi6hZm','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                《Android群英传》笔记(上)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-02-28T20:20:04+08:00" content="2016-02-28">
+              2016-02-28
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Book-Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Book Note</span>
+                  </a>
+                </span>
+                
+                
+  								<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
+								
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/28/《Android群英传》笔记(上)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/28/《Android群英传》笔记(上)/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3"><a href="#u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3" class="headerlink" title="第三章：Android控件架构与自定义控件详解"></a>第三章：Android控件架构与自定义控件详解</h1><h2 id="3-1_Android_u63A7_u4EF6_u67B6_u6784"><a href="#3-1_Android_u63A7_u4EF6_u67B6_u6784" class="headerlink" title="3.1 Android控件架构"></a>3.1 Android控件架构</h2><p>控件分为两类：View和ViewGroup，通过ViewGroup整个界面形成一个树形结构，并且ViewGroup负责对子View的测量与绘制以及传递交互事件。通常在Activity中使用的findViewById()方法，就是在控件树中以树的深度优先遍历来查找对应元素。在每颗控件树的顶部，都有一个ViewParent对象，这就是整棵树的控制核心，所有的交互管理事件都由它来统一调度和分配。</p>
+<p><img src="/uploads/20160228/20160228230641.png" alt="这里写图片描述"></p>
+<p>如上图所示，每个Activity都包含一个Window对象，在Android中Window对象通常由PhoneWindow来实现。PhoneWindow对象又将一个DecorView设置为整个应用的根View。DecorView作为了窗口界面的顶层视图，封装了一些窗口操作的通用方法。可以说，DecorView将要显示的具体内容呈现在了PhoneWindow上，这里所有View的监听事件，都通过WindowManagerService来接收，并通过Activity对象来回调onClickListener。DecorView在显示上分为TitleView和ContentView两部分。ContentView是一个ID为content的FrameLayout，activity_main.xml就是设置在这样一个FrameLayout里。可以通过如下代码获得ContentView：</p>
+<pre><code>FrameLayout content = (FrameLayout)findViewById(android.R.id.content);
+</code></pre><p><img src="/uploads/20160228/20160228232837.png" alt="这里写图片描述"></p>
+<p>而在代码中，当程序在onCreate()方法中调用setContentView()方法后，ActivityManagerService会回调onResume()方法，此时系统才会把整个DecorView添加到PhoneWindow中，并让其显示出来，从而最终完成界面的绘制。</p>
+<h2 id="3-2_View_u7684_u6D4B_u91CF"><a href="#3-2_View_u7684_u6D4B_u91CF" class="headerlink" title="3.2 View的测量"></a>3.2 View的测量</h2><p>View的测量在onMeasure中进行，系统提供了MeasureSpec类，是一个32位的int值，其高2位为测量模式，低30位为测量的大小。测量模式有以下三种：</p>
+<ul>
+<li><p>EXACTLY：精确模式，当控件指定精确值（例如android:layout_width=”50dp”）或者指定为match_parent属性时系统使用该模式。</p>
+</li>
+<li><p>AT_MOST：最大值模式，指定wrap_content时系统使用该属性。控件大小一般随着控件的子空间或内容的变化而变化，此时控件的尺寸只要不超过父控件允许的最大尺寸即可。View类默认只支持EXACTLY，如果想使用wrap_content需自己在onMeasure中实现。</p>
+</li>
+<li><p>UNSPECIFIED：自定义模式，View想多大就多大，通常在绘制自定义View的时候才使用。</p>
+</li>
+</ul>
+<p>下面是onMeasure的示例代码：</p>
+<pre><code>@Override
+protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    int widthMode = MeasureSpec.getMode(widthMeasureSpec);// 获取宽度模式
+    int widthSize = MeasureSpec.getSize(widthMeasureSpec);// 获取宽度值
+    int width = 0;
+    if (widthMode == MeasureSpec.EXACTLY) {
+        width = widthSize;
+    } else {
+        width = 200;// 自定义的默认wrap_content值
+        if (widthMode == MeasureSpec.AT_MOST) {
+                width = Math.min(widthSize, width);
+        }
+
+    }
+    int heightMode = MeasureSpec.getMode(heightMeasureSpec);// 获取高度模式
+    int heightSize = MeasureSpec.getSize(heightMeasureSpec);// 获取高度值
+    int height = 0;
+    if (heightMode == MeasureSpec.EXACTLY) {
+        height = heightSize;
+    } else {
+        height = 200;// 自定义的默认wrap_content值
+        if (heightMode == MeasureSpec.AT_MOST) {
+            height = Math.min(heightSize, height);
+        }
+    }
+    setMeasuredDimension(width, height);// 最终将测量的值传入该方法完成测量
+}
+</code></pre><h2 id="3-3_View_u7684_u7ED8_u5236"><a href="#3-3_View_u7684_u7ED8_u5236" class="headerlink" title="3.3 View的绘制"></a>3.3 View的绘制</h2><p>View的绘制是通过onDraw()方法实现的，具体是通过对onDraw()方法中Canvas参数操作执行绘图。在其他地方，则需要自己创建Canvas对象，创建时需传入一个bitmap对象，这个过程我们称之为装载画布。bitmap是用来存储所有绘制在Canvas上的像素信息，当你通过这种方式创建了Canvas对象后，后面调用所有的Canvas.drawXXX方法都发生在这个bitmap上。</p>
+<h2 id="3-4_ViewGroup_u7684_u6D4B_u91CF"><a href="#3-4_ViewGroup_u7684_u6D4B_u91CF" class="headerlink" title="3.4 ViewGroup的测量"></a>3.4 ViewGroup的测量</h2><p>当ViewGroup的大小为wrap_content时，它就会遍历所有子View，以便获得所有子View的大小，从而来决定自身的大小，而在其他模式下则通过指定值来设置自身的大小。</p>
+<p>然后当子View测量完毕以后，ViewGroup会执行它的Layout方法，同样是遍历子View并调用其Layout方法来确定布局位置。</p>
+<p>在自定义ViewGroup时，通常会重写onLayout()方法来控制子View显示位置，若需支持wrap_content还需重写onMeasure()方法，这点与View是相同的。</p>
+<h2 id="3-5_ViewGroup_u7684_u7ED8_u5236"><a href="#3-5_ViewGroup_u7684_u7ED8_u5236" class="headerlink" title="3.5 ViewGroup的绘制"></a>3.5 ViewGroup的绘制</h2><p>ViewGroup通常情况下不需要绘制，如果不是指定了ViewGroup的背景颜色，那么ViewGroup的onDraw()方法都不会被调用。但是ViewGroup会调用dispatchDraw()方法来绘制其子View，过程同样是遍历子View，并调用子View的绘制方法来完成绘制工作。</p>
+<h2 id="3-6__u81EA_u5B9A_u4E49View"><a href="#3-6__u81EA_u5B9A_u4E49View" class="headerlink" title="3.6 自定义View"></a>3.6 自定义View</h2><p>自定义View时有一些比较重要的回调方法如下：</p>
+<ul>
+<li>onFinishInflate();//从xml加载组件后回调</li>
+<li>onSizeChanged();//组件大小改变时回调</li>
+<li>onMeasure();//回调该方法进行测量</li>
+<li>onLayout();//回调该方法来确定显示的位置</li>
+<li>onTouchEvent();//监听到触摸事件回调</li>
+</ul>
+<p>通常情况下，有以下三种方法来实现自定义的控件：</p>
+<ul>
+<li>对现有控件进行拓展</li>
+<li>通过组合来实现新的控件</li>
+<li>重写View来实现全新的控件</li>
+</ul>
+<p>PS ： LinearGradient也称作线性渲染，LinearGradient的作用是实现某一区域内颜色的线性渐变效果。构造函数有两个，分别如下：</p>
+<p><code>public LinearGradient(float x0, float y0, float x1, float y1, int color0, int color1, Shader.TileMode tile)</code></p>
+<p>其中，参数x0表示渐变的起始点x坐标；参数y0表示渐变的起始点y坐标；参数x1表示渐变的终点x坐标；参数y1表示渐变的终点y坐标　；color0表示渐变开始颜色；color1表示渐变结束颜色；参数tile表示平铺方式。</p>
+<p>Shader.TileMode有3种参数可供选择，分别为CLAMP、REPEAT和MIRROR：</p>
+<ul>
+<li><p>CLAMP的作用是如果渲染器超出原始边界范围，则会复制边缘颜色对超出范围的区域进行着色</p>
+</li>
+<li><p>REPEAT的作用是在横向和纵向上以平铺的形式重复渲染位图</p>
+</li>
+<li><p>MIRROR的作用是在横向和纵向上以镜像的方式重复渲染位图</p>
+</li>
+</ul>
+<p><code>public LinearGradient (float x0, float y0, float x1, float y1, int[] colors, float[] positions, Shader.TileMode tile)</code></p>
+<p>其中，参数x0表示渐变的起始点x坐标；参数y0表示渐变的起始点y坐标；参数x1表示渐变的终点x坐标；参数y1表示渐变的终点y坐标；参数colors表示渐变的颜色数组；参数positions用来定义每个颜色处于的渐变相对位置；参数tile表示平铺方式。通常，参数positions设为null，表示颜色数组按顺序均匀的分布。</p>
+<h2 id="3-7__u81EA_u5B9A_u4E49ViewGroup"><a href="#3-7__u81EA_u5B9A_u4E49ViewGroup" class="headerlink" title="3.7 自定义ViewGroup"></a>3.7 自定义ViewGroup</h2><p>自定义ViewGroup通常需要重写onMeasure()方法来对子View进行测量，重写onLayout()方法来确定子View的位置，重写onTouchEvent()方法增加响应事件。</p>
+<p><code>onMeasure(int widthMeasureSpec, int heightMeasureSpec)</code>方法：</p>
+<pre><code>@Override
+protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    int count = getChildCount();
+    for (int i = 0; i &lt; count; i++) {
+        measureChild(getChildAt(i), widthMeasureSpec, heightMeasureSpec);
+    }
+}
+</code></pre><h2 id="3-8__u4E8B_u4EF6_u62E6_u622A_u673A_u5236_u5206_u6790"><a href="#3-8__u4E8B_u4EF6_u62E6_u622A_u673A_u5236_u5206_u6790" class="headerlink" title="3.8 事件拦截机制分析"></a>3.8 事件拦截机制分析</h2><p>本章较为浅显的分析了下事件传递的机制。当ViewGroup接收到事件，通过调用dispatchTouchEvent()，由这个方法再调用onInterceptTouchEvent()方法来判断是否要拦截事件，如果返回true则拦截将事件交给自己的onTouchEvent处理，返回false则继续向下传递。当View在接受到事件时，通过调用dispatchTouchEvent()，由此方法再调用onTouchEvent方法，如果返回true则拦截事件自己处理，如果返回false则将事件向上传递回ViewGroup并且调用其onTouchEvent方法继续做判断。</p>
+<h1 id="u7B2C_u56DB_u7AE0_uFF1AListView_u4F7F_u7528_u6280_u5DE7"><a href="#u7B2C_u56DB_u7AE0_uFF1AListView_u4F7F_u7528_u6280_u5DE7" class="headerlink" title="第四章：ListView使用技巧"></a>第四章：ListView使用技巧</h1><h2 id="4-1_ListView_u5E38_u7528_u4F18_u5316_u6280_u5DE7"><a href="#4-1_ListView_u5E38_u7528_u4F18_u5316_u6280_u5DE7" class="headerlink" title="4.1 ListView常用优化技巧"></a>4.1 ListView常用优化技巧</h2><ul>
+<li>使用ViewHolder模式提高效率</li>
+<li><p>设置项目间分隔线：</p>
+<pre><code>android:divider=&quot;@android:color/darker_gray&quot;
+android:dividerHeight=&quot;10dp&quot;
+</code></pre><p>   特殊情况下，以下代码可以设置分割线为透明：</p>
+<pre><code>android:divider=&quot;@null&quot;
+</code></pre></li>
+<li><p>隐藏ListView的滚动条：</p>
+<pre><code>android:scrollbars=&quot;none&quot;
+</code></pre></li>
+<li><p>取消ListView的点击效果：</p>
+<pre><code>android:listSelector=&quot;#00000000&quot;
+</code></pre><p>  也可以用Android自带的透明色来实现这个效果：</p>
+<pre><code>android:listSelector=&quot;@android:color/transparent&quot;
+</code></pre></li>
+<li><p>设置ListView需要显示在第几项：</p>
+<pre><code>listView.setSelection(N);
+</code></pre><p>  其中N就是需要显示的第N个Item。</p>
+<p>  除此之外，还可以使用如下代码来实现平滑移动：</p>
+<pre><code>mListView.smoothScrollBy(distance,duration);
+mListView.smoothScrollByOffset(offset);
+mListView.smoothScrollToPosition(index);
+</code></pre></li>
+<li><p>动态修改ListView：</p>
+<pre><code>mAdapter.notifyDataSetChanged();
+</code></pre></li>
+<li><p>遍历ListView中的所有Item：</p>
+<pre><code>for(int i=0;i&lt;mListView.getChildCount();i++){
+    View view = mListView.getChildAt(i);
+}
+</code></pre></li>
+<li><p>处理空ListView：</p>
+<pre><code>&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;&gt;
+
+    &lt;ListView
+    android:id=&quot;@+id/listView&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot; /&gt;
+
+    &lt;ImageView
+        android:id=&quot;@+id/imageView&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:src=&quot;@drawable/empty_view&quot; /&gt;
+
+&lt;/RelativeLayout&gt;
+</code></pre><p>  在代码中，我们通过以下方式给ListView设置空数据时要显示的布局，代码如下：</p>
+<pre><code>ListView listView = (ListView)findViewById(R.id.listView);
+listView.setEmptyView(findViewById(R.id.imageView));
+</code></pre></li>
+<li><p>ListView滑动监听：一种是通过OnTouchListener来实现监听，另外一种是使用OnScrollListener来实现监听。</p>
+<p>  OnScrollListener中有两个回调方法——onScrollStateChanged()和onScroll()</p>
+<pre><code> @Override
+public void onScrollStateChanged(AbsListView view, int scrollState) {
+    switch(scrollState){
+        case SCROLL_STATE_FLING:
+          // TODO    
+        break;
+        case SCROLL_STATE_IDLE:
+        // TODO 
+        break;
+        case SCROLL_STATE_TOUCH_SCROLL:
+        // TODO 
+        break;
+    }
+}
+</code></pre><p>  scrollState有以下三种模式：</p>
+<ul>
+<li>OnScrollListener.SCROLL_STATE_IDLE ： 滚动停止时；</li>
+<li>OnScrollListener.SCROLL_STATE_TOUCH_SCROLL ： 正在滚动时；</li>
+<li><p>OnScrollListener.SCROLL_STATE_FLING ： 手指抛动时，即手指用力滑动，在离开后ListView由于惯性继续滑动的状态；</p>
+<p>当手指没有做手指抛动的状态时，这个方法只会回调2次，否则会回调3次。</p>
+<pre><code>@Override
+public void onScroll(AbsListView view, int firstVisibleItem,
+        int visibleItemCount, int totalItemCount) {
+    // TODO Auto-generated method stub
+}
+</code></pre></li>
+<li><p>firstVisibleItem ： 当前能看见的第一个Item的ID（从0开始）</p>
+</li>
+<li><p>visibleItemCount ： 当前能看见的Item的总数</p>
+</li>
+<li><p>totalItemCount ： 整个ListView的Item总数</p>
+<p>判断是否滚动到最后一行：</p>
+<pre><code>if(firstVisibleItem + visibleItemCount == totalItemCount &amp;&amp; totalItemCount &gt; 0){
+    // 滚动到最后一行
+} 
+</code></pre><p>再比如，可以通过如下代码来判断滚动的方向：</p>
+<pre><code>if(firstVisibleItem &gt; lastVisibleItemPosition){
+    // 上滑
+}else if(firstVisibleItem &lt; lastVisibleItemPosition){
+    // 下滑
+}
+lastVisibleItemPosition = firstVisibleItem;
+</code></pre><p>当然，ListView也给我们提供了一些封装的方法来获得当前可视的Item的位置等信息：</p>
+<pre><code>// 获取可视区域内最后一个Item的id
+mListView.getLastVisiblePosition()；
+// 获取可视区域内第一个Item的id
+mListView。getFirstVisiblePosition();
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<h2 id="4-2_ListView_u5E38_u7528_u62D3_u5C55"><a href="#4-2_ListView_u5E38_u7528_u62D3_u5C55" class="headerlink" title="4.2 ListView常用拓展"></a>4.2 ListView常用拓展</h2><ol>
+<li><p>具有弹性的ListView：</p>
+<pre><code>@Override
+protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+    return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+}
+</code></pre><p> 其中的maxOverScrollY，默认值为0。所以只要修改它的值，就可以让ListView具有弹性了。</p>
+</li>
+</ol>
+<h1 id="u7B2C_u4E94_u7AE0_uFF1AAndroid_Scroll_u5206_u6790"><a href="#u7B2C_u4E94_u7AE0_uFF1AAndroid_Scroll_u5206_u6790" class="headerlink" title="第五章：Android Scroll分析"></a>第五章：Android Scroll分析</h1><h2 id="5-1__u6ED1_u52A8_u6548_u679C_u662F_u5982_u4F55_u4EA7_u751F_u7684"><a href="#5-1__u6ED1_u52A8_u6548_u679C_u662F_u5982_u4F55_u4EA7_u751F_u7684" class="headerlink" title="5.1 滑动效果是如何产生的"></a>5.1 滑动效果是如何产生的</h2><p>滑动一个View，本质上来说就是移动一个View。改变其当前所处的位置，它的原理与动画效果的实现非常相似，都是通过不断地改变View的坐标来实现这一效果。所以，要实现View的滑动，就必须监听用户触摸的事件，并根据事件传入的坐标，动态且不断地改变View的坐标，从而实现View跟随用户触摸的滑动而滑动。</p>
+<p><strong>Android坐标系</strong></p>
+<p>Android的坐标系是以屏幕最左上角为顶点，向右为x轴正方向，向下是y轴正方向。在触控事件中通过<code>getRawX()</code>和<code>getRawY()</code>获取Android坐标系中的坐标。在View中通过<code>getLocationOnScreen(int[] location)</code>获取。</p>
+<p><strong>视图坐标系</strong></p>
+<p>描述的是子视图在父视图中的位置关系，原点为父视图的左上角，x、y轴方向与Android坐标系一致。触控事件中通过<code>getX()</code>,<code>getY()</code>获取视图坐标系的坐标。</p>
+<p><strong>触控事件——MotionEvent</strong></p>
+<pre><code>// 单点触摸按下动作
+public static final int MotionEvent.ACTION_DOWN = 0;
+// 单点触摸离开动作
+public static final int MotionEvent.ACTION_UP = 1;
+// 触摸点移动动作
+public static final int MotionEvent.ACTION_MOVE = 2;
+// 触摸动作取消
+public static final int MotionEvent.ACTION_CANCEL = 3;
+// 触摸动作超出边界
+public static final int MotionEvent.ACTION_OUTSIDE = 4;
+// 多点触摸按下动作
+public static final int MotionEvent.ACTION_POINTER_DOWN = 5;
+// 多点离开动作
+public static final int MotionEvent.ACTION_POINTER_UP = 6;
+</code></pre><p><strong>View提供的获取坐标方法</strong></p>
+<ul>
+<li>getTop()：获取到的是View自身的顶边到其父布局顶边的距离</li>
+<li>getLeft()：获取到的是View自身的左边到其父布局左边的距离</li>
+<li>getRight()：获取到的是View自身的右边到其父布局右边的距离</li>
+<li>getBottom()：获取到的是View自身的底边到其父布局底边的距离</li>
+</ul>
+<p><strong>MotionEvent提供的方法</strong></p>
+<ul>
+<li>getX()：获取点击事件距离控件左边的距离，即视图坐标</li>
+<li>getY()：获取点击事件距离控件顶边的距离，即视图坐标</li>
+<li>getRawX()：获取点击事件距离整个屏幕左边的距离，即绝对坐标</li>
+<li>getRawY()：获取点击事件距离整个屏幕顶边的距离，即绝对坐标</li>
+</ul>
+<h2 id="5-2__u5B9E_u73B0_u6ED1_u52A8_u7684_u4E03_u79CD_u65B9_u6CD5"><a href="#5-2__u5B9E_u73B0_u6ED1_u52A8_u7684_u4E03_u79CD_u65B9_u6CD5" class="headerlink" title="5.2 实现滑动的七种方法"></a>5.2 实现滑动的七种方法</h2><ul>
+<li><p>layout()方法</p>
+<pre><code>private int lastX;
+private int lastY;
+private int offsetX;
+private int offsetY;
+
+@Override
+public boolean onTouchEvent(MotionEvent event) {
+  int x = (int) event.getRawX();
+  int y = (int) event.getRawY();
+
+  switch (event.getAction()) {
+  case MotionEvent.ACTION_DOWN:
+      lastX = x;
+      lastY = y;
+      break;
+  case MotionEvent.ACTION_MOVE:
+      offsetX = x - lastX;
+      offsetY = y - lastY;
+
+      layout(getLeft() + offsetX, getTop() + offsetY, getRight() + offsetX, getBottom() + offsetY);
+
+      lastX = x;
+      lastY = y;
+      break;
+  }
+  return true;
+}
+</code></pre></li>
+<li><p>offsetLeftAndRight()与offsetTopAndBottom()</p>
+<pre><code>// 同时对left和right进行偏移
+offsetLeftAndRight(offsetX);
+// 同时对top和bottom进行偏移
+offsetTopAndBottom(offsetY);
+</code></pre></li>
+<li><p>LayoutParams</p>
+<pre><code>LinearLayout.MarginLayoutParams layoutParams=(LinearLayout.LayoutParams)getLayoutParams();
+layoutParams.leftMargin=getLeft()+offsetX;
+layoutParams.topMargin=getTop()+offsetY;
+setLayoutParams(layoutParams);
+</code></pre><p>  或者</p>
+<pre><code>ViewGroup.MarginLayoutParams layoutParams=(MarginLayoutParams) getLayoutParams();
+layoutParams.leftMargin=getLeft()+offsetX;
+layoutParams.topMargin=getTop()+offsetY;
+setLayoutParams(layoutParams);
+</code></pre></li>
+<li><p>scrollTo()和scrollBy()</p>
+<pre><code>//scrollTo和scrollBy移动的是view的内容而不是view本身
+//如果在viewgroup中使用就是移动所有子view。
+View view=(View) getParent();
+//scrollTo和scrollBy参考的坐标系正好与视图坐标系相反，所以offset需为负
+view.scrollBy(-offsetX, -offsetY);
+</code></pre></li>
+<li><p>Scroller</p>
+<p>  scrollTo()和scrollBy()都是使View的平移瞬间发生的，这样的效果会让人感觉很突兀，而Scroller可以实现平滑移动的效果，而不是瞬间完成的移动。</p>
+<p>  使用Scroller主要有三个步骤：</p>
+<ol>
+<li><p>初始化Scroller对象，一般在view初始化的时候同时初始化scroller，代码如下：<br><code>mScroller=new Scroller(context);</code></p>
+</li>
+<li><p>重写view的computeScroll()方法，实现模拟滑动。computeScroll()的模版代码如下：</p>
+<pre><code>@Override
+public void computeScroll() {
+  super.computeScroll();
+  // 判断Scroller是否执行完毕
+  if (mScroller.computeScrollOffset()) {
+      ((View) getParent()).scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+      // 通过重绘来不断调用computeScroll
+      invalidate();
+  }
+}
+</code></pre><p> Scroller类提供了computeScrollOffset()方法来判断是否完成了整个滑动，同时也提供了getCurrX()和getCurrY()方法来获得当前的滑动坐标。computeScroll()方法是不会自动调用的，只能通过invalidate()-&gt;draw()-&gt;computeScroll()来间接调用，实现循环获取scrollX和scrollY的目的，当移动过程结束之后，Scroller.computeScrollOffset方法会返回false，从而中断循环,完成整个平滑移动过程；</p>
+</li>
+<li><p>startScroll开启模拟过程。调用Scroller.startScroll()方法，将起始位置、偏移量以及移动时间(可选)作为参数传递给startScroll()方法。在获取坐标时，通常可以使用getScrollX()和getScrollY()方法来获取父视图中content所滑动到的点的坐标，不过要注意的是这个值的正负，它与在scrollBy()、scrollTo()中讲解是一样的。另外，在startScroll()之后，还要invalidate()方法来通知View进行重绘，从而来调用computeScroll()的模拟过程。当然，可以给startScroll()方法增加一个duration的参数来设置滑动的持续时长。</p>
+</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><p>属性动画</p>
+</li>
+<li><p>ViewDragHelper</p>
+<p>  ViewDragHelper基本可以实现各种不同滑动需求，但使用稍微复杂。</p>
+<p>  示例代码：</p>
+<pre><code>public class DragViewGroup extends FrameLayout {
+
+  private ViewDragHelper mViewDragHelper;
+  private View mMenuView, mMainView;
+  private int mWidth;
+
+  public DragViewGroup(Context context) {
+      super(context);
+      initView();
+  }
+
+  public DragViewGroup(Context context, AttributeSet attrs) {
+      super(context, attrs);
+      initView();
+  }
+
+  public DragViewGroup(Context context, AttributeSet attrs, int defStyleAttr) {
+      super(context, attrs, defStyleAttr);
+      initView();
+  }
+
+  @Override
+  protected void onFinishInflate() {
+      super.onFinishInflate();
+      mMenuView = getChildAt(0);
+      mMainView = getChildAt(1);
+  }
+
+  @Override
+  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+      super.onSizeChanged(w, h, oldw, oldh);
+      mWidth = mMenuView.getMeasuredWidth();
+  }
+
+  @Override
+  public boolean onInterceptTouchEvent(MotionEvent ev) {
+      return mViewDragHelper.shouldInterceptTouchEvent(ev);
+  }
+
+  @Override
+  public boolean onTouchEvent(MotionEvent event) {
+      //将触摸事件传递给ViewDragHelper,此操作必不可少
+      mViewDragHelper.processTouchEvent(event);
+      return true;
+  }
+
+  private void initView() {
+      mViewDragHelper = ViewDragHelper.create(this, callback);
+  }
+
+  private ViewDragHelper.Callback callback = new ViewDragHelper.Callback() {
+
+      // 何时开始检测触摸事件
+      @Override
+      public boolean tryCaptureView(View child, int pointerId) {
+          //如果当前触摸的child是mMainView时开始检测
+          return mMainView == child;
+      }
+
+      // 触摸到View后回调
+      @Override
+      public void onViewCaptured(View capturedChild, int activePointerId) {
+          super.onViewCaptured(capturedChild, activePointerId);
+      }
+
+      // 当拖拽状态改变，比如idle，dragging
+      @Override
+      public void onViewDragStateChanged(int state) {
+          super.onViewDragStateChanged(state);
+      }
+
+      // 当位置改变的时候调用,常用与滑动时更改scale等
+      @Override
+      public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
+          super.onViewPositionChanged(changedView, left, top, dx, dy);
+      }
+
+      // 处理垂直滑动
+      @Override
+      public int clampViewPositionVertical(View child, int top, int dy) {
+          return 0;
+      }
+
+      // 处理水平滑动
+      @Override
+      public int clampViewPositionHorizontal(View child, int left, int dx) {
+          return left;
+      }
+
+      // 拖动结束后调用
+      @Override
+      public void onViewReleased(View releasedChild, float xvel, float yvel) {
+          super.onViewReleased(releasedChild, xvel, yvel);
+          //手指抬起后缓慢移动到指定位置
+          if (mMainView.getLeft() &lt; 500) {
+              //关闭菜单，相当于Scroller的startScroll方法
+              mViewDragHelper.smoothSlideViewTo(mMainView, 0, 0);
+              ViewCompat.postInvalidateOnAnimation(DragViewGroup.this);
+          } else {
+              //打开菜单
+              mViewDragHelper.smoothSlideViewTo(mMainView, 300, 0);
+              ViewCompat.postInvalidateOnAnimation(DragViewGroup.this);
+          }
+      }
+  };
+
+  @Override
+  public void computeScroll() {
+      if (mViewDragHelper.continueSettling(true)) {
+          ViewCompat.postInvalidateOnAnimation(this);
+      }
+  }
+}
+</code></pre></li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/《Android群英传》/" rel="tag">#《Android群英传》</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/26/使用RecyclerView实现仿喵街效果/" rel="next" title="使用RecyclerView实现仿喵街效果">
+                <i class="fa fa-chevron-left"></i> 使用RecyclerView实现仿喵街效果
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/07/实现WebView中JS和App之间的交互/" rel="prev" title="实现WebView中JS和App之间的交互">
+                实现WebView中JS和App之间的交互 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/02/28/《Android群英传》笔记(上)/"
+           data-title="《Android群英传》笔记(上)" data-url="http://yuqirong.me/2016/02/28/《Android群英传》笔记(上)/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar/27073358153.jpg" alt="俞其荣" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Google+
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i> Twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Instagram
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> 知乎
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3"><span class="nav-number">1.</span> <span class="nav-text">第三章：Android控件架构与自定义控件详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1_Android_u63A7_u4EF6_u67B6_u6784"><span class="nav-number">1.1.</span> <span class="nav-text">3.1 Android控件架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2_View_u7684_u6D4B_u91CF"><span class="nav-number">1.2.</span> <span class="nav-text">3.2 View的测量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3_View_u7684_u7ED8_u5236"><span class="nav-number">1.3.</span> <span class="nav-text">3.3 View的绘制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4_ViewGroup_u7684_u6D4B_u91CF"><span class="nav-number">1.4.</span> <span class="nav-text">3.4 ViewGroup的测量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5_ViewGroup_u7684_u7ED8_u5236"><span class="nav-number">1.5.</span> <span class="nav-text">3.5 ViewGroup的绘制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-6__u81EA_u5B9A_u4E49View"><span class="nav-number">1.6.</span> <span class="nav-text">3.6 自定义View</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-7__u81EA_u5B9A_u4E49ViewGroup"><span class="nav-number">1.7.</span> <span class="nav-text">3.7 自定义ViewGroup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-8__u4E8B_u4EF6_u62E6_u622A_u673A_u5236_u5206_u6790"><span class="nav-number">1.8.</span> <span class="nav-text">3.8 事件拦截机制分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u56DB_u7AE0_uFF1AListView_u4F7F_u7528_u6280_u5DE7"><span class="nav-number">2.</span> <span class="nav-text">第四章：ListView使用技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1_ListView_u5E38_u7528_u4F18_u5316_u6280_u5DE7"><span class="nav-number">2.1.</span> <span class="nav-text">4.1 ListView常用优化技巧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2_ListView_u5E38_u7528_u62D3_u5C55"><span class="nav-number">2.2.</span> <span class="nav-text">4.2 ListView常用拓展</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E94_u7AE0_uFF1AAndroid_Scroll_u5206_u6790"><span class="nav-number">3.</span> <span class="nav-text">第五章：Android Scroll分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1__u6ED1_u52A8_u6548_u679C_u662F_u5982_u4F55_u4EA7_u751F_u7684"><span class="nav-number">3.1.</span> <span class="nav-text">5.1 滑动效果是如何产生的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2__u5B9E_u73B0_u6ED1_u52A8_u7684_u4E03_u79CD_u65B9_u6CD5"><span class="nav-number">3.2.</span> <span class="nav-text">5.2 实现滑动的七种方法</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣
+   
+   &nbsp;&nbsp;|&nbsp;&nbsp;
+  <script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/sitemap.xml">Google网站地图</a></span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/baidusitemap.xml">百度网站地图</a></span>
+  
+  </span>
+</div>
+
+<div class="powered-by">
+	由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+	<a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>
+</div>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;本站总点击 <span id="busuanzi_value_site_pv"></span> 次
+&nbsp;&nbsp;|&nbsp;&nbsp;您是第 <span id="busuanzi_value_site_uv"></span> 位访客
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"yuqirong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '/js/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

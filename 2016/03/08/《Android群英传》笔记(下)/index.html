@@ -1,0 +1,1611 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,《Android群英传》," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="blog for yuqirong" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="第六章：Android绘图机制与处理技巧6.1 屏幕的尺寸信息系统屏幕密度如下
+
+ldpi—120—240X320分辨率
+mdpi—160—320X480分辨率
+hdpi—240—480X800分辨率
+xhdpi—320—720X1280分辨率
+xxhdpi—480—1080X1920分辨率
+
+Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上1px = 1dp。
+所以各个分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Android群英传》笔记(下)">
+<meta property="og:url" content="http://yuqirong.me/2016/03/08/《Android群英传》笔记(下)/index.html">
+<meta property="og:site_name" content="blog for yuqirong">
+<meta property="og:description" content="第六章：Android绘图机制与处理技巧6.1 屏幕的尺寸信息系统屏幕密度如下
+
+ldpi—120—240X320分辨率
+mdpi—160—320X480分辨率
+hdpi—240—480X800分辨率
+xhdpi—320—720X1280分辨率
+xxhdpi—480—1080X1920分辨率
+
+Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上1px = 1dp。
+所以各个分">
+<meta property="og:updated_time" content="2016-03-31T08:15:54.570Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《Android群英传》笔记(下)">
+<meta name="twitter:description" content="第六章：Android绘图机制与处理技巧6.1 屏幕的尺寸信息系统屏幕密度如下
+
+ldpi—120—240X320分辨率
+mdpi—160—320X480分辨率
+hdpi—240—480X800分辨率
+xhdpi—320—720X1280分辨率
+xxhdpi—480—1080X1920分辨率
+
+Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上1px = 1dp。
+所以各个分">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always',
+    motion: true
+  };
+</script>
+
+  <title> 《Android群英传》笔记(下) | blog for yuqirong </title>
+  <meta name="baidu-site-verification" content="MBYnGIEEPN" />
+  <meta name="baidu-site-verification" content="1Hx0jVHsgl" />
+  <meta name="baidu-site-verification" content="L0MgAErI0s" />
+  <meta name="google-site-verification" content="_hYRHLLoBRM6L31myWhOPTxzGtawe9z1zmCqcJ-aHA0" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">blog for yuqirong</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-question-circle fa-fw"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '8ZRfk21kUz89L8Xi6hZm','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                《Android群英传》笔记(下)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-03-08T20:22:27+08:00" content="2016-03-08">
+              2016-03-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Book-Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Book Note</span>
+                  </a>
+                </span>
+                
+                
+  								<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
+								
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/08/《Android群英传》笔记(下)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/08/《Android群英传》笔记(下)/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><a href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7" class="headerlink" title="第六章：Android绘图机制与处理技巧"></a>第六章：Android绘图机制与处理技巧</h1><h2 id="6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F"><a href="#6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F" class="headerlink" title="6.1 屏幕的尺寸信息"></a>6.1 屏幕的尺寸信息</h2><p>系统屏幕密度如下</p>
+<ul>
+<li>ldpi—120—240X320分辨率</li>
+<li>mdpi—160—320X480分辨率</li>
+<li>hdpi—240—480X800分辨率</li>
+<li>xhdpi—320—720X1280分辨率</li>
+<li>xxhdpi—480—1080X1920分辨率</li>
+</ul>
+<p>Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上1px = 1dp。</p>
+<p>所以各个分辨率直接的换算比例，即ldpi:mdpi:hdpi:xhdpi:xxhdpi=3:4:6:8:12</p>
+<p>下面给出单位转换的源码：</p>
+<pre><code>public class DisplayUtil {
+
+    /**
+     * 把px值转换为dip或dp值
+     *
+     * @param context
+     * @param pxValue
+     * @return
+     */
+    public static int px2dip(Context context, float pxValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
+    }
+
+    /**
+     * 把dip值或dp值转换为px值
+     *
+     * @param context
+     * @param dipValue
+     * @return
+     */
+    public static int dip2px(Context context, float dipValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dipValue * scale + 0.5f);
+    }
+
+    /**
+     * 将px值转换为sp值
+     *
+     * @param context
+     * @param pxValue
+     * @return
+     */
+    public static int px2sp(Context context, float pxValue) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (pxValue / fontScale + 0.5f);
+    }
+
+    /**
+     * 将sp值转换为px值
+     * @param context
+     * @param spValue
+     * @return
+     */
+    public static int sp2px(Context context, float spValue) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (spValue * fontScale + 0.5f);
+    }
+
+}
+</code></pre><h2 id="6-2_2D_u7ED8_u56FE_u57FA_u7840"><a href="#6-2_2D_u7ED8_u56FE_u57FA_u7840" class="headerlink" title="6.2 2D绘图基础"></a>6.2 2D绘图基础</h2><p>Paint类的一些属性和对应的功能：</p>
+<ul>
+<li>setAntiAlias(); //设置画笔的锯齿效果</li>
+<li>setColor(); //设置画笔的颜色</li>
+<li>setARGB(); //设置画笔的A,R,G,B的值</li>
+<li>setAlpha(); //设置画笔的Alpha值</li>
+<li>setTextSize(); //设置字体的尺寸</li>
+<li>setStyle(); //设置画笔的风格（空心或者实心）</li>
+<li>setStrokeWidth(); //设置空心边框的宽度</li>
+</ul>
+<p>Canvas类主要的绘画功能：</p>
+<ul>
+<li>canvas.drawPoint(x,y,paint); //绘制点</li>
+<li>canvas.drawLine(startX,startY,endX,endY,paint); //绘制直线</li>
+<li>canvas.drawRect(left,top,right,bottom,paint); //绘制矩形</li>
+<li>canvas.drawRoundRect(left,top,right,bottom,radiusX,radiusY,paint); //绘制圆角矩形</li>
+<li>canvas.drawCircle(circleX,circleY,radius,paint); //绘制圆</li>
+<li>canvas.drawOval(left,top,right,bottom,paint); //通过椭圆的外接矩形来绘制椭圆</li>
+<li>canvas.drawText(text,startX,startY,paint); //绘制文字</li>
+<li>canvas.drawPosText(text,new float[]{x1,y1,…,xn,yn},paint); //指定位置绘制文本</li>
+</ul>
+<h2 id="6-3_Android_XML_u7ED8_u56FE"><a href="#6-3_Android_XML_u7ED8_u56FE" class="headerlink" title="6.3 Android XML绘图"></a>6.3 Android XML绘图</h2><ul>
+<li><p>Bitmap：</p>
+<pre><code>&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+  android:src=&quot;@drawable/ic_launcher&quot;/&gt;
+</code></pre><p>  这样就能直接将图片转成bitmap在程序中使用了。</p>
+</li>
+<li><p>Shape:</p>
+<pre><code>&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+  android:shape=&quot;line|oval|ring|rectangle&quot;&gt;
+  &lt;!--默认为rectangle--&gt;
+  &lt;corners
+      android:bottomLeftRadius=&quot;integer&quot;
+      android:bottomRightRadius=&quot;integer&quot;
+      android:radius=&quot;integer&quot;
+      android:topLeftRadius=&quot;integer&quot;
+      android:topRightRadius=&quot;integer&quot; /&gt;
+  &lt;!--当shape为rectangle时才有，radius默认为1dp--&gt;
+
+  &lt;gradient
+      android:angle=&quot;integer&quot;
+      android:centerColor=&quot;color&quot;
+      android:centerX=&quot;integer&quot;
+      android:centerY=&quot;integer&quot;
+      android:endColor=&quot;color&quot;
+      android:gradientRadius=&quot;integer&quot;
+      android:startColor=&quot;color&quot;
+      android:type=&quot;linear|radial|sweep&quot;
+      android:useLevel=&quot;boolean&quot; /&gt;
+
+  &lt;padding
+      android:bottom=&quot;integer&quot;
+      android:left=&quot;integer&quot;
+      android:right=&quot;integer&quot;
+      android:top=&quot;integer&quot; /&gt;
+
+  &lt;size
+      android:width=&quot;integer&quot;
+      android:height=&quot;integer&quot; /&gt;
+  &lt;!--指定大小，一般用在imageview配合scaleType使用--&gt;
+
+  &lt;solid android:color=&quot;color&quot; /&gt;
+  &lt;!--填充颜色--&gt;
+  &lt;stroke
+      android:width=&quot;integer&quot;
+      android:color=&quot;color&quot;
+      android:dashGap=&quot;integer&quot;
+      android:dashWidth=&quot;integer&quot; /&gt;
+  &lt;!--边框,dashGap为虚线间隔宽度，dashWidth为虚线宽度--&gt;
+&lt;/shape&gt;
+</code></pre></li>
+<li><p>Layer:实现类似Photoshop中图层的概念。</p>
+<pre><code>&lt;layer-list xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+  &lt;item android:drawable=&quot;@mipmap/ic_launcher&quot; /&gt;
+  &lt;item
+      android:drawable=&quot;@mipmap/ic_launcher&quot;
+      android:left=&quot;10dp&quot;
+      android:top=&quot;10dp&quot; /&gt;
+  &lt;item
+      android:drawable=&quot;@mipmap/ic_launcher&quot;
+      android:left=&quot;20dp&quot;
+      android:top=&quot;20dp&quot; /&gt;
+&lt;/layer-list&gt;
+</code></pre></li>
+<li><p>Selector：通常用于view的触摸反馈。</p>
+<pre><code>&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+  &lt;item android:state_pressed=&quot;true&quot;&gt;
+      &lt;shape android:shape=&quot;rectangle&quot;&gt;
+          &lt;solid android:color=&quot;#334444&quot; /&gt;
+      &lt;/shape&gt;
+  &lt;/item&gt;
+  &lt;item android:state_pressed=&quot;false&quot;&gt;
+      &lt;shape android:shape=&quot;rectangle&quot;&gt;
+          &lt;solid android:color=&quot;#444444&quot; /&gt;
+      &lt;/shape&gt;
+  &lt;/item&gt;
+&lt;/selector&gt;
+</code></pre></li>
+</ul>
+<h2 id="6-4_Android_u7ED8_u56FE_u6280_u5DE7"><a href="#6-4_Android_u7ED8_u56FE_u6280_u5DE7" class="headerlink" title="6.4 Android绘图技巧"></a>6.4 Android绘图技巧</h2><ul>
+<li><p>Canvas.save():保存画布。它的作用就是将之前的所有已绘制图像保存起来，让后续的操作就好像在一个新的图层上操作一样。</p>
+</li>
+<li><p>Canvas.restore():合并图层操作。它的作用就是将我们在save()之后绘制的所有图像与save()之前的图像进行合并。</p>
+</li>
+<li><p>Canvas.translate():画布平移，可理解为坐标系的平移。如在之前绘制的坐标系原点在(0,0)。在translate(x,y)之后，坐标原点在(x,y)。</p>
+</li>
+<li><p>Canvas.rotate():画布翻转，可理解为坐标系的翻转。canvas.rotate(30);为按照坐标系的原点顺时针旋转30度。canvas.rotate(30,x,y);为按照坐标系的(x,y)点顺时针旋转30度。</p>
+</li>
+<li><p>Canvas.saveLayer()、Canvas.saveLayerAlpha():将一个图层入栈。</p>
+</li>
+<li><p>Canvas.restore()、Canvas.restoreToCount():将一个图层出栈。</p>
+</li>
+</ul>
+<h2 id="6-5_Android_u56FE_u50CF_u5904_u7406_u4E4B_u8272_u5F69_u7279_u6548_u5904_u7406"><a href="#6-5_Android_u56FE_u50CF_u5904_u7406_u4E4B_u8272_u5F69_u7279_u6548_u5904_u7406" class="headerlink" title="6.5 Android图像处理之色彩特效处理"></a>6.5 Android图像处理之色彩特效处理</h2><ul>
+<li><p>色调：<code>setRotate(int axis,float degree)</code>设置颜色的色调。第一个参数，系统分别使用0、1、2来代表Red、Green、Blue三种颜色的处理。而第二个参数就是需要处理的值。</p>
+<pre><code>ColorMatrix hueMatrix = new ColorMatrix();
+hueMatrix.setRotate(0, hue0);
+hueMatrix.setRotate(1, hue1);
+hueMatrix.setRotate(2, hue2);
+</code></pre></li>
+</ul>
+<p>通过上面的方法，可以为RGB三种颜色分量分别重新设置了不同的色调值。</p>
+<ul>
+<li><p>饱和度：<code>setSaturation(float sat)</code>方法来设置颜色的饱和度，参数即代表设置颜色饱和度的值，代码如下所示。当饱和度为0时，图像就变成灰色图像了。</p>
+<pre><code>ColorMatrix saturationMatrix = new ColorMatrix();
+saturationMatrix.setSaturation(saturation);
+</code></pre></li>
+<li><p>亮度：当三原色以相同的比例进行混合的时候，就会显示出白色。系统也正是使用这个原理来改变一个图像的亮度的，代码如下所示。当亮度为0时，图像就变成全黑了。</p>
+<pre><code>ColorMatrix lumMatrix = new ColorMatrix();
+lumMatrix.setScale(lum,lum,lum,1);
+</code></pre></li>
+<li><p><code>postConcat()</code>方法将矩阵的作用效果混合，从而叠加处理效果，代码如下：</p>
+<pre><code>ColorMatrix imageMatrix = new ColorMatrix();
+imageMatrix.postConcat(hueMatrix);
+imageMatrix.postConcat(saturationMatrix);
+imageMatrix.postConcat(lumMatrix);
+</code></pre></li>
+</ul>
+<h2 id="6-6_Android_u56FE_u50CF_u5904_u7406_u4E4B_u56FE_u5F62_u7279_u6548_u5904_u7406"><a href="#6-6_Android_u56FE_u50CF_u5904_u7406_u4E4B_u56FE_u5F62_u7279_u6548_u5904_u7406" class="headerlink" title="6.6 Android图像处理之图形特效处理"></a>6.6 Android图像处理之图形特效处理</h2><ul>
+<li>matrix.setRotate()——旋转变换</li>
+<li>matrix.setTranslate()——平移变换</li>
+<li>matrix.setScale()——缩放变换</li>
+<li>matrix.setSkew()——错切变换</li>
+<li>pre()和post()——提供矩阵的前乘和后乘运算</li>
+</ul>
+<h2 id="6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406"><a href="#6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406" class="headerlink" title="6.7 Android图像处理之画笔特效处理"></a>6.7 Android图像处理之画笔特效处理</h2><pre><code>mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+</code></pre><p>可以实现圆形ImageView。</p>
+<p>// TODO</p>
+<p><strong>Shader</strong></p>
+<p>Shader又称之为着色器、渲染器，它用来实现一系列的渐变、渲染效果。在Android中的Shader包括以下几种：</p>
+<ul>
+<li>BitmapShader 位图Shader</li>
+<li>LinearGradient 线性Shader</li>
+<li>RadialGradient 光束Shader</li>
+<li>SweepGradient 梯度Shader</li>
+<li>ComposeShader 混合Shader</li>
+</ul>
+<p>除第一个Shader以外 其他Shader都实现了名副其实的渐变。BitmapShader产生的是一个位图，它的作用就是通过Paint对画布进行指定Bitmap的填充，填充有以下几种模式可以选择：</p>
+<ul>
+<li>CLAMP拉伸——拉伸的是图片最后一个像素 不断重复</li>
+<li>REPEAT重复——横向纵向不断重复</li>
+<li>MIRROR镜像——横向不断翻转重复，纵向不断翻转重复</li>
+</ul>
+<p><strong>PathEffect</strong></p>
+<p>PathEffect是指用各种笔触效果来绘制一个路径。</p>
+<ul>
+<li>ConrnerPathEffect 就是将拐角变得圆滑，具体圆滑的程度，则由参数决定</li>
+<li>DiscretePathEffect 使用这个效果后，线段上就会产生许多杂点。</li>
+<li>DashPathEffect 这个效果可以用来绘制虚线，用一个数组来设置各个点之间的间隔。另一个参数phase则用来控制绘制时数组的一个偏移量。通常可以通过设置值来实现路径的动态效果。</li>
+<li>PathDashPathEffect 与前面的DashPathEffect类似，只不过它的功能更加强大，可以设置显示点的图形，即方形点的虚线，圆形点的虚线。</li>
+<li>ComposePathEffect 组合PathEffect，将任意两种路径特性组合起来形成一种新的效果。</li>
+</ul>
+<h2 id="6-8_View_u4E4B_u5B6A_u751F_u5144_u5F1F_u2014_u2014SurfaceView"><a href="#6-8_View_u4E4B_u5B6A_u751F_u5144_u5F1F_u2014_u2014SurfaceView" class="headerlink" title="6.8 View之孪生兄弟——SurfaceView"></a>6.8 View之孪生兄弟——SurfaceView</h2><p>SurfaceView与view的区别：  </p>
+<ul>
+<li>View主要适用于主动更新的情况下，而SurfaceView 主要适用于被动更新，例如频繁的刷新。</li>
+<li>View在主线程中对画面进行刷新，而SurfaceView通常会通过一个子线程来进行页面刷新。 </li>
+<li>View在绘图时没有使用双缓冲机制，而SurfaceView在底层实现机制中就已经实现了双缓冲。</li>
+</ul>
+<p>总结成一句话就是，如果你的自定义View需要频繁刷新，或者刷新时数据处理量比较大，那你就可以考虑使用SurfaceView来取代View了。</p>
+<p>SurfaceView模版代码：</p>
+<pre><code>public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolder.Callback {
+  //SurfaceHolder
+  private SurfaceHolder mSurfaceHolder;
+  //用于绘图的Canvas
+  private Canvas mCanvas;
+  //子线程标志位
+  private boolean mIsDrawing;
+
+  public MySurfaceView(Context context) {
+      super(context);
+      init();
+  }
+  public MySurfaceView(Context context, AttributeSet attrs) {
+      super(context, attrs);
+      init();
+  }
+  public MySurfaceView(Context context, AttributeSet attrs, int defStyleAttr) {
+      super(context, attrs, defStyleAttr);
+      init();
+  }
+  private void init() {
+      mSurfaceHolder = getHolder();
+      mSurfaceHolder.addCallback(this);
+      setFocusable(true);
+      setFocusableInTouchMode(true);
+      this.setKeepScreenOn(true);
+      //mSurfaceHolder.setFormat(PixelFormat.OPAQUE);
+  }
+  @Override
+  public void surfaceCreated(SurfaceHolder holder) {
+      mIsDrawing = true;
+      new Thread(this).start();
+  }
+  @Override
+  public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+  }
+  @Override
+  public void surfaceDestroyed(SurfaceHolder holder) {
+      mIsDrawing = false;
+  }
+  @Override
+  public void run() {
+      while (mIsDrawing) {
+          draw();
+      }
+  }
+  private void draw() {
+      try {
+          //每次获得的canvas对象都是上次的 因此上次的绘画操作都会保存
+          mCanvas = mSurfaceHolder.lockCanvas();
+          //draw here
+      } catch (Exception e) {
+
+      } finally {
+          if (mCanvas != null) {
+              // 对画布内容进行提交
+              mSurfaceHolder.unlockCanvasAndPost(mCanvas);
+          }
+      }
+
+  }
+}
+</code></pre><h1 id="u7B2C_u4E03_u7AE0_uFF1AAndroid_u52A8_u753B_u673A_u5236_u4E0E_u4F7F_u7528_u6280_u5DE7"><a href="#u7B2C_u4E03_u7AE0_uFF1AAndroid_u52A8_u753B_u673A_u5236_u4E0E_u4F7F_u7528_u6280_u5DE7" class="headerlink" title="第七章：Android动画机制与使用技巧"></a>第七章：Android动画机制与使用技巧</h1><h2 id="7-1_Android_View_u52A8_u753B_u6846_u67B6"><a href="#7-1_Android_View_u52A8_u753B_u6846_u67B6" class="headerlink" title="7.1 Android View动画框架"></a>7.1 Android View动画框架</h2><p>Animation框架定义了透明度、旋转、缩放和位移几种常见的动画，而且控制的是整个View，实现的原理是绘制视图时 View 所在的 ViewGroup 中的 drawChild 函数获取该View的Animation的Transformation值，然后调用canvas.concat(transformToApply.getMatrix()),通过矩阵运算完成动画帧。如果动画没有完成，就继续调用invalidate()函数，启动下次绘制来驱动动画，从而完成整个动画的绘制。</p>
+<ul>
+<li>透明度动画：AlphaAnimation</li>
+<li>旋转动画：RotateAnimation</li>
+<li>位移动画：TranslateAnimation</li>
+<li>缩放动画：ScaleAnimation</li>
+</ul>
+<p>动画集合：AnimationSet</p>
+<p>动画监听器：setAnimationListener(new Animation.AnimationListener(){…})</p>
+<h2 id="7-2_Android_u5C5E_u6027_u52A8_u753B_u5206_u6790"><a href="#7-2_Android_u5C5E_u6027_u52A8_u753B_u5206_u6790" class="headerlink" title="7.2 Android属性动画分析"></a>7.2 Android属性动画分析</h2><p><strong>ObjectAnimator</strong>：属性动画框架中最重要的实行类。</p>
+<p>用法：</p>
+<pre><code>ObjectAnimator animator = ObjectAnimator.ofFloat(view,&quot;translationX&quot;,300);
+animator.setDuration(300);
+animator.start();
+</code></pre><p>注意：操纵的属性(即上面的“translationX”)必须具有get、set方法，不然ObjectAnimator就无法起效。因为内部会通过Java反射机制来调用set函数修改对象属性值。</p>
+<p>常用属性值：</p>
+<ul>
+<li>translationX和translationY</li>
+<li>rotation、rotationX和rotationY</li>
+<li>scaleX和scaleY</li>
+<li>pivotX和pivotY</li>
+<li>x和y</li>
+<li>alpha</li>
+</ul>
+<p><strong>PropertyValuesHolder</strong>：类似于视图动画中的AnimationSet。在属性动画中，如果针对同一个对象的多个属性，要同时作用多种动画，可以使用PropertyValuesHolder来实现。</p>
+<p>用法：</p>
+<pre><code>PropertyValuesHolder pvh1 = PropertyValuesHolder.ofFloat(&quot;translationX&quot;,300f);
+PropertyValuesHolder pvh2 = PropertyValuesHolder.ofFloat(&quot;scaleX&quot;,1f,0,1f);
+PropertyValuesHolder pvh3 = PropertyValuesHolder.ofFloat(&quot;scaleY&quot;,1f,0,1f);
+ObjectAnimator.ofPropertyValuesHolder(view,pvh1,pvh2,pvh3).setDuration(1000).start();
+</code></pre><p><strong>ValueAnimator</strong>：ValueAnimator本身不提供任何动画效果，它更像一个数值发生器，用来产生具有一定规律的数字，从而让调用者来控制动画的实现过程。</p>
+<p>用法：</p>
+<pre><code>ValueAnimator animator = ValueAnimator.ofFloat(0,100);
+animator.setTarget(view);
+animator.setDuration(1000).start();
+animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+    @Override
+    public void onAnimationUpdate(ValueAnimator animation) {
+        Float value = (Float) animation.getAnimatedValue();
+        // TODO use the value
+    }
+});
+</code></pre><p>在ValueAnimator的AnimatorUpdateListener中监听数值的变换，从而完成动画的变换。</p>
+<p><strong>AnimatorListener和AnimatorListenerAdapter</strong>：动画事件的监听。</p>
+<p>AnimatorListener用法：</p>
+<pre><code>ObjectAnimator animator = ObjectAnimator.ofFloat(view,&quot;translationX&quot;,300);
+animator.addListener(new Animator.AnimatorListener() {
+    @Override
+    public void onAnimationStart(Animator animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animator animation) {
+
+    }
+
+    @Override
+    public void onAnimationCancel(Animator animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animator animation) {
+
+    }
+});
+</code></pre><p>AnimatorListenerAdapter用法：</p>
+<pre><code>ObjectAnimator animator = ObjectAnimator.ofFloat(view,&quot;translationX&quot;,300);
+animator.addListener(new AnimatorListenerAdapter() {
+    @Override
+    public void onAnimationEnd(Animator animation) {
+        super.onAnimationEnd(animation);
+    }
+});
+</code></pre><p><strong>AnimatorSet</strong>：AnimatorSet不仅能实现一个属性同时作用多个属性动画效果，同时也能实现更为精确的顺序控制。</p>
+<p>用法(实现上面使用PropertyValuesHolder的动画效果)：</p>
+<pre><code>ObjectAnimator animator1 = ObjectAnimator.ofFloat(view,&quot;translationX&quot;,300);
+    ObjectAnimator animator2 = ObjectAnimator.ofFloat(view,&quot;scaleX&quot;,1f,0f,1f);
+    ObjectAnimator animator3 = ObjectAnimator.ofFloat(view,&quot;scaleY&quot;,1f,0f,1f);
+    AnimatorSet set = new AnimatorSet();
+    set.setDuration(1000);
+    set.playTogether(animator1,animator2,animator3);
+    set.start();
+</code></pre><p>还有playTogether()、playSequentially()、animSet.play()、with()、before()、after()来协同工作。</p>
+<p><strong>在XML中使用属性动画</strong>：在res里新建文件夹animator。</p>
+<p>anim_scalex.xml：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;objectAnimator xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:duration=&quot;1000&quot;
+    android:propertyName=&quot;scaleX&quot;
+    android:valueFrom=&quot;1.0&quot;
+    android:valueTo=&quot;2.0&quot;
+    android:valueType=&quot;floatType&quot;&gt;
+&lt;/objectAnimator&gt; 
+</code></pre><p>在代码中加载xml属性动画：</p>
+<pre><code>public void scaleX(View view) {
+    Animator anim = AnimatorInflater.loadAnimator(this, R.animator.anim_scalex);  
+    anim.setTarget(view);  
+    anim.start();
+}
+</code></pre><p>另附 XML文件中定义两个objectAnimator：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;  
+&lt;set xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;  
+    android:ordering=&quot;together&quot; &gt;  
+
+    &lt;objectAnimator  
+        android:duration=&quot;1000&quot;  
+        android:propertyName=&quot;scaleX&quot;  
+        android:valueFrom=&quot;1&quot;  
+        android:valueTo=&quot;0.5&quot; &gt;  
+    &lt;/objectAnimator&gt;  
+    &lt;objectAnimator  
+        android:duration=&quot;1000&quot;  
+        android:propertyName=&quot;scaleY&quot;  
+        android:valueFrom=&quot;1&quot;  
+        android:valueTo=&quot;0.5&quot; &gt;  
+    &lt;/objectAnimator&gt;  
+
+&lt;/set&gt; 
+</code></pre><p><strong>View的animate方法</strong>：可以认为是属性动画的一种简写方式。</p>
+<p>用法：</p>
+<pre><code>view.animate()
+    .alpha(0)
+    .y(300)
+    .setDuration(300)
+    .withStartAction(new Runnable() {
+        @Override
+        public void run() {
+
+        }
+    }).withEndAction(new Runnable() {
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            });
+        }
+    }).start();
+</code></pre><h2 id="7-3_Android_u5E03_u5C40_u52A8_u753B"><a href="#7-3_Android_u5E03_u5C40_u52A8_u753B" class="headerlink" title="7.3 Android布局动画"></a>7.3 Android布局动画</h2><p>最简单的布局动画是在ViewGroup的XML中，使用以下打开布局动画。<br><code>android:animateLayoutChanges=&quot;true&quot;</code><br>通过上面的代码，当ViewGroup添加View时，子View会呈现逐渐显示的过渡效果，是Android默认的显示的过渡效果。</p>
+<p><strong>LayoutAnimationController</strong></p>
+<pre><code>LinearLayout ll = (LinearLayout)findViewById(R.id.ll);
+// 设置过渡动画
+ScaleAnimation scaleAnimation = new ScaleAnimation(0,1,0,1);
+scaleAnimation.setDuration(2000);
+// 设置布局动画的显示属性
+LayoutAnimationController lac = new LayoutAnimationController(scaleAnimation,0.5f);
+lac.setOrder(LayoutAnimationController.ORDER_NORMAL);
+ll.setLayoutAnimation(lac);
+</code></pre><p>LayoutAnimationController的第一个参数是作用的动画，第二个参数是每个View显示的delay时间。当delay时间不为0时，可以设置子View显示的顺序，如下所示。</p>
+<ul>
+<li>LayoutAnimationController.ORDER_NORMAL  顺序</li>
+<li>LayoutAnimationController.ORDER_RANDOM  随机</li>
+<li>LayoutAnimationController.ORDER_REVERSE 反序</li>
+</ul>
+<h2 id="7-4_Interpolators_28_u63D2_u503C_u5668_29"><a href="#7-4_Interpolators_28_u63D2_u503C_u5668_29" class="headerlink" title="7.4 Interpolators(插值器)"></a>7.4 Interpolators(插值器)</h2><h2 id="7-5__u81EA_u5B9A_u4E49_u52A8_u753B"><a href="#7-5__u81EA_u5B9A_u4E49_u52A8_u753B" class="headerlink" title="7.5 自定义动画"></a>7.5 自定义动画</h2><p>首先继承Animation类，实现<code>applyTransformation(float interpolatedTime, Transformation t)</code>的逻辑。不过通常情况下，还要覆盖父类的<code>initialize(int width, int height, int parentWidth, int parentHeight)</code>实现一些初始化的工作。</p>
+<p><code>applyTransformation(float interpolatedTime, Transformation t)</code>第一个参数是插值器的时间因子，这个因子由动画当前完成的百分比和当前时间所对应的插值所计算得来的，取值为0到1.0。第二个参数是矩阵的封装类，一般使用这个类来获取当前的矩阵对象，代码如下：</p>
+<pre><code>final Matrix matrix = t.getMatrix();
+</code></pre><p>下面给出电视机关闭效果的动画：</p>
+<pre><code>@Override
+protected void applyTransformation(float interpolatedTime, Transformation t) {
+    final Matrix matrix = t.getMatrix();
+    matrix.preScale(1, 1 - interpolatedTime, mCenterWidth, mCenterHeight);
+}
+</code></pre><p>//TODO</p>
+<h2 id="7-6_Android_5-X_SVG__u77E2_u91CF_u52A8_u753B_u673A_u5236"><a href="#7-6_Android_5-X_SVG__u77E2_u91CF_u52A8_u753B_u673A_u5236" class="headerlink" title="7.6 Android 5.X SVG 矢量动画机制"></a>7.6 Android 5.X SVG 矢量动画机制</h2><p>Google在Android 5.X中提供了下面两个新的API来帮助支持SVG：</p>
+<ul>
+<li>VectorDrawable</li>
+<li>AnimatedVectorDrawable</li>
+</ul>
+<p>下面给出SVG图形：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:width=&quot;200dp&quot;
+    android:height=&quot;200dp&quot;
+    android:viewportHeight=&quot;100&quot;
+    android:viewportWidth=&quot;100&quot;&gt;
+
+    &lt;group
+        android:name=&quot;test&quot;
+        android:rotation=&quot;0&quot;&gt;
+        &lt;path
+            android:fillColor=&quot;@android:color/holo_blue_light&quot;
+            android:pathData=&quot;M 25 50
+            a 25,25 0 1,0 50,0&quot; /&gt;
+    &lt;/group&gt;
+
+&lt;/vector&gt;
+</code></pre><p> //TODO</p>
+<h1 id="u7B2C_u516B_u7AE0_uFF1AActivity_u4E0EActivity_u8C03_u7528_u6808_u5206_u6790"><a href="#u7B2C_u516B_u7AE0_uFF1AActivity_u4E0EActivity_u8C03_u7528_u6808_u5206_u6790" class="headerlink" title="第八章：Activity与Activity调用栈分析"></a>第八章：Activity与Activity调用栈分析</h1><h2 id="8-1_Activity"><a href="#8-1_Activity" class="headerlink" title="8.1 Activity"></a>8.1 Activity</h2><p>Activity的形态：</p>
+<ul>
+<li><p>Active/Running : 这时候Activity处于Activity栈的最顶层，可见，并与用户进行交互。</p>
+</li>
+<li><p>Paused : 当Activity失去焦点，被一个新的非全屏的Activity或者一个透明的Activity放置在栈顶时，Activity就转化为Paused形态。但它只是失去了与用户交互的能力，所有状态信息、成员变量都还保持着，只有在系统内存极低的情况下，才会被系统回收掉。</p>
+</li>
+<li><p>Stopped : 如果一个Activity被另一个Activity完全覆盖，那么Activity就会进入Stopped形态，此时，它不再可见，但却依然保持了所有状态信息和成员变量。</p>
+</li>
+<li><p>Killed : 当Activity被系统回收掉或者Activity从来没有创建过，Activity就处于Killed状态。</p>
+</li>
+</ul>
+<p>Activity启动与销毁过程：</p>
+<ul>
+<li><p>onCreate() ： 创建基本的UI元素。</p>
+</li>
+<li><p>onPause()和onStop() ： 清除Activity的资源，避免浪费。</p>
+</li>
+<li><p>onDestory() ： 因为引用会在Activity销毁的时候销毁，而线程不会，所以清除开启的线程。</p>
+</li>
+</ul>
+<p>Activity的暂停与恢复过程：</p>
+<ul>
+<li><p>onPause() ： 释放系统资源，如Camera、sensor、receivers。</p>
+</li>
+<li><p>onResume() ： 需要重新初始化在onPause()中释放资源。</p>
+</li>
+</ul>
+<p>Activity的停止过程：</p>
+<ul>
+<li><p>由部分不可见到完全不可见 ： onPause() -&gt; onStop()</p>
+</li>
+<li><p>由部分不可见到可见： onPause() -&gt; onStop() -&gt; onRestart() -&gt; onStart() -&gt; onResume()</p>
+</li>
+</ul>
+<p>Activity的重新创建过程：</p>
+<p>如果用户finish()方法结束了Activity，则不会调用onSaveInstanceState()。</p>
+<h2 id="8-2_Android_u4EFB_u52A1_u6808_u7B80_u4ECB"><a href="#8-2_Android_u4EFB_u52A1_u6808_u7B80_u4ECB" class="headerlink" title="8.2 Android任务栈简介"></a>8.2 Android任务栈简介</h2><p>一个Task中的Activity可以来自不同的App，同一个App的Activity也可能不在一个Task中。</p>
+<h2 id="8-3_AndroidMainifest_u542F_u52A8_u6A21_u5F0F"><a href="#8-3_AndroidMainifest_u542F_u52A8_u6A21_u5F0F" class="headerlink" title="8.3 AndroidMainifest启动模式"></a>8.3 AndroidMainifest启动模式</h2><ul>
+<li><p>standard ： 默认的启动模式，每次都会创建新的实例</p>
+</li>
+<li><p>singleTop ：   通常适用于接收到消息后显示的界面</p>
+</li>
+<li><p>singleTask ： 通常可以用来退出整个应用：将主Activity设为singleTask模式，然后在要退出的Activity中转到主Activity，从而将主Activity之上的Activity都清除，然后重写主Activity的onNewIntent()方法，在方法中加上一句finish()，将最后一个Activity结束掉。</p>
+</li>
+<li><p>singleInstance ： 申明为singleInstance的Activity会出现在一个新的任务栈中，而且该任务栈中只存在这一个Activity。举个例子，如果应用A的任务栈中创建了MainActivity的实例，且启动模式为singleInstance，如果应用B的也要激活MainActivity，则不需要创建，两个应用共享该Activity实例。这种启动模式常用于需要与程序分离的界面。</p>
+</li>
+</ul>
+<p>关于singleTop和singleInstance这两种启动模式还有一点需要特殊说明：如果在一个singleTop或者singleInstance的Activity A中通过startActivityForResult()方法来启动另一个Activity B，那么直接返回Activity.RESULT_CANCELED而不会再去等待返回。这是由于系统在Framework层做了对这两种启动模式的限制，因为Android开发者认为，不同Task之间，默认是不能传递数据的，如果一定要传递，那么只能通过Intent来绑定数据。</p>
+<h2 id="8-4_Intent_Flag_u542F_u52A8_u6A21_u5F0F"><a href="#8-4_Intent_Flag_u542F_u52A8_u6A21_u5F0F" class="headerlink" title="8.4 Intent Flag启动模式"></a>8.4 Intent Flag启动模式</h2><ul>
+<li><p>Intent.FLAG_ACTIVITY_NEW_TASK：使用一个新的Task来启动一个Activity，但启动的每个Activity都将在一个新的Task中。该Flag通常使用在从Service中启动Activity的场景，由于在Service中并不存在Activity栈，所以使用该Flag来创建一个新的Activity栈，并创建新的Activity实例。</p>
+</li>
+<li><p>FLAG_ACTIVITY_SINGLE_TOP：使用singleTop模式来启动一个Activity，与指定android:launchMode=”singleTop”效果相同。</p>
+</li>
+<li><p>FLAG_ACTIVITY_CLEAR_TOP：使用singleTask模式来启动一个Activity，与指定android:launchMode=”singleTask”效果相同。</p>
+</li>
+<li><p>FLAG_ACTIVITY_NO_HISTORY：使用这种模式启动Activity，当该Activity启动其他Activity后，该Activity就消失了，不会保留在Activity栈中。例如A-B，B中以这种模式启动C，C再启动D，则当前Activity栈为ABD。</p>
+</li>
+</ul>
+<h2 id="8-5__u6E05_u7A7A_u4EFB_u52A1_u6808"><a href="#8-5__u6E05_u7A7A_u4EFB_u52A1_u6808" class="headerlink" title="8.5 清空任务栈"></a>8.5 清空任务栈</h2><ul>
+<li><p>clearTaskOnLaunch：每次返回该Activity时，都将该Activity之上的所有Activity都清除。通过这个属性，可以让这个Task每次在初始化的时候，都只有这一个Activity。</p>
+</li>
+<li><p>finishOnTaskLaunch：finishOnTaskLaunch属性与clearTaskOnLaunch属性类似，只不过clearTaskOnLaunch作用在别人身上，而finishOnTaskLaunch作用在自己身上。通过这个属性，当离开这个Activity所处的Task，那么用户再返回时，该Activity就会被finish掉。</p>
+</li>
+<li><p>alwaysRetainTaskState：如果将Activity的这个属性设置为True，那么该Activity所在的Task将不接受任何清理命令，一直保持当前Task状态。</p>
+</li>
+</ul>
+<h1 id="u7B2C_u4E5D_u7AE0_uFF1AAndroid_u7CFB_u7EDF_u4FE1_u606F_u4E0E_u5B89_u5168_u673A_u5236"><a href="#u7B2C_u4E5D_u7AE0_uFF1AAndroid_u7CFB_u7EDF_u4FE1_u606F_u4E0E_u5B89_u5168_u673A_u5236" class="headerlink" title="第九章：Android系统信息与安全机制"></a>第九章：Android系统信息与安全机制</h1><h2 id="9-1_Android_u7CFB_u7EDF_u4FE1_u606F_u83B7_u53D6"><a href="#9-1_Android_u7CFB_u7EDF_u4FE1_u606F_u83B7_u53D6" class="headerlink" title="9.1 Android系统信息获取"></a>9.1 Android系统信息获取</h2><p>要获取系统的配置信息，通常可以从以下两个方面获取：</p>
+<ul>
+<li>android.os.Build</li>
+<li>SystemProperty</li>
+</ul>
+<p>下面列举了android.os.Build一些常用的信息：</p>
+<ul>
+<li>Build.BOARD // 主板</li>
+<li>Build.BRAND // Android系统定制商</li>
+<li>Build.SUPPORTED_ABIS // CPU指令集</li>
+<li>Build.DEVICE // 设备参数</li>
+<li>Build.DISPLAY // 显示屏参数</li>
+<li>Build.FINGERPRINT // 唯一编号</li>
+<li>Build.SERIAL // 硬件序列号</li>
+<li>Build.ID // 修订版本列表</li>
+<li>Build.MANUFACTURER // 硬件制造商</li>
+<li>Build.MODEL // 版本</li>
+<li>Build.HARDWARE // 硬件名</li>
+<li>Build.PRODUCT // 手机产品名</li>
+<li>Build.TAGS // 描述Build的标签</li>
+<li>Build.TYPE // Builder类型</li>
+<li>Build.VERSION.CODENAME // 当前开发代号</li>
+<li>Build.VERSION.INCREMENTAL // 源码控制版本号</li>
+<li>Build.VERSION.RELEASE // 版本字符串</li>
+<li>Build.VERSION.SDK_INT // 版本号</li>
+<li>Build.HOST // Host值</li>
+<li>Build.USER // User名</li>
+<li>Build.TIME // 编译时间</li>
+</ul>
+<p>下面列举了SystemProperty常用的信息：</p>
+<ul>
+<li>os.version // OS版本</li>
+<li>os.name // OS名称</li>
+<li>os.arch // OS架构</li>
+<li>user.home // Home属性</li>
+<li>user.name // Name属性</li>
+<li>user.dir //Dir属性</li>
+<li>user.timezone // 时区</li>
+<li>path.separator // 路径分隔符</li>
+<li>line.separator // 行分隔符</li>
+<li>file.separator // 文件分隔符</li>
+<li>java.vendor.url // Java Vendor URL 属性</li>
+<li>java.class.path // Java Class 路径</li>
+<li>java.class.version Java Class 版本</li>
+<li>java.vendor // Java Vendor 属性</li>
+<li>java.version // Java 版本</li>
+<li>java.home // Java Home 属性</li>
+</ul>
+<p>我们可以访问到系统的属性值，代码如下所示：</p>
+<pre><code>String board = Build.BOARD;
+String brand = Build.BRAND;
+
+String os_version = System.getProperty(&quot;os.version&quot;);
+String os_name = System.getProperty(&quot;os.name&quot;);
+</code></pre><h2 id="9-2_Android_Apk_u5E94_u7528_u4FE1_u606F_u83B7_u53D6_u4E4BPackageManager"><a href="#9-2_Android_Apk_u5E94_u7528_u4FE1_u606F_u83B7_u53D6_u4E4BPackageManager" class="headerlink" title="9.2 Android Apk应用信息获取之PackageManager"></a>9.2 Android Apk应用信息获取之PackageManager</h2><p>Android系统提供了PackageManager来负责管理所有已安装的App。其中封装的信息如下：</p>
+<ul>
+<li>ActivityInfo：Mainfest文件中<activity\></activity\>和<receiver\></receiver\>之间的所有信息，包括name、icon、label、launchmode等。</li>
+<li>ServiceInfo：封装了<service\></service\>之间的所有信息。</li>
+<li>ApplicationInfo：封装了<application\></application\>之间的信息，不过特别的是，Application包含很多Flag，FLAG_SYSTEM表示为系统应用，FLAG_EXTERNAL_STORAGE表示为安装在SDCard上的应用等，通过这些Flag，可以很方便的判断应用类型。</li>
+<li>PackageInfo：PackageInfo与前面三个Info类似，都是用于封装Mainfest文件的相关节点信息，而它包含了所以Activity、Service等信息。</li>
+<li>ResolveInfo：封装的是包含<intent\>信息的上一级信息，所以它可以返回ActivityInfo，ServiceInfo等包含<intent\>的信息，它经常用来帮助我们找到那些包含特定Intent条件的信息，如带分享功能、播放功能的应用。</intent\></intent\></li>
+</ul>
+<p>PackageManager常用方法如下：</p>
+<ul>
+<li>getPackageManager：通过调用这个方法返回一个PackageManager对象。</li>
+<li>getApplicationInfo：以ApplicationInfo的形式返回指定包名的ApplicationInfo。</li>
+<li>getApplicationIcon：返回指定包名的Icon。</li>
+<li>getInstallApplication：以ApplicationInfo的形式返回安装的应用。</li>
+<li>getInstalledPackages：以PackageInfo的形式返回安装的应用。</li>
+<li>queryIntentActivities：返回指定intent的ResolveInfo对象、Activity集合。</li>
+<li>queryIntentServices：返回指定intent的ResolveInfo对象、Service集合。</li>
+<li>resolveActivity：返回指定Intent的Activity。</li>
+<li>resolveService：返回指定Intent的Service。</li>
+</ul>
+<p>判断App类型的依据，就是利用ApplicationInfo中的FLAG_SYSTEM来进行判断，代码如下所示：</p>
+<pre><code>app.flags &amp; ApplicationInfo.FLAG_SYSTEM
+</code></pre><ul>
+<li>如果当前应用的<code>flags &amp; ApplicationInfo.FLAG_SYSTEM != 0</code>则为系统应用；</li>
+<li>如果当前应用的<code>flags &amp; ApplicationInfo.FLAG_SYSTEM &lt;= 0</code>则为第三方应用；</li>
+<li>特殊的，当系统应用经过升级后，也将成为第三方应用：<code>flags &amp; ApplicationInfo.FLAG_UPDATED_SYSTEM_APP != 0</code>；</li>
+<li>如果当前应用的<code>flags &amp; ApplicationInfo.FLAG_EXTERNAL_STORAGE != 0</code>则为安装在SDCard上的应用。</li>
+</ul>
+<h2 id="9-3_Android_Apk_u5E94_u7528_u4FE1_u606F_u83B7_u53D6_u4E4BActivityManager"><a href="#9-3_Android_Apk_u5E94_u7528_u4FE1_u606F_u83B7_u53D6_u4E4BActivityManager" class="headerlink" title="9.3 Android Apk应用信息获取之ActivityManager"></a>9.3 Android Apk应用信息获取之ActivityManager</h2><p>ActivityManager可以获得在运行的应用程序信息。其中封装的信息如下：</p>
+<ul>
+<li>ActivityManager.MemoryInfo：MemoryInfo有几个非常重要的字段，availMem–系统可用内存，totalMem–总内存，threshold–低内存的阈值，即区分是否低内存的临界值，lowMemory–是否处于低内存。</li>
+<li>Debug.MemoryInfo：ActivityManager.MemoryInfo用于统计全局的内存信息，而Debug.MemoryInfo用于统计进程下的内存信息。</li>
+<li>RunningAppProcessInfo：进程相关的信息，processName–进程名，pid–进程pid，uid–进程uid，pkgList–该进程下的所有包。</li>
+<li>RunningServiceInfo：用于封装运行的服务信息，在它里面包含一些服务进程的信息，同时还有一些其他信息。activeSince–第一次被激活的时间、方式，foreground–服务是否在后台执行。</li>
+</ul>
+<h2 id="9-4__u89E3_u6790Packages-xml_u83B7_u53D6_u7CFB_u7EDF_u4FE1_u606F"><a href="#9-4__u89E3_u6790Packages-xml_u83B7_u53D6_u7CFB_u7EDF_u4FE1_u606F" class="headerlink" title="9.4 解析Packages.xml获取系统信息"></a>9.4 解析Packages.xml获取系统信息</h2><p>packages.xml在 data/system/目录下。</p>
+<h2 id="9-5_Android_u5B89_u5168_u673A_u5236"><a href="#9-5_Android_u5B89_u5168_u673A_u5236" class="headerlink" title="9.5 Android安全机制"></a>9.5 Android安全机制</h2><p>反编译：</p>
+<ul>
+<li>apktool(反编译XML) ： <code>apktool_2.1.0.jar d test.apk</code></li>
+<li>apktool(重新打包) ： <code>apktool_2.1.0.jar b test</code></li>
+<li>Dex2jar、jd-gui ：<code>d2j-dex2jar.bat classes.dex</code></li>
+</ul>
+<p>Android Apk 加密：</p>
+<p>打开build.gradle(Module:app)文件，minifyEnabled为true则说明打开混淆功能，proguard-rules.pro为项目自定义的混淆文件，在项目app文件夹下找到这个文件，在这个文件里可以定义引入的第三方依赖包的混淆规则。</p>
+<pre><code>buildTypes {
+    release {
+        minifyEnabled true
+        proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;
+    }
+}
+</code></pre><h1 id="u7B2C_u5341_u7AE0_uFF1AAndroid_u6027_u80FD_u4F18_u5316"><a href="#u7B2C_u5341_u7AE0_uFF1AAndroid_u6027_u80FD_u4F18_u5316" class="headerlink" title="第十章：Android性能优化"></a>第十章：Android性能优化</h1><h2 id="10-1__u5E03_u5C40_u4F18_u5316"><a href="#10-1__u5E03_u5C40_u4F18_u5316" class="headerlink" title="10.1 布局优化"></a>10.1 布局优化</h2><ul>
+<li><p>Android UI渲染机制</p>
+<p>  在Android中，系统通过VSYNC信号出发对UI的渲染、重绘，其间隔时间是16ms。这个16ms其实就是1000ms中显示60帧画面的单位时间（玩游戏的就该知道，大于等于60帧就感觉不到卡顿）。Android系统提供了检测UI渲染时间的工具，打开“开发者选项”，选择“Profile GPU Rendering”（我的手机是“GPU呈现模式分析”），选中“On screen as bars”（我的为“在屏幕上显示为条形图”）。每一条柱状线都包括三部分，蓝色代表测量绘制Display List的时间，红色代表OpenGL渲染Display List所需要的时间，黄色代表CPU等待GPU处理的时间，中间绿色横线代表VSYNC时间16ms，需要尽量将所有条形图都控制在这条绿线之下。</p>
+</li>
+<li><p>避免Overdraw</p>
+<p>  过渡绘制会浪费很多CPU、GPU资源，例如系统默认会绘制Activity的背景，而如果再给布局绘制了重叠的背景，那么默认Activity的背景就属于无效的过渡绘制。Android系统在开发者选项中提供了这样一个检测工具–“Enable GPU Overdraw”。借助它可以判断Overdraw的次数。尽量增大蓝色的区域，减少红色的区域。</p>
+</li>
+<li><p>优化布局层级</p>
+<p>  在Android中系统对View的测量、布局和绘制都是通过遍历View树来进行的，如果View树太高，就会影响其速度，Google也建议View树的高度不宜超过10层。</p>
+</li>
+<li><p>避免嵌套过多无用布局</p>
+<ul>
+<li>使用<include\>标签重用Layout</include\></li>
+<li><p>使用<viewstub\>实现View的延迟加载</viewstub\></p>
+<p><viewstub\>是个非常轻量级的组件，不仅不可视而且大小为0。这个布局在初始化时不需要显示，只有在某些情况下才显示出来。下面是实例代码：</viewstub\></p>
+<pre><code>&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    tools:context=&quot;.MainActivity&quot;&gt;
+    &lt;TextView
+      android:id=&quot;@+id/tv&quot;
+      android:layout_width=&quot;wrap_content&quot;
+      android:layout_height=&quot;wrap_content&quot;
+      android:text=&quot;not often use&quot; /&gt;
+&lt;/RelativeLayout&gt;
+</code></pre><p>使用<viewstub\>：</viewstub\></p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    tools:context=&quot;.MainActivity&quot;&gt;
+    &lt;ViewStub
+      android:id=&quot;@+id/view_stub&quot;
+      android:layout_width=&quot;match_parent&quot;
+      android:layout_height=&quot;wrap_content&quot;
+      android:layout_centerInParent=&quot;true&quot;
+      android:layout=&quot;@layout/test&quot; /&gt;
+&lt;/RelativeLayout&gt;
+</code></pre><p>在<code>onCreate(Bundle savedInstanceState)</code>中：</p>
+<pre><code>ViewStub viewStub= (ViewStub) findViewById(R.id.view_stub);
+//下面两个方法都是用来实现延迟加载的，区别是inflate()方法会返回引用的布局。
+viewStub.setVisibility(View.VISIBLE); // 第一种方法
+
+View view=viewStub.inflate(); // 第二种方法
+TextView tv= (TextView) view.findViewById(R.id.tv);
+</code></pre><p><viewstub\>标签与设置View.GONE这种方式的区别在于<viewstub\>标签只在显示时渲染整个布局，而设置View.GONE这种方式在初始化布局树时就已经添加在布局树上了，所以相比之下<viewstub>更有效率。</viewstub></viewstub\></viewstub\></p>
+</li>
+</ul>
+</li>
+<li><p>Hierarchy Viewer</p>
+</li>
+</ul>
+<p>这是个用来测试布局冗余的工具。<a href="http://blog.csdn.net/xyz_lmn/article/details/14222975" target="_blank" rel="external">可点击此处</a></p>
+<h2 id="10-2__u5185_u5B58_u4F18_u5316"><a href="#10-2__u5185_u5B58_u4F18_u5316" class="headerlink" title="10.2 内存优化"></a>10.2 内存优化</h2><ul>
+<li><p>什么是内存</p>
+<ul>
+<li>寄存器：速度最快的存储场所，因为寄存器位于处理器内部，在程序中无法控制。</li>
+<li>栈：存放基本类型的数据和对象的引用，但对象本身不存放在栈中，而是存放在堆中。</li>
+<li>堆：堆内存用来存放由new创建的对象和数组，在堆中分配的内存，由Java虚拟机的自动垃圾回收器(GC)来管理。</li>
+<li>静态存储区域：是指在固定的位置存放应用程序运行时一直存在的数据，Java在内存中专门划分了一个静态存储区域来管理一些特殊的数据变量如静态的数据变量。</li>
+<li><p>常量池：就是该类型所用到常量的一个有序集合，包括直接常量（基本类型，String）和对其他类型、字段和方法的符号引用。</p>
+<p>在程序中，可以使用如下所示的代码来获得堆的大小，所谓的内存分析，正是分析Heap中的内存状态</p>
+<pre><code>ActivityManager manager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)；
+int heapSize = manager.getLargeMemoryClass();
+</code></pre></li>
+</ul>
+</li>
+<li><p>获取Android系统内存信息</p>
+<ul>
+<li><p>进程状态</p>
+<pre><code>adb shell dumpsys procstats
+</code></pre></li>
+<li><p>内存信息</p>
+<pre><code>adb shell dumpsys meminfo
+</code></pre></li>
+</ul>
+</li>
+<li><p>内存优化实例</p>
+<ul>
+<li><p>Bitmap优化</p>
+<p>Bitmap是造成内存占用过高甚至是OOM的最大威胁，可以通过以下技巧进行优化</p>
+<p>① 使用适当分辨率和大小的图片：例如在图片列表界面可以使用图片的缩略图thumbnails，而在显示详细图片的时候再显示原图；或者在对图像要求不高的地方，尽量降低图片的精度。</p>
+<p>② 及时回收内存：一旦使用完Bitmap后，一定要及时使用bitmap.recycle()方法释放内存资源。自Android3.0后，由于Bitmap被放到了堆中，其内存由GC管理，就不需要释放了。</p>
+<p>③ 通过内存缓存LruCache和DiskLruCache可以更好地使用Bitmap。</p>
+</li>
+<li><p>代码优化</p>
+<p>任何Java类都将占用大约500字节的内存空间，创建一个类的实例会消耗大约15字节内存。从代码的实现上，也可以对内存进行优化。</p>
+<p>① 对常量使用static修饰符。</p>
+<p>② 使用静态方法，静态方法会比普通方法提高15%左右的访问速度。</p>
+<p>③ 减少不必要的成员变量，这点在Android Lint工具上已经集成检测了。</p>
+<p>④ 减少不必要对象，使用基础类型会比使用对象更加节省资源，同时更应该避免频繁创建短作用域的变量。</p>
+<p>⑤ 尽量不要使用枚举、少用迭代器。</p>
+<p>⑥ 对Cursor、Receiver、Sensor、File等对象，要非常注意对它们的创建、回收和注册、反注册。</p>
+<p>⑦ 避免使用IOC框架，IOC通常使用注解、反射来进行实现，大量使用反射会带来性能的下降。</p>
+<p>⑧ 使用RenderScript、OpenGL来进行非常复杂的绘图操作。</p>
+<p>⑨ 使用SurfaceView来代替View进行大量、频繁的绘图操作。</p>
+<p>⑩ 尽量使用视图缓存，而不是每次都执行inflate()解析视图。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="10-3_Lint_u5DE5_u5177"><a href="#10-3_Lint_u5DE5_u5177" class="headerlink" title="10.3 Lint工具"></a>10.3 Lint工具</h2><h2 id="10-4__u4F7F_u7528Android_Studio_u7684Memory_Monitor_u5DE5_u5177"><a href="#10-4__u4F7F_u7528Android_Studio_u7684Memory_Monitor_u5DE5_u5177" class="headerlink" title="10.4 使用Android Studio的Memory Monitor工具"></a>10.4 使用Android Studio的Memory Monitor工具</h2><h2 id="10-5__u4F7F_u7528TraceView_u5DE5_u5177_u4F18_u5316App_u6027_u80FD"><a href="#10-5__u4F7F_u7528TraceView_u5DE5_u5177_u4F18_u5316App_u6027_u80FD" class="headerlink" title="10.5 使用TraceView工具优化App性能"></a>10.5 使用TraceView工具优化App性能</h2><h2 id="10-6__u4F7F_u7528MAT_u5DE5_u5177_u5206_u6790App_u5185_u5B58_u72B6_u6001"><a href="#10-6__u4F7F_u7528MAT_u5DE5_u5177_u5206_u6790App_u5185_u5B58_u72B6_u6001" class="headerlink" title="10.6 使用MAT工具分析App内存状态"></a>10.6 使用MAT工具分析App内存状态</h2><h2 id="10-7__u4F7F_u7528Dumpsys_u547D_u4EE4_u5206_u6790_u7CFB_u7EDF_u72B6_u6001"><a href="#10-7__u4F7F_u7528Dumpsys_u547D_u4EE4_u5206_u6790_u7CFB_u7EDF_u72B6_u6001" class="headerlink" title="10.7 使用Dumpsys命令分析系统状态"></a>10.7 使用Dumpsys命令分析系统状态</h2></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/《Android群英传》/" rel="tag">#《Android群英传》</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/07/实现WebView中JS和App之间的交互/" rel="next" title="实现WebView中JS和App之间的交互">
+                <i class="fa fa-chevron-left"></i> 实现WebView中JS和App之间的交互
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/17/夜半一忆/" rel="prev" title="夜半一忆">
+                夜半一忆 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/03/08/《Android群英传》笔记(下)/"
+           data-title="《Android群英传》笔记(下)" data-url="http://yuqirong.me/2016/03/08/《Android群英传》笔记(下)/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar/27073358153.jpg" alt="俞其荣" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Google+
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i> Twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Instagram
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> 知乎
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><span class="nav-number">1.</span> <span class="nav-text">第六章：Android绘图机制与处理技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F"><span class="nav-number">1.1.</span> <span class="nav-text">6.1 屏幕的尺寸信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2_2D_u7ED8_u56FE_u57FA_u7840"><span class="nav-number">1.2.</span> <span class="nav-text">6.2 2D绘图基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3_Android_XML_u7ED8_u56FE"><span class="nav-number">1.3.</span> <span class="nav-text">6.3 Android XML绘图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-4_Android_u7ED8_u56FE_u6280_u5DE7"><span class="nav-number">1.4.</span> <span class="nav-text">6.4 Android绘图技巧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-5_Android_u56FE_u50CF_u5904_u7406_u4E4B_u8272_u5F69_u7279_u6548_u5904_u7406"><span class="nav-number">1.5.</span> <span class="nav-text">6.5 Android图像处理之色彩特效处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-6_Android_u56FE_u50CF_u5904_u7406_u4E4B_u56FE_u5F62_u7279_u6548_u5904_u7406"><span class="nav-number">1.6.</span> <span class="nav-text">6.6 Android图像处理之图形特效处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406"><span class="nav-number">1.7.</span> <span class="nav-text">6.7 Android图像处理之画笔特效处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-8_View_u4E4B_u5B6A_u751F_u5144_u5F1F_u2014_u2014SurfaceView"><span class="nav-number">1.8.</span> <span class="nav-text">6.8 View之孪生兄弟——SurfaceView</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E03_u7AE0_uFF1AAndroid_u52A8_u753B_u673A_u5236_u4E0E_u4F7F_u7528_u6280_u5DE7"><span class="nav-number">2.</span> <span class="nav-text">第七章：Android动画机制与使用技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1_Android_View_u52A8_u753B_u6846_u67B6"><span class="nav-number">2.1.</span> <span class="nav-text">7.1 Android View动画框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2_Android_u5C5E_u6027_u52A8_u753B_u5206_u6790"><span class="nav-number">2.2.</span> <span class="nav-text">7.2 Android属性动画分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-3_Android_u5E03_u5C40_u52A8_u753B"><span class="nav-number">2.3.</span> <span class="nav-text">7.3 Android布局动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-4_Interpolators_28_u63D2_u503C_u5668_29"><span class="nav-number">2.4.</span> <span class="nav-text">7.4 Interpolators(插值器)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-5__u81EA_u5B9A_u4E49_u52A8_u753B"><span class="nav-number">2.5.</span> <span class="nav-text">7.5 自定义动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-6_Android_5-X_SVG__u77E2_u91CF_u52A8_u753B_u673A_u5236"><span class="nav-number">2.6.</span> <span class="nav-text">7.6 Android 5.X SVG 矢量动画机制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u516B_u7AE0_uFF1AActivity_u4E0EActivity_u8C03_u7528_u6808_u5206_u6790"><span class="nav-number">3.</span> <span class="nav-text">第八章：Activity与Activity调用栈分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#8-1_Activity"><span class="nav-number">3.1.</span> <span class="nav-text">8.1 Activity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-2_Android_u4EFB_u52A1_u6808_u7B80_u4ECB"><span class="nav-number">3.2.</span> <span class="nav-text">8.2 Android任务栈简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-3_AndroidMainifest_u542F_u52A8_u6A21_u5F0F"><span class="nav-number">3.3.</span> <span class="nav-text">8.3 AndroidMainifest启动模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-4_Intent_Flag_u542F_u52A8_u6A21_u5F0F"><span class="nav-number">3.4.</span> <span class="nav-text">8.4 Intent Flag启动模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-5__u6E05_u7A7A_u4EFB_u52A1_u6808"><span class="nav-number">3.5.</span> <span class="nav-text">8.5 清空任务栈</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E5D_u7AE0_uFF1AAndroid_u7CFB_u7EDF_u4FE1_u606F_u4E0E_u5B89_u5168_u673A_u5236"><span class="nav-number">4.</span> <span class="nav-text">第九章：Android系统信息与安全机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#9-1_Android_u7CFB_u7EDF_u4FE1_u606F_u83B7_u53D6"><span class="nav-number">4.1.</span> <span class="nav-text">9.1 Android系统信息获取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-2_Android_Apk_u5E94_u7528_u4FE1_u606F_u83B7_u53D6_u4E4BPackageManager"><span class="nav-number">4.2.</span> <span class="nav-text">9.2 Android Apk应用信息获取之PackageManager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-3_Android_Apk_u5E94_u7528_u4FE1_u606F_u83B7_u53D6_u4E4BActivityManager"><span class="nav-number">4.3.</span> <span class="nav-text">9.3 Android Apk应用信息获取之ActivityManager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-4__u89E3_u6790Packages-xml_u83B7_u53D6_u7CFB_u7EDF_u4FE1_u606F"><span class="nav-number">4.4.</span> <span class="nav-text">9.4 解析Packages.xml获取系统信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-5_Android_u5B89_u5168_u673A_u5236"><span class="nav-number">4.5.</span> <span class="nav-text">9.5 Android安全机制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u5341_u7AE0_uFF1AAndroid_u6027_u80FD_u4F18_u5316"><span class="nav-number">5.</span> <span class="nav-text">第十章：Android性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#10-1__u5E03_u5C40_u4F18_u5316"><span class="nav-number">5.1.</span> <span class="nav-text">10.1 布局优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-2__u5185_u5B58_u4F18_u5316"><span class="nav-number">5.2.</span> <span class="nav-text">10.2 内存优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-3_Lint_u5DE5_u5177"><span class="nav-number">5.3.</span> <span class="nav-text">10.3 Lint工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-4__u4F7F_u7528Android_Studio_u7684Memory_Monitor_u5DE5_u5177"><span class="nav-number">5.4.</span> <span class="nav-text">10.4 使用Android Studio的Memory Monitor工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-5__u4F7F_u7528TraceView_u5DE5_u5177_u4F18_u5316App_u6027_u80FD"><span class="nav-number">5.5.</span> <span class="nav-text">10.5 使用TraceView工具优化App性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-6__u4F7F_u7528MAT_u5DE5_u5177_u5206_u6790App_u5185_u5B58_u72B6_u6001"><span class="nav-number">5.6.</span> <span class="nav-text">10.6 使用MAT工具分析App内存状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-7__u4F7F_u7528Dumpsys_u547D_u4EE4_u5206_u6790_u7CFB_u7EDF_u72B6_u6001"><span class="nav-number">5.7.</span> <span class="nav-text">10.7 使用Dumpsys命令分析系统状态</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣
+   
+   &nbsp;&nbsp;|&nbsp;&nbsp;
+  <script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/sitemap.xml">Google网站地图</a></span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/baidusitemap.xml">百度网站地图</a></span>
+  
+  </span>
+</div>
+
+<div class="powered-by">
+	由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+	<a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>
+</div>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;本站总点击 <span id="busuanzi_value_site_pv"></span> 次
+&nbsp;&nbsp;|&nbsp;&nbsp;您是第 <span id="busuanzi_value_site_uv"></span> 位访客
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"yuqirong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '/js/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

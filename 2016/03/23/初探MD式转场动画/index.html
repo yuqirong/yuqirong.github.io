@@ -35,7 +35,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Android,《Android群英传》," />
+  <meta name="keywords" content="Android," />
 
 
 
@@ -53,31 +53,32 @@
 
 
 
-<meta name="description" content="第六章：Android绘图机制与处理技巧6.4 Android绘图技巧
-Canvas.save():保存画布。它的作用就是将之前的所有已绘制图像保存起来，让后续的操作就好像在一个新的图层上操作一样。
+<meta name="description" content="最近在做MD设计风格的APP，所以在转场动画上当然也得符合MD了。下面就是效果图：
 
-Canvas.restore():合并图层操作。它的作用就是将我们在save()之后绘制的所有图像与save()之前的图像进行合并。
-
-Canvas.translate():画布平移，可理解为坐标系">
+一开始并未了解过这种转场动画，原来是Google在SDK中已经给我们提供了。ActivityOptions是 Android 5.0 及以上使用的，但是也提供了ActivityOptionsCompat向下兼容。
+下面我们就来看看吧：
+layout_item.xml(ListView的item布局)：
+&amp;lt;?">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《Android群英传》笔记">
-<meta property="og:url" content="http://yuqirong.me/2016/03/08/《Android群英传》笔记/index.html">
+<meta property="og:title" content="初探MD式转场动画">
+<meta property="og:url" content="http://yuqirong.me/2016/03/23/初探MD式转场动画/index.html">
 <meta property="og:site_name" content="blog for yuqirong">
-<meta property="og:description" content="第六章：Android绘图机制与处理技巧6.4 Android绘图技巧
-Canvas.save():保存画布。它的作用就是将之前的所有已绘制图像保存起来，让后续的操作就好像在一个新的图层上操作一样。
+<meta property="og:description" content="最近在做MD设计风格的APP，所以在转场动画上当然也得符合MD了。下面就是效果图：
 
-Canvas.restore():合并图层操作。它的作用就是将我们在save()之后绘制的所有图像与save()之前的图像进行合并。
-
-Canvas.translate():画布平移，可理解为坐标系">
-<meta property="og:updated_time" content="2016-03-18T05:17:29.869Z">
+一开始并未了解过这种转场动画，原来是Google在SDK中已经给我们提供了。ActivityOptions是 Android 5.0 及以上使用的，但是也提供了ActivityOptionsCompat向下兼容。
+下面我们就来看看吧：
+layout_item.xml(ListView的item布局)：
+&amp;lt;?">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160323/20160323165423.gif">
+<meta property="og:updated_time" content="2016-03-23T15:27:42.318Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《Android群英传》笔记">
-<meta name="twitter:description" content="第六章：Android绘图机制与处理技巧6.4 Android绘图技巧
-Canvas.save():保存画布。它的作用就是将之前的所有已绘制图像保存起来，让后续的操作就好像在一个新的图层上操作一样。
+<meta name="twitter:title" content="初探MD式转场动画">
+<meta name="twitter:description" content="最近在做MD设计风格的APP，所以在转场动画上当然也得符合MD了。下面就是效果图：
 
-Canvas.restore():合并图层操作。它的作用就是将我们在save()之后绘制的所有图像与save()之前的图像进行合并。
-
-Canvas.translate():画布平移，可理解为坐标系">
+一开始并未了解过这种转场动画，原来是Google在SDK中已经给我们提供了。ActivityOptions是 Android 5.0 及以上使用的，但是也提供了ActivityOptionsCompat向下兼容。
+下面我们就来看看吧：
+layout_item.xml(ListView的item布局)：
+&amp;lt;?">
 
 
 
@@ -89,7 +90,7 @@ Canvas.translate():画布平移，可理解为坐标系">
   };
 </script>
 
-  <title> 《Android群英传》笔记 | blog for yuqirong </title>
+  <title> 初探MD式转场动画 | blog for yuqirong </title>
   <meta name="baidu-site-verification" content="MBYnGIEEPN" />
   <meta name="baidu-site-verification" content="1Hx0jVHsgl" />
   <meta name="baidu-site-verification" content="L0MgAErI0s" />
@@ -274,7 +275,7 @@ Canvas.translate():画布平移，可理解为坐标系">
             
             
               
-                《Android群英传》笔记
+                初探MD式转场动画
               
             
           </h1>
@@ -283,8 +284,8 @@ Canvas.translate():画布平移，可理解为坐标系">
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2016-03-08T20:22:27+08:00" content="2016-03-08">
-              2016-03-08
+            <time itemprop="dateCreated" datetime="2016-03-23T16:44:22+08:00" content="2016-03-23">
+              2016-03-23
             </time>
           </span>
 
@@ -293,8 +294,8 @@ Canvas.translate():画布平移，可理解为坐标系">
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Book-Note/" itemprop="url" rel="index">
-                    <span itemprop="name">Book Note</span>
+                  <a href="/categories/Android-Tips/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Tips</span>
                   </a>
                 </span>
                 
@@ -313,8 +314,8 @@ Canvas.translate():画布平移，可理解为坐标系">
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/03/08/《Android群英传》笔记/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/08/《Android群英传》笔记/" itemprop="commentsCount"></span>
+                <a href="/2016/03/23/初探MD式转场动画/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/23/初探MD式转场动画/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -333,54 +334,101 @@ Canvas.translate():画布平移，可理解为坐标系">
       
 
       
-        <span itemprop="articleBody"><h1 id="u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><a href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7" class="headerlink" title="第六章：Android绘图机制与处理技巧"></a>第六章：Android绘图机制与处理技巧</h1><h2 id="6-4_Android_u7ED8_u56FE_u6280_u5DE7"><a href="#6-4_Android_u7ED8_u56FE_u6280_u5DE7" class="headerlink" title="6.4 Android绘图技巧"></a>6.4 Android绘图技巧</h2><ul>
-<li><p>Canvas.save():保存画布。它的作用就是将之前的所有已绘制图像保存起来，让后续的操作就好像在一个新的图层上操作一样。</p>
-</li>
-<li><p>Canvas.restore():合并图层操作。它的作用就是将我们在save()之后绘制的所有图像与save()之前的图像进行合并。</p>
-</li>
-<li><p>Canvas.translate():画布平移，可理解为坐标系的平移。如在之前绘制的坐标系原点在(0,0)。在translate(x,y)之后，坐标原点在(x,y)。</p>
-</li>
-<li><p>Canvas.rotate():画布翻转，可理解为坐标系的翻转。canvas.rotate(30);为按照坐标系的原点顺时针旋转30度。canvas.rotate(30,x,y);为按照坐标系的(x,y)点顺时针旋转30度。</p>
-</li>
-<li><p>Canvas.saveLayer()、Canvas.saveLayerAlpha():将一个图层入栈。</p>
-</li>
-<li><p>Canvas.restore()、Canvas.restoreToCount():将一个图层出栈。</p>
-</li>
-</ul>
-<h2 id="6-5_Android_u56FE_u50CF_u5904_u7406_u4E4B_u8272_u5F69_u7279_u6548_u5904_u7406"><a href="#6-5_Android_u56FE_u50CF_u5904_u7406_u4E4B_u8272_u5F69_u7279_u6548_u5904_u7406" class="headerlink" title="6.5 Android图像处理之色彩特效处理"></a>6.5 Android图像处理之色彩特效处理</h2><ul>
-<li><p>色调：<code>setRotate(int axis,float degree)</code>设置颜色的色调。第一个参数，系统分别使用0、1、2来代表Red、Green、Blue三种颜色的处理。而第二个参数就是需要处理的值。</p>
-<pre><code>ColorMatrix hueMatrix = new ColorMatrix();
-hueMatrix.setRotate(0, hue0);
-hueMatrix.setRotate(1, hue1);
-hueMatrix.setRotate(2, hue2);
-</code></pre></li>
-</ul>
-<p>通过上面的方法，可以为RGB三种颜色分量分别重新设置了不同的色调值。</p>
-<ul>
-<li><p>饱和度：<code>setSaturation(float sat)</code>方法来设置颜色的饱和度，参数即代表设置颜色饱和度的值，代码如下所示。当饱和度为0时，图像就变成灰色图像了。</p>
-<pre><code>ColorMatrix saturationMatrix = new ColorMatrix();
-saturationMatrix.setSaturation(saturation);
-</code></pre></li>
-<li><p>亮度：当三原色以相同的比例进行混合的时候，就会显示出白色。系统也正是使用这个原理来改变一个图像的亮度的，代码如下所示。当亮度为0时，图像就变成全黑了。</p>
-<pre><code>ColorMatrix lumMatrix = new ColorMatrix();
-lumMatrix.setScale(lum,lum,lum,1);
-</code></pre></li>
-<li><p><code>postConcat()</code>方法将矩阵的作用效果混合，从而叠加处理效果，代码如下：</p>
-<pre><code>ColorMatrix imageMatrix = new ColorMatrix();
-imageMatrix.postConcat(hueMatrix);
-imageMatrix.postConcat(saturationMatrix);
-imageMatrix.postConcat(lumMatrix);
-</code></pre></li>
-</ul>
-<h2 id="6-6_Android_u56FE_u50CF_u5904_u7406_u4E4B_u56FE_u5F62_u7279_u6548_u5904_u7406"><a href="#6-6_Android_u56FE_u50CF_u5904_u7406_u4E4B_u56FE_u5F62_u7279_u6548_u5904_u7406" class="headerlink" title="6.6 Android图像处理之图形特效处理"></a>6.6 Android图像处理之图形特效处理</h2><ul>
-<li>matrix.setRotate()——旋转变换</li>
-<li>matrix.setTranslate()——平移变换</li>
-<li>matrix.setScale()——缩放变换</li>
-<li>matrix.setSkew()——错切变换</li>
-<li>pre()和post()——提供矩阵的前乘和后乘运算</li>
-</ul>
-<h2 id="6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406"><a href="#6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406" class="headerlink" title="6.7 Android图像处理之画笔特效处理"></a>6.7 Android图像处理之画笔特效处理</h2><pre><code>mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-</code></pre><p>可以实现圆形ImageView。</p>
+        <span itemprop="articleBody"><p>最近在做MD设计风格的APP，所以在转场动画上当然也得符合MD了。下面就是效果图：</p>
+<p><img src="/uploads/20160323/20160323165423.gif" alt="这里写图片描述"></p>
+<p>一开始并未了解过这种转场动画，原来是Google在SDK中已经给我们提供了。<code>ActivityOptions</code>是 Android 5.0 及以上使用的，但是也提供了<code>ActivityOptionsCompat</code>向下兼容。</p>
+<p>下面我们就来看看吧：</p>
+<p>layout_item.xml(ListView的item布局)：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:background=&quot;@android:color/white&quot;
+    android:padding=&quot;10dp&quot;&gt;
+
+    &lt;ImageView
+        android:id=&quot;@+id/iv_img&quot;
+        android:layout_width=&quot;90dip&quot;
+        android:layout_height=&quot;65dip&quot;
+        android:transitionName=&quot;photos&quot;
+        android:padding=&quot;1dp&quot; /&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/tv_title&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_marginLeft=&quot;8dp&quot;
+        android:layout_marginTop=&quot;2dp&quot;
+        android:layout_toRightOf=&quot;@id/iv_img&quot;
+        android:singleLine=&quot;true&quot;
+        android:textAppearance=&quot;@style/TextAppearance.AppCompat.Subhead&quot;
+        android:textColor=&quot;?android:attr/textColorPrimary&quot;
+        tools:text=&quot;标题&quot; /&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/tv_content&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_below=&quot;@id/tv_title&quot;
+        android:layout_marginLeft=&quot;8dp&quot;
+        android:layout_marginTop=&quot;8dp&quot;
+        android:layout_toRightOf=&quot;@id/iv_img&quot;
+        android:maxLines=&quot;2&quot;
+        android:textAppearance=&quot;@style/TextAppearance.AppCompat.Small&quot;
+        android:textColor=&quot;?android:attr/textColorPrimary&quot;
+        tools:text=&quot;标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题&quot; /&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/tv_time&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_alignParentRight=&quot;true&quot;
+        android:layout_below=&quot;@+id/tv_content&quot;
+        android:maxLines=&quot;1&quot;
+        android:text=&quot;2016-02-25 11:22:23&quot;
+        android:textAppearance=&quot;@style/TextAppearance.AppCompat.Small&quot;
+        android:textColor=&quot;?android:attr/textColorSecondary&quot;
+        android:textSize=&quot;12sp&quot; /&gt;
+
+&lt;/RelativeLayout&gt;
+</code></pre><p>我们会注意到在ImageView里有<code>android:transitionName=&quot;photos&quot;</code>，这正是后面需要用到的。在这里的<code>photos</code>可以任意取名。也就是说你想让哪个View在转场时表现出动画，就在哪个View的xml中添加<code>android:transitionName</code>。</p>
+<p>之后就是我们点击Item时应该跳转到另一个Activity中(这里就跳转到NewsDetailActivity了)，这其中的逻辑如下：</p>
+<pre><code>// Android 5.0 使用转场动画
+if (android.os.Build.VERSION.SDK_INT &gt;= android.os.Build.VERSION_CODES.LOLLIPOP) {
+    ActivityOptions options = ActivityOptions
+            .makeSceneTransitionAnimation(getActivity(),
+                    itemView.findViewById(R.id.iv_img), &quot;photos&quot;);
+    startActivity(NewsDetailActivity.class, bundle, options.toBundle());
+} else {
+    //让新的Activity从一个小的范围扩大到全屏
+    ActivityOptionsCompat options = ActivityOptionsCompat
+            .makeScaleUpAnimation(itemView, itemView.getWidth() / 2,
+                    itemView.getHeight() / 2, 0, 0);
+    startActivity(NewsDetailActivity.class, bundle, options.toBundle());
+}
+</code></pre><p>可以看到在Android 5.0时使用的<code>makeSceneTransitionAnimation()</code>方法中的第三个参数正是上面的<code>&quot;photos&quot;</code>。当然在5.0版本以下我们只能使用兼容的<code>ActivityOptionsCompat</code>了。</p>
+<p>最后在要跳转的Activity的布局中也添加<code>android:transitionName=&quot;photos&quot;</code>，这样就形成了一个MD式转场动画了。</p>
+<p>以下是NewsDetailActivity的布局xml(只截取了部分)：</p>
+<pre><code>&lt;ImageView
+    android:id=&quot;@+id/iv_album&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;256dp&quot;
+    android:scaleType=&quot;centerCrop&quot;
+    android:src=&quot;@drawable/thumbnail_default&quot;
+    android:transitionName=&quot;photos&quot;
+    app:layout_collapseMode=&quot;parallax&quot;
+    app:layout_collapseParallaxMultiplier=&quot;0.7&quot; /&gt;
+</code></pre><p>好了，这样就完成了，如果你需要在NewsDetailActivity执行finish时也出现转场动画，你只需要这样做(这里只给出了<code>onBackPressed()</code>的样例)：</p>
+<pre><code>@Override
+public void onBackPressed() {
+    super.onBackPressed();
+    if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.LOLLIPOP) {
+        finishAfterTransition();
+    }
+}
+</code></pre><p>其实关于<code>ActivityOptions</code>和<code>ActivityOptionsCompat</code>转场动画还有更多选择，可以深入研究一下。</p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="http://www.lxway.com/895445426.htm" target="_blank" rel="external">你所不知道的Activity转场动画——ActivityOptions</a></p>
 </span>
       
     </div>
@@ -391,8 +439,6 @@ imageMatrix.postConcat(lumMatrix);
           
             <a href="/tags/Android/" rel="tag">#Android</a>
           
-            <a href="/tags/《Android群英传》/" rel="tag">#《Android群英传》</a>
-          
         </div>
       
 
@@ -400,17 +446,13 @@ imageMatrix.postConcat(lumMatrix);
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/03/07/实现WebView中JS和App之间的交互/" rel="next" title="实现WebView中JS和App之间的交互">
-                <i class="fa fa-chevron-left"></i> 实现WebView中JS和App之间的交互
+              <a href="/2016/03/22/快速打造仿Android联系人界面/" rel="next" title="快速打造仿Android联系人界面">
+                <i class="fa fa-chevron-left"></i> 快速打造仿Android联系人界面
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/03/17/夜半一忆/" rel="prev" title="夜半一忆">
-                夜半一忆 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -437,8 +479,8 @@ imageMatrix.postConcat(lumMatrix);
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/03/08/《Android群英传》笔记/"
-           data-title="《Android群英传》笔记" data-url="http://yuqirong.me/2016/03/08/《Android群英传》笔记/">
+      <div class="ds-thread" data-thread-key="2016/03/23/初探MD式转场动画/"
+           data-title="初探MD式转场动画" data-url="http://yuqirong.me/2016/03/23/初探MD式转场动画/">
       </div>
     
   </div>
@@ -482,21 +524,21 @@ imageMatrix.postConcat(lumMatrix);
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">11</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -585,7 +627,7 @@ imageMatrix.postConcat(lumMatrix);
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><span class="nav-number">1.</span> <span class="nav-text">第六章：Android绘图机制与处理技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-4_Android_u7ED8_u56FE_u6280_u5DE7"><span class="nav-number">1.1.</span> <span class="nav-text">6.4 Android绘图技巧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-5_Android_u56FE_u50CF_u5904_u7406_u4E4B_u8272_u5F69_u7279_u6548_u5904_u7406"><span class="nav-number">1.2.</span> <span class="nav-text">6.5 Android图像处理之色彩特效处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-6_Android_u56FE_u50CF_u5904_u7406_u4E4B_u56FE_u5F62_u7279_u6548_u5904_u7406"><span class="nav-number">1.3.</span> <span class="nav-text">6.6 Android图像处理之图形特效处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406"><span class="nav-number">1.4.</span> <span class="nav-text">6.7 Android图像处理之画笔特效处理</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">1.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">

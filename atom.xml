@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-03-22T13:24:29.627Z</updated>
+  <updated>2016-03-23T15:27:42.318Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -13,6 +13,120 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[初探MD式转场动画]]></title>
+    <link href="http://yuqirong.me/2016/03/23/%E5%88%9D%E6%8E%A2MD%E5%BC%8F%E8%BD%AC%E5%9C%BA%E5%8A%A8%E7%94%BB/"/>
+    <id>http://yuqirong.me/2016/03/23/初探MD式转场动画/</id>
+    <published>2016-03-23T08:44:22.000Z</published>
+    <updated>2016-03-23T15:27:42.318Z</updated>
+    <content type="html"><![CDATA[<p>最近在做MD设计风格的APP，所以在转场动画上当然也得符合MD了。下面就是效果图：</p>
+<p><img src="/uploads/20160323/20160323165423.gif" alt="这里写图片描述"></p>
+<p>一开始并未了解过这种转场动画，原来是Google在SDK中已经给我们提供了。<code>ActivityOptions</code>是 Android 5.0 及以上使用的，但是也提供了<code>ActivityOptionsCompat</code>向下兼容。</p>
+<p>下面我们就来看看吧：</p>
+<p>layout_item.xml(ListView的item布局)：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:background=&quot;@android:color/white&quot;
+    android:padding=&quot;10dp&quot;&gt;
+
+    &lt;ImageView
+        android:id=&quot;@+id/iv_img&quot;
+        android:layout_width=&quot;90dip&quot;
+        android:layout_height=&quot;65dip&quot;
+        android:transitionName=&quot;photos&quot;
+        android:padding=&quot;1dp&quot; /&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/tv_title&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_marginLeft=&quot;8dp&quot;
+        android:layout_marginTop=&quot;2dp&quot;
+        android:layout_toRightOf=&quot;@id/iv_img&quot;
+        android:singleLine=&quot;true&quot;
+        android:textAppearance=&quot;@style/TextAppearance.AppCompat.Subhead&quot;
+        android:textColor=&quot;?android:attr/textColorPrimary&quot;
+        tools:text=&quot;标题&quot; /&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/tv_content&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_below=&quot;@id/tv_title&quot;
+        android:layout_marginLeft=&quot;8dp&quot;
+        android:layout_marginTop=&quot;8dp&quot;
+        android:layout_toRightOf=&quot;@id/iv_img&quot;
+        android:maxLines=&quot;2&quot;
+        android:textAppearance=&quot;@style/TextAppearance.AppCompat.Small&quot;
+        android:textColor=&quot;?android:attr/textColorPrimary&quot;
+        tools:text=&quot;标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题&quot; /&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/tv_time&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_alignParentRight=&quot;true&quot;
+        android:layout_below=&quot;@+id/tv_content&quot;
+        android:maxLines=&quot;1&quot;
+        android:text=&quot;2016-02-25 11:22:23&quot;
+        android:textAppearance=&quot;@style/TextAppearance.AppCompat.Small&quot;
+        android:textColor=&quot;?android:attr/textColorSecondary&quot;
+        android:textSize=&quot;12sp&quot; /&gt;
+
+&lt;/RelativeLayout&gt;
+</code></pre><p>我们会注意到在ImageView里有<code>android:transitionName=&quot;photos&quot;</code>，这正是后面需要用到的。在这里的<code>photos</code>可以任意取名。也就是说你想让哪个View在转场时表现出动画，就在哪个View的xml中添加<code>android:transitionName</code>。</p>
+<p>之后就是我们点击Item时应该跳转到另一个Activity中(这里就跳转到NewsDetailActivity了)，这其中的逻辑如下：</p>
+<pre><code>// Android 5.0 使用转场动画
+if (android.os.Build.VERSION.SDK_INT &gt;= android.os.Build.VERSION_CODES.LOLLIPOP) {
+    ActivityOptions options = ActivityOptions
+            .makeSceneTransitionAnimation(getActivity(),
+                    itemView.findViewById(R.id.iv_img), &quot;photos&quot;);
+    startActivity(NewsDetailActivity.class, bundle, options.toBundle());
+} else {
+    //让新的Activity从一个小的范围扩大到全屏
+    ActivityOptionsCompat options = ActivityOptionsCompat
+            .makeScaleUpAnimation(itemView, itemView.getWidth() / 2,
+                    itemView.getHeight() / 2, 0, 0);
+    startActivity(NewsDetailActivity.class, bundle, options.toBundle());
+}
+</code></pre><p>可以看到在Android 5.0时使用的<code>makeSceneTransitionAnimation()</code>方法中的第三个参数正是上面的<code>&quot;photos&quot;</code>。当然在5.0版本以下我们只能使用兼容的<code>ActivityOptionsCompat</code>了。</p>
+<p>最后在要跳转的Activity的布局中也添加<code>android:transitionName=&quot;photos&quot;</code>，这样就形成了一个MD式转场动画了。</p>
+<p>以下是NewsDetailActivity的布局xml(只截取了部分)：</p>
+<pre><code>&lt;ImageView
+    android:id=&quot;@+id/iv_album&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;256dp&quot;
+    android:scaleType=&quot;centerCrop&quot;
+    android:src=&quot;@drawable/thumbnail_default&quot;
+    android:transitionName=&quot;photos&quot;
+    app:layout_collapseMode=&quot;parallax&quot;
+    app:layout_collapseParallaxMultiplier=&quot;0.7&quot; /&gt;
+</code></pre><p>好了，这样就完成了，如果你需要在NewsDetailActivity执行finish时也出现转场动画，你只需要这样做(这里只给出了<code>onBackPressed()</code>的样例)：</p>
+<pre><code>@Override
+public void onBackPressed() {
+    super.onBackPressed();
+    if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.LOLLIPOP) {
+        finishAfterTransition();
+    }
+}
+</code></pre><p>其实关于<code>ActivityOptions</code>和<code>ActivityOptionsCompat</code>转场动画还有更多选择，可以深入研究一下。</p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="http://www.lxway.com/895445426.htm" target="_blank" rel="external">你所不知道的Activity转场动画——ActivityOptions</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>最近在做MD设计风格的APP，所以在转场动画上当然也得符合MD了。下面就是效果图：</p>
+<p><img src="/uploads/20160323/20160323165423.gif" alt="这里写图片描述"></p>
+<p>一开始并未了解过这种转场动画，原来是]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="Android Tips" scheme="http://yuqirong.me/categories/Android-Tips/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[快速打造仿Android联系人界面]]></title>
@@ -229,12 +343,172 @@ public boolean onTouchEvent(MotionEvent event) {
   </entry>
   
   <entry>
-    <title><![CDATA[《Android群英传》笔记]]></title>
-    <link href="http://yuqirong.me/2016/03/08/%E3%80%8AAndroid%E7%BE%A4%E8%8B%B1%E4%BC%A0%E3%80%8B%E7%AC%94%E8%AE%B0/"/>
-    <id>http://yuqirong.me/2016/03/08/《Android群英传》笔记/</id>
+    <title><![CDATA[《Android群英传》笔记(下)]]></title>
+    <link href="http://yuqirong.me/2016/03/08/%E3%80%8AAndroid%E7%BE%A4%E8%8B%B1%E4%BC%A0%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8B)/"/>
+    <id>http://yuqirong.me/2016/03/08/《Android群英传》笔记(下)/</id>
     <published>2016-03-08T12:22:27.000Z</published>
-    <updated>2016-03-18T05:17:29.869Z</updated>
-    <content type="html"><![CDATA[<h1 id="u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><a href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7" class="headerlink" title="第六章：Android绘图机制与处理技巧"></a>第六章：Android绘图机制与处理技巧</h1><h2 id="6-4_Android_u7ED8_u56FE_u6280_u5DE7"><a href="#6-4_Android_u7ED8_u56FE_u6280_u5DE7" class="headerlink" title="6.4 Android绘图技巧"></a>6.4 Android绘图技巧</h2><ul>
+    <updated>2016-03-31T08:15:54.570Z</updated>
+    <content type="html"><![CDATA[<h1 id="u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><a href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7" class="headerlink" title="第六章：Android绘图机制与处理技巧"></a>第六章：Android绘图机制与处理技巧</h1><h2 id="6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F"><a href="#6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F" class="headerlink" title="6.1 屏幕的尺寸信息"></a>6.1 屏幕的尺寸信息</h2><p>系统屏幕密度如下</p>
+<ul>
+<li>ldpi—120—240X320分辨率</li>
+<li>mdpi—160—320X480分辨率</li>
+<li>hdpi—240—480X800分辨率</li>
+<li>xhdpi—320—720X1280分辨率</li>
+<li>xxhdpi—480—1080X1920分辨率</li>
+</ul>
+<p>Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上1px = 1dp。</p>
+<p>所以各个分辨率直接的换算比例，即ldpi:mdpi:hdpi:xhdpi:xxhdpi=3:4:6:8:12</p>
+<p>下面给出单位转换的源码：</p>
+<pre><code>public class DisplayUtil {
+
+    /**
+     * 把px值转换为dip或dp值
+     *
+     * @param context
+     * @param pxValue
+     * @return
+     */
+    public static int px2dip(Context context, float pxValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
+    }
+
+    /**
+     * 把dip值或dp值转换为px值
+     *
+     * @param context
+     * @param dipValue
+     * @return
+     */
+    public static int dip2px(Context context, float dipValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dipValue * scale + 0.5f);
+    }
+
+    /**
+     * 将px值转换为sp值
+     *
+     * @param context
+     * @param pxValue
+     * @return
+     */
+    public static int px2sp(Context context, float pxValue) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (pxValue / fontScale + 0.5f);
+    }
+
+    /**
+     * 将sp值转换为px值
+     * @param context
+     * @param spValue
+     * @return
+     */
+    public static int sp2px(Context context, float spValue) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (spValue * fontScale + 0.5f);
+    }
+
+}
+</code></pre><h2 id="6-2_2D_u7ED8_u56FE_u57FA_u7840"><a href="#6-2_2D_u7ED8_u56FE_u57FA_u7840" class="headerlink" title="6.2 2D绘图基础"></a>6.2 2D绘图基础</h2><p>Paint类的一些属性和对应的功能：</p>
+<ul>
+<li>setAntiAlias(); //设置画笔的锯齿效果</li>
+<li>setColor(); //设置画笔的颜色</li>
+<li>setARGB(); //设置画笔的A,R,G,B的值</li>
+<li>setAlpha(); //设置画笔的Alpha值</li>
+<li>setTextSize(); //设置字体的尺寸</li>
+<li>setStyle(); //设置画笔的风格（空心或者实心）</li>
+<li>setStrokeWidth(); //设置空心边框的宽度</li>
+</ul>
+<p>Canvas类主要的绘画功能：</p>
+<ul>
+<li>canvas.drawPoint(x,y,paint); //绘制点</li>
+<li>canvas.drawLine(startX,startY,endX,endY,paint); //绘制直线</li>
+<li>canvas.drawRect(left,top,right,bottom,paint); //绘制矩形</li>
+<li>canvas.drawRoundRect(left,top,right,bottom,radiusX,radiusY,paint); //绘制圆角矩形</li>
+<li>canvas.drawCircle(circleX,circleY,radius,paint); //绘制圆</li>
+<li>canvas.drawOval(left,top,right,bottom,paint); //通过椭圆的外接矩形来绘制椭圆</li>
+<li>canvas.drawText(text,startX,startY,paint); //绘制文字</li>
+<li>canvas.drawPosText(text,new float[]{x1,y1,…,xn,yn},paint); //指定位置绘制文本</li>
+</ul>
+<h2 id="6-3_Android_XML_u7ED8_u56FE"><a href="#6-3_Android_XML_u7ED8_u56FE" class="headerlink" title="6.3 Android XML绘图"></a>6.3 Android XML绘图</h2><ul>
+<li><p>Bitmap：</p>
+<pre><code>&lt;bitmap xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+  android:src=&quot;@drawable/ic_launcher&quot;/&gt;
+</code></pre><p>  这样就能直接将图片转成bitmap在程序中使用了。</p>
+</li>
+<li><p>Shape:</p>
+<pre><code>&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+  android:shape=&quot;line|oval|ring|rectangle&quot;&gt;
+  &lt;!--默认为rectangle--&gt;
+  &lt;corners
+      android:bottomLeftRadius=&quot;integer&quot;
+      android:bottomRightRadius=&quot;integer&quot;
+      android:radius=&quot;integer&quot;
+      android:topLeftRadius=&quot;integer&quot;
+      android:topRightRadius=&quot;integer&quot; /&gt;
+  &lt;!--当shape为rectangle时才有，radius默认为1dp--&gt;
+
+  &lt;gradient
+      android:angle=&quot;integer&quot;
+      android:centerColor=&quot;color&quot;
+      android:centerX=&quot;integer&quot;
+      android:centerY=&quot;integer&quot;
+      android:endColor=&quot;color&quot;
+      android:gradientRadius=&quot;integer&quot;
+      android:startColor=&quot;color&quot;
+      android:type=&quot;linear|radial|sweep&quot;
+      android:useLevel=&quot;boolean&quot; /&gt;
+
+  &lt;padding
+      android:bottom=&quot;integer&quot;
+      android:left=&quot;integer&quot;
+      android:right=&quot;integer&quot;
+      android:top=&quot;integer&quot; /&gt;
+
+  &lt;size
+      android:width=&quot;integer&quot;
+      android:height=&quot;integer&quot; /&gt;
+  &lt;!--指定大小，一般用在imageview配合scaleType使用--&gt;
+
+  &lt;solid android:color=&quot;color&quot; /&gt;
+  &lt;!--填充颜色--&gt;
+  &lt;stroke
+      android:width=&quot;integer&quot;
+      android:color=&quot;color&quot;
+      android:dashGap=&quot;integer&quot;
+      android:dashWidth=&quot;integer&quot; /&gt;
+  &lt;!--边框,dashGap为虚线间隔宽度，dashWidth为虚线宽度--&gt;
+&lt;/shape&gt;
+</code></pre></li>
+<li><p>Layer:实现类似Photoshop中图层的概念。</p>
+<pre><code>&lt;layer-list xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+  &lt;item android:drawable=&quot;@mipmap/ic_launcher&quot; /&gt;
+  &lt;item
+      android:drawable=&quot;@mipmap/ic_launcher&quot;
+      android:left=&quot;10dp&quot;
+      android:top=&quot;10dp&quot; /&gt;
+  &lt;item
+      android:drawable=&quot;@mipmap/ic_launcher&quot;
+      android:left=&quot;20dp&quot;
+      android:top=&quot;20dp&quot; /&gt;
+&lt;/layer-list&gt;
+</code></pre></li>
+<li><p>Selector：通常用于view的触摸反馈。</p>
+<pre><code>&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+  &lt;item android:state_pressed=&quot;true&quot;&gt;
+      &lt;shape android:shape=&quot;rectangle&quot;&gt;
+          &lt;solid android:color=&quot;#334444&quot; /&gt;
+      &lt;/shape&gt;
+  &lt;/item&gt;
+  &lt;item android:state_pressed=&quot;false&quot;&gt;
+      &lt;shape android:shape=&quot;rectangle&quot;&gt;
+          &lt;solid android:color=&quot;#444444&quot; /&gt;
+      &lt;/shape&gt;
+  &lt;/item&gt;
+&lt;/selector&gt;
+</code></pre></li>
+</ul>
+<h2 id="6-4_Android_u7ED8_u56FE_u6280_u5DE7"><a href="#6-4_Android_u7ED8_u56FE_u6280_u5DE7" class="headerlink" title="6.4 Android绘图技巧"></a>6.4 Android绘图技巧</h2><ul>
 <li><p>Canvas.save():保存画布。它的作用就是将之前的所有已绘制图像保存起来，让后续的操作就好像在一个新的图层上操作一样。</p>
 </li>
 <li><p>Canvas.restore():合并图层操作。它的作用就是将我们在save()之后绘制的所有图像与save()之前的图像进行合并。</p>
@@ -282,7 +556,567 @@ imageMatrix.postConcat(lumMatrix);
 </ul>
 <h2 id="6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406"><a href="#6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406" class="headerlink" title="6.7 Android图像处理之画笔特效处理"></a>6.7 Android图像处理之画笔特效处理</h2><pre><code>mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
 </code></pre><p>可以实现圆形ImageView。</p>
-]]></content>
+<p>// TODO</p>
+<p><strong>Shader</strong></p>
+<p>Shader又称之为着色器、渲染器，它用来实现一系列的渐变、渲染效果。在Android中的Shader包括以下几种：</p>
+<ul>
+<li>BitmapShader 位图Shader</li>
+<li>LinearGradient 线性Shader</li>
+<li>RadialGradient 光束Shader</li>
+<li>SweepGradient 梯度Shader</li>
+<li>ComposeShader 混合Shader</li>
+</ul>
+<p>除第一个Shader以外 其他Shader都实现了名副其实的渐变。BitmapShader产生的是一个位图，它的作用就是通过Paint对画布进行指定Bitmap的填充，填充有以下几种模式可以选择：</p>
+<ul>
+<li>CLAMP拉伸——拉伸的是图片最后一个像素 不断重复</li>
+<li>REPEAT重复——横向纵向不断重复</li>
+<li>MIRROR镜像——横向不断翻转重复，纵向不断翻转重复</li>
+</ul>
+<p><strong>PathEffect</strong></p>
+<p>PathEffect是指用各种笔触效果来绘制一个路径。</p>
+<ul>
+<li>ConrnerPathEffect 就是将拐角变得圆滑，具体圆滑的程度，则由参数决定</li>
+<li>DiscretePathEffect 使用这个效果后，线段上就会产生许多杂点。</li>
+<li>DashPathEffect 这个效果可以用来绘制虚线，用一个数组来设置各个点之间的间隔。另一个参数phase则用来控制绘制时数组的一个偏移量。通常可以通过设置值来实现路径的动态效果。</li>
+<li>PathDashPathEffect 与前面的DashPathEffect类似，只不过它的功能更加强大，可以设置显示点的图形，即方形点的虚线，圆形点的虚线。</li>
+<li>ComposePathEffect 组合PathEffect，将任意两种路径特性组合起来形成一种新的效果。</li>
+</ul>
+<h2 id="6-8_View_u4E4B_u5B6A_u751F_u5144_u5F1F_u2014_u2014SurfaceView"><a href="#6-8_View_u4E4B_u5B6A_u751F_u5144_u5F1F_u2014_u2014SurfaceView" class="headerlink" title="6.8 View之孪生兄弟——SurfaceView"></a>6.8 View之孪生兄弟——SurfaceView</h2><p>SurfaceView与view的区别：  </p>
+<ul>
+<li>View主要适用于主动更新的情况下，而SurfaceView 主要适用于被动更新，例如频繁的刷新。</li>
+<li>View在主线程中对画面进行刷新，而SurfaceView通常会通过一个子线程来进行页面刷新。 </li>
+<li>View在绘图时没有使用双缓冲机制，而SurfaceView在底层实现机制中就已经实现了双缓冲。</li>
+</ul>
+<p>总结成一句话就是，如果你的自定义View需要频繁刷新，或者刷新时数据处理量比较大，那你就可以考虑使用SurfaceView来取代View了。</p>
+<p>SurfaceView模版代码：</p>
+<pre><code>public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolder.Callback {
+  //SurfaceHolder
+  private SurfaceHolder mSurfaceHolder;
+  //用于绘图的Canvas
+  private Canvas mCanvas;
+  //子线程标志位
+  private boolean mIsDrawing;
+
+  public MySurfaceView(Context context) {
+      super(context);
+      init();
+  }
+  public MySurfaceView(Context context, AttributeSet attrs) {
+      super(context, attrs);
+      init();
+  }
+  public MySurfaceView(Context context, AttributeSet attrs, int defStyleAttr) {
+      super(context, attrs, defStyleAttr);
+      init();
+  }
+  private void init() {
+      mSurfaceHolder = getHolder();
+      mSurfaceHolder.addCallback(this);
+      setFocusable(true);
+      setFocusableInTouchMode(true);
+      this.setKeepScreenOn(true);
+      //mSurfaceHolder.setFormat(PixelFormat.OPAQUE);
+  }
+  @Override
+  public void surfaceCreated(SurfaceHolder holder) {
+      mIsDrawing = true;
+      new Thread(this).start();
+  }
+  @Override
+  public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+  }
+  @Override
+  public void surfaceDestroyed(SurfaceHolder holder) {
+      mIsDrawing = false;
+  }
+  @Override
+  public void run() {
+      while (mIsDrawing) {
+          draw();
+      }
+  }
+  private void draw() {
+      try {
+          //每次获得的canvas对象都是上次的 因此上次的绘画操作都会保存
+          mCanvas = mSurfaceHolder.lockCanvas();
+          //draw here
+      } catch (Exception e) {
+
+      } finally {
+          if (mCanvas != null) {
+              // 对画布内容进行提交
+              mSurfaceHolder.unlockCanvasAndPost(mCanvas);
+          }
+      }
+
+  }
+}
+</code></pre><h1 id="u7B2C_u4E03_u7AE0_uFF1AAndroid_u52A8_u753B_u673A_u5236_u4E0E_u4F7F_u7528_u6280_u5DE7"><a href="#u7B2C_u4E03_u7AE0_uFF1AAndroid_u52A8_u753B_u673A_u5236_u4E0E_u4F7F_u7528_u6280_u5DE7" class="headerlink" title="第七章：Android动画机制与使用技巧"></a>第七章：Android动画机制与使用技巧</h1><h2 id="7-1_Android_View_u52A8_u753B_u6846_u67B6"><a href="#7-1_Android_View_u52A8_u753B_u6846_u67B6" class="headerlink" title="7.1 Android View动画框架"></a>7.1 Android View动画框架</h2><p>Animation框架定义了透明度、旋转、缩放和位移几种常见的动画，而且控制的是整个View，实现的原理是绘制视图时 View 所在的 ViewGroup 中的 drawChild 函数获取该View的Animation的Transformation值，然后调用canvas.concat(transformToApply.getMatrix()),通过矩阵运算完成动画帧。如果动画没有完成，就继续调用invalidate()函数，启动下次绘制来驱动动画，从而完成整个动画的绘制。</p>
+<ul>
+<li>透明度动画：AlphaAnimation</li>
+<li>旋转动画：RotateAnimation</li>
+<li>位移动画：TranslateAnimation</li>
+<li>缩放动画：ScaleAnimation</li>
+</ul>
+<p>动画集合：AnimationSet</p>
+<p>动画监听器：setAnimationListener(new Animation.AnimationListener(){…})</p>
+<h2 id="7-2_Android_u5C5E_u6027_u52A8_u753B_u5206_u6790"><a href="#7-2_Android_u5C5E_u6027_u52A8_u753B_u5206_u6790" class="headerlink" title="7.2 Android属性动画分析"></a>7.2 Android属性动画分析</h2><p><strong>ObjectAnimator</strong>：属性动画框架中最重要的实行类。</p>
+<p>用法：</p>
+<pre><code>ObjectAnimator animator = ObjectAnimator.ofFloat(view,&quot;translationX&quot;,300);
+animator.setDuration(300);
+animator.start();
+</code></pre><p>注意：操纵的属性(即上面的“translationX”)必须具有get、set方法，不然ObjectAnimator就无法起效。因为内部会通过Java反射机制来调用set函数修改对象属性值。</p>
+<p>常用属性值：</p>
+<ul>
+<li>translationX和translationY</li>
+<li>rotation、rotationX和rotationY</li>
+<li>scaleX和scaleY</li>
+<li>pivotX和pivotY</li>
+<li>x和y</li>
+<li>alpha</li>
+</ul>
+<p><strong>PropertyValuesHolder</strong>：类似于视图动画中的AnimationSet。在属性动画中，如果针对同一个对象的多个属性，要同时作用多种动画，可以使用PropertyValuesHolder来实现。</p>
+<p>用法：</p>
+<pre><code>PropertyValuesHolder pvh1 = PropertyValuesHolder.ofFloat(&quot;translationX&quot;,300f);
+PropertyValuesHolder pvh2 = PropertyValuesHolder.ofFloat(&quot;scaleX&quot;,1f,0,1f);
+PropertyValuesHolder pvh3 = PropertyValuesHolder.ofFloat(&quot;scaleY&quot;,1f,0,1f);
+ObjectAnimator.ofPropertyValuesHolder(view,pvh1,pvh2,pvh3).setDuration(1000).start();
+</code></pre><p><strong>ValueAnimator</strong>：ValueAnimator本身不提供任何动画效果，它更像一个数值发生器，用来产生具有一定规律的数字，从而让调用者来控制动画的实现过程。</p>
+<p>用法：</p>
+<pre><code>ValueAnimator animator = ValueAnimator.ofFloat(0,100);
+animator.setTarget(view);
+animator.setDuration(1000).start();
+animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+    @Override
+    public void onAnimationUpdate(ValueAnimator animation) {
+        Float value = (Float) animation.getAnimatedValue();
+        // TODO use the value
+    }
+});
+</code></pre><p>在ValueAnimator的AnimatorUpdateListener中监听数值的变换，从而完成动画的变换。</p>
+<p><strong>AnimatorListener和AnimatorListenerAdapter</strong>：动画事件的监听。</p>
+<p>AnimatorListener用法：</p>
+<pre><code>ObjectAnimator animator = ObjectAnimator.ofFloat(view,&quot;translationX&quot;,300);
+animator.addListener(new Animator.AnimatorListener() {
+    @Override
+    public void onAnimationStart(Animator animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animator animation) {
+
+    }
+
+    @Override
+    public void onAnimationCancel(Animator animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animator animation) {
+
+    }
+});
+</code></pre><p>AnimatorListenerAdapter用法：</p>
+<pre><code>ObjectAnimator animator = ObjectAnimator.ofFloat(view,&quot;translationX&quot;,300);
+animator.addListener(new AnimatorListenerAdapter() {
+    @Override
+    public void onAnimationEnd(Animator animation) {
+        super.onAnimationEnd(animation);
+    }
+});
+</code></pre><p><strong>AnimatorSet</strong>：AnimatorSet不仅能实现一个属性同时作用多个属性动画效果，同时也能实现更为精确的顺序控制。</p>
+<p>用法(实现上面使用PropertyValuesHolder的动画效果)：</p>
+<pre><code>ObjectAnimator animator1 = ObjectAnimator.ofFloat(view,&quot;translationX&quot;,300);
+    ObjectAnimator animator2 = ObjectAnimator.ofFloat(view,&quot;scaleX&quot;,1f,0f,1f);
+    ObjectAnimator animator3 = ObjectAnimator.ofFloat(view,&quot;scaleY&quot;,1f,0f,1f);
+    AnimatorSet set = new AnimatorSet();
+    set.setDuration(1000);
+    set.playTogether(animator1,animator2,animator3);
+    set.start();
+</code></pre><p>还有playTogether()、playSequentially()、animSet.play()、with()、before()、after()来协同工作。</p>
+<p><strong>在XML中使用属性动画</strong>：在res里新建文件夹animator。</p>
+<p>anim_scalex.xml：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;objectAnimator xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:duration=&quot;1000&quot;
+    android:propertyName=&quot;scaleX&quot;
+    android:valueFrom=&quot;1.0&quot;
+    android:valueTo=&quot;2.0&quot;
+    android:valueType=&quot;floatType&quot;&gt;
+&lt;/objectAnimator&gt; 
+</code></pre><p>在代码中加载xml属性动画：</p>
+<pre><code>public void scaleX(View view) {
+    Animator anim = AnimatorInflater.loadAnimator(this, R.animator.anim_scalex);  
+    anim.setTarget(view);  
+    anim.start();
+}
+</code></pre><p>另附 XML文件中定义两个objectAnimator：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;  
+&lt;set xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;  
+    android:ordering=&quot;together&quot; &gt;  
+
+    &lt;objectAnimator  
+        android:duration=&quot;1000&quot;  
+        android:propertyName=&quot;scaleX&quot;  
+        android:valueFrom=&quot;1&quot;  
+        android:valueTo=&quot;0.5&quot; &gt;  
+    &lt;/objectAnimator&gt;  
+    &lt;objectAnimator  
+        android:duration=&quot;1000&quot;  
+        android:propertyName=&quot;scaleY&quot;  
+        android:valueFrom=&quot;1&quot;  
+        android:valueTo=&quot;0.5&quot; &gt;  
+    &lt;/objectAnimator&gt;  
+
+&lt;/set&gt; 
+</code></pre><p><strong>View的animate方法</strong>：可以认为是属性动画的一种简写方式。</p>
+<p>用法：</p>
+<pre><code>view.animate()
+    .alpha(0)
+    .y(300)
+    .setDuration(300)
+    .withStartAction(new Runnable() {
+        @Override
+        public void run() {
+
+        }
+    }).withEndAction(new Runnable() {
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            });
+        }
+    }).start();
+</code></pre><h2 id="7-3_Android_u5E03_u5C40_u52A8_u753B"><a href="#7-3_Android_u5E03_u5C40_u52A8_u753B" class="headerlink" title="7.3 Android布局动画"></a>7.3 Android布局动画</h2><p>最简单的布局动画是在ViewGroup的XML中，使用以下打开布局动画。<br><code>android:animateLayoutChanges=&quot;true&quot;</code><br>通过上面的代码，当ViewGroup添加View时，子View会呈现逐渐显示的过渡效果，是Android默认的显示的过渡效果。</p>
+<p><strong>LayoutAnimationController</strong></p>
+<pre><code>LinearLayout ll = (LinearLayout)findViewById(R.id.ll);
+// 设置过渡动画
+ScaleAnimation scaleAnimation = new ScaleAnimation(0,1,0,1);
+scaleAnimation.setDuration(2000);
+// 设置布局动画的显示属性
+LayoutAnimationController lac = new LayoutAnimationController(scaleAnimation,0.5f);
+lac.setOrder(LayoutAnimationController.ORDER_NORMAL);
+ll.setLayoutAnimation(lac);
+</code></pre><p>LayoutAnimationController的第一个参数是作用的动画，第二个参数是每个View显示的delay时间。当delay时间不为0时，可以设置子View显示的顺序，如下所示。</p>
+<ul>
+<li>LayoutAnimationController.ORDER_NORMAL  顺序</li>
+<li>LayoutAnimationController.ORDER_RANDOM  随机</li>
+<li>LayoutAnimationController.ORDER_REVERSE 反序</li>
+</ul>
+<h2 id="7-4_Interpolators_28_u63D2_u503C_u5668_29"><a href="#7-4_Interpolators_28_u63D2_u503C_u5668_29" class="headerlink" title="7.4 Interpolators(插值器)"></a>7.4 Interpolators(插值器)</h2><h2 id="7-5__u81EA_u5B9A_u4E49_u52A8_u753B"><a href="#7-5__u81EA_u5B9A_u4E49_u52A8_u753B" class="headerlink" title="7.5 自定义动画"></a>7.5 自定义动画</h2><p>首先继承Animation类，实现<code>applyTransformation(float interpolatedTime, Transformation t)</code>的逻辑。不过通常情况下，还要覆盖父类的<code>initialize(int width, int height, int parentWidth, int parentHeight)</code>实现一些初始化的工作。</p>
+<p><code>applyTransformation(float interpolatedTime, Transformation t)</code>第一个参数是插值器的时间因子，这个因子由动画当前完成的百分比和当前时间所对应的插值所计算得来的，取值为0到1.0。第二个参数是矩阵的封装类，一般使用这个类来获取当前的矩阵对象，代码如下：</p>
+<pre><code>final Matrix matrix = t.getMatrix();
+</code></pre><p>下面给出电视机关闭效果的动画：</p>
+<pre><code>@Override
+protected void applyTransformation(float interpolatedTime, Transformation t) {
+    final Matrix matrix = t.getMatrix();
+    matrix.preScale(1, 1 - interpolatedTime, mCenterWidth, mCenterHeight);
+}
+</code></pre><p>//TODO</p>
+<h2 id="7-6_Android_5-X_SVG__u77E2_u91CF_u52A8_u753B_u673A_u5236"><a href="#7-6_Android_5-X_SVG__u77E2_u91CF_u52A8_u753B_u673A_u5236" class="headerlink" title="7.6 Android 5.X SVG 矢量动画机制"></a>7.6 Android 5.X SVG 矢量动画机制</h2><p>Google在Android 5.X中提供了下面两个新的API来帮助支持SVG：</p>
+<ul>
+<li>VectorDrawable</li>
+<li>AnimatedVectorDrawable</li>
+</ul>
+<p>下面给出SVG图形：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:width=&quot;200dp&quot;
+    android:height=&quot;200dp&quot;
+    android:viewportHeight=&quot;100&quot;
+    android:viewportWidth=&quot;100&quot;&gt;
+
+    &lt;group
+        android:name=&quot;test&quot;
+        android:rotation=&quot;0&quot;&gt;
+        &lt;path
+            android:fillColor=&quot;@android:color/holo_blue_light&quot;
+            android:pathData=&quot;M 25 50
+            a 25,25 0 1,0 50,0&quot; /&gt;
+    &lt;/group&gt;
+
+&lt;/vector&gt;
+</code></pre><p> //TODO</p>
+<h1 id="u7B2C_u516B_u7AE0_uFF1AActivity_u4E0EActivity_u8C03_u7528_u6808_u5206_u6790"><a href="#u7B2C_u516B_u7AE0_uFF1AActivity_u4E0EActivity_u8C03_u7528_u6808_u5206_u6790" class="headerlink" title="第八章：Activity与Activity调用栈分析"></a>第八章：Activity与Activity调用栈分析</h1><h2 id="8-1_Activity"><a href="#8-1_Activity" class="headerlink" title="8.1 Activity"></a>8.1 Activity</h2><p>Activity的形态：</p>
+<ul>
+<li><p>Active/Running : 这时候Activity处于Activity栈的最顶层，可见，并与用户进行交互。</p>
+</li>
+<li><p>Paused : 当Activity失去焦点，被一个新的非全屏的Activity或者一个透明的Activity放置在栈顶时，Activity就转化为Paused形态。但它只是失去了与用户交互的能力，所有状态信息、成员变量都还保持着，只有在系统内存极低的情况下，才会被系统回收掉。</p>
+</li>
+<li><p>Stopped : 如果一个Activity被另一个Activity完全覆盖，那么Activity就会进入Stopped形态，此时，它不再可见，但却依然保持了所有状态信息和成员变量。</p>
+</li>
+<li><p>Killed : 当Activity被系统回收掉或者Activity从来没有创建过，Activity就处于Killed状态。</p>
+</li>
+</ul>
+<p>Activity启动与销毁过程：</p>
+<ul>
+<li><p>onCreate() ： 创建基本的UI元素。</p>
+</li>
+<li><p>onPause()和onStop() ： 清除Activity的资源，避免浪费。</p>
+</li>
+<li><p>onDestory() ： 因为引用会在Activity销毁的时候销毁，而线程不会，所以清除开启的线程。</p>
+</li>
+</ul>
+<p>Activity的暂停与恢复过程：</p>
+<ul>
+<li><p>onPause() ： 释放系统资源，如Camera、sensor、receivers。</p>
+</li>
+<li><p>onResume() ： 需要重新初始化在onPause()中释放资源。</p>
+</li>
+</ul>
+<p>Activity的停止过程：</p>
+<ul>
+<li><p>由部分不可见到完全不可见 ： onPause() -&gt; onStop()</p>
+</li>
+<li><p>由部分不可见到可见： onPause() -&gt; onStop() -&gt; onRestart() -&gt; onStart() -&gt; onResume()</p>
+</li>
+</ul>
+<p>Activity的重新创建过程：</p>
+<p>如果用户finish()方法结束了Activity，则不会调用onSaveInstanceState()。</p>
+<h2 id="8-2_Android_u4EFB_u52A1_u6808_u7B80_u4ECB"><a href="#8-2_Android_u4EFB_u52A1_u6808_u7B80_u4ECB" class="headerlink" title="8.2 Android任务栈简介"></a>8.2 Android任务栈简介</h2><p>一个Task中的Activity可以来自不同的App，同一个App的Activity也可能不在一个Task中。</p>
+<h2 id="8-3_AndroidMainifest_u542F_u52A8_u6A21_u5F0F"><a href="#8-3_AndroidMainifest_u542F_u52A8_u6A21_u5F0F" class="headerlink" title="8.3 AndroidMainifest启动模式"></a>8.3 AndroidMainifest启动模式</h2><ul>
+<li><p>standard ： 默认的启动模式，每次都会创建新的实例</p>
+</li>
+<li><p>singleTop ：   通常适用于接收到消息后显示的界面</p>
+</li>
+<li><p>singleTask ： 通常可以用来退出整个应用：将主Activity设为singleTask模式，然后在要退出的Activity中转到主Activity，从而将主Activity之上的Activity都清除，然后重写主Activity的onNewIntent()方法，在方法中加上一句finish()，将最后一个Activity结束掉。</p>
+</li>
+<li><p>singleInstance ： 申明为singleInstance的Activity会出现在一个新的任务栈中，而且该任务栈中只存在这一个Activity。举个例子，如果应用A的任务栈中创建了MainActivity的实例，且启动模式为singleInstance，如果应用B的也要激活MainActivity，则不需要创建，两个应用共享该Activity实例。这种启动模式常用于需要与程序分离的界面。</p>
+</li>
+</ul>
+<p>关于singleTop和singleInstance这两种启动模式还有一点需要特殊说明：如果在一个singleTop或者singleInstance的Activity A中通过startActivityForResult()方法来启动另一个Activity B，那么直接返回Activity.RESULT_CANCELED而不会再去等待返回。这是由于系统在Framework层做了对这两种启动模式的限制，因为Android开发者认为，不同Task之间，默认是不能传递数据的，如果一定要传递，那么只能通过Intent来绑定数据。</p>
+<h2 id="8-4_Intent_Flag_u542F_u52A8_u6A21_u5F0F"><a href="#8-4_Intent_Flag_u542F_u52A8_u6A21_u5F0F" class="headerlink" title="8.4 Intent Flag启动模式"></a>8.4 Intent Flag启动模式</h2><ul>
+<li><p>Intent.FLAG_ACTIVITY_NEW_TASK：使用一个新的Task来启动一个Activity，但启动的每个Activity都将在一个新的Task中。该Flag通常使用在从Service中启动Activity的场景，由于在Service中并不存在Activity栈，所以使用该Flag来创建一个新的Activity栈，并创建新的Activity实例。</p>
+</li>
+<li><p>FLAG_ACTIVITY_SINGLE_TOP：使用singleTop模式来启动一个Activity，与指定android:launchMode=”singleTop”效果相同。</p>
+</li>
+<li><p>FLAG_ACTIVITY_CLEAR_TOP：使用singleTask模式来启动一个Activity，与指定android:launchMode=”singleTask”效果相同。</p>
+</li>
+<li><p>FLAG_ACTIVITY_NO_HISTORY：使用这种模式启动Activity，当该Activity启动其他Activity后，该Activity就消失了，不会保留在Activity栈中。例如A-B，B中以这种模式启动C，C再启动D，则当前Activity栈为ABD。</p>
+</li>
+</ul>
+<h2 id="8-5__u6E05_u7A7A_u4EFB_u52A1_u6808"><a href="#8-5__u6E05_u7A7A_u4EFB_u52A1_u6808" class="headerlink" title="8.5 清空任务栈"></a>8.5 清空任务栈</h2><ul>
+<li><p>clearTaskOnLaunch：每次返回该Activity时，都将该Activity之上的所有Activity都清除。通过这个属性，可以让这个Task每次在初始化的时候，都只有这一个Activity。</p>
+</li>
+<li><p>finishOnTaskLaunch：finishOnTaskLaunch属性与clearTaskOnLaunch属性类似，只不过clearTaskOnLaunch作用在别人身上，而finishOnTaskLaunch作用在自己身上。通过这个属性，当离开这个Activity所处的Task，那么用户再返回时，该Activity就会被finish掉。</p>
+</li>
+<li><p>alwaysRetainTaskState：如果将Activity的这个属性设置为True，那么该Activity所在的Task将不接受任何清理命令，一直保持当前Task状态。</p>
+</li>
+</ul>
+<h1 id="u7B2C_u4E5D_u7AE0_uFF1AAndroid_u7CFB_u7EDF_u4FE1_u606F_u4E0E_u5B89_u5168_u673A_u5236"><a href="#u7B2C_u4E5D_u7AE0_uFF1AAndroid_u7CFB_u7EDF_u4FE1_u606F_u4E0E_u5B89_u5168_u673A_u5236" class="headerlink" title="第九章：Android系统信息与安全机制"></a>第九章：Android系统信息与安全机制</h1><h2 id="9-1_Android_u7CFB_u7EDF_u4FE1_u606F_u83B7_u53D6"><a href="#9-1_Android_u7CFB_u7EDF_u4FE1_u606F_u83B7_u53D6" class="headerlink" title="9.1 Android系统信息获取"></a>9.1 Android系统信息获取</h2><p>要获取系统的配置信息，通常可以从以下两个方面获取：</p>
+<ul>
+<li>android.os.Build</li>
+<li>SystemProperty</li>
+</ul>
+<p>下面列举了android.os.Build一些常用的信息：</p>
+<ul>
+<li>Build.BOARD // 主板</li>
+<li>Build.BRAND // Android系统定制商</li>
+<li>Build.SUPPORTED_ABIS // CPU指令集</li>
+<li>Build.DEVICE // 设备参数</li>
+<li>Build.DISPLAY // 显示屏参数</li>
+<li>Build.FINGERPRINT // 唯一编号</li>
+<li>Build.SERIAL // 硬件序列号</li>
+<li>Build.ID // 修订版本列表</li>
+<li>Build.MANUFACTURER // 硬件制造商</li>
+<li>Build.MODEL // 版本</li>
+<li>Build.HARDWARE // 硬件名</li>
+<li>Build.PRODUCT // 手机产品名</li>
+<li>Build.TAGS // 描述Build的标签</li>
+<li>Build.TYPE // Builder类型</li>
+<li>Build.VERSION.CODENAME // 当前开发代号</li>
+<li>Build.VERSION.INCREMENTAL // 源码控制版本号</li>
+<li>Build.VERSION.RELEASE // 版本字符串</li>
+<li>Build.VERSION.SDK_INT // 版本号</li>
+<li>Build.HOST // Host值</li>
+<li>Build.USER // User名</li>
+<li>Build.TIME // 编译时间</li>
+</ul>
+<p>下面列举了SystemProperty常用的信息：</p>
+<ul>
+<li>os.version // OS版本</li>
+<li>os.name // OS名称</li>
+<li>os.arch // OS架构</li>
+<li>user.home // Home属性</li>
+<li>user.name // Name属性</li>
+<li>user.dir //Dir属性</li>
+<li>user.timezone // 时区</li>
+<li>path.separator // 路径分隔符</li>
+<li>line.separator // 行分隔符</li>
+<li>file.separator // 文件分隔符</li>
+<li>java.vendor.url // Java Vendor URL 属性</li>
+<li>java.class.path // Java Class 路径</li>
+<li>java.class.version Java Class 版本</li>
+<li>java.vendor // Java Vendor 属性</li>
+<li>java.version // Java 版本</li>
+<li>java.home // Java Home 属性</li>
+</ul>
+<p>我们可以访问到系统的属性值，代码如下所示：</p>
+<pre><code>String board = Build.BOARD;
+String brand = Build.BRAND;
+
+String os_version = System.getProperty(&quot;os.version&quot;);
+String os_name = System.getProperty(&quot;os.name&quot;);
+</code></pre><h2 id="9-2_Android_Apk_u5E94_u7528_u4FE1_u606F_u83B7_u53D6_u4E4BPackageManager"><a href="#9-2_Android_Apk_u5E94_u7528_u4FE1_u606F_u83B7_u53D6_u4E4BPackageManager" class="headerlink" title="9.2 Android Apk应用信息获取之PackageManager"></a>9.2 Android Apk应用信息获取之PackageManager</h2><p>Android系统提供了PackageManager来负责管理所有已安装的App。其中封装的信息如下：</p>
+<ul>
+<li>ActivityInfo：Mainfest文件中<activity\></activity\>和<receiver\></receiver\>之间的所有信息，包括name、icon、label、launchmode等。</li>
+<li>ServiceInfo：封装了<service\></service\>之间的所有信息。</li>
+<li>ApplicationInfo：封装了<application\></application\>之间的信息，不过特别的是，Application包含很多Flag，FLAG_SYSTEM表示为系统应用，FLAG_EXTERNAL_STORAGE表示为安装在SDCard上的应用等，通过这些Flag，可以很方便的判断应用类型。</li>
+<li>PackageInfo：PackageInfo与前面三个Info类似，都是用于封装Mainfest文件的相关节点信息，而它包含了所以Activity、Service等信息。</li>
+<li>ResolveInfo：封装的是包含<intent\>信息的上一级信息，所以它可以返回ActivityInfo，ServiceInfo等包含<intent\>的信息，它经常用来帮助我们找到那些包含特定Intent条件的信息，如带分享功能、播放功能的应用。</intent\></intent\></li>
+</ul>
+<p>PackageManager常用方法如下：</p>
+<ul>
+<li>getPackageManager：通过调用这个方法返回一个PackageManager对象。</li>
+<li>getApplicationInfo：以ApplicationInfo的形式返回指定包名的ApplicationInfo。</li>
+<li>getApplicationIcon：返回指定包名的Icon。</li>
+<li>getInstallApplication：以ApplicationInfo的形式返回安装的应用。</li>
+<li>getInstalledPackages：以PackageInfo的形式返回安装的应用。</li>
+<li>queryIntentActivities：返回指定intent的ResolveInfo对象、Activity集合。</li>
+<li>queryIntentServices：返回指定intent的ResolveInfo对象、Service集合。</li>
+<li>resolveActivity：返回指定Intent的Activity。</li>
+<li>resolveService：返回指定Intent的Service。</li>
+</ul>
+<p>判断App类型的依据，就是利用ApplicationInfo中的FLAG_SYSTEM来进行判断，代码如下所示：</p>
+<pre><code>app.flags &amp; ApplicationInfo.FLAG_SYSTEM
+</code></pre><ul>
+<li>如果当前应用的<code>flags &amp; ApplicationInfo.FLAG_SYSTEM != 0</code>则为系统应用；</li>
+<li>如果当前应用的<code>flags &amp; ApplicationInfo.FLAG_SYSTEM &lt;= 0</code>则为第三方应用；</li>
+<li>特殊的，当系统应用经过升级后，也将成为第三方应用：<code>flags &amp; ApplicationInfo.FLAG_UPDATED_SYSTEM_APP != 0</code>；</li>
+<li>如果当前应用的<code>flags &amp; ApplicationInfo.FLAG_EXTERNAL_STORAGE != 0</code>则为安装在SDCard上的应用。</li>
+</ul>
+<h2 id="9-3_Android_Apk_u5E94_u7528_u4FE1_u606F_u83B7_u53D6_u4E4BActivityManager"><a href="#9-3_Android_Apk_u5E94_u7528_u4FE1_u606F_u83B7_u53D6_u4E4BActivityManager" class="headerlink" title="9.3 Android Apk应用信息获取之ActivityManager"></a>9.3 Android Apk应用信息获取之ActivityManager</h2><p>ActivityManager可以获得在运行的应用程序信息。其中封装的信息如下：</p>
+<ul>
+<li>ActivityManager.MemoryInfo：MemoryInfo有几个非常重要的字段，availMem–系统可用内存，totalMem–总内存，threshold–低内存的阈值，即区分是否低内存的临界值，lowMemory–是否处于低内存。</li>
+<li>Debug.MemoryInfo：ActivityManager.MemoryInfo用于统计全局的内存信息，而Debug.MemoryInfo用于统计进程下的内存信息。</li>
+<li>RunningAppProcessInfo：进程相关的信息，processName–进程名，pid–进程pid，uid–进程uid，pkgList–该进程下的所有包。</li>
+<li>RunningServiceInfo：用于封装运行的服务信息，在它里面包含一些服务进程的信息，同时还有一些其他信息。activeSince–第一次被激活的时间、方式，foreground–服务是否在后台执行。</li>
+</ul>
+<h2 id="9-4__u89E3_u6790Packages-xml_u83B7_u53D6_u7CFB_u7EDF_u4FE1_u606F"><a href="#9-4__u89E3_u6790Packages-xml_u83B7_u53D6_u7CFB_u7EDF_u4FE1_u606F" class="headerlink" title="9.4 解析Packages.xml获取系统信息"></a>9.4 解析Packages.xml获取系统信息</h2><p>packages.xml在 data/system/目录下。</p>
+<h2 id="9-5_Android_u5B89_u5168_u673A_u5236"><a href="#9-5_Android_u5B89_u5168_u673A_u5236" class="headerlink" title="9.5 Android安全机制"></a>9.5 Android安全机制</h2><p>反编译：</p>
+<ul>
+<li>apktool(反编译XML) ： <code>apktool_2.1.0.jar d test.apk</code></li>
+<li>apktool(重新打包) ： <code>apktool_2.1.0.jar b test</code></li>
+<li>Dex2jar、jd-gui ：<code>d2j-dex2jar.bat classes.dex</code></li>
+</ul>
+<p>Android Apk 加密：</p>
+<p>打开build.gradle(Module:app)文件，minifyEnabled为true则说明打开混淆功能，proguard-rules.pro为项目自定义的混淆文件，在项目app文件夹下找到这个文件，在这个文件里可以定义引入的第三方依赖包的混淆规则。</p>
+<pre><code>buildTypes {
+    release {
+        minifyEnabled true
+        proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;
+    }
+}
+</code></pre><h1 id="u7B2C_u5341_u7AE0_uFF1AAndroid_u6027_u80FD_u4F18_u5316"><a href="#u7B2C_u5341_u7AE0_uFF1AAndroid_u6027_u80FD_u4F18_u5316" class="headerlink" title="第十章：Android性能优化"></a>第十章：Android性能优化</h1><h2 id="10-1__u5E03_u5C40_u4F18_u5316"><a href="#10-1__u5E03_u5C40_u4F18_u5316" class="headerlink" title="10.1 布局优化"></a>10.1 布局优化</h2><ul>
+<li><p>Android UI渲染机制</p>
+<p>  在Android中，系统通过VSYNC信号出发对UI的渲染、重绘，其间隔时间是16ms。这个16ms其实就是1000ms中显示60帧画面的单位时间（玩游戏的就该知道，大于等于60帧就感觉不到卡顿）。Android系统提供了检测UI渲染时间的工具，打开“开发者选项”，选择“Profile GPU Rendering”（我的手机是“GPU呈现模式分析”），选中“On screen as bars”（我的为“在屏幕上显示为条形图”）。每一条柱状线都包括三部分，蓝色代表测量绘制Display List的时间，红色代表OpenGL渲染Display List所需要的时间，黄色代表CPU等待GPU处理的时间，中间绿色横线代表VSYNC时间16ms，需要尽量将所有条形图都控制在这条绿线之下。</p>
+</li>
+<li><p>避免Overdraw</p>
+<p>  过渡绘制会浪费很多CPU、GPU资源，例如系统默认会绘制Activity的背景，而如果再给布局绘制了重叠的背景，那么默认Activity的背景就属于无效的过渡绘制。Android系统在开发者选项中提供了这样一个检测工具–“Enable GPU Overdraw”。借助它可以判断Overdraw的次数。尽量增大蓝色的区域，减少红色的区域。</p>
+</li>
+<li><p>优化布局层级</p>
+<p>  在Android中系统对View的测量、布局和绘制都是通过遍历View树来进行的，如果View树太高，就会影响其速度，Google也建议View树的高度不宜超过10层。</p>
+</li>
+<li><p>避免嵌套过多无用布局</p>
+<ul>
+<li>使用<include\>标签重用Layout</include\></li>
+<li><p>使用<viewstub\>实现View的延迟加载</viewstub\></p>
+<p><viewstub\>是个非常轻量级的组件，不仅不可视而且大小为0。这个布局在初始化时不需要显示，只有在某些情况下才显示出来。下面是实例代码：</viewstub\></p>
+<pre><code>&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    tools:context=&quot;.MainActivity&quot;&gt;
+    &lt;TextView
+      android:id=&quot;@+id/tv&quot;
+      android:layout_width=&quot;wrap_content&quot;
+      android:layout_height=&quot;wrap_content&quot;
+      android:text=&quot;not often use&quot; /&gt;
+&lt;/RelativeLayout&gt;
+</code></pre><p>使用<viewstub\>：</viewstub\></p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    tools:context=&quot;.MainActivity&quot;&gt;
+    &lt;ViewStub
+      android:id=&quot;@+id/view_stub&quot;
+      android:layout_width=&quot;match_parent&quot;
+      android:layout_height=&quot;wrap_content&quot;
+      android:layout_centerInParent=&quot;true&quot;
+      android:layout=&quot;@layout/test&quot; /&gt;
+&lt;/RelativeLayout&gt;
+</code></pre><p>在<code>onCreate(Bundle savedInstanceState)</code>中：</p>
+<pre><code>ViewStub viewStub= (ViewStub) findViewById(R.id.view_stub);
+//下面两个方法都是用来实现延迟加载的，区别是inflate()方法会返回引用的布局。
+viewStub.setVisibility(View.VISIBLE); // 第一种方法
+
+View view=viewStub.inflate(); // 第二种方法
+TextView tv= (TextView) view.findViewById(R.id.tv);
+</code></pre><p><viewstub\>标签与设置View.GONE这种方式的区别在于<viewstub\>标签只在显示时渲染整个布局，而设置View.GONE这种方式在初始化布局树时就已经添加在布局树上了，所以相比之下<viewstub>更有效率。</viewstub></viewstub\></viewstub\></p>
+</li>
+</ul>
+</li>
+<li><p>Hierarchy Viewer</p>
+</li>
+</ul>
+<p>这是个用来测试布局冗余的工具。<a href="http://blog.csdn.net/xyz_lmn/article/details/14222975" target="_blank" rel="external">可点击此处</a></p>
+<h2 id="10-2__u5185_u5B58_u4F18_u5316"><a href="#10-2__u5185_u5B58_u4F18_u5316" class="headerlink" title="10.2 内存优化"></a>10.2 内存优化</h2><ul>
+<li><p>什么是内存</p>
+<ul>
+<li>寄存器：速度最快的存储场所，因为寄存器位于处理器内部，在程序中无法控制。</li>
+<li>栈：存放基本类型的数据和对象的引用，但对象本身不存放在栈中，而是存放在堆中。</li>
+<li>堆：堆内存用来存放由new创建的对象和数组，在堆中分配的内存，由Java虚拟机的自动垃圾回收器(GC)来管理。</li>
+<li>静态存储区域：是指在固定的位置存放应用程序运行时一直存在的数据，Java在内存中专门划分了一个静态存储区域来管理一些特殊的数据变量如静态的数据变量。</li>
+<li><p>常量池：就是该类型所用到常量的一个有序集合，包括直接常量（基本类型，String）和对其他类型、字段和方法的符号引用。</p>
+<p>在程序中，可以使用如下所示的代码来获得堆的大小，所谓的内存分析，正是分析Heap中的内存状态</p>
+<pre><code>ActivityManager manager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)；
+int heapSize = manager.getLargeMemoryClass();
+</code></pre></li>
+</ul>
+</li>
+<li><p>获取Android系统内存信息</p>
+<ul>
+<li><p>进程状态</p>
+<pre><code>adb shell dumpsys procstats
+</code></pre></li>
+<li><p>内存信息</p>
+<pre><code>adb shell dumpsys meminfo
+</code></pre></li>
+</ul>
+</li>
+<li><p>内存优化实例</p>
+<ul>
+<li><p>Bitmap优化</p>
+<p>Bitmap是造成内存占用过高甚至是OOM的最大威胁，可以通过以下技巧进行优化</p>
+<p>① 使用适当分辨率和大小的图片：例如在图片列表界面可以使用图片的缩略图thumbnails，而在显示详细图片的时候再显示原图；或者在对图像要求不高的地方，尽量降低图片的精度。</p>
+<p>② 及时回收内存：一旦使用完Bitmap后，一定要及时使用bitmap.recycle()方法释放内存资源。自Android3.0后，由于Bitmap被放到了堆中，其内存由GC管理，就不需要释放了。</p>
+<p>③ 通过内存缓存LruCache和DiskLruCache可以更好地使用Bitmap。</p>
+</li>
+<li><p>代码优化</p>
+<p>任何Java类都将占用大约500字节的内存空间，创建一个类的实例会消耗大约15字节内存。从代码的实现上，也可以对内存进行优化。</p>
+<p>① 对常量使用static修饰符。</p>
+<p>② 使用静态方法，静态方法会比普通方法提高15%左右的访问速度。</p>
+<p>③ 减少不必要的成员变量，这点在Android Lint工具上已经集成检测了。</p>
+<p>④ 减少不必要对象，使用基础类型会比使用对象更加节省资源，同时更应该避免频繁创建短作用域的变量。</p>
+<p>⑤ 尽量不要使用枚举、少用迭代器。</p>
+<p>⑥ 对Cursor、Receiver、Sensor、File等对象，要非常注意对它们的创建、回收和注册、反注册。</p>
+<p>⑦ 避免使用IOC框架，IOC通常使用注解、反射来进行实现，大量使用反射会带来性能的下降。</p>
+<p>⑧ 使用RenderScript、OpenGL来进行非常复杂的绘图操作。</p>
+<p>⑨ 使用SurfaceView来代替View进行大量、频繁的绘图操作。</p>
+<p>⑩ 尽量使用视图缓存，而不是每次都执行inflate()解析视图。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="10-3_Lint_u5DE5_u5177"><a href="#10-3_Lint_u5DE5_u5177" class="headerlink" title="10.3 Lint工具"></a>10.3 Lint工具</h2><h2 id="10-4__u4F7F_u7528Android_Studio_u7684Memory_Monitor_u5DE5_u5177"><a href="#10-4__u4F7F_u7528Android_Studio_u7684Memory_Monitor_u5DE5_u5177" class="headerlink" title="10.4 使用Android Studio的Memory Monitor工具"></a>10.4 使用Android Studio的Memory Monitor工具</h2><h2 id="10-5__u4F7F_u7528TraceView_u5DE5_u5177_u4F18_u5316App_u6027_u80FD"><a href="#10-5__u4F7F_u7528TraceView_u5DE5_u5177_u4F18_u5316App_u6027_u80FD" class="headerlink" title="10.5 使用TraceView工具优化App性能"></a>10.5 使用TraceView工具优化App性能</h2><h2 id="10-6__u4F7F_u7528MAT_u5DE5_u5177_u5206_u6790App_u5185_u5B58_u72B6_u6001"><a href="#10-6__u4F7F_u7528MAT_u5DE5_u5177_u5206_u6790App_u5185_u5B58_u72B6_u6001" class="headerlink" title="10.6 使用MAT工具分析App内存状态"></a>10.6 使用MAT工具分析App内存状态</h2><h2 id="10-7__u4F7F_u7528Dumpsys_u547D_u4EE4_u5206_u6790_u7CFB_u7EDF_u72B6_u6001"><a href="#10-7__u4F7F_u7528Dumpsys_u547D_u4EE4_u5206_u6790_u7CFB_u7EDF_u72B6_u6001" class="headerlink" title="10.7 使用Dumpsys命令分析系统状态"></a>10.7 使用Dumpsys命令分析系统状态</h2>]]></content>
     <summary type="html">
     <![CDATA[<h1 id="u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><a href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8]]>
     </summary>
@@ -407,6 +1241,460 @@ imageMatrix.postConcat(lumMatrix);
       <category term="WebView" scheme="http://yuqirong.me/tags/WebView/"/>
     
       <category term="Android Tips" scheme="http://yuqirong.me/categories/Android-Tips/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[《Android群英传》笔记(上)]]></title>
+    <link href="http://yuqirong.me/2016/02/28/%E3%80%8AAndroid%E7%BE%A4%E8%8B%B1%E4%BC%A0%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8A)/"/>
+    <id>http://yuqirong.me/2016/02/28/《Android群英传》笔记(上)/</id>
+    <published>2016-02-28T12:20:04.000Z</published>
+    <updated>2016-03-31T06:28:41.641Z</updated>
+    <content type="html"><![CDATA[<h1 id="u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3"><a href="#u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3" class="headerlink" title="第三章：Android控件架构与自定义控件详解"></a>第三章：Android控件架构与自定义控件详解</h1><h2 id="3-1_Android_u63A7_u4EF6_u67B6_u6784"><a href="#3-1_Android_u63A7_u4EF6_u67B6_u6784" class="headerlink" title="3.1 Android控件架构"></a>3.1 Android控件架构</h2><p>控件分为两类：View和ViewGroup，通过ViewGroup整个界面形成一个树形结构，并且ViewGroup负责对子View的测量与绘制以及传递交互事件。通常在Activity中使用的findViewById()方法，就是在控件树中以树的深度优先遍历来查找对应元素。在每颗控件树的顶部，都有一个ViewParent对象，这就是整棵树的控制核心，所有的交互管理事件都由它来统一调度和分配。</p>
+<p><img src="/uploads/20160228/20160228230641.png" alt="这里写图片描述"></p>
+<p>如上图所示，每个Activity都包含一个Window对象，在Android中Window对象通常由PhoneWindow来实现。PhoneWindow对象又将一个DecorView设置为整个应用的根View。DecorView作为了窗口界面的顶层视图，封装了一些窗口操作的通用方法。可以说，DecorView将要显示的具体内容呈现在了PhoneWindow上，这里所有View的监听事件，都通过WindowManagerService来接收，并通过Activity对象来回调onClickListener。DecorView在显示上分为TitleView和ContentView两部分。ContentView是一个ID为content的FrameLayout，activity_main.xml就是设置在这样一个FrameLayout里。可以通过如下代码获得ContentView：</p>
+<pre><code>FrameLayout content = (FrameLayout)findViewById(android.R.id.content);
+</code></pre><p><img src="/uploads/20160228/20160228232837.png" alt="这里写图片描述"></p>
+<p>而在代码中，当程序在onCreate()方法中调用setContentView()方法后，ActivityManagerService会回调onResume()方法，此时系统才会把整个DecorView添加到PhoneWindow中，并让其显示出来，从而最终完成界面的绘制。</p>
+<h2 id="3-2_View_u7684_u6D4B_u91CF"><a href="#3-2_View_u7684_u6D4B_u91CF" class="headerlink" title="3.2 View的测量"></a>3.2 View的测量</h2><p>View的测量在onMeasure中进行，系统提供了MeasureSpec类，是一个32位的int值，其高2位为测量模式，低30位为测量的大小。测量模式有以下三种：</p>
+<ul>
+<li><p>EXACTLY：精确模式，当控件指定精确值（例如android:layout_width=”50dp”）或者指定为match_parent属性时系统使用该模式。</p>
+</li>
+<li><p>AT_MOST：最大值模式，指定wrap_content时系统使用该属性。控件大小一般随着控件的子空间或内容的变化而变化，此时控件的尺寸只要不超过父控件允许的最大尺寸即可。View类默认只支持EXACTLY，如果想使用wrap_content需自己在onMeasure中实现。</p>
+</li>
+<li><p>UNSPECIFIED：自定义模式，View想多大就多大，通常在绘制自定义View的时候才使用。</p>
+</li>
+</ul>
+<p>下面是onMeasure的示例代码：</p>
+<pre><code>@Override
+protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    int widthMode = MeasureSpec.getMode(widthMeasureSpec);// 获取宽度模式
+    int widthSize = MeasureSpec.getSize(widthMeasureSpec);// 获取宽度值
+    int width = 0;
+    if (widthMode == MeasureSpec.EXACTLY) {
+        width = widthSize;
+    } else {
+        width = 200;// 自定义的默认wrap_content值
+        if (widthMode == MeasureSpec.AT_MOST) {
+                width = Math.min(widthSize, width);
+        }
+
+    }
+    int heightMode = MeasureSpec.getMode(heightMeasureSpec);// 获取高度模式
+    int heightSize = MeasureSpec.getSize(heightMeasureSpec);// 获取高度值
+    int height = 0;
+    if (heightMode == MeasureSpec.EXACTLY) {
+        height = heightSize;
+    } else {
+        height = 200;// 自定义的默认wrap_content值
+        if (heightMode == MeasureSpec.AT_MOST) {
+            height = Math.min(heightSize, height);
+        }
+    }
+    setMeasuredDimension(width, height);// 最终将测量的值传入该方法完成测量
+}
+</code></pre><h2 id="3-3_View_u7684_u7ED8_u5236"><a href="#3-3_View_u7684_u7ED8_u5236" class="headerlink" title="3.3 View的绘制"></a>3.3 View的绘制</h2><p>View的绘制是通过onDraw()方法实现的，具体是通过对onDraw()方法中Canvas参数操作执行绘图。在其他地方，则需要自己创建Canvas对象，创建时需传入一个bitmap对象，这个过程我们称之为装载画布。bitmap是用来存储所有绘制在Canvas上的像素信息，当你通过这种方式创建了Canvas对象后，后面调用所有的Canvas.drawXXX方法都发生在这个bitmap上。</p>
+<h2 id="3-4_ViewGroup_u7684_u6D4B_u91CF"><a href="#3-4_ViewGroup_u7684_u6D4B_u91CF" class="headerlink" title="3.4 ViewGroup的测量"></a>3.4 ViewGroup的测量</h2><p>当ViewGroup的大小为wrap_content时，它就会遍历所有子View，以便获得所有子View的大小，从而来决定自身的大小，而在其他模式下则通过指定值来设置自身的大小。</p>
+<p>然后当子View测量完毕以后，ViewGroup会执行它的Layout方法，同样是遍历子View并调用其Layout方法来确定布局位置。</p>
+<p>在自定义ViewGroup时，通常会重写onLayout()方法来控制子View显示位置，若需支持wrap_content还需重写onMeasure()方法，这点与View是相同的。</p>
+<h2 id="3-5_ViewGroup_u7684_u7ED8_u5236"><a href="#3-5_ViewGroup_u7684_u7ED8_u5236" class="headerlink" title="3.5 ViewGroup的绘制"></a>3.5 ViewGroup的绘制</h2><p>ViewGroup通常情况下不需要绘制，如果不是指定了ViewGroup的背景颜色，那么ViewGroup的onDraw()方法都不会被调用。但是ViewGroup会调用dispatchDraw()方法来绘制其子View，过程同样是遍历子View，并调用子View的绘制方法来完成绘制工作。</p>
+<h2 id="3-6__u81EA_u5B9A_u4E49View"><a href="#3-6__u81EA_u5B9A_u4E49View" class="headerlink" title="3.6 自定义View"></a>3.6 自定义View</h2><p>自定义View时有一些比较重要的回调方法如下：</p>
+<ul>
+<li>onFinishInflate();//从xml加载组件后回调</li>
+<li>onSizeChanged();//组件大小改变时回调</li>
+<li>onMeasure();//回调该方法进行测量</li>
+<li>onLayout();//回调该方法来确定显示的位置</li>
+<li>onTouchEvent();//监听到触摸事件回调</li>
+</ul>
+<p>通常情况下，有以下三种方法来实现自定义的控件：</p>
+<ul>
+<li>对现有控件进行拓展</li>
+<li>通过组合来实现新的控件</li>
+<li>重写View来实现全新的控件</li>
+</ul>
+<p>PS ： LinearGradient也称作线性渲染，LinearGradient的作用是实现某一区域内颜色的线性渐变效果。构造函数有两个，分别如下：</p>
+<p><code>public LinearGradient(float x0, float y0, float x1, float y1, int color0, int color1, Shader.TileMode tile)</code></p>
+<p>其中，参数x0表示渐变的起始点x坐标；参数y0表示渐变的起始点y坐标；参数x1表示渐变的终点x坐标；参数y1表示渐变的终点y坐标　；color0表示渐变开始颜色；color1表示渐变结束颜色；参数tile表示平铺方式。</p>
+<p>Shader.TileMode有3种参数可供选择，分别为CLAMP、REPEAT和MIRROR：</p>
+<ul>
+<li><p>CLAMP的作用是如果渲染器超出原始边界范围，则会复制边缘颜色对超出范围的区域进行着色</p>
+</li>
+<li><p>REPEAT的作用是在横向和纵向上以平铺的形式重复渲染位图</p>
+</li>
+<li><p>MIRROR的作用是在横向和纵向上以镜像的方式重复渲染位图</p>
+</li>
+</ul>
+<p><code>public LinearGradient (float x0, float y0, float x1, float y1, int[] colors, float[] positions, Shader.TileMode tile)</code></p>
+<p>其中，参数x0表示渐变的起始点x坐标；参数y0表示渐变的起始点y坐标；参数x1表示渐变的终点x坐标；参数y1表示渐变的终点y坐标；参数colors表示渐变的颜色数组；参数positions用来定义每个颜色处于的渐变相对位置；参数tile表示平铺方式。通常，参数positions设为null，表示颜色数组按顺序均匀的分布。</p>
+<h2 id="3-7__u81EA_u5B9A_u4E49ViewGroup"><a href="#3-7__u81EA_u5B9A_u4E49ViewGroup" class="headerlink" title="3.7 自定义ViewGroup"></a>3.7 自定义ViewGroup</h2><p>自定义ViewGroup通常需要重写onMeasure()方法来对子View进行测量，重写onLayout()方法来确定子View的位置，重写onTouchEvent()方法增加响应事件。</p>
+<p><code>onMeasure(int widthMeasureSpec, int heightMeasureSpec)</code>方法：</p>
+<pre><code>@Override
+protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    int count = getChildCount();
+    for (int i = 0; i &lt; count; i++) {
+        measureChild(getChildAt(i), widthMeasureSpec, heightMeasureSpec);
+    }
+}
+</code></pre><h2 id="3-8__u4E8B_u4EF6_u62E6_u622A_u673A_u5236_u5206_u6790"><a href="#3-8__u4E8B_u4EF6_u62E6_u622A_u673A_u5236_u5206_u6790" class="headerlink" title="3.8 事件拦截机制分析"></a>3.8 事件拦截机制分析</h2><p>本章较为浅显的分析了下事件传递的机制。当ViewGroup接收到事件，通过调用dispatchTouchEvent()，由这个方法再调用onInterceptTouchEvent()方法来判断是否要拦截事件，如果返回true则拦截将事件交给自己的onTouchEvent处理，返回false则继续向下传递。当View在接受到事件时，通过调用dispatchTouchEvent()，由此方法再调用onTouchEvent方法，如果返回true则拦截事件自己处理，如果返回false则将事件向上传递回ViewGroup并且调用其onTouchEvent方法继续做判断。</p>
+<h1 id="u7B2C_u56DB_u7AE0_uFF1AListView_u4F7F_u7528_u6280_u5DE7"><a href="#u7B2C_u56DB_u7AE0_uFF1AListView_u4F7F_u7528_u6280_u5DE7" class="headerlink" title="第四章：ListView使用技巧"></a>第四章：ListView使用技巧</h1><h2 id="4-1_ListView_u5E38_u7528_u4F18_u5316_u6280_u5DE7"><a href="#4-1_ListView_u5E38_u7528_u4F18_u5316_u6280_u5DE7" class="headerlink" title="4.1 ListView常用优化技巧"></a>4.1 ListView常用优化技巧</h2><ul>
+<li>使用ViewHolder模式提高效率</li>
+<li><p>设置项目间分隔线：</p>
+<pre><code>android:divider=&quot;@android:color/darker_gray&quot;
+android:dividerHeight=&quot;10dp&quot;
+</code></pre><p>   特殊情况下，以下代码可以设置分割线为透明：</p>
+<pre><code>android:divider=&quot;@null&quot;
+</code></pre></li>
+<li><p>隐藏ListView的滚动条：</p>
+<pre><code>android:scrollbars=&quot;none&quot;
+</code></pre></li>
+<li><p>取消ListView的点击效果：</p>
+<pre><code>android:listSelector=&quot;#00000000&quot;
+</code></pre><p>  也可以用Android自带的透明色来实现这个效果：</p>
+<pre><code>android:listSelector=&quot;@android:color/transparent&quot;
+</code></pre></li>
+<li><p>设置ListView需要显示在第几项：</p>
+<pre><code>listView.setSelection(N);
+</code></pre><p>  其中N就是需要显示的第N个Item。</p>
+<p>  除此之外，还可以使用如下代码来实现平滑移动：</p>
+<pre><code>mListView.smoothScrollBy(distance,duration);
+mListView.smoothScrollByOffset(offset);
+mListView.smoothScrollToPosition(index);
+</code></pre></li>
+<li><p>动态修改ListView：</p>
+<pre><code>mAdapter.notifyDataSetChanged();
+</code></pre></li>
+<li><p>遍历ListView中的所有Item：</p>
+<pre><code>for(int i=0;i&lt;mListView.getChildCount();i++){
+    View view = mListView.getChildAt(i);
+}
+</code></pre></li>
+<li><p>处理空ListView：</p>
+<pre><code>&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;&gt;
+
+    &lt;ListView
+    android:id=&quot;@+id/listView&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot; /&gt;
+
+    &lt;ImageView
+        android:id=&quot;@+id/imageView&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:src=&quot;@drawable/empty_view&quot; /&gt;
+
+&lt;/RelativeLayout&gt;
+</code></pre><p>  在代码中，我们通过以下方式给ListView设置空数据时要显示的布局，代码如下：</p>
+<pre><code>ListView listView = (ListView)findViewById(R.id.listView);
+listView.setEmptyView(findViewById(R.id.imageView));
+</code></pre></li>
+<li><p>ListView滑动监听：一种是通过OnTouchListener来实现监听，另外一种是使用OnScrollListener来实现监听。</p>
+<p>  OnScrollListener中有两个回调方法——onScrollStateChanged()和onScroll()</p>
+<pre><code> @Override
+public void onScrollStateChanged(AbsListView view, int scrollState) {
+    switch(scrollState){
+        case SCROLL_STATE_FLING:
+          // TODO    
+        break;
+        case SCROLL_STATE_IDLE:
+        // TODO 
+        break;
+        case SCROLL_STATE_TOUCH_SCROLL:
+        // TODO 
+        break;
+    }
+}
+</code></pre><p>  scrollState有以下三种模式：</p>
+<ul>
+<li>OnScrollListener.SCROLL_STATE_IDLE ： 滚动停止时；</li>
+<li>OnScrollListener.SCROLL_STATE_TOUCH_SCROLL ： 正在滚动时；</li>
+<li><p>OnScrollListener.SCROLL_STATE_FLING ： 手指抛动时，即手指用力滑动，在离开后ListView由于惯性继续滑动的状态；</p>
+<p>当手指没有做手指抛动的状态时，这个方法只会回调2次，否则会回调3次。</p>
+<pre><code>@Override
+public void onScroll(AbsListView view, int firstVisibleItem,
+        int visibleItemCount, int totalItemCount) {
+    // TODO Auto-generated method stub
+}
+</code></pre></li>
+<li><p>firstVisibleItem ： 当前能看见的第一个Item的ID（从0开始）</p>
+</li>
+<li><p>visibleItemCount ： 当前能看见的Item的总数</p>
+</li>
+<li><p>totalItemCount ： 整个ListView的Item总数</p>
+<p>判断是否滚动到最后一行：</p>
+<pre><code>if(firstVisibleItem + visibleItemCount == totalItemCount &amp;&amp; totalItemCount &gt; 0){
+    // 滚动到最后一行
+} 
+</code></pre><p>再比如，可以通过如下代码来判断滚动的方向：</p>
+<pre><code>if(firstVisibleItem &gt; lastVisibleItemPosition){
+    // 上滑
+}else if(firstVisibleItem &lt; lastVisibleItemPosition){
+    // 下滑
+}
+lastVisibleItemPosition = firstVisibleItem;
+</code></pre><p>当然，ListView也给我们提供了一些封装的方法来获得当前可视的Item的位置等信息：</p>
+<pre><code>// 获取可视区域内最后一个Item的id
+mListView.getLastVisiblePosition()；
+// 获取可视区域内第一个Item的id
+mListView。getFirstVisiblePosition();
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<h2 id="4-2_ListView_u5E38_u7528_u62D3_u5C55"><a href="#4-2_ListView_u5E38_u7528_u62D3_u5C55" class="headerlink" title="4.2 ListView常用拓展"></a>4.2 ListView常用拓展</h2><ol>
+<li><p>具有弹性的ListView：</p>
+<pre><code>@Override
+protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+    return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+}
+</code></pre><p> 其中的maxOverScrollY，默认值为0。所以只要修改它的值，就可以让ListView具有弹性了。</p>
+</li>
+</ol>
+<h1 id="u7B2C_u4E94_u7AE0_uFF1AAndroid_Scroll_u5206_u6790"><a href="#u7B2C_u4E94_u7AE0_uFF1AAndroid_Scroll_u5206_u6790" class="headerlink" title="第五章：Android Scroll分析"></a>第五章：Android Scroll分析</h1><h2 id="5-1__u6ED1_u52A8_u6548_u679C_u662F_u5982_u4F55_u4EA7_u751F_u7684"><a href="#5-1__u6ED1_u52A8_u6548_u679C_u662F_u5982_u4F55_u4EA7_u751F_u7684" class="headerlink" title="5.1 滑动效果是如何产生的"></a>5.1 滑动效果是如何产生的</h2><p>滑动一个View，本质上来说就是移动一个View。改变其当前所处的位置，它的原理与动画效果的实现非常相似，都是通过不断地改变View的坐标来实现这一效果。所以，要实现View的滑动，就必须监听用户触摸的事件，并根据事件传入的坐标，动态且不断地改变View的坐标，从而实现View跟随用户触摸的滑动而滑动。</p>
+<p><strong>Android坐标系</strong></p>
+<p>Android的坐标系是以屏幕最左上角为顶点，向右为x轴正方向，向下是y轴正方向。在触控事件中通过<code>getRawX()</code>和<code>getRawY()</code>获取Android坐标系中的坐标。在View中通过<code>getLocationOnScreen(int[] location)</code>获取。</p>
+<p><strong>视图坐标系</strong></p>
+<p>描述的是子视图在父视图中的位置关系，原点为父视图的左上角，x、y轴方向与Android坐标系一致。触控事件中通过<code>getX()</code>,<code>getY()</code>获取视图坐标系的坐标。</p>
+<p><strong>触控事件——MotionEvent</strong></p>
+<pre><code>// 单点触摸按下动作
+public static final int MotionEvent.ACTION_DOWN = 0;
+// 单点触摸离开动作
+public static final int MotionEvent.ACTION_UP = 1;
+// 触摸点移动动作
+public static final int MotionEvent.ACTION_MOVE = 2;
+// 触摸动作取消
+public static final int MotionEvent.ACTION_CANCEL = 3;
+// 触摸动作超出边界
+public static final int MotionEvent.ACTION_OUTSIDE = 4;
+// 多点触摸按下动作
+public static final int MotionEvent.ACTION_POINTER_DOWN = 5;
+// 多点离开动作
+public static final int MotionEvent.ACTION_POINTER_UP = 6;
+</code></pre><p><strong>View提供的获取坐标方法</strong></p>
+<ul>
+<li>getTop()：获取到的是View自身的顶边到其父布局顶边的距离</li>
+<li>getLeft()：获取到的是View自身的左边到其父布局左边的距离</li>
+<li>getRight()：获取到的是View自身的右边到其父布局右边的距离</li>
+<li>getBottom()：获取到的是View自身的底边到其父布局底边的距离</li>
+</ul>
+<p><strong>MotionEvent提供的方法</strong></p>
+<ul>
+<li>getX()：获取点击事件距离控件左边的距离，即视图坐标</li>
+<li>getY()：获取点击事件距离控件顶边的距离，即视图坐标</li>
+<li>getRawX()：获取点击事件距离整个屏幕左边的距离，即绝对坐标</li>
+<li>getRawY()：获取点击事件距离整个屏幕顶边的距离，即绝对坐标</li>
+</ul>
+<h2 id="5-2__u5B9E_u73B0_u6ED1_u52A8_u7684_u4E03_u79CD_u65B9_u6CD5"><a href="#5-2__u5B9E_u73B0_u6ED1_u52A8_u7684_u4E03_u79CD_u65B9_u6CD5" class="headerlink" title="5.2 实现滑动的七种方法"></a>5.2 实现滑动的七种方法</h2><ul>
+<li><p>layout()方法</p>
+<pre><code>private int lastX;
+private int lastY;
+private int offsetX;
+private int offsetY;
+
+@Override
+public boolean onTouchEvent(MotionEvent event) {
+  int x = (int) event.getRawX();
+  int y = (int) event.getRawY();
+
+  switch (event.getAction()) {
+  case MotionEvent.ACTION_DOWN:
+      lastX = x;
+      lastY = y;
+      break;
+  case MotionEvent.ACTION_MOVE:
+      offsetX = x - lastX;
+      offsetY = y - lastY;
+
+      layout(getLeft() + offsetX, getTop() + offsetY, getRight() + offsetX, getBottom() + offsetY);
+
+      lastX = x;
+      lastY = y;
+      break;
+  }
+  return true;
+}
+</code></pre></li>
+<li><p>offsetLeftAndRight()与offsetTopAndBottom()</p>
+<pre><code>// 同时对left和right进行偏移
+offsetLeftAndRight(offsetX);
+// 同时对top和bottom进行偏移
+offsetTopAndBottom(offsetY);
+</code></pre></li>
+<li><p>LayoutParams</p>
+<pre><code>LinearLayout.MarginLayoutParams layoutParams=(LinearLayout.LayoutParams)getLayoutParams();
+layoutParams.leftMargin=getLeft()+offsetX;
+layoutParams.topMargin=getTop()+offsetY;
+setLayoutParams(layoutParams);
+</code></pre><p>  或者</p>
+<pre><code>ViewGroup.MarginLayoutParams layoutParams=(MarginLayoutParams) getLayoutParams();
+layoutParams.leftMargin=getLeft()+offsetX;
+layoutParams.topMargin=getTop()+offsetY;
+setLayoutParams(layoutParams);
+</code></pre></li>
+<li><p>scrollTo()和scrollBy()</p>
+<pre><code>//scrollTo和scrollBy移动的是view的内容而不是view本身
+//如果在viewgroup中使用就是移动所有子view。
+View view=(View) getParent();
+//scrollTo和scrollBy参考的坐标系正好与视图坐标系相反，所以offset需为负
+view.scrollBy(-offsetX, -offsetY);
+</code></pre></li>
+<li><p>Scroller</p>
+<p>  scrollTo()和scrollBy()都是使View的平移瞬间发生的，这样的效果会让人感觉很突兀，而Scroller可以实现平滑移动的效果，而不是瞬间完成的移动。</p>
+<p>  使用Scroller主要有三个步骤：</p>
+<ol>
+<li><p>初始化Scroller对象，一般在view初始化的时候同时初始化scroller，代码如下：<br><code>mScroller=new Scroller(context);</code></p>
+</li>
+<li><p>重写view的computeScroll()方法，实现模拟滑动。computeScroll()的模版代码如下：</p>
+<pre><code>@Override
+public void computeScroll() {
+  super.computeScroll();
+  // 判断Scroller是否执行完毕
+  if (mScroller.computeScrollOffset()) {
+      ((View) getParent()).scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+      // 通过重绘来不断调用computeScroll
+      invalidate();
+  }
+}
+</code></pre><p> Scroller类提供了computeScrollOffset()方法来判断是否完成了整个滑动，同时也提供了getCurrX()和getCurrY()方法来获得当前的滑动坐标。computeScroll()方法是不会自动调用的，只能通过invalidate()-&gt;draw()-&gt;computeScroll()来间接调用，实现循环获取scrollX和scrollY的目的，当移动过程结束之后，Scroller.computeScrollOffset方法会返回false，从而中断循环,完成整个平滑移动过程；</p>
+</li>
+<li><p>startScroll开启模拟过程。调用Scroller.startScroll()方法，将起始位置、偏移量以及移动时间(可选)作为参数传递给startScroll()方法。在获取坐标时，通常可以使用getScrollX()和getScrollY()方法来获取父视图中content所滑动到的点的坐标，不过要注意的是这个值的正负，它与在scrollBy()、scrollTo()中讲解是一样的。另外，在startScroll()之后，还要invalidate()方法来通知View进行重绘，从而来调用computeScroll()的模拟过程。当然，可以给startScroll()方法增加一个duration的参数来设置滑动的持续时长。</p>
+</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><p>属性动画</p>
+</li>
+<li><p>ViewDragHelper</p>
+<p>  ViewDragHelper基本可以实现各种不同滑动需求，但使用稍微复杂。</p>
+<p>  示例代码：</p>
+<pre><code>public class DragViewGroup extends FrameLayout {
+
+  private ViewDragHelper mViewDragHelper;
+  private View mMenuView, mMainView;
+  private int mWidth;
+
+  public DragViewGroup(Context context) {
+      super(context);
+      initView();
+  }
+
+  public DragViewGroup(Context context, AttributeSet attrs) {
+      super(context, attrs);
+      initView();
+  }
+
+  public DragViewGroup(Context context, AttributeSet attrs, int defStyleAttr) {
+      super(context, attrs, defStyleAttr);
+      initView();
+  }
+
+  @Override
+  protected void onFinishInflate() {
+      super.onFinishInflate();
+      mMenuView = getChildAt(0);
+      mMainView = getChildAt(1);
+  }
+
+  @Override
+  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+      super.onSizeChanged(w, h, oldw, oldh);
+      mWidth = mMenuView.getMeasuredWidth();
+  }
+
+  @Override
+  public boolean onInterceptTouchEvent(MotionEvent ev) {
+      return mViewDragHelper.shouldInterceptTouchEvent(ev);
+  }
+
+  @Override
+  public boolean onTouchEvent(MotionEvent event) {
+      //将触摸事件传递给ViewDragHelper,此操作必不可少
+      mViewDragHelper.processTouchEvent(event);
+      return true;
+  }
+
+  private void initView() {
+      mViewDragHelper = ViewDragHelper.create(this, callback);
+  }
+
+  private ViewDragHelper.Callback callback = new ViewDragHelper.Callback() {
+
+      // 何时开始检测触摸事件
+      @Override
+      public boolean tryCaptureView(View child, int pointerId) {
+          //如果当前触摸的child是mMainView时开始检测
+          return mMainView == child;
+      }
+
+      // 触摸到View后回调
+      @Override
+      public void onViewCaptured(View capturedChild, int activePointerId) {
+          super.onViewCaptured(capturedChild, activePointerId);
+      }
+
+      // 当拖拽状态改变，比如idle，dragging
+      @Override
+      public void onViewDragStateChanged(int state) {
+          super.onViewDragStateChanged(state);
+      }
+
+      // 当位置改变的时候调用,常用与滑动时更改scale等
+      @Override
+      public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
+          super.onViewPositionChanged(changedView, left, top, dx, dy);
+      }
+
+      // 处理垂直滑动
+      @Override
+      public int clampViewPositionVertical(View child, int top, int dy) {
+          return 0;
+      }
+
+      // 处理水平滑动
+      @Override
+      public int clampViewPositionHorizontal(View child, int left, int dx) {
+          return left;
+      }
+
+      // 拖动结束后调用
+      @Override
+      public void onViewReleased(View releasedChild, float xvel, float yvel) {
+          super.onViewReleased(releasedChild, xvel, yvel);
+          //手指抬起后缓慢移动到指定位置
+          if (mMainView.getLeft() &lt; 500) {
+              //关闭菜单，相当于Scroller的startScroll方法
+              mViewDragHelper.smoothSlideViewTo(mMainView, 0, 0);
+              ViewCompat.postInvalidateOnAnimation(DragViewGroup.this);
+          } else {
+              //打开菜单
+              mViewDragHelper.smoothSlideViewTo(mMainView, 300, 0);
+              ViewCompat.postInvalidateOnAnimation(DragViewGroup.this);
+          }
+      }
+  };
+
+  @Override
+  public void computeScroll() {
+      if (mViewDragHelper.continueSettling(true)) {
+          ViewCompat.postInvalidateOnAnimation(this);
+      }
+  }
+}
+</code></pre></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3"><a href="#u7B2C_u4E09_u7AE0_]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="《Android群英传》" scheme="http://yuqirong.me/tags/%E3%80%8AAndroid%E7%BE%A4%E8%8B%B1%E4%BC%A0%E3%80%8B/"/>
+    
+      <category term="Book Note" scheme="http://yuqirong.me/categories/Book-Note/"/>
     
   </entry>
   
@@ -550,6 +1838,367 @@ public abstract void bindCustomViewHolder(RecyclerView.ViewHolder holder, int po
       <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[九大基本排序算法]]></title>
+    <link href="http://yuqirong.me/2016/02/18/%E4%B9%9D%E5%A4%A7%E5%9F%BA%E6%9C%AC%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/"/>
+    <id>http://yuqirong.me/2016/02/18/九大基本排序算法/</id>
+    <published>2016-02-18T13:56:06.000Z</published>
+    <updated>2016-03-23T08:13:50.130Z</updated>
+    <content type="html"><![CDATA[<h1 id="u5192_u6CE1_u6392_u5E8F"><a href="#u5192_u6CE1_u6392_u5E8F" class="headerlink" title="冒泡排序"></a>冒泡排序</h1><p>冒泡排序的平均复杂度是O(N^2),最好的情况O(N),最坏的情况O(N^2);空间复杂度O(1)；稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] bubbleSort(int[] A, int n) {
+    int temp;
+    for (int i = 0; i &lt; n - 1; i++) {
+        for (int j = 0; j &lt; n - i - 1; j++) {
+            if (A[j] &gt; A[j + 1]) {
+                temp = A[j + 1];
+                A[j + 1] = A[j];
+                A[j] = temp;
+            }
+        }
+    }
+    return A;
+}
+</code></pre><h1 id="u9009_u62E9_u6392_u5E8F"><a href="#u9009_u62E9_u6392_u5E8F" class="headerlink" title="选择排序"></a>选择排序</h1><p>选择排序时间复杂度 O(N^2)，最坏的情况O(N^2);空间复杂度O(1)；不稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] selectionSort(int[] A, int n) {
+    int minPos = 0;
+    int temp;
+    for (int i = 0; i &lt; n - 1; i++) {
+        for (int j = i + 1; j &lt; n; j++) {
+            if (A[j] &lt; A[minPos]) {
+                minPos = j;
+            }
+        }
+        temp = A[minPos];
+        A[minPos] = A[i];
+        A[i] = temp;
+        minPos = i + 1;
+    }
+    return A;
+}
+</code></pre><h1 id="u63D2_u5165_u6392_u5E8F"><a href="#u63D2_u5165_u6392_u5E8F" class="headerlink" title="插入排序"></a>插入排序</h1><p>插入排序的平均复杂度是O(N^2)，最好的情况O(N)，最坏的情况O(N^2);空间复杂度O(1)；稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] insertionSort(int[] A, int n) {
+    int temp;
+    for (int i = 2; i &lt; n; i++) {
+        for (int j = 0; j &lt; i; j++) {
+            if (A[i] &lt; A[j]) {
+                temp = A[j];
+                A[j] = A[i];
+                A[i] = temp;
+            }
+        }
+    }
+    return A;
+}
+</code></pre><h1 id="u5F52_u5E76_u6392_u5E8F"><a href="#u5F52_u5E76_u6392_u5E8F" class="headerlink" title="归并排序"></a>归并排序</h1><p>归并排序时间复杂度O(N*logN),最好的情况O(N*logN)，最坏的情况O(N*logN)；空间复杂度O(N)；稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] mergeSort(int[] A, int n) {
+    if (n &gt; 1) {
+        int k = n / 2;
+        int[] temp1 = new int[k];
+        int[] temp2 = new int[n - k];
+
+        for (int i = 0; i &lt; k; i++) {
+            temp1[i] = A[i];
+        }
+        for (int i = k; i &lt; n; i++) {
+            temp2[i - k] = A[i];
+        }
+        temp1 = mergeSort(temp1, k);
+        temp2 = mergeSort(temp2, n - k);
+
+        int i = 0;
+        int j = 0;
+        int x = 0;
+        int[] temp = new int[n];
+
+        while (i &lt; k &amp;&amp; j &lt; n - k) {
+            if (temp1[i] &lt;= temp2[j]) {
+                temp[x] = temp1[i];
+                x++;
+                i++;
+            } else {
+                temp[x] = temp2[j];
+                x++;
+                j++;
+            }
+        }
+
+        while (i &lt; k) {
+            temp[x] = temp1[i];
+            x++;
+            i++;
+        }
+
+        while (j &lt; n - k) {
+            temp[x] = temp2[j];
+            x++;
+            j++;
+        }
+        return temp;
+    }
+    return A;
+}
+</code></pre><h1 id="u5FEB_u901F_u6392_u5E8F"><a href="#u5FEB_u901F_u6392_u5E8F" class="headerlink" title="快速排序"></a>快速排序</h1><p>快速排序的平均复杂度是O(N*logN)，最好的情况O(N*logN)，最坏的情况O(N^2);空间复杂度O(logN)；不稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] quickSort(int[] A, int n) {
+    qSort(A, 0, n - 1);
+    return A;
+}
+
+/**
+ * 
+ * @param A
+ *            数组
+ * @param start
+ *            数组起始位
+ * @param end
+ *            数组终止位
+ */
+public static void qSort(int[] A, int start, int end) {
+    if (start &lt; end) {
+        Random random = new Random();
+        // 产生一个随机数
+        int nextInt = random.nextInt(end - start + 1) + start;
+        // 把随机位和数组最后一位交换
+        int temp = A[end];
+        A[end] = A[nextInt];
+        A[nextInt] = temp;
+        // 比A[nextInt]小的数的个数
+        int lt = 0;
+
+        for (int i = start; i &lt; end; i++) {
+            if (A[i] &lt;= A[end]) {
+                int temp1 = A[lt + start];
+                A[lt + start] = A[i];
+                A[i] = temp1;
+                lt++;
+            }
+        }
+        // 把数组最后一位和A[start + lt]交换
+        int temp2 = A[start + lt];
+        A[lt + start] = A[end];
+        A[end] = temp2;
+        // 递归
+        qSort(A, start, lt + start - 1);
+        qSort(A, lt + start + 1, end);
+    }
+}
+</code></pre><h1 id="u5806_u6392_u5E8F"><a href="#u5806_u6392_u5E8F" class="headerlink" title="堆排序"></a>堆排序</h1><p>时间复杂度 O(N*logN),最坏O(N*logN);不稳定算法</p>
+<pre><code>/**
+ * 从堆顶中取值，再重新建堆
+ * 
+ * @param A
+ *            数组
+ * @param n
+ *            数组长度
+ * @return
+ */
+private static int[] heapSort(int[] A, int n) {
+    while (n &gt; 0) {
+        sift(A, n);
+        int temp = A[n - 1];
+        A[n - 1] = A[0];
+        A[0] = temp;
+        n--;
+        sift(A, n);
+    }
+    return A;
+}
+
+/**
+ * 建堆
+ * 
+ * @param A
+ * @param n
+ */
+public static void sift(int[] A, int n) {
+    // 最后一个非终端节点
+    int temp = n / 2;
+
+    while (temp &gt; 0) {
+        int tt = 2 * temp - 1;
+        if (2 * temp &lt;= n - 1) {
+            if (A[2 * temp] &lt; A[2 * temp - 1]) {
+                tt = 2 * temp - 1;
+            } else {
+                tt = 2 * temp;
+            }
+        }
+        // 如果子节点大于父节点
+        if (A[temp - 1] &lt; A[tt]) {
+            int t = A[temp - 1];
+            A[temp - 1] = A[tt];
+            A[tt] = t;
+        }
+
+        // 保证下面的堆为大顶堆
+        for (int i = (tt + 1); i &lt;= n; i = 2 * i) {
+            int k = 2 * i - 1;
+            if (k &lt; n) {
+                if (i * 2 + 1 &lt;= n) {
+                    if (A[2 * i] &gt; A[2 * i - 1]) {
+                        k = 2 * i;
+                    }
+                }
+                if (A[i - 1] &lt; A[k]) {
+                    int t = A[i - 1];
+                    A[i - 1] = A[k];
+                    A[k] = t;
+                }
+            }
+        }
+        // 节点自减
+        temp--;
+    }
+}
+</code></pre><h1 id="u5E0C_u5C14_u6392_u5E8F"><a href="#u5E0C_u5C14_u6392_u5E8F" class="headerlink" title="希尔排序"></a>希尔排序</h1><p>希尔排序的平均复杂度是O(N*logN)~O(N^2)，最好的情况O(N^1.3)，最坏的情况O(N^2)；空间复杂度O(1);不稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] shellSort(int[] A, int n) {
+    Random random = new Random();
+    // 步长
+    int step = random.nextInt(n);
+    sSort(A,step);
+    return A;
+}
+
+/**
+ * 
+ * @param A
+ * @param start
+ *            数组起始位
+ * @param end
+ *            数组终止位
+ */
+public static void sSort(int[] A, int step) {
+    // 当步长大于0时循环
+    while (step &gt; 0) {
+        for (int i = step; i &lt; A.length; i++) {
+            int k = i;
+            int temp = k - step;
+            while (temp &gt;= 0) {
+                if (A[k] &lt; A[temp]) {
+                    int temp2 = A[k];
+                    A[k] = A[temp];
+                    A[temp] = temp2;
+                    k = temp;
+                }
+                temp -= step;
+            }
+        }
+        // 步长自减
+        step--;
+    }
+}
+</code></pre><h1 id="u8BA1_u6570_u6392_u5E8F"><a href="#u8BA1_u6570_u6392_u5E8F" class="headerlink" title="计数排序"></a>计数排序</h1><p>时间复杂度 O(N)；</p>
+<pre><code>/**
+ * 
+ * @param A
+ *            数组
+ * @param n
+ *            数组长度
+ * @return
+ */
+private static int[] countingSort(int[] A, int n) {
+    int temp = A[0];
+    for (int i = 1;i&lt;n ;i++) {
+        if(A[i]&gt;temp){
+            temp = A[i];
+        }
+    }
+
+    int[] count = new int[temp+1];
+
+    for (int i = 0; i &lt; n; i++) {
+        count[A[i]]++;
+    }
+    int[] result = new int[n];
+    int length = 0;
+    for (int i = 0; i &lt; count.length; i++) {
+        while(count[i]&gt;0){
+            result[length] = i;
+            count[i]--;
+            length++;
+        }
+    }
+    return result;
+}
+</code></pre><h1 id="u57FA_u6570_u6392_u5E8F"><a href="#u57FA_u6570_u6392_u5E8F" class="headerlink" title="基数排序"></a>基数排序</h1><p>时间复杂度 O (nlog(r)m)，其中r为所采取的基数，而m为堆数;空间复杂度O(N)；稳定算法</p>
+<pre><code>public static int[] radixSort(int[] A, int n) {
+
+    int index = 0;
+    for (int i = 1; i &lt; n; i++) {
+        if (A[i] &gt; A[index]) {
+            index = i;
+        }
+    }
+
+    int temp = A[index];
+    int count = 0;
+    while (temp / 10 &gt; 0) {
+        count++;
+        temp /= 10;
+    }
+    count++;
+
+    int[][] bucket = new int[10][n + 1];
+
+    int temp1 = count;
+    while (count &gt; 0) {
+
+        for (int i = 0; i &lt; bucket.length; i++) {
+            bucket[i][0] = 0;
+        }
+
+        for (int i = 0; i &lt; n; i++) {
+            int num;
+            if (temp1 - count == 0) {
+                num = A[i] % 10;
+            } else {
+                int tt = (int) Math.pow(10, temp1 - count);
+                num = (int) A[i] / tt % 10;
+            }
+            int length = bucket[num][0];
+            bucket[num][length + 1] = A[i];
+            length++;
+            bucket[num][0] = length;
+        }
+        int length = 0;
+        for (int i = 0; i &lt; 10; i++) {
+            for (int j = 0; j &lt; bucket[i][0]; j++) {
+                A[length] = bucket[i][j + 1];
+                length++;
+            }
+        }
+        count--;
+    }
+    return A;
+}
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u5192_u6CE1_u6392_u5E8F"><a href="#u5192_u6CE1_u6392_u5E8F" class="headerlink" title="冒泡排序"></a>冒泡排序</h1><p>冒泡排序的平均复杂度是O(N^2),最好的情况O]]>
+    </summary>
+    
+      <category term="算法" scheme="http://yuqirong.me/tags/%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="算法" scheme="http://yuqirong.me/categories/%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
@@ -3109,859 +4758,6 @@ locationDao.insert(local);
     </summary>
     
       <category term="greenDAO" scheme="http://yuqirong.me/tags/greenDAO/"/>
-    
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[简单实现满屏表情下落的动画效果，你也可以]]></title>
-    <link href="http://yuqirong.me/2015/11/12/%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%BB%A1%E5%B1%8F%E8%A1%A8%E6%83%85%E4%B8%8B%E8%90%BD%E7%9A%84%E5%8A%A8%E7%94%BB%E6%95%88%E6%9E%9C%EF%BC%8C%E4%BD%A0%E4%B9%9F%E5%8F%AF%E4%BB%A5/"/>
-    <id>http://yuqirong.me/2015/11/12/简单实现满屏表情下落的动画效果，你也可以/</id>
-    <published>2015-11-12T14:39:14.000Z</published>
-    <updated>2016-02-21T14:20:31.424Z</updated>
-    <content type="html"><![CDATA[<p>首先我相信大家一定玩过微信吧。之前在玩微信的时候，给好友发一句“圣诞快乐”就会有满屏的圣诞树往下掉，当时觉得这个动画好酷。正好在公司的项目中需要用到这样的动画效果。于是写了一个小Demo,就有了这篇文章。</p>
-<p>下图是做出的相关效果： </p>
-<p><img src="/uploads/20151112/20151112224542.gif" alt="这里写图片描述"></p>
-<p>看完上面的效果图，大家一定都迫不及待地想要试一试了，那就让我们来动手吧。</p>
-<p>首先我们定义一个实体类DropLook:</p>
-<pre><code>/**
- * 下落的表情
- */
-public class DropLook {
-
-    // x轴坐标
-    private float x;
-    // y轴坐标
-    private float y;
-    // 初始旋转角度
-    private float rotation;
-    // 下落速度
-    private float speed;
-    // 旋转速度
-    private float rotationSpeed;
-    // 宽度
-    private int width;
-    // 高度
-    private int height;
-    // 图片
-    private Bitmap bitmap;
-
-    public float getX() {
-        return x;
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public float getRotationSpeed() {
-        return rotationSpeed;
-    }
-
-    public void setRotationSpeed(float rotationSpeed) {
-        this.rotationSpeed = rotationSpeed;
-    }
-
-    public float getRotation() {
-        return rotation;
-    }
-
-    public void setRotation(float rotation) {
-        this.rotation = rotation;
-    }
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-}
-</code></pre><p>我们定义的实体类很简单，只是设置了如宽高、x，y坐标、下落速度等。接下来我们再创建一个DropLookFactory类，用来创建DropLook对象。</p>
-<pre><code>public class DropLookFactory {
-
-    private DropLookFactory() {
-
-    }
-
-    public static DropLook createDropLook(int width, int height,Bitmap originalBitmap) {
-        DropLook look = new DropLook();
-        if (originalBitmap == null) {
-            throw new NullPointerException(&quot;originalBitmap cannot be null&quot;);
-        }
-        // 设置与图片等宽
-        look.setWidth(originalBitmap.getWidth());
-        // 设置与图片等高
-        look.setHeight(originalBitmap.getHeight());
-        // 设置起始位置的X坐标
-        look.setX((float) Math.random() * (width - look.getWidth()));
-        // 设置起始位置的Y坐标
-        look.setY((float) Math.random() * (height - look.getHeight()));
-        // 设置速度
-        look.setSpeed(20 + (float) Math.random() * 40);
-        // 设置初始旋转角度
-        look.setRotation((float) Math.random() * 180 - 90);
-        // 设置旋转速度
-        look.setRotationSpeed((float) Math.random() * 90 - 60);
-        // 设置图片
-        look.setBitmap(originalBitmap);
-        return look;
-    }
-
-}
-</code></pre><p>其中<code>createDropLook(Context context, float xRange, Bitmap originalBitmap)</code>的第一个参数代表着下落表情在x轴上的范围，第二个参数代表在y轴上的范围，第三个参数是表情的图片。在createDropLook方法中相信大家都看得懂，主要就是用随机数初始化DropLook的坐标及下落速度等。</p>
-<p>好了，下面就是今天的重头戏DropLookView，先来看看onMeasure(): </p>
-<pre><code> @Override
-protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-    int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-    if (widthMode == MeasureSpec.EXACTLY) {
-        mWidth = widthSize;
-    } else {
-        mWidth = Tools.dip2px(getContext(),200);
-    }
-    int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-    int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-    if (heightMode == MeasureSpec.EXACTLY) {
-        mHeight = heightSize;
-    } else {
-        mHeight = Tools.dip2px(getContext(),200);
-    }
-    setMeasuredDimension(mWidth, mHeight);
-    if (looks.size() == 0) {
-        for (int i = 0; i &lt; DEFAULT_DROP_LOOK_NUMS; ++i) {
-            looks.add(DropLookFactory.createDropLook(mWidth, mHeight, mBitmap));
-        }
-        Log.i(TAG, &quot;num = &quot; + looks.size());
-    }
-}
-</code></pre><p>onMeasure里主要是对View的测量，如果是<code>wrap_content</code>的话设置一个默认的宽高度200dp。然后就是初始化DropLook，looks是DropLook类的集合，用于管理DropLook。而<code>DEFAULT_LOOK_NUMS</code>是默认的looks集合的数量。</p>
-<p>接下来就是最关键的onDraw():</p>
-<pre><code>@Override
-protected void onDraw(Canvas canvas) {
-    super.onDraw(canvas);
-    canvas.save();
-    long nowTime = System.currentTimeMillis();
-    if (nowTime - startTime &lt; 100) {
-        try {
-            Thread.sleep(100 + startTime - nowTime);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    for (int i = 0; i &lt; DEFAULT_DROP_LOOK_NUMS; i++) {
-
-        DropLook look = looks.get(i);
-        mMatrix.setTranslate(-look.getWidth() / 2, -look.getHeight() / 2);
-        mMatrix.postRotate(look.getRotation());
-        mMatrix.postTranslate(look.getWidth() / 2 + look.getX(), look.getHeight() / 2 + look.getY());
-        canvas.drawBitmap(look.getBitmap(), mMatrix, mPaint);
-
-        look.setY(look.getY() + look.getSpeed());
-        if (look.getY() &gt; getHeight()) {
-            look.setY((float) (0 - Math.random() * look.getHeight()));
-        }
-
-        look.setRotation(look.getRotation() + look.getRotationSpeed());
-    }
-
-    canvas.restore();
-    startTime = System.currentTimeMillis();
-    invalidate();
-}
-</code></pre><p>一开始判断时间间隔如果没有超过100ms，就让线程睡眠一会。然后就是用drawBitmap的方法把looks里面逐个绘制出来。并且再把look的y轴坐标加上下落速度等，旋转的角度也是如此。最后就是调用invalidate()不断地重绘。总体上并没有什么难点。</p>
-<p>以下是DropLookView的完整代码：</p>
-<pre><code>/**
- * 表情下落view
- */
-public class DropLookView extends View {
-
-    // 表情
-    private Bitmap mBitmap;
-    // 所有表情集合
-    List&lt;DropLook&gt; looks = new ArrayList();
-    // view开始时间
-    private long startTime;
-    // view宽度
-    private int mWidth;
-    // view高度
-    private int mHeight;
-    // 画笔
-    private Paint mPaint;
-    // 默认表情下落数
-    private static final int DEFAULT_DROP_LOOK_NUMS = 35;
-
-    private static final String TAG = &quot;DropLookView&quot;;
-
-    private Matrix mMatrix = new Matrix();
-
-    public DropLookView(Context context) {
-        this(context, null);
-    }
-
-    public DropLookView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public DropLookView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        // 图片
-        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.d_5_xiaoku);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        if (widthMode == MeasureSpec.EXACTLY) {
-            mWidth = widthSize;
-        } else {
-            mWidth = Tools.dip2px(getContext(),200);
-        }
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        if (heightMode == MeasureSpec.EXACTLY) {
-            mHeight = heightSize;
-        } else {
-            mHeight = Tools.dip2px(getContext(),200);
-        }
-        setMeasuredDimension(mWidth, mHeight);
-        if (looks.size() == 0) {
-            for (int i = 0; i &lt; DEFAULT_DROP_LOOK_NUMS; ++i) {
-                looks.add(DropLookFactory.createDropLook(mWidth, mHeight, mBitmap));
-            }
-            Log.i(TAG, &quot;num = &quot; + looks.size());
-        }
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.save();
-        long nowTime = System.currentTimeMillis();
-        if (nowTime - startTime &lt; 100) {
-            try {
-                Thread.sleep(100 + startTime - nowTime);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        for (int i = 0; i &lt; DEFAULT_DROP_LOOK_NUMS; i++) {
-
-            DropLook look = looks.get(i);
-            mMatrix.setTranslate(-look.getWidth() / 2, -look.getHeight() / 2);
-            mMatrix.postRotate(look.getRotation());
-            mMatrix.postTranslate(look.getWidth() / 2 + look.getX(), look.getHeight() / 2 + look.getY());
-            canvas.drawBitmap(look.getBitmap(), mMatrix, mPaint);
-
-            look.setY(look.getY() + look.getSpeed());
-            if (look.getY() &gt; getHeight()) {
-                look.setY((float) (0 - Math.random() * look.getHeight()));
-            }
-
-            look.setRotation(look.getRotation() + look.getRotationSpeed());
-        }
-
-        canvas.restore();
-        startTime = System.currentTimeMillis();
-        invalidate();
-    }
-
-}
-</code></pre><p>该讲的也差不多讲完了，其实并没有想象中的那么有难度，实现起来也比较容易。当然DropLookView也有需要改进的地方。比如说可以在布局文件中自定义表情下落的数量等。这些就需要自己根据需求来更改了，那今天就先这样吧。</p>
-<p>下面是本Demo的完整代码：<br><a href="/uploads/20151112/DropDownView.rar">DropLookView.rar</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>首先我相信大家一定玩过微信吧。之前在玩微信的时候，给好友发一句“圣诞快乐”就会有满屏的圣诞树往下掉，当时觉得这个动画好酷。正好在公司的项目中需要用到这样的动画效果。于是写了一个小Demo,就有了这篇文章。</p>
-<p>下图是做出的相关效果： </p>
-<p><img sr]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
-    
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[史上最简单粗暴实现侧滑菜单]]></title>
-    <link href="http://yuqirong.me/2015/11/04/%E5%8F%B2%E4%B8%8A%E6%9C%80%E7%AE%80%E5%8D%95%E7%B2%97%E6%9A%B4%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91%E8%8F%9C%E5%8D%95/"/>
-    <id>http://yuqirong.me/2015/11/04/史上最简单粗暴实现侧滑菜单/</id>
-    <published>2015-11-04T12:47:16.000Z</published>
-    <updated>2016-02-21T14:20:45.816Z</updated>
-    <content type="html"><![CDATA[<p>在Android开发中，相信侧滑菜单大家都不陌生吧，几乎是每个app都必备的。从早期的 <a href="https://github.com/jfeinstein10/SlidingMenu" target="_blank" rel="external">SlidingMenu</a> 再到           <a href="https://github.com/SpecialCyCi/AndroidResideMenu" target="_blank" rel="external">AndroidResideMenu</a> 最后到Android自带的DrawerLayout，无处不体现着侧滑菜单的诱人魅力。侧滑菜单可以拓展app的内容，充分利用手机屏幕，增加程序的可玩性。既然有这么多可供选择的侧滑菜单使用，那为什么我们还要自己写呢？我觉得我们在使用侧滑菜单的时候应该要懂得其中的原理，更好的，可以自己写一个侧滑菜单来加深体会。</p>
-<p>好了，话不多说。来看看我们所谓“史上最简单粗暴实现的侧滑菜单”的产物吧：</p>
-<p><img src="/uploads/20151104/20151104205135.gif" alt="这里写图片描述"></p>
-<p>看完了上面的gif，想不想自己也写一个呢，那还等什么，一起来看看喽。</p>
-<p>首先来说一下侧滑菜单实现的思路：侧滑菜单的布局为MenuLayout，还有主页的布局为MainLayout。MenuLayout在MainLayout的左边，当手指向右滑动的时候，MainLayout就向右滑动，同时MenuLayout跟着向右滑动，于是就显示出了侧滑菜单。以下是示意图：</p>
-<p><img src="/uploads/20151104/20151104000149.png" alt="这里写图片描述"></p>
-<p>大概地了解思路以后，我们先来看看布局文件。</p>
-<p>layout_slidemenu.xml(侧滑菜单的布局)：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:layout_width=&quot;300dp&quot;
-    android:layout_height=&quot;wrap_content&quot;
-    android:background=&quot;@drawable/menu_bg&quot;
-    android:orientation=&quot;vertical&quot;&gt;
-
-    &lt;ListView
-        android:id=&quot;@+id/lv_menu&quot;
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:cacheColorHint=&quot;@null&quot; /&gt;
-&lt;/LinearLayout&gt;
-</code></pre><p>layout_activity_main.xml(主界面的布局)：</p>
-<pre><code>&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-android:layout_width=&quot;match_parent&quot;
-android:layout_height=&quot;match_parent&quot;
-android:background=&quot;#55666666&quot;
-android:orientation=&quot;vertical&quot; &gt;
-
-    &lt;LinearLayout
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;60dp&quot;
-        android:background=&quot;@drawable/top_bar_bg&quot;
-        android:gravity=&quot;center_vertical&quot; &gt;
-
-        &lt;ImageView
-            android:id=&quot;@+id/iv_menu&quot;
-            android:layout_width=&quot;wrap_content&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:layout_margin=&quot;10dp&quot;
-            android:layout_gravity=&quot;center_vertical&quot;
-            android:background=&quot;@drawable/img_menu&quot; /&gt;
-
-        &lt;TextView
-            android:layout_width=&quot;wrap_content&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:layout_marginLeft=&quot;15dp&quot;
-            android:text=&quot;SlidingMenu&quot;
-            android:layout_gravity=&quot;center_vertical&quot;
-            android:textColor=&quot;#ffffff&quot;
-            android:textSize=&quot;22sp&quot; /&gt;
-    &lt;/LinearLayout&gt;
-
-&lt;/LinearLayout&gt;
-</code></pre><p>layout_main.xml(activity的布局)，注意，主界面的布局一定要放在菜单布局的后面：</p>
-<pre><code>&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-xmlns:tools=&quot;http://schemas.android.com/tools&quot;
-android:layout_width=&quot;match_parent&quot;
-android:layout_height=&quot;match_parent&quot; &gt;
-
-    &lt;com.yuqirong.slidingmenu.view.SlidingMenu
-        android:id=&quot;@+id/slideMenu1&quot;
-        android:layout_width=&quot;wrap_content&quot;
-        android:layout_height=&quot;wrap_content&quot; &gt;
-
-        &lt;!-- 菜单界面的布局 --&gt;
-
-        &lt;include layout=&quot;@layout/layout_slidemenu&quot; /&gt;
-
-        &lt;!-- 主界面的布局 --&gt;
-
-        &lt;include layout=&quot;@layout/layout_activity_main&quot; /&gt;
-    &lt;/com.yuqirong.slidingmenu.view.SlidingMenu&gt;
-
-&lt;/RelativeLayout&gt;
-</code></pre><p>看完了布局文件，下面我们就来看看代码(以下为部分代码，并非全部)：</p>
-<pre><code>public class SlidingMenu extends FrameLayout {
-
-    private ViewDragHelper mdDragHelper;
-
-    public SlidingMenu(Context context) {
-        this(context, null);
-    }
-
-    public SlidingMenu(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public SlidingMenu(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        mdDragHelper = ViewDragHelper.create(this, callback);
-    }
-}
-</code></pre><p>我们创建一个类名叫SlidingMenu，继承自FrameLayout，然后重写构造器。在构造器中新建了一个ViewDragHelper的对象。如果你还不知道ViewDragHelper为何物，建议你去看看<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的<a href="http://blog.csdn.net/lmj623565791/article/details/46858663" target="_blank" rel="external">《Android ViewDragHelper完全解析 自定义ViewGroup神器》</a>，这里就不展开叙述了。在<code>ViewDragHelper.create(Context context,ViewDragHelper.Callback callback)</code>里我们传入了一个回调callback，那接下来就来看看这个callback：</p>
-<pre><code> Callback callback = new Callback() {
-
-    @Override
-    public boolean tryCaptureView(View view, int arg1) {
-        return true;
-    }
-
-    public int getViewHorizontalDragRange(View child) {
-        return menuWidth;
-    }
-
-    @Override
-    public int clampViewPositionHorizontal(View child, int left, int dx) {
-        if (child == mainView) {
-            if (left &lt; 0)
-                return 0;
-            else if (left &gt; menuWidth)
-                return menuWidth;
-            else
-                return left;
-        } else if (child == menuView) {
-            if (left &gt; 0)
-                return 0;
-            else if (left &gt; menuWidth)
-                return menuWidth;
-            else
-                return left;
-        }
-        return 0;
-    }
-
-    public void onViewPositionChanged(View changedView, int left, int top,
-                                      int dx, int dy) {
-        if (changedView == mainView)
-            menuView.offsetLeftAndRight(dx);
-        else
-            mainView.offsetLeftAndRight(dx);
-        invalidate();
-    }
-
-    ;
-
-    public void onViewReleased(View releasedChild, float xvel, float yvel) {
-        if (releasedChild == mainView) {
-            if (status == Status.Open) {
-                // 关闭侧滑菜单
-                close();
-                return;
-            }
-            if (xvel == 0
-                    &amp;&amp; Math.abs(mainView.getLeft()) &gt; menuWidth / 2.0f) {
-                // 打开侧滑菜单
-                open();
-            } else if (xvel &gt; 0) {
-                open();
-            } else {
-                close();
-            }
-        } else {
-            if (xvel == 0
-                    &amp;&amp; Math.abs(mainView.getLeft()) &gt; menuWidth / 2.0f) {
-                // 打开侧滑菜单
-                open();
-            }else if (xvel &gt; 0) {
-                open();
-            } else {
-                // 关闭侧滑菜单
-                close();
-            }
-        }
-    }
-
-};
-</code></pre><p>我们发现在callback中几乎完成了绝大部分的逻辑。首先在<code>tryCaptureView(View view, int arg1)</code>直接返回了true，因为无论在mainView(主View)还是在menuView(菜单View)都应该去捕获，而<code>getViewHorizontalDragRange(View child)</code>返回的应该是menuView的宽度，也就是说滑动的时候最多能滑menuWidth的距离。而menuWidth是在<code>onFinishInflate()</code>中得到的。至于<code>clampViewPositionHorizontal(View child, int left, int dx)</code>和<code>onViewPositionChanged(View changedView, int left, int top,int dx, int dy)</code>两个方法逻辑很简单，相信大家都看得懂。最后在<code>onViewReleased(View releasedChild, float xvel, float yvel)</code>方法中判断了菜单打开或关闭的逻辑，比如在菜单关闭的情况下，只要手指向右滑或是停止滑动时侧滑菜单在屏幕中的宽度大于menuWidth/2这两种情况下，侧滑菜单都是执行open()方法，其它的情况以此类推。下面就来看看open()和close()方法。</p>
-<pre><code>/**
- * 打开菜单
- */
-public void open() {
-    if (mdDragHelper.smoothSlideViewTo(mainView, menuWidth, 0)) {
-        ViewCompat.postInvalidateOnAnimation(this);
-    }
-    preStatus = status;
-    status = Status.Open;
-    if (listener != null &amp;&amp; preStatus == Status.Close) {
-        listener.statusChanged(status);
-    }
-}
-
-/**
- * 关闭菜单
- */
-public void close() {
-    if (mdDragHelper.smoothSlideViewTo(mainView, 0, 0)) {
-        ViewCompat.postInvalidateOnAnimation(this);
-    }
-    preStatus = status;
-    status = Status.Close;
-    if (listener != null &amp;&amp; preStatus == Status.Open) {
-        listener.statusChanged(status);
-    }
-}
-
-/**
- * 切换菜单状态
- */
-public void toggle() {
-    if (status == Status.Close) {
-        open();
-    } else {
-        close();
-    }
-} 
-
-@Override
-public void computeScroll() {
-    super.computeScroll();
-    // 开始执行动画
-    if (mdDragHelper.continueSettling(true)) {
-        ViewCompat.postInvalidateOnAnimation(this);
-    }
-}
-</code></pre><p>我们发现在<code>open()</code>和<code>close()</code>两个方法中都调用了<code>ViewCompat.postInvalidateOnAnimation(this);</code>而<code>postInvalidateOnAnimation(View view)</code>需要重写<code>computeScroll()</code>来实现平滑滚动的效果，一般的写法都如上代码所示，不需要改动。再重新回到<code>open()</code>和<code>close()</code>两个方法，其中的listener就是菜单开关状态的监听器，当状态改变的时候都会回调listener的<code>statusChanged(Status status)</code>方法。</p>
-<p>最后的最后，别忘了在<code>onLayout(boolean changed, int left, int top, int right, int bottom)</code>中把menuView设置在mainView的左边。而menuView和mainView都是在<code>onFinishInflate()</code>中得到的。</p>
-<pre><code>@Override
-protected void onFinishInflate() {
-    super.onFinishInflate();
-    if(getChildCount()!=2){
-        throw new IllegalArgumentException(&quot;子view的数量必须为2个&quot;);
-    }
-    menuView = getChildAt(0);
-    mainView = getChildAt(1);
-    menuWidth = menuView.getLayoutParams().width;
-}
-
-@Override
-protected void onLayout(boolean changed, int left, int top, int right,
-                        int bottom) {
-    menuView.layout(-menuWidth, 0, 0, menuView.getMeasuredHeight());
-    mainView.layout(0, 0, right, bottom);
-}
-</code></pre><p>好了，讲解了这么多，差不多把SlidingMenu的代码逻辑讲解完成了。如果有什么疑问，可以在下面留言。</p>
-<p>国际惯例，下面贴出源码下载链接：</p>
-<p><a href="/uploads/20151104/SlidingMenu.rar">SlidingMenu.rar</a></p>
-<p>~have fun!~</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>在Android开发中，相信侧滑菜单大家都不陌生吧，几乎是每个app都必备的。从早期的 <a href="https://github.com/jfeinstein10/SlidingMenu" target="_blank" rel="external">SlidingM]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
-    
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android onTouch事件传递机制解析]]></title>
-    <link href="http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/"/>
-    <id>http://yuqirong.me/2015/10/29/Android onTouch事件传递机制解析/</id>
-    <published>2015-10-29T14:56:09.000Z</published>
-    <updated>2016-02-21T14:20:08.513Z</updated>
-    <content type="html"><![CDATA[<p>记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事件传递的机制了，顺便写一篇博客来记录一下。下面就让我们来看看吧。</p>
-<p>大家都知道一般我们使用的UI控件都是继承自共同的父类——View。所以View这个类应该掌管着onTouch事件的相关处理。那就让我们去看看：在View中寻找Touch相关的方法，其中一个很容易地引起了我们的注意：dispatchTouchEvent(MotionEvent event)。根据方法名的意思应该是负责分发触摸事件的，下面给出了源码：</p>
-<pre><code>/**
- * Pass the touch screen motion event down to the target view, or this
- * view if it is the target.
- *
- * @param event The motion event to be dispatched.
- * @return True if the event was handled by the view, false otherwise.
- */
- public boolean dispatchTouchEvent(MotionEvent event) {
-    // If the event should be handled by accessibility focus first.
-    if (event.isTargetAccessibilityFocus()) {
-        // We don&apos;t have focus or no virtual descendant has it, do not handle the event.
-        if (!isAccessibilityFocusedViewOrHost()) {
-            return false;
-        }
-        // We have focus and got the event, then use normal event dispatch.
-        event.setTargetAccessibilityFocus(false);
-    }
-
-    boolean result = false;
-
-    if (mInputEventConsistencyVerifier != null) {
-        mInputEventConsistencyVerifier.onTouchEvent(event, 0);
-    }
-
-    final int actionMasked = event.getActionMasked();
-    if (actionMasked == MotionEvent.ACTION_DOWN) {
-        // Defensive cleanup for new gesture
-        stopNestedScroll();
-    }
-
-    if (onFilterTouchEventForSecurity(event)) {
-        //noinspection SimplifiableIfStatement
-        ListenerInfo li = mListenerInfo;
-        if (li != null &amp;&amp; li.mOnTouchListener != null
-                &amp;&amp; (mViewFlags &amp; ENABLED_MASK) == ENABLED
-                &amp;&amp; li.mOnTouchListener.onTouch(this, event)) {
-            result = true;
-        }
-
-        if (!result &amp;&amp; onTouchEvent(event)) {
-            result = true;
-        }
-    }
-
-    if (!result &amp;&amp; mInputEventConsistencyVerifier != null) {
-        mInputEventConsistencyVerifier.onUnhandledEvent(event, 0);
-    }
-
-    // Clean up after nested scrolls if this is the end of a gesture;
-    // also cancel it if we tried an ACTION_DOWN but we didn&apos;t want the rest
-    // of the gesture.
-    if (actionMasked == MotionEvent.ACTION_UP ||
-            actionMasked == MotionEvent.ACTION_CANCEL ||
-            (actionMasked == MotionEvent.ACTION_DOWN &amp;&amp; !result)) {
-        stopNestedScroll();
-    }
-
-    return result;
-}
-</code></pre><p>源码有点长，但我们不必每一行都看。首先注意到dispatchTouchEvent的返回值是boolean类型的，注释上的解释：<code>@return True if the event was handled by the view, false otherwise.</code>也就是说如果该触摸事件被这个View消费了就返回true，否则返回false。在方法中首先判断了该event是否是否得到了焦点，如果没有得到焦点直接返回false。然后让我们把目光转向<code>if (li != null &amp;&amp; li.mOnTouchListener != null&amp;&amp; (mViewFlags &amp; ENABLED_MASK) == ENABLED&amp;&amp; li.mOnTouchListener.onTouch(this, event))</code>这个片段，看到这里有一个名为li的局部变量，属于 ListenerInfo 类，经 mListenerInfo 赋值得到。ListenerInfo只是一个包装类，里面封装了大量的监听器。再在 View 类中去寻找 mListenerInfo ，可以看到下面的代码：</p>
-<pre><code>  ListenerInfo getListenerInfo() {
-    if (mListenerInfo != null) {
-        return mListenerInfo;
-    }
-    mListenerInfo = new ListenerInfo();
-    return mListenerInfo;
-}
-</code></pre><p>因此我们可以知道mListenerInfo是不为空的，所以li也不是空，第一个判断为true，然后看到li.mOnTouchListener，前面说过ListenerInfo是一个监听器的封装类，所以我们同样去追踪mOnTouchListener：</p>
-<pre><code>/**
- * Register a callback to be invoked when a touch event is sent to this view.
- * @param l the touch listener to attach to this view
- */
-public void setOnTouchListener(OnTouchListener l) {
-    getListenerInfo().mOnTouchListener = l;
-}
-</code></pre><p>正是通过上面的方法来设置 mOnTouchListener 的，我想上面的方法大家肯定都很熟悉吧，正是我们平时经常用的 xxx.setOnTouchListener ，好了我们从中得知如果设置了OnTouchListener则第二个判断也为true，第三个判断为如果该View是否为enable，默认都是enable的，所以同样为true。还剩最后一个：<code>li.mOnTouchListener.onTouch(this, event)</code>，显然是回调了第二个判断中监听器的onTouch()方法，如果onTouch()方法返回true,则上面四个判断全部为true,dispatchTouchEvent()方法会返回true，并且不会执行<code>if (!result &amp;&amp; onTouchEvent(event))</code>这个判断；而在这个判断中我们又看到了一个熟悉的方法：onTouchEvent()。所以想要执行onTouchEvent，则在上面的四个判断中必须至少有一个false。</p>
-<p>那就假定我们在onTouch()方法中返回的是false，这样就顺利地执行了onTouchEvent，那就看看onTouchEvent的源码吧：</p>
-<pre><code>/**
- * Implement this method to handle touch screen motion events.
- * &lt;p&gt;
- * If this method is used to detect click actions, it is recommended that
- * the actions be performed by implementing and calling
- * {@link #performClick()}. This will ensure consistent system behavior,
- * including:
- * &lt;ul&gt;
- * &lt;li&gt;obeying click sound preferences
- * &lt;li&gt;dispatching OnClickListener calls
- * &lt;li&gt;handling {@link AccessibilityNodeInfo#ACTION_CLICK ACTION_CLICK} when
- * accessibility features are enabled
- * &lt;/ul&gt;
- *
- * @param event The motion event.
- * @return True if the event was handled, false otherwise.
- */
-public boolean onTouchEvent(MotionEvent event) {
-    final float x = event.getX();
-    final float y = event.getY();
-    final int viewFlags = mViewFlags;
-    final int action = event.getAction();
-
-    if ((viewFlags &amp; ENABLED_MASK) == DISABLED) {
-        if (action == MotionEvent.ACTION_UP &amp;&amp; (mPrivateFlags &amp; PFLAG_PRESSED) != 0) {
-            setPressed(false);
-        }
-        // A disabled view that is clickable still consumes the touch
-        // events, it just doesn&apos;t respond to them.
-        return (((viewFlags &amp; CLICKABLE) == CLICKABLE
-                || (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE)
-                || (viewFlags &amp; CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE);
-    }
-
-    if (mTouchDelegate != null) {
-        if (mTouchDelegate.onTouchEvent(event)) {
-            return true;
-        }
-    }
-
-    if (((viewFlags &amp; CLICKABLE) == CLICKABLE ||
-            (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE) ||
-            (viewFlags &amp; CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE) {
-        switch (action) {
-            case MotionEvent.ACTION_UP:
-                boolean prepressed = (mPrivateFlags &amp; PFLAG_PREPRESSED) != 0;
-                if ((mPrivateFlags &amp; PFLAG_PRESSED) != 0 || prepressed) {
-                    // take focus if we don&apos;t have it already and we should in
-                    // touch mode.
-                    boolean focusTaken = false;
-                    if (isFocusable() &amp;&amp; isFocusableInTouchMode() &amp;&amp; !isFocused()) {
-                        focusTaken = requestFocus();
-                    }
-
-                    if (prepressed) {
-                        // The button is being released before we actually
-                        // showed it as pressed.  Make it show the pressed
-                        // state now (before scheduling the click) to ensure
-                        // the user sees it.
-                        setPressed(true, x, y);
-                   }
-
-                    if (!mHasPerformedLongPress &amp;&amp; !mIgnoreNextUpEvent) {
-                        // This is a tap, so remove the longpress check
-                        removeLongPressCallback();
-
-                        // Only perform take click actions if we were in the pressed state
-                        if (!focusTaken) {
-                            // Use a Runnable and post this rather than calling
-                            // performClick directly. This lets other visual state
-                            // of the view update before click actions start.
-                            if (mPerformClick == null) {
-                                mPerformClick = new PerformClick();
-                            }
-                            if (!post(mPerformClick)) {
-                                performClick();
-                            }
-                        }
-                    }
-
-                    if (mUnsetPressedState == null) {
-                        mUnsetPressedState = new UnsetPressedState();
-                    }
-
-                    if (prepressed) {
-                        postDelayed(mUnsetPressedState,
-                                ViewConfiguration.getPressedStateDuration());
-                    } else if (!post(mUnsetPressedState)) {
-                        // If the post failed, unpress right now
-                        mUnsetPressedState.run();
-                    }
-
-                    removeTapCallback();
-                }
-                mIgnoreNextUpEvent = false;
-                break;
-
-            case MotionEvent.ACTION_DOWN:
-                mHasPerformedLongPress = false;
-
-                if (performButtonActionOnTouchDown(event)) {
-                    break;
-                }
-
-                // Walk up the hierarchy to determine if we&apos;re inside a scrolling container.
-                boolean isInScrollingContainer = isInScrollingContainer();
-
-                // For views inside a scrolling container, delay the pressed feedback for
-                // a short period in case this is a scroll.
-                if (isInScrollingContainer) {
-                    mPrivateFlags |= PFLAG_PREPRESSED;
-                    if (mPendingCheckForTap == null) {
-                        mPendingCheckForTap = new CheckForTap();
-                    }
-                    mPendingCheckForTap.x = event.getX();
-                    mPendingCheckForTap.y = event.getY();
-                    postDelayed(mPendingCheckForTap, ViewConfiguration.getTapTimeout());
-                } else {
-                    // Not inside a scrolling container, so show the feedback right away
-                    setPressed(true, x, y);
-                    checkForLongClick(0);
-                }
-                break;
-
-            case MotionEvent.ACTION_CANCEL:
-                setPressed(false);
-                removeTapCallback();
-                removeLongPressCallback();
-                mInContextButtonPress = false;
-                mHasPerformedLongPress = false;
-                mIgnoreNextUpEvent = false;
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                drawableHotspotChanged(x, y);
-
-                // Be lenient about moving outside of buttons
-                if (!pointInView(x, y, mTouchSlop)) {
-                    // Outside button
-                    removeTapCallback();
-                    if ((mPrivateFlags &amp; PFLAG_PRESSED) != 0) {
-                        // Remove any future long press/tap checks
-                        removeLongPressCallback();
-
-                        setPressed(false);
-                    }
-                }
-                break;
-        }
-
-        return true;
-    }
-
-    return false;
-}
-</code></pre><p>这段源码比 dispatchTouchEvent 的还要长，不过同样我们挑重点的看：<br><code>if (((viewFlags &amp; CLICKABLE) == CLICKABLE || (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE) || (viewFlags &amp; CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE)</code><br>看到这句话就大概知道了主要是判断该view是否是可点击的，如果可以点击则接着执行，否则直接返回false。可以看到if里面用switch来判断是哪种触摸事件，但在最后都是返回true的。还有一点要注意：在 ACTION_UP 中会执行 performClick() 方法：</p>
-<pre><code>public boolean performClick() {
-    final boolean result;
-    final ListenerInfo li = mListenerInfo;
-    if (li != null &amp;&amp; li.mOnClickListener != null) {
-        playSoundEffect(SoundEffectConstants.CLICK);
-        li.mOnClickListener.onClick(this);
-        result = true;
-    } else {
-        result = false;
-    }
-
-    sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);
-    return result;
-}
-</code></pre><p>可以看到上面的<code>li.mOnClickListener.onClick(this);</code>，没错，我们好像又有了新的发现。根据上面的经验，这句代码会去回调我们设置好的点击事件监听器。也就是我们平常用的xxx.setOnClickListener(listener);</p>
-<pre><code>/**
- * Register a callback to be invoked when this view is clicked. If this view is not
- * clickable, it becomes clickable.
- *
- * @param l The callback that will run
- *
- * @see #setClickable(boolean)
- */
-public void setOnClickListener(@Nullable OnClickListener l) {
-    if (!isClickable()) {
-        setClickable(true);
-    }
-    getListenerInfo().mOnClickListener = l;
-}
-</code></pre><p>我们可以看到上面方法设置正是mListenerInfo的点击监听器，验证了上面的猜想。到了这里onTouch事件的传递机制基本已经分析完成了,也算是告一段落了。</p>
-<p>好了，这下我们可以解决开头的问题了，顺便我们再来小结一下：在dispatchTouchEvent中，如果设置了OnTouchListener并且View是enable的，那么首先被执行的是OnTouchListener中的<code>onTouch(View v, MotionEvent event)</code>。若onTouch返回true,则dispatchTouchEvent不再往下执行并且返回true；不然会执行onTouchEvent，在onTouchEvent中若View是可点击的，则返回true，不然为false。还有在onTouchEvent中若View是可点击以及当前触摸事件为ACTION_UP，会执行performClick()，回调OnClickListener的onClick方法。下面是我画的一张草图：<br><img src="/uploads/20151029/20151029230937.png" alt="这里写图片描述"></p>
-<p>还有一点值得注意的地方是：假如当前事件是ACTION_DOWN，只有dispatchTouchEvent返回true了之后该View才会接收到接下来的ACTION_MOVE,ACTION_UP事件，也就是说只有事件被消费了才能接收接下来的事件。</p>
-<p>好了，今天就到这里了，如果有什么问题可以在下面留言。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
