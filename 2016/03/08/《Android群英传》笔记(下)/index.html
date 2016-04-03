@@ -77,7 +77,7 @@ xxhdpi—480—1080X1920分辨率
 
 Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上1px = 1dp。
 所以各个分">
-<meta property="og:updated_time" content="2016-03-31T08:15:54.570Z">
+<meta property="og:updated_time" content="2016-04-01T14:26:56.726Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Android群英传》笔记(下)">
 <meta name="twitter:description" content="第六章：Android绘图机制与处理技巧6.1 屏幕的尺寸信息系统屏幕密度如下
@@ -891,11 +891,11 @@ protected void applyTransformation(float interpolatedTime, Transformation t) {
 <h2 id="8-4_Intent_Flag_u542F_u52A8_u6A21_u5F0F"><a href="#8-4_Intent_Flag_u542F_u52A8_u6A21_u5F0F" class="headerlink" title="8.4 Intent Flag启动模式"></a>8.4 Intent Flag启动模式</h2><ul>
 <li><p>Intent.FLAG_ACTIVITY_NEW_TASK：使用一个新的Task来启动一个Activity，但启动的每个Activity都将在一个新的Task中。该Flag通常使用在从Service中启动Activity的场景，由于在Service中并不存在Activity栈，所以使用该Flag来创建一个新的Activity栈，并创建新的Activity实例。</p>
 </li>
-<li><p>FLAG_ACTIVITY_SINGLE_TOP：使用singleTop模式来启动一个Activity，与指定android:launchMode=”singleTop”效果相同。</p>
+<li><p>Intent.FLAG_ACTIVITY_SINGLE_TOP：使用singleTop模式来启动一个Activity，与指定android:launchMode=”singleTop”效果相同。</p>
 </li>
-<li><p>FLAG_ACTIVITY_CLEAR_TOP：使用singleTask模式来启动一个Activity，与指定android:launchMode=”singleTask”效果相同。</p>
+<li><p>Intent.FLAG_ACTIVITY_CLEAR_TOP：使用singleTask模式来启动一个Activity，与指定android:launchMode=”singleTask”效果相同。</p>
 </li>
-<li><p>FLAG_ACTIVITY_NO_HISTORY：使用这种模式启动Activity，当该Activity启动其他Activity后，该Activity就消失了，不会保留在Activity栈中。例如A-B，B中以这种模式启动C，C再启动D，则当前Activity栈为ABD。</p>
+<li><p>Intent.FLAG_ACTIVITY_NO_HISTORY：使用这种模式启动Activity，当该Activity启动其他Activity后，该Activity就消失了，不会保留在Activity栈中。例如A-B，B中以这种模式启动C，C再启动D，则当前Activity栈为ABD。</p>
 </li>
 </ul>
 <h2 id="8-5__u6E05_u7A7A_u4EFB_u52A1_u6808"><a href="#8-5__u6E05_u7A7A_u4EFB_u52A1_u6808" class="headerlink" title="8.5 清空任务栈"></a>8.5 清空任务栈</h2><ul>
@@ -998,8 +998,8 @@ String os_name = System.getProperty(&quot;os.name&quot;);
 <h2 id="9-4__u89E3_u6790Packages-xml_u83B7_u53D6_u7CFB_u7EDF_u4FE1_u606F"><a href="#9-4__u89E3_u6790Packages-xml_u83B7_u53D6_u7CFB_u7EDF_u4FE1_u606F" class="headerlink" title="9.4 解析Packages.xml获取系统信息"></a>9.4 解析Packages.xml获取系统信息</h2><p>packages.xml在 data/system/目录下。</p>
 <h2 id="9-5_Android_u5B89_u5168_u673A_u5236"><a href="#9-5_Android_u5B89_u5168_u673A_u5236" class="headerlink" title="9.5 Android安全机制"></a>9.5 Android安全机制</h2><p>反编译：</p>
 <ul>
-<li>apktool(反编译XML) ： <code>apktool_2.1.0.jar d test.apk</code></li>
-<li>apktool(重新打包) ： <code>apktool_2.1.0.jar b test</code></li>
+<li>apktool(反编译XML) ： <code>java -jar apktool_2.1.0.jar d test.apk</code></li>
+<li>apktool(重新打包) ： <code>java -jar apktool_2.1.0.jar b test</code></li>
 <li>Dex2jar、jd-gui ：<code>d2j-dex2jar.bat classes.dex</code></li>
 </ul>
 <p>Android Apk 加密：</p>
@@ -1214,7 +1214,7 @@ int heapSize = manager.getLargeMemoryClass();
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1228,7 +1228,7 @@ int heapSize = manager.getLargeMemoryClass();
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

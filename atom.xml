@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-03-23T15:27:42.318Z</updated>
+  <updated>2016-04-03T05:30:16.355Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -13,6 +13,145 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Android安全机制之反编译]]></title>
+    <link href="http://yuqirong.me/2016/04/03/Android%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6%E4%B9%8B%E5%8F%8D%E7%BC%96%E8%AF%91/"/>
+    <id>http://yuqirong.me/2016/04/03/Android安全机制之反编译/</id>
+    <published>2016-04-02T16:59:11.000Z</published>
+    <updated>2016-04-03T05:30:16.355Z</updated>
+    <content type="html"><![CDATA[<p>今天我们就来探讨一下反编译，其实反编译在我一开始学习Android的时候就听说过，但是一直没有去尝试。初次接触应该就是那次“蜻蜓FM v5.0.1 apk”事件了( 此处应有掌声(¯ □ ¯) )。那时根据网上的教程第一次反编译了“蜻蜓FM”的apk，看到了传说中的“普罗米修斯方法”以及“宙斯类”(不得不感慨开发小哥的智商)。之后就是在阅读《Android群英传》时也有相关反编译的内容，觉得有必要记录一下。所以这就是本片写博文的起源了。</p>
+<p>首先关于反编译，我们先要准备几个工具：</p>
+<ul>
+<li>apktool：aoktool主要是用来反编译资源文件的，也就是XML了。</li>
+<li>Dex2jar：Dex2jar就是反编译源代码的，会把源代码反编译成一个jar包。</li>
+<li>jd-gui ：在上面Dex2jar反编译出来的jar包，放入jd-gui中，就可以查看源代码了。</li>
+</ul>
+<p>关于上面的三个工具，我会在文末放出下载链接，大家可以去下载。</p>
+<p>好了，那接下来我们就开始反编译之旅吧！</p>
+<p>至于要反编译的apk，我只能选择自己的<a href="https://github.com/yuqirong/Koku" target="_blank" rel="external">Koku</a>了，<a href="http://www.wandoujia.com/apps/com.yuqirong.koku/download" target="_blank" rel="external">点击此处下载</a>。</p>
+<p>我们把上面下载下来的apk用winrar打开(当然你也可以用其他的解压工具)，我们可以看到里面的文件内容如下图所示：</p>
+<p><img src="/uploads/20160403/20160403112646.png" alt="这里写图片描述"></p>
+<p>我们发现classes.dex这个文件，其实classes.dex反编译出来就是源代码。然后我们把Dex2jar解压出来，发现里面有d2j-dex2jar.bat，这就是主角了。</p>
+<p><img src="/uploads/20160403/20160403124449.png" alt="这里写图片描述"></p>
+<p>在Dex2jar解压出来的目录下，打开命令提示符输入：</p>
+<pre><code>d2j-dex2jar.bat classes.dex所在的路径
+</code></pre><p>比如：</p>
+<p><img src="/uploads/20160403/20160403124911.png" alt="这里写图片描述"></p>
+<p>运行后，我们发现在Dex2jar解压出来的目录下多了一个classes-dex2jar.jar。</p>
+<p><img src="/uploads/20160403/20160403125136.png" alt="这里写图片描述"></p>
+<p>然后我们把下载下来的jd-gui.zip解压，里面会有jd-gui.exe。相信大家都懂吧。用jd-gui.exe打开上面的classes-dex2jar.jar，你会惊喜地发现源代码就在你眼前！</p>
+<p><img src="/uploads/20160403/20160403125619.png" alt="这里写图片描述"></p>
+<p>看上面的代码截图，我们会发现比如说<code>setContentView()</code>里面是一串数字。不过别怕，我们都知道R文件是用来关联资源文件的，把上面的那串数字复制下来，再打开R.class，查找一下：</p>
+<p><img src="/uploads/20160403/20160403130002.png" alt="这里写图片描述"></p>
+<p>原来那串数字就代表了activity_my_favorite.xml这个layout。那么问题来了，我们如何反编译XML文件呢？那就要用到上面的apktool了。</p>
+<p>打开apktool的所在目录，把koku.apk移动到apktool的同一目录下，输入命令符：</p>
+<pre><code>java -jar apktool_2.1.0.jar d koku.apk
+</code></pre><p>如果你配置了Java环境变量，则可以直接输入：</p>
+<pre><code>apktool_2.1.0.jar d koku.apk
+</code></pre><p>运行完成之后，我们可以发现在目录下多了一个名字叫koku的文件夹，而这就是我们反编译出来的XML文件了。</p>
+<p><img src="/uploads/20160403/20160403131154.png" alt="这里写图片描述"></p>
+<p>我们打开里面的AndroidManifest.xml：</p>
+<p><img src="/uploads/20160403/20160403131326.png" alt="这里写图片描述"></p>
+<p>里面真的有<uses-permission\>、<activity\>等信息！然后我们打开res里面的layout文件夹，会发现里面有我们上面提到的activity_my_favorite.xml：</activity\></uses-permission\></p>
+<p><img src="/uploads/20160403/20160403131658.png" alt="这里写图片描述"></p>
+<p>里面的布局一目了然。到这里，这样一个apk的基本的源代码我们都可以看得到。当然，反编译别人的apk应该是以学习为主，而不是恶意地二次打包以及破坏。</p>
+<p>在这里额外多说一句，如果要反编译的apk经过了代码混淆，那么反编译出来的就变成了a.class、b.class、c.class等等，所以代码混淆可以有效地阻止apk反编译。</p>
+<p>而如果你想要将代码混淆，只要打开项目中的build.gradle(Module:app)文件，minifyEnabled为true则说明打开混淆功能。proguard-rules.pro为项目自定义的混淆文件，在项目app文件夹下找到这个文件，在这个文件里可以定义引入的第三方依赖包的混淆规则。</p>
+<pre><code>buildTypes {
+    release {
+        minifyEnabled true
+        proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;
+    }
+}
+</code></pre><p>好了，差不多该讲的都讲完了，今天就到这里了。</p>
+<p>下面给出反编译工具的下载链接：</p>
+<p><a href="/uploads/20160403/apktool_2.1.0.jar">apktool_2.1.0.jar</a></p>
+<p><a href="/uploads/20160403/dex2jar-2.0.zip">dex2jar-2.0.zip</a></p>
+<p><a href="/uploads/20160403/jd-gui-0.3.5.windows.zip">jd-gui-0.3.5.windows.zip</a></p>
+<p>~have a nice day~</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>今天我们就来探讨一下反编译，其实反编译在我一开始学习Android的时候就听说过，但是一直没有去尝试。初次接触应该就是那次“蜻蜓FM v5.0.1 apk”事件了( 此处应有掌声(¯ □ ¯) )。那时根据网上的教程第一次反编译了“蜻蜓FM”的apk，看到了传说中的“普罗米]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[《Android开发艺术探索》笔记(上)]]></title>
+    <link href="http://yuqirong.me/2016/03/31/%E3%80%8AAndroid%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8A)/"/>
+    <id>http://yuqirong.me/2016/03/31/《Android开发艺术探索》笔记(上)/</id>
+    <published>2016-03-31T11:49:28.000Z</published>
+    <updated>2016-04-03T05:23:21.595Z</updated>
+    <content type="html"><![CDATA[<h1 id="u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F"><a href="#u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F" class="headerlink" title="第一章：Activity的生命周期和启动模式"></a>第一章：Activity的生命周期和启动模式</h1><h2 id="1-1_Activity_u7684_u751F_u547D_u5468_u671F_u5168_u9762_u5206_u6790"><a href="#1-1_Activity_u7684_u751F_u547D_u5468_u671F_u5168_u9762_u5206_u6790" class="headerlink" title="1.1 Activity的生命周期全面分析"></a>1.1 Activity的生命周期全面分析</h2><p><strong>典型情况下的生命周期分析</strong></p>
+<p>onStart()和onStop()是从Activity是否可见这个角度来回调的，而onResume()和onPause()是从Activity是否位于前台这个角度来回调的。</p>
+<p>Activity A打开Activity B时，为了不影响B的显示，最好不要在Activity A的onPause()里执行一些耗时操作，可以考虑将这些操作放到onStop()里，这时B已经可见了。</p>
+<p><strong>异常情况下的生命周期分析</strong></p>
+<p>由于Activity是在异常情况下终止的，系统会调用onSaveInstanceState()来保存当前Activity的状态。这个方法的调用时机是在onStop()之前，但它和onPause()没有既定的时序关系，它既可能在onPause()之前调用，也可能在onPause()之后调用。需要强调的一点是，这个方法只会出现在Activity被异常终止的情况下，正常情况下系统不会调用onSaveInstanceState()这个方法。</p>
+<p>当Activity被重新创建后，系统会调用onRestoreInstanceState()，并且把Activity销毁时onSaveInstanceState()方法所保存的Bundle对象作为参数同时传递给onRestoreInstanceState()和onCreate()方法。因此我们可以通过onRestoreInstanceState()和onCreate()方法来判断Activity是否重建了。如果被重建了，那么我们就可以取出之前保存的数据并恢复，从时序上来说，onRestoreInstanceState的调用时机在onStart()之后。</p>
+<p>和Activity一样，每个View都有onSaveInstanceState()和onRestoreInstanceState()这两个方法。关于保存和恢复View层次结构，系统的工作流程是这样的：首先Activity会委托Window去保存数据，接着Window再委托它上面的顶级容器去保存数据。顶层容器是一个ViewGroup，一般来说它很可能是DecorWindow。最后顶层容器再去一一通知它的子元素来保存数据，这样整个数据保存过程就完成了。可以发现，这是一种典型的委托思想，上层委托下层、父层委托子元素去处理一件事情。至于数据恢复过程也是类似的，这里就不再重复介绍了。</p>
+<p>Activity按照优先级从高到低，可以分为如下三种：</p>
+<ul>
+<li>前台Activity——正在和用户交互的Activity，优先级最高。</li>
+<li>可见但非前台Activity——比如Activity中弹出了一个对话框，导致Activity可见但是位于后台无法和用户直接交互。</li>
+<li>后台Activity——已经被暂停的Activity，比如说执行了onStop，优先级最低。</li>
+</ul>
+<p>如果不想Activity在屏幕旋转的时候重新创建，则：</p>
+<pre><code>android:configChanges=&quot;orientation&quot;
+</code></pre><p>另外，若minSdkVersion和targetSdkVersion其中有一个低于13，则要在上面的基础上，加上screenSize，即：</p>
+<pre><code>android:configChanges=&quot;orientation|screenSize&quot;
+</code></pre><h2 id="1-2_Activity_u7684_u542F_u52A8_u6A21_u5F0F"><a href="#1-2_Activity_u7684_u542F_u52A8_u6A21_u5F0F" class="headerlink" title="1.2 Activity的启动模式"></a>1.2 Activity的启动模式</h2><p><strong>Activity的launchMode</strong></p>
+<ul>
+<li><p>standard 标准模式。每次启动会重新创建新的实例，谁启动了这个Activity，这个Activity就运行在启动仪它的那个Activity所在的栈里。另外要注意的是，当我们用ApplicationContext去启动standard模式的Activity的时候会报错，错误如下</p>
+<pre><code>E/AndroidRuntime(674):andriod.util.AndroidRuntimeException: Calling startActivity from outside of an Activity context requires the FLAG_ACTIVITY_NEW_TASK flag.Is this really what you want?
+</code></pre><p>  这是因为standard模式的Activity默认会进入启动它的Activity所属的任务栈中，但是由于非Activity类型的Context(如ApplicationContext)并没有所谓的任务栈，所以这就有问题了。解决这个问题的方法是为待启动Activity指定FLAG_ACTIVITY_NEW_TASK标记位，这样启动的时候就会为它创建一个新的任务栈，这个时候待启动Activity实际上是以singleTask模式启动的。</p>
+</li>
+<li><p>singleTop 栈顶复用模式。若该Activity已经位于任务栈的栈顶，那么该Activity不会被重新创建，同时它的onNewIntent()方法会被回调，通过此方法的参数我们可以取出当前请求的信息。而且它的onCreate()和onStart()并不会被调用。执行的是onNewIntent()–&gt;onResume()。 如果该Activity已存在但不是位于栈顶，则该Activity仍然会被重新创建。</p>
+</li>
+<li><p>singleTask 栈内复用模式。这是一种单实例模式，在这种模式下，只要Activity在一个栈中存在，那么多次启动此Activity都不会重新创建实例，和singleTop一样，系统也会回调其onNewsIntent()。具体一点，当一个具有singleTask模式的Activity请求启动后，比如说Activity A，系统首先会寻找是否存在A想要的任务栈，如果不存在，就重新创建一个任务栈，然后创建A的实例后把A放到栈中。如果存在把A所需的任务栈，这时要看A是否在栈中有实例存在，如果有实例存在，那么系统就会把A调到栈顶(会把在栈中所有处于A之上的Activity全部出栈)并调用它的onNewsIntent()方法，如果实例不存在，就创建A的实例并把A压入栈中。</p>
+</li>
+<li><p>singleInstance 单实例模式。这是一种加强的singleTask模式，它除了具有singleTask模式的所有特性外，还加强了一点，那就是具有此种模式的Activity只能单独地位于一个任务栈中。换句话说，比如Activity A是singleInstance模式，当A启动后，系统会为它创建一个新的任务栈，然后A独自在这个新的任务栈中，由于栈内复用的特性，后续的请求均不会创建新的Activity。除非这个独特的任务栈被系统销毁了。</p>
+</li>
+</ul>
+<p><code>android:taskAffinity</code>：可以翻译为任务相关性。这个参数标识了一个Activity所需要的任务栈的名字，默认情况下，所有Activity所需的任务栈的名字为报名。当然，我们可以为每个Activity都单独制定TaskAffinity属性，这个属性必须不能和包名相同，否则就相当于没有指定。TaskAffinity属性主要和singleTask启动模式或者allowTaskReparenting属性配对使用，在其他情况下没有意义。另外，任务栈分为前台任务栈和后台任务栈，后台任务栈中的Activity位于暂停状态，用户可以通过切换将后台任务栈再次调到前台。</p>
+<ul>
+<li><p>当TaskAffinity和singleTask启动模式配对使用的时候，它是具有该模式的Activity的目前任务栈的名字，待启动的Activity会运行在名字和TaskAffinity相同的任务栈中。</p>
+</li>
+<li><p>当TaskAffinity和allowTaskReparenting结合的时候，这种情况比较复杂，会产生特殊的效果。当一个应用A启动了应用B的某个Activity后，如果这个Activity的allowTaskReparenting属性为true的话，那么当应用B被启动后，此Activity会直接从应用A的任务栈转移到应用B的任务栈中。</p>
+</li>
+</ul>
+<p><strong>Activity的Flags</strong></p>
+<ul>
+<li><p>Intent.FLAG_ACTIVITY_NEW_TASK：为Activity指定“singleTask”启动模式，其效果和在XML中指定该启动模式相同。</p>
+</li>
+<li><p>Intent.FLAG_ACTIVITY_SINGLE_TOP：使用singleTop模式来启动一个Activity，与指定android:launchMode=”singleTop”效果相同。</p>
+</li>
+<li><p>Intent.FLAG_ACTIVITY_CLEAR_TOP：具有此标记位的Activity，当它启动时，在同一个任务栈中所有位于它上面的Activity都要出栈。这个模式一般需要和FLAG_ACTIVITY_NEW_TASK配合使用。</p>
+</li>
+<li><p>Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS：具有这个标记的Activity不会出现在历史Activity的列表中，当某些情况下我们不希望用户通过历史列表回到我们的Activity的时候这个标记比较有用。它等同于在XML中指定Activity的属性<code>android:excludeFromRecents=&quot;true&quot;</code>。</p>
+</li>
+</ul>
+<h2 id="1-3_IntentFilter_u7684_u5339_u914D_u89C4_u5219"><a href="#1-3_IntentFilter_u7684_u5339_u914D_u89C4_u5219" class="headerlink" title="1.3 IntentFilter的匹配规则"></a>1.3 IntentFilter的匹配规则</h2><ul>
+<li>action匹配规则：要求intent中的action 存在 且 必须和过滤规则中的其中一个相同 区分大小写；</li>
+<li>category匹配规则：系统会默认加上一个android.intent.category.DEAFAULT，所以intent中可以不存在category，但如果存在就必须匹配其中一个；</li>
+<li>data匹配规则：data由两部分组成，mimeType和URI，要求和action相似。如果没有指定URI，URI但默认值为content和file（schema）。如果要为intent指定完整的data，必须要调用setDataAndType方法。</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F"><a href="#u7B2C_u4E00_u7AE0_uFF1AActivi]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="《Android艺术开发探索》" scheme="http://yuqirong.me/tags/%E3%80%8AAndroid%E8%89%BA%E6%9C%AF%E5%BC%80%E5%8F%91%E6%8E%A2%E7%B4%A2%E3%80%8B/"/>
+    
+      <category term="Book Note" scheme="http://yuqirong.me/categories/Book-Note/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[初探MD式转场动画]]></title>
@@ -347,7 +486,7 @@ public boolean onTouchEvent(MotionEvent event) {
     <link href="http://yuqirong.me/2016/03/08/%E3%80%8AAndroid%E7%BE%A4%E8%8B%B1%E4%BC%A0%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8B)/"/>
     <id>http://yuqirong.me/2016/03/08/《Android群英传》笔记(下)/</id>
     <published>2016-03-08T12:22:27.000Z</published>
-    <updated>2016-03-31T08:15:54.570Z</updated>
+    <updated>2016-04-01T14:26:56.726Z</updated>
     <content type="html"><![CDATA[<h1 id="u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><a href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7" class="headerlink" title="第六章：Android绘图机制与处理技巧"></a>第六章：Android绘图机制与处理技巧</h1><h2 id="6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F"><a href="#6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F" class="headerlink" title="6.1 屏幕的尺寸信息"></a>6.1 屏幕的尺寸信息</h2><p>系统屏幕密度如下</p>
 <ul>
 <li>ldpi—120—240X320分辨率</li>
@@ -894,11 +1033,11 @@ protected void applyTransformation(float interpolatedTime, Transformation t) {
 <h2 id="8-4_Intent_Flag_u542F_u52A8_u6A21_u5F0F"><a href="#8-4_Intent_Flag_u542F_u52A8_u6A21_u5F0F" class="headerlink" title="8.4 Intent Flag启动模式"></a>8.4 Intent Flag启动模式</h2><ul>
 <li><p>Intent.FLAG_ACTIVITY_NEW_TASK：使用一个新的Task来启动一个Activity，但启动的每个Activity都将在一个新的Task中。该Flag通常使用在从Service中启动Activity的场景，由于在Service中并不存在Activity栈，所以使用该Flag来创建一个新的Activity栈，并创建新的Activity实例。</p>
 </li>
-<li><p>FLAG_ACTIVITY_SINGLE_TOP：使用singleTop模式来启动一个Activity，与指定android:launchMode=”singleTop”效果相同。</p>
+<li><p>Intent.FLAG_ACTIVITY_SINGLE_TOP：使用singleTop模式来启动一个Activity，与指定android:launchMode=”singleTop”效果相同。</p>
 </li>
-<li><p>FLAG_ACTIVITY_CLEAR_TOP：使用singleTask模式来启动一个Activity，与指定android:launchMode=”singleTask”效果相同。</p>
+<li><p>Intent.FLAG_ACTIVITY_CLEAR_TOP：使用singleTask模式来启动一个Activity，与指定android:launchMode=”singleTask”效果相同。</p>
 </li>
-<li><p>FLAG_ACTIVITY_NO_HISTORY：使用这种模式启动Activity，当该Activity启动其他Activity后，该Activity就消失了，不会保留在Activity栈中。例如A-B，B中以这种模式启动C，C再启动D，则当前Activity栈为ABD。</p>
+<li><p>Intent.FLAG_ACTIVITY_NO_HISTORY：使用这种模式启动Activity，当该Activity启动其他Activity后，该Activity就消失了，不会保留在Activity栈中。例如A-B，B中以这种模式启动C，C再启动D，则当前Activity栈为ABD。</p>
 </li>
 </ul>
 <h2 id="8-5__u6E05_u7A7A_u4EFB_u52A1_u6808"><a href="#8-5__u6E05_u7A7A_u4EFB_u52A1_u6808" class="headerlink" title="8.5 清空任务栈"></a>8.5 清空任务栈</h2><ul>
@@ -1001,8 +1140,8 @@ String os_name = System.getProperty(&quot;os.name&quot;);
 <h2 id="9-4__u89E3_u6790Packages-xml_u83B7_u53D6_u7CFB_u7EDF_u4FE1_u606F"><a href="#9-4__u89E3_u6790Packages-xml_u83B7_u53D6_u7CFB_u7EDF_u4FE1_u606F" class="headerlink" title="9.4 解析Packages.xml获取系统信息"></a>9.4 解析Packages.xml获取系统信息</h2><p>packages.xml在 data/system/目录下。</p>
 <h2 id="9-5_Android_u5B89_u5168_u673A_u5236"><a href="#9-5_Android_u5B89_u5168_u673A_u5236" class="headerlink" title="9.5 Android安全机制"></a>9.5 Android安全机制</h2><p>反编译：</p>
 <ul>
-<li>apktool(反编译XML) ： <code>apktool_2.1.0.jar d test.apk</code></li>
-<li>apktool(重新打包) ： <code>apktool_2.1.0.jar b test</code></li>
+<li>apktool(反编译XML) ： <code>java -jar apktool_2.1.0.jar d test.apk</code></li>
+<li>apktool(重新打包) ： <code>java -jar apktool_2.1.0.jar b test</code></li>
 <li>Dex2jar、jd-gui ：<code>d2j-dex2jar.bat classes.dex</code></li>
 </ul>
 <p>Android Apk 加密：</p>
@@ -4136,628 +4275,6 @@ public class SwipeListLayout extends FrameLayout {
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
     
       <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
-    
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[实现炫酷的CheckBox，就这么简单]]></title>
-    <link href="http://yuqirong.me/2015/12/05/%E5%AE%9E%E7%8E%B0%E7%82%AB%E9%85%B7%E7%9A%84CheckBox%EF%BC%8C%E5%B0%B1%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/"/>
-    <id>http://yuqirong.me/2015/12/05/实现炫酷的CheckBox，就这么简单/</id>
-    <published>2015-12-05T15:10:32.000Z</published>
-    <updated>2016-03-02T08:52:24.219Z</updated>
-    <content type="html"><![CDATA[<p>今天给大家带来的是一款全新的CheckBox，是不是对系统自带的CheckBox产生乏味感了呢，那就来看看下面的CheckBox吧！</p>
-<p>之前在逛GitHub的时候看到一款比较新颖的CheckBox：<a href="https://github.com/andyxialm/SmoothCheckBox" target="_blank" rel="external">SmoothCheckBox</a>，它的效果预览触动到我了，于是趁着今天有空就试着自己写一写。尽管效果可能不如SmoothCheckBox那样动感，但是基本的效果还是实现了。按照惯例，下面就贴出我写的CheckBox的gif： </p>
-<p><img src="/uploads/20151205/20151205234652.gif" alt="这里写图片描述"></p>
-<p>gif的效果可能有点过快，在真机上运行的效果会更好一些。我们主要的思路就是利用属性动画来动态地画出选中状态以及对勾的绘制过程。看到上面的效果图，相信大家都迫不及待地要跃跃欲试了，那就让我们开始吧。</p>
-<p>自定义View的第一步：自定义属性。</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;resources&gt;
-    &lt;declare-styleable name=&quot;SmoothCheckBox&quot;&gt;
-        &lt;!-- 动画持续时间 --&gt;
-        &lt;attr name=&quot;duration&quot; format=&quot;integer&quot;&gt;&lt;/attr&gt;
-        &lt;!-- 边框宽度 --&gt;
-        &lt;attr name=&quot;strikeWidth&quot; format=&quot;dimension|reference&quot;&gt;&lt;/attr&gt;
-        &lt;!-- 边框颜色 --&gt;
-        &lt;attr name=&quot;borderColor&quot; format=&quot;color|reference&quot;&gt;&lt;/attr&gt;
-        &lt;!-- 选中状态的颜色 --&gt;
-        &lt;attr name=&quot;trimColor&quot; format=&quot;color|reference&quot;&gt;&lt;/attr&gt;
-        &lt;!-- 对勾颜色 --&gt;
-        &lt;attr name=&quot;tickColor&quot; format=&quot;color|reference&quot;&gt;&lt;/attr&gt;
-        &lt;!-- 对勾宽度 --&gt;
-        &lt;attr name=&quot;tickWidth&quot; format=&quot;dimension|reference&quot;&gt;&lt;/attr&gt;
-    &lt;/declare-styleable&gt;
-&lt;/resources&gt;
-</code></pre><p>我们把CheckBox取名为SmoothCheckBox(没办法(⊙﹏⊙)，这名字挺好听的)，定义了几个等等要用到的属性。这一步很简单，相信大家都熟练了。</p>
-<p>接下来看一看<code>onMeasure(int widthMeasureSpec, int heightMeasureSpec)</code>:</p>
-<pre><code>@Override
-protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-    int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-    if (widthMode == MeasureSpec.EXACTLY) {
-        mWidth = widthSize;
-    } else {
-        mWidth = 40;
-    }
-
-    int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-    int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-    if (heightMode == MeasureSpec.EXACTLY) {
-        mHeight = heightSize;
-    } else {
-        mHeight = 40;
-    }
-    setMeasuredDimension(mWidth, mHeight);
-    int size = Math.min(mWidth, mHeight);
-    center = size / 2;
-    mRadius = (int) ((size - mStrokeWidth) / 2 / 1.2f);
-    startPoint.set(center * 14 / 30, center * 28 / 30);
-    breakPoint.set(center * 26 / 30, center * 40 / 30);
-    endPoint.set(center * 44 / 30, center * 20 / 30);
-
-    downLength = (float) Math.sqrt(Math.pow(startPoint.x - breakPoint.x, 2f) + Math.pow(startPoint.y - breakPoint.y, 2f));
-    upLength = (float) Math.sqrt(Math.pow(endPoint.x - breakPoint.x, 2f) + Math.pow(endPoint.y - breakPoint.y, 2f));
-    totalLength = downLength + upLength;
-}
-</code></pre><p>一开始是测量了SmoothCheckBox的宽、高度，默认的宽高度随便定义了一个，当然你们可以自己去修改和完善它。然后就是设置半径之类的，最后的startPoint、breakPoint、endPoint分别对应着选中时对勾的三个点(至于为何是这几个数字，那完全是经验值);downLength就是startPoint和breakPoint的距离，而相对应的upLength就是breakPoint和endPoint的距离。即以下图示：</p>
-<p><img src="/uploads/20151205/20151205000130.png" alt="这里写图片描述"></p>
-<p>在看<code>onDraw(Canvas canvas)</code>之前我们先来看两组动画，分别是选中状态时的动画以及未选中状态的动画：</p>
-<pre><code> // 由未选中到选中的动画
-private void checkedAnimation() {
-    animatedValue = 0f;
-    tickValue = 0f;
-    // 选中时底色的动画
-    mValueAnimator = ValueAnimator.ofFloat(0f, 1.2f, 1f).setDuration(2 * duration / 5);
-    mValueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-    // 对勾的动画
-    mTickValueAnimator = ValueAnimator.ofFloat(0f, 1f).setDuration(3 * duration / 5);
-    mTickValueAnimator.setInterpolator(new LinearInterpolator());
-    mTickValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-            // 得到动画执行进度
-            tickValue = (float) valueAnimator.getAnimatedValue();
-            postInvalidate();
-        }
-    });
-    mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-            // 得到动画执行进度
-            animatedValue = (float) valueAnimator.getAnimatedValue();
-            postInvalidate();
-        }
-    });
-    mValueAnimator.addListener(new AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            //当底色的动画完成后再开始对勾的动画
-            mTickValueAnimator.start();
-            Log.i(TAG,&quot; mTickValueAnimator.start();&quot;);
-        }
-    });
-    mValueAnimator.start();
-}
-
-// 由选中到未选中的动画
-private void uncheckedAnimation() {
-    animatedValue = 0f;
-    mValueAnimator = ValueAnimator.ofFloat(1f, 0f).setDuration(2 * duration / 5);
-    mValueAnimator.setInterpolator(new AccelerateInterpolator());
-    mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-            animatedValue = (float) valueAnimator.getAnimatedValue();
-            postInvalidate();
-        }
-    });
-    mValueAnimator.start();
-}
-</code></pre><p>这两组动画在点击SmoothCheckBox的时候会调用。相似的，都是在动画执行中得到动画执行的进度，再来调用<code>postInvalidate();</code>让SmoothCheckBox重绘。看完这个之后就是终极大招<code>onDraw(Canvas canvas)</code>了:</p>
-<pre><code>@Override
-protected void onDraw(Canvas canvas) {
-    super.onDraw(canvas);
-    canvas.save();
-    drawBorder(canvas);
-    drawTrim(canvas);
-    if (isChecked) {
-        drawTick(canvas);
-    }
-    canvas.restore();
-}
-
-// 画对勾
-private void drawTick(Canvas canvas) {
-    // 得到画对勾的进度
-    float temp = tickValue * totalLength;
-    Log.i(TAG, &quot;temp:&quot; + temp + &quot;downlength :&quot; + downLength);
-    //判断是否是刚开始画对勾的时候,即等于startPoint
-    if (Float.compare(tickValue, 0f) == 0) {
-        Log.i(TAG, &quot;startPoint : &quot; + startPoint.x + &quot;, &quot; + startPoint.y);
-        path.reset();
-        path.moveTo(startPoint.x, startPoint.y);
-    }
-    // 如果画对勾的进度已经超过breakPoint的时候,即(breakPoint,endPoint]
-    if (temp &gt; downLength) {
-        path.moveTo(startPoint.x, startPoint.y);
-        path.lineTo(breakPoint.x, breakPoint.y);
-        Log.i(TAG, &quot;endPoint : &quot; + endPoint.x + &quot;, &quot; + endPoint.y);
-        path.lineTo((endPoint.x - breakPoint.x) * (temp - downLength) / upLength + breakPoint.x, (endPoint.y - breakPoint.y) * (temp - downLength) / upLength + breakPoint.y);
-    } else {
-        //画对勾的进度介于startPoinit和breakPoint之间，即(startPoint,breakPoint]
-        Log.i(TAG, &quot;down x : &quot; + (breakPoint.x - startPoint.x) * temp / downLength + &quot;,down y: &quot; + (breakPoint.y - startPoint.y) * temp / downLength);
-        path.lineTo((breakPoint.x - startPoint.x) * temp / downLength + startPoint.x, (breakPoint.y - startPoint.y) * temp / downLength + startPoint.y);
-    }
-    canvas.drawPath(path, tickPaint);
-}
-
-// 画边框
-private void drawBorder(Canvas canvas) {
-    float temp;
-    // 通过animatedValue让边框产生一个“OverShooting”的动画
-    if (animatedValue &gt; 1f) {
-        temp = animatedValue * mRadius;
-    } else {
-        temp = mRadius;
-    }
-    canvas.drawCircle(center, center, temp, borderPaint);
-}
-
-// 画checkbox内部
-private void drawTrim(Canvas canvas) {
-    canvas.drawCircle(center, center, (mRadius - mStrokeWidth) * animatedValue, trimPaint);
-}
-</code></pre><p><code>onDraw(Canvas canvas)</code>代码中的逻辑基本都加了注释，主要就是原理搞懂了就比较简单了。在绘制对勾时要区分当前处于绘制对勾的哪种状态，然后对应做处理画出线条，剩下的就简单了。关于SmoothCheckBox的讲解到这里就差不多了。</p>
-<p>下面就贴出SmoothCheckBox的完整代码：</p>
-<pre><code>public class SmoothCheckBox extends View implements View.OnClickListener {
-
-    // 动画持续时间
-    private long duration;
-    // 边框宽度
-    private float mStrokeWidth;
-    // 对勾宽度
-    private float mTickWidth;
-    // 内饰画笔
-    private Paint trimPaint;
-    // 边框画笔
-    private Paint borderPaint;
-    // 对勾画笔
-    private Paint tickPaint;
-    // 默认边框宽度
-    private float defaultStrikeWidth;
-    // 默认对勾宽度
-    private float defaultTickWidth;
-    // 宽度
-    private int mWidth;
-    // 高度
-    private int mHeight;
-    // 边框颜色
-    private int borderColor;
-    // 内饰颜色
-    private int trimColor;
-    // 对勾颜色
-    private int tickColor;
-    // 半径
-    private int mRadius;
-    // 中心点
-    private int center;
-    // 是否是选中
-    private boolean isChecked;
-    //对勾向下的长度
-    private float downLength;
-    //对勾向上的长度
-    private float upLength;
-    // 对勾的总长度
-    private float totalLength;
-    // 监听器
-    private OnCheckedChangeListener listener;
-
-    private ValueAnimator mValueAnimator;
-
-    private ValueAnimator mTickValueAnimator;
-
-    private float animatedValue;
-
-    private float tickValue;
-    // 对勾开始点
-    private Point startPoint = new Point();
-    // 对勾转折点
-    private Point breakPoint = new Point();
-    // 对勾结束点
-    private Point endPoint = new Point();
-
-    private static final String TAG = &quot;SmoothCheckBox&quot;;
-
-    private static final String KEY_INSTANCE_STATE = &quot;InstanceState&quot;;
-
-    private Path path = new Path();
-
-    public void setOnCheckedChangeListener(OnCheckedChangeListener listener) {
-        this.listener = listener;
-    }
-
-    public SmoothCheckBox(Context context) {
-        this(context, null);
-    }
-
-    public SmoothCheckBox(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public SmoothCheckBox(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.SmoothCheckBox);
-        duration = a.getInt(R.styleable.SmoothCheckBox_duration, 600);
-
-        defaultStrikeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
-        mStrokeWidth = a.getDimension(R.styleable.SmoothCheckBox_strikeWidth, defaultStrikeWidth);
-        defaultTickWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
-        mTickWidth = a.getDimension(R.styleable.SmoothCheckBox_tickWidth, defaultTickWidth);
-        borderColor = a.getColor(R.styleable.SmoothCheckBox_borderColor, getResources().getColor(android.R.color.darker_gray));
-        trimColor = a.getColor(R.styleable.SmoothCheckBox_trimColor, getResources().getColor(android.R.color.holo_green_light));
-        tickColor = a.getColor(R.styleable.SmoothCheckBox_tickColor, getResources().getColor(android.R.color.white));
-        a.recycle();
-
-        trimPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        trimPaint.setStyle(Paint.Style.FILL);
-        trimPaint.setColor(trimColor);
-
-        borderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        borderPaint.setStrokeWidth(mStrokeWidth);
-        borderPaint.setColor(borderColor);
-        borderPaint.setStyle(Paint.Style.STROKE);
-
-        tickPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        tickPaint.setColor(tickColor);
-        tickPaint.setStyle(Paint.Style.STROKE);
-        tickPaint.setStrokeCap(Paint.Cap.ROUND);
-        tickPaint.setStrokeWidth(mTickWidth);
-
-        setOnClickListener(this);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        if (widthMode == MeasureSpec.EXACTLY) {
-            mWidth = widthSize;
-        } else {
-            mWidth = 40;
-        }
-
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        if (heightMode == MeasureSpec.EXACTLY) {
-            mHeight = heightSize;
-        } else {
-            mHeight = 40;
-        }
-        setMeasuredDimension(mWidth, mHeight);
-        int size = Math.min(mWidth, mHeight);
-        center = size / 2;
-        mRadius = (int) ((size - mStrokeWidth) / 2 / 1.2f);
-        startPoint.set(center * 14 / 30, center * 28 / 30);
-        breakPoint.set(center * 26 / 30, center * 40 / 30);
-        endPoint.set(center * 44 / 30, center * 20 / 30);
-
-        downLength = (float) Math.sqrt(Math.pow(startPoint.x - breakPoint.x, 2f) + Math.pow(startPoint.y - breakPoint.y, 2f));
-        upLength = (float) Math.sqrt(Math.pow(endPoint.x - breakPoint.x, 2f) + Math.pow(endPoint.y - breakPoint.y, 2f));
-        totalLength = downLength + upLength;
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.save();
-        drawBorder(canvas);
-        drawTrim(canvas);
-        if (isChecked) {
-            drawTick(canvas);
-        }
-        canvas.restore();
-    }
-
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_INSTANCE_STATE, super.onSaveInstanceState());
-        bundle.putBoolean(KEY_INSTANCE_STATE, isChecked);
-        return bundle;
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        if (state instanceof Bundle) {
-            Bundle bundle = (Bundle) state;
-            boolean isChecked = bundle.getBoolean(KEY_INSTANCE_STATE);
-            setChecked(isChecked);
-            super.onRestoreInstanceState(bundle.getParcelable(KEY_INSTANCE_STATE));
-            return;
-        }
-        super.onRestoreInstanceState(state);
-    }
-
-    // 切换状态
-    private void toggle() {
-        isChecked = !isChecked;
-        if (listener != null) {
-            listener.onCheckedChanged(this, isChecked);
-        }
-        if (isChecked) {
-            checkedAnimation();
-        } else {
-            uncheckedAnimation();
-        }
-    }
-
-    // 由未选中到选中的动画
-    private void checkedAnimation() {
-        animatedValue = 0f;
-        tickValue = 0f;
-        mValueAnimator = ValueAnimator.ofFloat(0f, 1.2f, 1f).setDuration(2 * duration / 5);
-        mValueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        mTickValueAnimator = ValueAnimator.ofFloat(0f, 1f).setDuration(3 * duration / 5);
-        mTickValueAnimator.setInterpolator(new LinearInterpolator());
-        mTickValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                tickValue = (float) valueAnimator.getAnimatedValue();
-                postInvalidate();
-            }
-        });
-        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                animatedValue = (float) valueAnimator.getAnimatedValue();
-                postInvalidate();
-            }
-        });
-        mValueAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mTickValueAnimator.start();
-                Log.i(TAG,&quot; mTickValueAnimator.start();&quot;);
-            }
-        });
-        mValueAnimator.start();
-    }
-
-    // 由选中到未选中的动画
-    private void uncheckedAnimation() {
-        animatedValue = 0f;
-        mValueAnimator = ValueAnimator.ofFloat(1f, 0f).setDuration(2 * duration / 5);
-        mValueAnimator.setInterpolator(new AccelerateInterpolator());
-        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                animatedValue = (float) valueAnimator.getAnimatedValue();
-                postInvalidate();
-            }
-        });
-        mValueAnimator.start();
-    }
-
-    // 画对勾
-    private void drawTick(Canvas canvas) {
-        float temp = tickValue * totalLength;
-        Log.i(TAG, &quot;temp:&quot; + temp + &quot;downlength :&quot; + downLength);
-        if (Float.compare(tickValue, 0f) == 0) {
-            Log.i(TAG, &quot;startPoint : &quot; + startPoint.x + &quot;, &quot; + startPoint.y);
-            path.reset();
-            path.moveTo(startPoint.x, startPoint.y);
-        }
-        if (temp &gt; downLength) {
-            path.moveTo(startPoint.x, startPoint.y);
-            path.lineTo(breakPoint.x, breakPoint.y);
-            Log.i(TAG, &quot;endPoint : &quot; + endPoint.x + &quot;, &quot; + endPoint.y);
-            path.lineTo((endPoint.x - breakPoint.x) * (temp - downLength) / upLength + breakPoint.x, (endPoint.y - breakPoint.y) * (temp - downLength) / upLength + breakPoint.y);
-        } else {
-            Log.i(TAG, &quot;down x : &quot; + (breakPoint.x - startPoint.x) * temp / downLength + &quot;,down y: &quot; + (breakPoint.y - startPoint.y) * temp / downLength);
-            path.lineTo((breakPoint.x - startPoint.x) * temp / downLength + startPoint.x, (breakPoint.y - startPoint.y) * temp / downLength + startPoint.y);
-        }
-        canvas.drawPath(path, tickPaint);
-    }
-
-    // 画边框
-    private void drawBorder(Canvas canvas) {
-        float temp;
-        if (animatedValue &gt; 1f) {
-            temp = animatedValue * mRadius;
-        } else {
-            temp = mRadius;
-        }
-        canvas.drawCircle(center, center, temp, borderPaint);
-    }
-
-    // 画checkbox内部
-    private void drawTrim(Canvas canvas) {
-        canvas.drawCircle(center, center, (mRadius - mStrokeWidth) * animatedValue, trimPaint);
-    }
-
-    @Override
-    public void onClick(View view) {
-        toggle();
-    }
-
-    /**
-     * 判断checkbox是否选中状态
-     *
-     * @return
-     */
-    public boolean isChecked() {
-        return isChecked;
-    }
-
-    /**
-     * 设置checkbox的状态
-     *
-     * @param isChecked 是否选中
-     */
-    public void setChecked(boolean isChecked) {
-        this.setChecked(isChecked, false);
-    }
-
-    /**
-     * 设置checkbox的状态
-     *
-     * @param isChecked   是否选中
-     * @param isAnimation 切换时是否有动画
-     */
-    public void setChecked(boolean isChecked, boolean isAnimation) {
-        this.isChecked = isChecked;
-        if (isAnimation) {
-            if (isChecked) {
-                checkedAnimation();
-            } else {
-                uncheckedAnimation();
-            }
-        } else {
-            animatedValue = isChecked ? 1f : 0f;
-            tickValue = 1f;
-            invalidate();
-        }
-        if (listener != null) {
-            listener.onCheckedChanged(this, isChecked);
-        }
-    }
-
-    public interface OnCheckedChangeListener {
-        void onCheckedChanged(SmoothCheckBox smoothCheckBox, boolean isChecked);
-    }
-}
-</code></pre><p>下面是SmoothCheckBox的源码下载，如果有问题可以在下面留言来交流：</p>
-<p><a href="/uploads/20151205/SmoothCheckBox.rar">SmoothCheckBox.rar</a></p>
-<p>GitHub:</p>
-<p><a href="https://github.com/yuqirong/SmoothCheckBox" target="_blank" rel="external">SmoothCheckBox</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>今天给大家带来的是一款全新的CheckBox，是不是对系统自带的CheckBox产生乏味感了呢，那就来看看下面的CheckBox吧！</p>
-<p>之前在逛GitHub的时候看到一款比较新颖的CheckBox：<a href="https://github.com/andy]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
-    
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[初探Android ORM框架之greenDAO]]></title>
-    <link href="http://yuqirong.me/2015/11/24/%E5%88%9D%E6%8E%A2Android%20ORM%E6%A1%86%E6%9E%B6%E4%B9%8BgreenDAO/"/>
-    <id>http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/</id>
-    <published>2015-11-24T13:14:30.000Z</published>
-    <updated>2016-02-21T14:20:16.913Z</updated>
-    <content type="html"><![CDATA[<p>在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&gt;﹏&lt;)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、ActiveAndroid、ormlite等。说到ORM，相信有过J2EE开发经验的童鞋对此并不陌生，在web开发中就有Hibernate、MyBatis等框架提供使用。那么今天就来介绍一下主角：greenDAO。</p>
-<p>根据 <a href="http://greenrobot.org/" target="_blank" rel="external">greenrobot</a> 官方的介绍，greenDAO是一款轻量，快速，适用于Android数据库的ORM框架。具有很高的性能以及消耗很少的内存。其他的优点和特性就不在这里一一介绍了，想要了解的同学可以去访问它的项目地址：<a href="https://github.com/greenrobot/greenDAO" target="_blank" rel="external">https://github.com/greenrobot/greenDAO</a>。</p>
-<p>说了这么多，下面就开始我们的正题吧。</p>
-<p>在使用greenDAO之前，我们有一件事情不得不做，那就是用代码生成器生成数据模型以及xxxDao等</p>
-<p>新建一个java module，取名greendaogeneration(名字随意取，不要在意细节↖(^ω^)↗)，然后在build.gradle(Module:greendaogeneration)中添加依赖：</p>
-<p><code>compile &#39;de.greenrobot:greendao-generator:2.0.0&#39;</code></p>
-<p>在 src/main 目录下新建一个与 java 同层级的 java-gen 目录，然后配置 Android 工程的 build.gradle(Module:app)，分别添加如下sourceSets。</p>
-<pre><code>android {
-    compileSdkVersion 23
-    buildToolsVersion &quot;23.0.2&quot;
-
-    defaultConfig {
-        applicationId &quot;com.yuqirong.greendaodemo&quot;
-        minSdkVersion 14
-        targetSdkVersion 23
-        versionCode 1
-        versionName &quot;1.0&quot;
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;
-        }
-    }
-    sourceSets {
-        main {
-            java.srcDirs = [&apos;src/main/java&apos;, &apos;src/main/java-gen&apos;]
-        }
-    }
-}
-</code></pre><p>然后在greendaogeneration中创建一个GreenDaoGeneration类，用于生成代码：</p>
-<pre><code>public class GreenDaoGeneration {
-
-    public static void main(String[] arg0) {
-
-        try {
-            Schema schema = new Schema(1, &quot;com.yuqirong.greendao&quot;);
-            addLocation(schema);
-            new DaoGenerator().generateAll(schema, &quot;C:/Users/yuqirong/Desktop/GreenDaoDemo/app/src/main/java-gen&quot;);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public static void addLocation(Schema schema){
-        Entity location= schema.addEntity(&quot;Location&quot;);
-        location.addIdProperty();
-        location.addDoubleProperty(&quot;lon&quot;);
-        location.addIntProperty(&quot;level&quot;);
-        location.addStringProperty(&quot;address&quot;);
-        location.addStringProperty(&quot;city_name&quot;);
-        location.addIntProperty(&quot;alevel&quot;);
-        location.addDoubleProperty(&quot;lat&quot;);
-    }
-}
-</code></pre><p>其中在创建Schema对象的参数中，第一个表示数据库的版本号，我们传入了“1”，第二个参数是生成代码的包名，我们传入了”com.yuqirong.greendao”，那么生成的代码就自动在”com.yuqirong.greendao”包下了。</p>
-<p>在addLocatiion方法中，我们打算把“Location”这个类(其实到现在为止，Location实体类还未生成)保存在数据库中，<code>schema.addEntity(&quot;Location&quot;)</code>传入的Location，那么该表的表名就叫Location，然后我们又定义了在Location表中会有lon、lat、city_name三个字段。所以如果你想创建多张表，那么就要像addLocation()这样的方法多写几个。好了，该做的差不多都做了，最后再<code>new DaoGenerator().generateAll(schema, &quot;C:/Users/yuqirong/Desktop/GreenDaoDemo/app/src/main/java-gen&quot;);</code>把之前的schema传入，第二个参数传的是之前创建的java-gen的路径(建议传入绝对路径，之前在这里被坑了好久↖(~^~)↗)。代码运行之后再到”com.yuqirong.greendao”路径下去看，发现会有许多类生成：</p>
-<p><img src="/uploads/20151124/20151124235609.png" alt="这里写图片描述"></p>
-<p>至于这些类的作用，我们到下面再说。</p>
-<p>第二步在Android Studio的build.gradle(Module:app)中添加以下依赖：</p>
-<p><code>compile &#39;de.greenrobot:greendao:2.0.0&#39;</code>  </p>
-<p>这样我们就可以在项目中使用greenDAO了。</p>
-<p>在正式使用greenDAO前我们需要了解几个greenDAO中的类(也就是上面代码生成的几个类)：</p>
-<ul>
-<li><p>DaoMaster ：一看这个类名我们就知道这个类肯定是大总管级别的，DaoMaster继承自AbstractDaoMaster。在AbstractDaoMaster中保存了sqlitedatebase对象以及以Map的形式保存了各种操作DAO。DaoMaster还提供了一些创建和删除table的静态方法。另外在DaoMaster类里面有一个静态内部类DevOpenHelper，DevOpenHelper间接继承了SQLiteOpenHelper，通常我们会用<code>new DaoMaster.DevOpenHelper(this, &quot;notes-db&quot;, null)</code>来得到一个DevOpenHelper对象，第一个参数是Context，第二个参数是数据库名，第三个参数是CursorFactory，通常我们传入null。就上面这样简单的一句话你就实际上创建了一个SQLiteOpenHelper对象，而不需要输入<code>&quot;CREATE TABLE...&quot;</code> SQL语句，greenDAO已经帮你做好了一切。</p>
-</li>
-<li><p>DaoSession：会话层。主要功能就是操作具体的DAO对象，比如各种getXXXDao()方法。</p>
-</li>
-<li><p>XXXDao：实际生成的DAO类(即生成的LocationDao)，主要对应于某张表的CRUD，比如说LocationDao，那相对应就是对Location表的操作。</p>
-</li>
-<li><p>XXXEntity：主要是各个实体类(也就是上面生成的Location)，里面的属性与表中的字段相对应。比如上面的LocationDao，那么实体类就是Location，Location实体类中有lon，lat，city_name,alevel,level,address六个属性，那么在Location表中就有lon，lat，city_name,alevel,level,address六个字段。</p>
-</li>
-</ul>
-<p>通过上面几个类作用的介绍，相信大家对greenDAO有了一个初步的印象，下面我们就要真枪实弹了，一起来看一个简单的Demo吧：</p>
-<pre><code>DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(context, &quot;location&quot;, null);
-SQLiteDatabase writableDB = devOpenHelper.getWritableDatabase();
-DaoMaster daoMaster = new DaoMaster(writableDB);
-DaoSession daoSession = daoMaster.newSession();
-</code></pre><p>上面的代码很简单，我们创建了一个名叫“location”的数据库，然后通过daoMaster得到了daoSession，有了daoSession，我们就可以得到各种xxxDao，之后的CRUD都是通过xxxDao来操作。</p>
-<pre><code>LocationDao locationDao = daoSession.getLocationDao();
-Location local = new Location(null,120.15507,2,&quot;&quot;,&quot;杭州市&quot;,4,30.27408);
-locationDao.insert(local);
-</code></pre><p>我们创建了一个Location的对象，然后调用<code>locationDao.insert()</code>方法就把local的数据插入到location的表中，是不是简单到难以让人置信?!只需要三行代码，而不再需要原生的ContentValues了。不得不感叹greenDAO太方便了。</p>
-<p>除了添加数据的，greenDAO还提供删除数据的方法：<code>locationDao.deleteByKey(id);</code>id为当前要删除的那行的主键。</p>
-<p>更新数据的方法：<code>locationDao.update(local);</code>local为新的数据。</p>
-<p>查询数据的方法： </p>
-<ul>
-<li><code>locationDao.queryRaw(String where, String...selectionArg)</code>,可以看到greenDAO支持sql语句查询。</li>
-<li><p>greenDAO还支持一种更为简单的查询方式，不再需要你去写sql语句(查询Location的lon大于120度和lat大于30度)： </p>
-<pre><code>List&lt;Location&gt; list = locationDao.queryBuilder()
-                        .where(LocationDao.Properties.Lat.gt(30d), LocationDao.Properties.Lon.gt(120d))
-                        .build()
-                        .list();
-</code></pre></li>
-</ul>
-<p>好了，关于greenDAO的简单使用就先到这里，至于深入使用我们有机会再讲吧！</p>
-<p>依据惯例，下面提供本Demo的源码:</p>
-<p><a href="/uploads/20151124/GreenDaoDemo.rar">GreenDaoDemo.rar</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&gt;﹏&lt;)↗。于是在这种情况下，产生了许]]>
-    </summary>
-    
-      <category term="greenDAO" scheme="http://yuqirong.me/tags/greenDAO/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
