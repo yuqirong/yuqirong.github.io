@@ -651,11 +651,11 @@ Activity的重新创建过程：
 
 * Intent.FLAG\_ACTIVITY\_NEW\_TASK：使用一个新的Task来启动一个Activity，但启动的每个Activity都将在一个新的Task中。该Flag通常使用在从Service中启动Activity的场景，由于在Service中并不存在Activity栈，所以使用该Flag来创建一个新的Activity栈，并创建新的Activity实例。
 
-* FLAG\_ACTIVITY\_SINGLE\_TOP：使用singleTop模式来启动一个Activity，与指定android:launchMode="singleTop"效果相同。
+* Intent.FLAG\_ACTIVITY\_SINGLE\_TOP：使用singleTop模式来启动一个Activity，与指定android:launchMode="singleTop"效果相同。
 
-* FLAG\_ACTIVITY\_CLEAR\_TOP：使用singleTask模式来启动一个Activity，与指定android:launchMode="singleTask"效果相同。
+* Intent.FLAG\_ACTIVITY\_CLEAR\_TOP：使用singleTask模式来启动一个Activity，与指定android:launchMode="singleTask"效果相同。
 
-* FLAG\_ACTIVITY\_NO\_HISTORY：使用这种模式启动Activity，当该Activity启动其他Activity后，该Activity就消失了，不会保留在Activity栈中。例如A-B，B中以这种模式启动C，C再启动D，则当前Activity栈为ABD。
+* Intent.FLAG\_ACTIVITY\_NO\_HISTORY：使用这种模式启动Activity，当该Activity启动其他Activity后，该Activity就消失了，不会保留在Activity栈中。例如A-B，B中以这种模式启动C，C再启动D，则当前Activity栈为ABD。
 
 8.5 清空任务栈
 --------------------
@@ -780,8 +780,8 @@ packages.xml在 data/system/目录下。
 
 反编译：
 
-* apktool(反编译XML) ： `apktool_2.1.0.jar d test.apk`
-* apktool(重新打包) ： `apktool_2.1.0.jar b test`
+* apktool(反编译XML) ： `java -jar apktool_2.1.0.jar d test.apk`
+* apktool(重新打包) ： `java -jar apktool_2.1.0.jar b test`
 * Dex2jar、jd-gui ：`d2j-dex2jar.bat classes.dex`
 
 Android Apk 加密：
