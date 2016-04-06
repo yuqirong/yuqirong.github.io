@@ -41,7 +41,7 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="blog for yuqirong" type="application/atom+xml" />
+  <link rel="alternate" href="/atom.xml" title="Qirong Yu's Blog" type="application/atom+xml" />
 
 
 
@@ -59,11 +59,11 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
 <meta property="og:type" content="article">
 <meta property="og:title" content="《Android开发艺术探索》笔记(上)">
 <meta property="og:url" content="http://yuqirong.me/2016/03/31/《Android开发艺术探索》笔记(上)/index.html">
-<meta property="og:site_name" content="blog for yuqirong">
+<meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="第一章：Activity的生命周期和启动模式1.1 Activity的生命周期全面分析典型情况下的生命周期分析
 onStart()和onStop()是从Activity是否可见这个角度来回调的，而onResume()和onPause()是从Activity是否位于前台这个角度来回调的。
 Activity A打开Activity B时，为了不影响B的显示，最好不要在Activity A的onPaus">
-<meta property="og:updated_time" content="2016-04-03T05:23:21.595Z">
+<meta property="og:updated_time" content="2016-04-05T12:05:37.486Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Android开发艺术探索》笔记(上)">
 <meta name="twitter:description" content="第一章：Activity的生命周期和启动模式1.1 Activity的生命周期全面分析典型情况下的生命周期分析
@@ -80,7 +80,7 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
   };
 </script>
 
-  <title> 《Android开发艺术探索》笔记(上) | blog for yuqirong </title>
+  <title> 《Android开发艺术探索》笔记(上) | Qirong Yu's Blog </title>
   <meta name="baidu-site-verification" content="MBYnGIEEPN" />
   <meta name="baidu-site-verification" content="1Hx0jVHsgl" />
   <meta name="baidu-site-verification" content="L0MgAErI0s" />
@@ -125,7 +125,7 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
   <div class="custom-logo-site-title">
     <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <span class="site-title">blog for yuqirong</span>
+      <span class="site-title">Qirong Yu's Blog</span>
       <span class="logo-line-after"><i></i></span>
     </a>
   </div>
@@ -377,7 +377,191 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
 <li>category匹配规则：系统会默认加上一个android.intent.category.DEAFAULT，所以intent中可以不存在category，但如果存在就必须匹配其中一个；</li>
 <li>data匹配规则：data由两部分组成，mimeType和URI，要求和action相似。如果没有指定URI，URI但默认值为content和file（schema）。如果要为intent指定完整的data，必须要调用setDataAndType方法。</li>
 </ul>
-</span>
+<h1 id="u7B2C_u4E8C_u7AE0_uFF1AIPC_u673A_u5236"><a href="#u7B2C_u4E8C_u7AE0_uFF1AIPC_u673A_u5236" class="headerlink" title="第二章：IPC机制"></a>第二章：IPC机制</h1><h2 id="2-1_Android_IPC_u7B80_u4ECB"><a href="#2-1_Android_IPC_u7B80_u4ECB" class="headerlink" title="2.1 Android IPC简介"></a>2.1 Android IPC简介</h2><h2 id="2-2_Android_u4E2D_u7684_u591A_u8FDB_u7A0B_u6A21_u5F0F"><a href="#2-2_Android_u4E2D_u7684_u591A_u8FDB_u7A0B_u6A21_u5F0F" class="headerlink" title="2.2 Android中的多进程模式"></a>2.2 Android中的多进程模式</h2><p><strong>开启多进程模式</strong></p>
+<p>在Android中使用多进程只有一个办法，那就是给四大组件(Activity、Service、Receiver、ContentProvider)在AndroidMenifest中指定android:process属性。另外还有一种非常规的多进程方法，那就是通过JNI在native层去fork一个新的进程。</p>
+<p>进程名以“:”开头的进程属于当前应用的私有进程，其他应用的组件不可以和它跑在同一个进程中，而进程名不以“:”开头的进程属于全局过程，其他应用可以通过ShareUID方式和它跑在同一个进程中。</p>
+<p>我们知道Android系统会为每个应用分配一个唯一的UID，具有相同UID的应用才能共享数据。这里要说明的是，两个应用通过ShareUID跑在同一个进程中是有要求的，需要这两个应用有相同的ShareUID并且签名相同才可以。在这种情况下，它们可以互相访问对方的私有数据，比如data目录、组件信息等，不管它们是否跑在同一个进程中。当然如果它们跑在同一个进程中，那么除了能共享data目录、组件信息，还可以共享内存数据，或者说他们看起来就像是一个应用的两个部分。</p>
+<p><strong>多进程模式的运行机制</strong></p>
+<p>Android会为每一个应用分配一个独立的虚拟机，或者说为每个进程都分配一个独立的虚拟机，不同的虚拟机在内存分配上有不同的地址空间，这就导致在不同的虚拟机中访问同一个类的对象会产生多份副本。</p>
+<p>一般来说，使用多进程会造成如下几方面的问题：</p>
+<ol>
+<li>静态成员和单例模式完全失效；</li>
+<li>线程同步机制完全失效；</li>
+<li>SharedPreferences的可靠性下降；</li>
+<li>Application会多次创建。</li>
+</ol>
+<h2 id="2-3_IPC_u57FA_u7840_u6982_u5FF5_u4ECB_u7ECD"><a href="#2-3_IPC_u57FA_u7840_u6982_u5FF5_u4ECB_u7ECD" class="headerlink" title="2.3 IPC基础概念介绍"></a>2.3 IPC基础概念介绍</h2><p><strong>Serializable接口</strong></p>
+<p>通过Serializable来实现对象的序列化和反序列化(User类实现了Serializable接口)：</p>
+<pre><code>// 序列化过程
+User user = new User(0,&quot;jake&quot;,true);
+ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(&quot;cache.txt&quot;));
+out.writeObject(user);
+out.close();
+
+// 反序列化过程
+ObjectInputStream in = new ObjectInputStream(new FileInputStream(&quot;cache.txt&quot;))；
+User newUser = (User)in.readObject();
+in.close();
+</code></pre><p>恢复的对象newUser和user的内容完全一样，但是两者并不是同一个对象。</p>
+<p>原则上序列化后的数据中的serialVerionUID只有和当前类的serialVersionUID相同才能够正常地被反序列化。</p>
+<p>有两个需要注意一下：</p>
+<ul>
+<li>静态成员变量属于类不属于对像，所以不会参与序列化过程；</li>
+<li>用transient关键字标记的成员变量不参与序列化过程。</li>
+</ul>
+<p><strong>Parcelable接口</strong></p>
+<p>Serializable是Java中的序列化接口，其使用起来简单但是开销很大，序列化和反序列化过程需要大量I/O操作。而Parcelable是Android中的序列化方式，因此更适合在Android平台上，它的缺点就是使用起来稍微麻烦点，但是它的效率很高，因此推荐使用Parcelable。</p>
+<p><strong>Binder</strong></p>
+<p>// TODO</p>
+<h1 id="u7B2C_u4E09_u7AE0_uFF1AView_u7684_u4E8B_u4EF6_u4F53_u7CFB"><a href="#u7B2C_u4E09_u7AE0_uFF1AView_u7684_u4E8B_u4EF6_u4F53_u7CFB" class="headerlink" title="第三章：View的事件体系"></a>第三章：View的事件体系</h1><h2 id="3-1_View_u57FA_u7840_u77E5_u8BC6"><a href="#3-1_View_u57FA_u7840_u77E5_u8BC6" class="headerlink" title="3.1 View基础知识"></a>3.1 View基础知识</h2><p><strong>View的位置参数</strong></p>
+<ul>
+<li>View的宽高和坐标关系：width = right - left，height = top - bottom。</li>
+<li>View在平移过程中，top和left表示的是原始左上角的位置信息，其值不会改变，发生改变的是x、y、translationX、translationY这四个参数。x是View左上角的坐标，translation是view移动后相对于父容器的偏移量，所以有x = left + translationX。y的原理相同。</li>
+</ul>
+<p><strong>MotionEvent和TouchSlop</strong></p>
+<p>TouchSlop是系统所能识别出的被认为是滑动的最小距离。这是一个常量，和设备有关，在不同设备上这个值可能是不同的，通过如下方式即可获取这个常量：<code>ViewConfiguration.get(getContext()).getScaledTouchSlop()</code>。当两次滑动事件的滑动距离小于TouchSlop时就可以认为不是滑动。</p>
+<p><strong>VelocityTracker、GestureDetector和Scroller</strong></p>
+<p>1.VelocityTracker</p>
+<p>速度追踪。用于追踪手指在滑动过程中的速度，包括水平和竖直方向的速度。首先，在View的onTouchEvent方法中追踪当前单击事件的速度。</p>
+<pre><code>VelocityTracker velocityTracker = VelocityTracker.obtain();
+velocityTracker.addMovement(event);
+</code></pre><p>获取当前的速度：</p>
+<pre><code>velocityTracker.computeCurrentVelocity(1000); //表示的是一个时间单元或者说时间间隔
+int xVelocity = (int) velocityTracker.getXVelocity();
+int yVelocity = (int) velocityTracker.getYVelocity();
+</code></pre><p>当不用它的时候，需要调用clear()方法来重置并回收内存：</p>
+<pre><code>velocityTracker.clear();
+velocityTracker.recycle();
+</code></pre><p>2.GestureDetector</p>
+<p>手势检测，用于辅助检测用户的单击、滑动、长按、双击等行动。</p>
+<p>首先，需要创建一个GestureDetector对象并实现OnGestureListener接口，根据需要我们还可以实现OnDoubleTapListener从而能够监听双击行为：</p>
+<pre><code>GestureDetector mGestureDetector = new GestureDetector(this);
+// 解决长按屏幕后无法拖动的现象
+mGestureDetector.setIsLongpressEnabled(false)；
+</code></pre><p>接着，接管目标View的onTouchEvent方法，在待监听View的onTouchEvent方法中添加如下实现：</p>
+<pre><code>boolean consume = mGestureDetector.onTouchEvent(event);
+return consume;
+</code></pre><p>做完了上面两步，我们就可以有选择地实现OnGestureListener和OnDoubleTapListener中的方法了。</p>
+<p>3.Scroller</p>
+<p>在3.2节中详细介绍。</p>
+<h2 id="3-2_View_u7684_u6ED1_u52A8"><a href="#3-2_View_u7684_u6ED1_u52A8" class="headerlink" title="3.2 View的滑动"></a>3.2 View的滑动</h2><ul>
+<li><p>使用scrollTo/scrollBy：操作简单，适合对View内容的滑动</p>
+</li>
+<li><p>使用动画：操作简单，主要适用于没有交互的View和实现复杂的动画效果</p>
+</li>
+<li><p>改变布局参数：操作稍微复杂，使用于有交互的View</p>
+</li>
+</ul>
+<h2 id="3-3__u5F39_u6027_u6ED1_u52A8"><a href="#3-3__u5F39_u6027_u6ED1_u52A8" class="headerlink" title="3.3 弹性滑动"></a>3.3 弹性滑动</h2><ul>
+<li><p>使用Scroller</p>
+</li>
+<li><p>通过动画</p>
+</li>
+<li><p>使用Handler延时策略</p>
+</li>
+</ul>
+<h2 id="3-4_View_u7684_u4E8B_u4EF6_u5206_u53D1_u673A_u5236"><a href="#3-4_View_u7684_u4E8B_u4EF6_u5206_u53D1_u673A_u5236" class="headerlink" title="3.4 View的事件分发机制"></a>3.4 View的事件分发机制</h2><p>当一个点击事件产生后，它的传递过程遵循如下顺序：Activity-&gt;Window-&gt;View。即事件总是先传递给Activity，Activity再传递给Window，最后Window再传递给顶级View。顶级View接收到事件后，就会按照事件分发机制去分发事件。</p>
+<p>主要过程：Activity的dispatchTouchEvent–&gt;Window的superDispatchTouchEvent(Window实际上是一个抽象类，而它的实现类为PhoneWindow)–&gt;DecorView的superDispatchTouchEvent(DecorView是继承自FrameLayout，是Activity的根View)–&gt;分发到子View中(即分发到contentView中)。</p>
+<p>注意点：</p>
+<ul>
+<li><p>如果一个View的onTouchEvent返回false，那么它的父容器的onTouchEvent将会被调用，依此类推。如果所有的元素都不处理这个事件，那么这个事件将会最终传递给Activity处理，即Activity的onTouchEvent方法会被调用。</p>
+</li>
+<li><p>某个view一旦开始处理事件，如果它不消耗ACTION_DOWN事件，那么同一事件序列的其他事件都不会再交给它来处理，并且事件将重新交给它的父容器去处理(调用父容器的onTouchEvent方法)；如果它消耗ACTION_DOWN事件，但是不消耗其他类型事件，那么这个点击事件会消失，父容器的onTouchEvent方法不会被调用，当前view依然可以收到后续的事件，但是这些事件最后都会传递给Activity处理。</p>
+</li>
+<li><p>View的enable属性不影响onTouchEvent的默认返回值。哪怕一个view是disable状态，只要它的clickable或者longClickable有一个是true，那么它的onTouchEvent就会返回true。</p>
+</li>
+<li><p>通过requestDisallowInterceptTouchEvent方法可以在子元素中干预父元素的事件分发过程，但是ACTION_DOWN事件除外。</p>
+</li>
+<li><p>ViewGroup的dispatchTouchEvent方法中有一个标志位FLAG_DISALLOW_INTERCEPT，这个标志位就是通过子view调用requestDisallowInterceptTouchEvent方法来设置的，一旦设置为true，那么ViewGroup不会拦截该事件。</p>
+</li>
+</ul>
+<h2 id="3-5_View_u7684_u6ED1_u52A8_u51B2_u7A81"><a href="#3-5_View_u7684_u6ED1_u52A8_u51B2_u7A81" class="headerlink" title="3.5 View的滑动冲突"></a>3.5 View的滑动冲突</h2><p><strong>常见的滑动冲突场景</strong></p>
+<p>常见的滑动冲突场景可以简单分为如下三种：</p>
+<ul>
+<li>场景1——外部滑动方向和内部滑动方向不一致</li>
+<li>场景2——外部滑动方向和内部滑动方向一致</li>
+<li>场景3——上面两种情况的嵌套</li>
+</ul>
+<p><strong>滑动冲突处理规则</strong></p>
+<p>可以根据滑动距离和水平方向形成的夹角；或者根绝水平和竖直方向滑动的距离差；或者两个方向上的速度差等</p>
+<p><strong>滑动冲突的解决方式</strong></p>
+<p>外部拦截法：点击事件都先经过父容器的拦截处理，如果父容器需要此事件就拦截，如果不需要就不拦截。该方法需要重写父容器的onInterceptTouchEvent方法，在内部做相应的拦截即可，其他均不需要做修改。</p>
+<p>伪代码如下：</p>
+<pre><code>public boolean onInterceptTouchEvent(MotionEvent event) {
+    boolean intercepted = false;
+    int x = (int) event.getX();
+    int y = (int) event.getY();
+
+    switch (event.getAction()) {
+    case MotionEvent.ACTION_DOWN: {
+        intercepted = false;
+        break;
+    }
+    case MotionEvent.ACTION_MOVE: {
+        int deltaX = x - mLastXIntercept;
+        int deltaY = y - mLastYIntercept;
+        if (父容器需要拦截当前点击事件的条件，例如：Math.abs(deltaX) &gt; Math.abs(deltaY)) {
+            intercepted = true;
+        } else {
+            intercepted = false;
+        }
+        break;
+    }
+    case MotionEvent.ACTION_UP: {
+        intercepted = false;
+        break;
+    }
+    default:
+        break;
+    }
+
+    mLastXIntercept = x;
+    mLastYIntercept = y;
+
+    return intercepted;
+}
+</code></pre><p>内部拦截法：父容器不拦截任何事件，所有的事件都传递给子元素，如果子元素需要此事件就直接消耗掉，否则就交给父容器来处理。这种方法和Android中的事件分发机制不一致，需要配合requestDisallowInterceptTouchEvent方法才能正常工作。</p>
+<p>伪代码如下：</p>
+<p>子元素：</p>
+<pre><code>public boolean dispatchTouchEvent(MotionEvent event) {
+    int x = (int) event.getX();
+    int y = (int) event.getY();
+
+    switch (event.getAction()) {
+    case MotionEvent.ACTION_DOWN: {
+        getParent().requestDisallowInterceptTouchEvent(true);
+        break;
+    }
+    case MotionEvent.ACTION_MOVE: {
+        int deltaX = x - mLastX;
+        int deltaY = y - mLastY;
+        if (当前view需要拦截当前点击事件的条件，例如：Math.abs(deltaX) &gt; Math.abs(deltaY)) {
+            getParent().requestDisallowInterceptTouchEvent(false);
+        }
+        break;
+    }
+    case MotionEvent.ACTION_UP: {
+        break;
+    }
+    default:
+        break;
+    }
+
+    mLastX = x;
+    mLastY = y;
+    return super.dispatchTouchEvent(event);
+}
+</code></pre><p>父元素：</p>
+<pre><code>@Override
+public boolean onInterceptTouchEvent(MotionEvent event) {
+    int action = event.getAction();
+    if(action == MotionEvent.ACTION_DOWN){
+        return false;
+    }else{
+        return true;
+    }
+}
+</code></pre><h1 id="u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406"><a href="#u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406" class="headerlink" title="第四章：View的工作原理"></a>第四章：View的工作原理</h1><h2 id="4-1__u521D_u8BC6ViewRoot_u548CDecorView"><a href="#4-1__u521D_u8BC6ViewRoot_u548CDecorView" class="headerlink" title="4.1 初识ViewRoot和DecorView"></a>4.1 初识ViewRoot和DecorView</h2></span>
       
     </div>
 
@@ -478,7 +662,7 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -567,6 +751,41 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
 
         <div class="links-of-author motion-element">
           
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">          
+								<a href="http://guolin.tech/" target="_blank" rel="external nofollow">郭霖的专栏</a>
+              </span>
+            
+              <span class="links-of-author-item">          
+								<a href="http://blog.csdn.net/lmj623565791/" target="_blank" rel="external nofollow">Hongyang</a>
+              </span>
+            
+              <span class="links-of-author-item">          
+								<a href="http://blog.csdn.net/singwhatiwanna/" target="_blank" rel="external nofollow">任玉刚</a>
+              </span>
+            
+              <span class="links-of-author-item">          
+								<a href="http://liaohuqiu.net/" target="_blank" rel="external nofollow">Srain</a>
+              </span>
+            
+              <span class="links-of-author-item">          
+								<a href="http://hukai.me/" target="_blank" rel="external nofollow">胡凯</a>
+              </span>
+            
+              <span class="links-of-author-item">          
+								<a href="http://stormzhang.com/" target="_blank" rel="external nofollow">stormzhang</a>
+              </span>
+            
+              <span class="links-of-author-item">          
+								<a href="http://drakeet.me/" target="_blank" rel="external nofollow">Drakeet的个人博客</a>
+              </span>
+            
+              <span class="links-of-author-item">          
+								<a href="https://github.com/xuyisheng/" target="_blank" rel="external nofollow">eclipse_xu</a>
+              </span>
+            
+          
         </div>
 
       </section>
@@ -581,7 +800,7 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F"><span class="nav-number">1.</span> <span class="nav-text">第一章：Activity的生命周期和启动模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1_Activity_u7684_u751F_u547D_u5468_u671F_u5168_u9762_u5206_u6790"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 Activity的生命周期全面分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2_Activity_u7684_u542F_u52A8_u6A21_u5F0F"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Activity的启动模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3_IntentFilter_u7684_u5339_u914D_u89C4_u5219"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 IntentFilter的匹配规则</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F"><span class="nav-number">1.</span> <span class="nav-text">第一章：Activity的生命周期和启动模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1_Activity_u7684_u751F_u547D_u5468_u671F_u5168_u9762_u5206_u6790"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 Activity的生命周期全面分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2_Activity_u7684_u542F_u52A8_u6A21_u5F0F"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Activity的启动模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3_IntentFilter_u7684_u5339_u914D_u89C4_u5219"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 IntentFilter的匹配规则</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E8C_u7AE0_uFF1AIPC_u673A_u5236"><span class="nav-number">2.</span> <span class="nav-text">第二章：IPC机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1_Android_IPC_u7B80_u4ECB"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Android IPC简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2_Android_u4E2D_u7684_u591A_u8FDB_u7A0B_u6A21_u5F0F"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Android中的多进程模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3_IPC_u57FA_u7840_u6982_u5FF5_u4ECB_u7ECD"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 IPC基础概念介绍</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E09_u7AE0_uFF1AView_u7684_u4E8B_u4EF6_u4F53_u7CFB"><span class="nav-number">3.</span> <span class="nav-text">第三章：View的事件体系</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1_View_u57FA_u7840_u77E5_u8BC6"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 View基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2_View_u7684_u6ED1_u52A8"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 View的滑动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3__u5F39_u6027_u6ED1_u52A8"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 弹性滑动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4_View_u7684_u4E8B_u4EF6_u5206_u53D1_u673A_u5236"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 View的事件分发机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5_View_u7684_u6ED1_u52A8_u51B2_u7A81"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 View的滑动冲突</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406"><span class="nav-number">4.</span> <span class="nav-text">第四章：View的工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1__u521D_u8BC6ViewRoot_u548CDecorView"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 初识ViewRoot和DecorView</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">

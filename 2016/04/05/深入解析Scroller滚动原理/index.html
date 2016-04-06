@@ -35,7 +35,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="greenDAO," />
+  <meta name="keywords" content="Android,源码解析," />
 
 
 
@@ -53,17 +53,29 @@
 
 
 
-<meta name="description" content="在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&amp;gt;﹏&amp;lt;)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、Ac">
+<meta name="description" content="最近在看《Android开发艺术探索》这本书，不得不赞一句主席写得真好，受益匪浅。在书中的相关章节有介绍用Scroller来实现平滑滚动的效果。而我们今天就来探究一下为什么Scroller能够实现平滑滚动。
+首先我们先来看一下Scroller的用法，基本可概括为“三部曲”：
+
+创建一个Scroller对象，一般在View的构造器中创建：
+public ScrollViewGroup(Context">
 <meta property="og:type" content="article">
-<meta property="og:title" content="初探Android ORM框架之greenDAO">
-<meta property="og:url" content="http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/index.html">
+<meta property="og:title" content="深入解析Scroller滚动原理">
+<meta property="og:url" content="http://yuqirong.me/2016/04/05/深入解析Scroller滚动原理/index.html">
 <meta property="og:site_name" content="Qirong Yu's Blog">
-<meta property="og:description" content="在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&amp;gt;﹏&amp;lt;)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、Ac">
-<meta property="og:image" content="http://yuqirong.me/uploads/20151124/20151124235609.png">
-<meta property="og:updated_time" content="2016-02-21T14:20:16.913Z">
+<meta property="og:description" content="最近在看《Android开发艺术探索》这本书，不得不赞一句主席写得真好，受益匪浅。在书中的相关章节有介绍用Scroller来实现平滑滚动的效果。而我们今天就来探究一下为什么Scroller能够实现平滑滚动。
+首先我们先来看一下Scroller的用法，基本可概括为“三部曲”：
+
+创建一个Scroller对象，一般在View的构造器中创建：
+public ScrollViewGroup(Context">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160405/20160405235023.png">
+<meta property="og:updated_time" content="2016-04-05T16:04:28.032Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="初探Android ORM框架之greenDAO">
-<meta name="twitter:description" content="在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&amp;gt;﹏&amp;lt;)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、Ac">
+<meta name="twitter:title" content="深入解析Scroller滚动原理">
+<meta name="twitter:description" content="最近在看《Android开发艺术探索》这本书，不得不赞一句主席写得真好，受益匪浅。在书中的相关章节有介绍用Scroller来实现平滑滚动的效果。而我们今天就来探究一下为什么Scroller能够实现平滑滚动。
+首先我们先来看一下Scroller的用法，基本可概括为“三部曲”：
+
+创建一个Scroller对象，一般在View的构造器中创建：
+public ScrollViewGroup(Context">
 
 
 
@@ -75,7 +87,7 @@
   };
 </script>
 
-  <title> 初探Android ORM框架之greenDAO | Qirong Yu's Blog </title>
+  <title> 深入解析Scroller滚动原理 | Qirong Yu's Blog </title>
   <meta name="baidu-site-verification" content="MBYnGIEEPN" />
   <meta name="baidu-site-verification" content="1Hx0jVHsgl" />
   <meta name="baidu-site-verification" content="L0MgAErI0s" />
@@ -260,7 +272,7 @@
             
             
               
-                初探Android ORM框架之greenDAO
+                深入解析Scroller滚动原理
               
             
           </h1>
@@ -269,8 +281,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-11-24T21:14:30+08:00" content="2015-11-24">
-              2015-11-24
+            <time itemprop="dateCreated" datetime="2016-04-05T20:21:10+08:00" content="2016-04-05">
+              2016-04-05
             </time>
           </span>
 
@@ -299,8 +311,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/11/24/初探Android ORM框架之greenDAO/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/24/初探Android ORM框架之greenDAO/" itemprop="commentsCount"></span>
+                <a href="/2016/04/05/深入解析Scroller滚动原理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/05/深入解析Scroller滚动原理/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -319,105 +331,164 @@
       
 
       
-        <span itemprop="articleBody"><p>在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&gt;﹏&lt;)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、ActiveAndroid、ormlite等。说到ORM，相信有过J2EE开发经验的童鞋对此并不陌生，在web开发中就有Hibernate、MyBatis等框架提供使用。那么今天就来介绍一下主角：greenDAO。</p>
-<p>根据 <a href="http://greenrobot.org/" target="_blank" rel="external">greenrobot</a> 官方的介绍，greenDAO是一款轻量，快速，适用于Android数据库的ORM框架。具有很高的性能以及消耗很少的内存。其他的优点和特性就不在这里一一介绍了，想要了解的同学可以去访问它的项目地址：<a href="https://github.com/greenrobot/greenDAO" target="_blank" rel="external">https://github.com/greenrobot/greenDAO</a>。</p>
-<p>说了这么多，下面就开始我们的正题吧。</p>
-<p>在使用greenDAO之前，我们有一件事情不得不做，那就是用代码生成器生成数据模型以及xxxDao等</p>
-<p>新建一个java module，取名greendaogeneration(名字随意取，不要在意细节↖(^ω^)↗)，然后在build.gradle(Module:greendaogeneration)中添加依赖：</p>
-<p><code>compile &#39;de.greenrobot:greendao-generator:2.0.0&#39;</code></p>
-<p>在 src/main 目录下新建一个与 java 同层级的 java-gen 目录，然后配置 Android 工程的 build.gradle(Module:app)，分别添加如下sourceSets。</p>
-<pre><code>android {
-    compileSdkVersion 23
-    buildToolsVersion &quot;23.0.2&quot;
-
-    defaultConfig {
-        applicationId &quot;com.yuqirong.greendaodemo&quot;
-        minSdkVersion 14
-        targetSdkVersion 23
-        versionCode 1
-        versionName &quot;1.0&quot;
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;
-        }
-    }
-    sourceSets {
-        main {
-            java.srcDirs = [&apos;src/main/java&apos;, &apos;src/main/java-gen&apos;]
-        }
-    }
+        <span itemprop="articleBody"><p>最近在看《Android开发艺术探索》这本书，不得不赞一句主席写得真好，受益匪浅。在书中的相关章节有介绍用Scroller来实现平滑滚动的效果。而我们今天就来探究一下为什么Scroller能够实现平滑滚动。</p>
+<p>首先我们先来看一下Scroller的用法，基本可概括为“三部曲”：</p>
+<ol>
+<li><p>创建一个Scroller对象，一般在View的构造器中创建：</p>
+<pre><code>public ScrollViewGroup(Context context) {
+    this(context, null);
 }
-</code></pre><p>然后在greendaogeneration中创建一个GreenDaoGeneration类，用于生成代码：</p>
-<pre><code>public class GreenDaoGeneration {
 
-    public static void main(String[] arg0) {
-
-        try {
-            Schema schema = new Schema(1, &quot;com.yuqirong.greendao&quot;);
-            addLocation(schema);
-            new DaoGenerator().generateAll(schema, &quot;C:/Users/yuqirong/Desktop/GreenDaoDemo/app/src/main/java-gen&quot;);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public static void addLocation(Schema schema){
-        Entity location= schema.addEntity(&quot;Location&quot;);
-        location.addIdProperty();
-        location.addDoubleProperty(&quot;lon&quot;);
-        location.addIntProperty(&quot;level&quot;);
-        location.addStringProperty(&quot;address&quot;);
-        location.addStringProperty(&quot;city_name&quot;);
-        location.addIntProperty(&quot;alevel&quot;);
-        location.addDoubleProperty(&quot;lat&quot;);
-    }
+public ScrollViewGroup(Context context, AttributeSet attrs) {
+    this(context, attrs, 0);
 }
-</code></pre><p>其中在创建Schema对象的参数中，第一个表示数据库的版本号，我们传入了“1”，第二个参数是生成代码的包名，我们传入了”com.yuqirong.greendao”，那么生成的代码就自动在”com.yuqirong.greendao”包下了。</p>
-<p>在addLocatiion方法中，我们打算把“Location”这个类(其实到现在为止，Location实体类还未生成)保存在数据库中，<code>schema.addEntity(&quot;Location&quot;)</code>传入的Location，那么该表的表名就叫Location，然后我们又定义了在Location表中会有lon、lat、city_name三个字段。所以如果你想创建多张表，那么就要像addLocation()这样的方法多写几个。好了，该做的差不多都做了，最后再<code>new DaoGenerator().generateAll(schema, &quot;C:/Users/yuqirong/Desktop/GreenDaoDemo/app/src/main/java-gen&quot;);</code>把之前的schema传入，第二个参数传的是之前创建的java-gen的路径(建议传入绝对路径，之前在这里被坑了好久↖(~^~)↗)。代码运行之后再到”com.yuqirong.greendao”路径下去看，发现会有许多类生成：</p>
-<p><img src="/uploads/20151124/20151124235609.png" alt="这里写图片描述"></p>
-<p>至于这些类的作用，我们到下面再说。</p>
-<p>第二步在Android Studio的build.gradle(Module:app)中添加以下依赖：</p>
-<p><code>compile &#39;de.greenrobot:greendao:2.0.0&#39;</code>  </p>
-<p>这样我们就可以在项目中使用greenDAO了。</p>
-<p>在正式使用greenDAO前我们需要了解几个greenDAO中的类(也就是上面代码生成的几个类)：</p>
-<ul>
-<li><p>DaoMaster ：一看这个类名我们就知道这个类肯定是大总管级别的，DaoMaster继承自AbstractDaoMaster。在AbstractDaoMaster中保存了sqlitedatebase对象以及以Map的形式保存了各种操作DAO。DaoMaster还提供了一些创建和删除table的静态方法。另外在DaoMaster类里面有一个静态内部类DevOpenHelper，DevOpenHelper间接继承了SQLiteOpenHelper，通常我们会用<code>new DaoMaster.DevOpenHelper(this, &quot;notes-db&quot;, null)</code>来得到一个DevOpenHelper对象，第一个参数是Context，第二个参数是数据库名，第三个参数是CursorFactory，通常我们传入null。就上面这样简单的一句话你就实际上创建了一个SQLiteOpenHelper对象，而不需要输入<code>&quot;CREATE TABLE...&quot;</code> SQL语句，greenDAO已经帮你做好了一切。</p>
-</li>
-<li><p>DaoSession：会话层。主要功能就是操作具体的DAO对象，比如各种getXXXDao()方法。</p>
-</li>
-<li><p>XXXDao：实际生成的DAO类(即生成的LocationDao)，主要对应于某张表的CRUD，比如说LocationDao，那相对应就是对Location表的操作。</p>
-</li>
-<li><p>XXXEntity：主要是各个实体类(也就是上面生成的Location)，里面的属性与表中的字段相对应。比如上面的LocationDao，那么实体类就是Location，Location实体类中有lon，lat，city_name,alevel,level,address六个属性，那么在Location表中就有lon，lat，city_name,alevel,level,address六个字段。</p>
-</li>
-</ul>
-<p>通过上面几个类作用的介绍，相信大家对greenDAO有了一个初步的印象，下面我们就要真枪实弹了，一起来看一个简单的Demo吧：</p>
-<pre><code>DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(context, &quot;location&quot;, null);
-SQLiteDatabase writableDB = devOpenHelper.getWritableDatabase();
-DaoMaster daoMaster = new DaoMaster(writableDB);
-DaoSession daoSession = daoMaster.newSession();
-</code></pre><p>上面的代码很简单，我们创建了一个名叫“location”的数据库，然后通过daoMaster得到了daoSession，有了daoSession，我们就可以得到各种xxxDao，之后的CRUD都是通过xxxDao来操作。</p>
-<pre><code>LocationDao locationDao = daoSession.getLocationDao();
-Location local = new Location(null,120.15507,2,&quot;&quot;,&quot;杭州市&quot;,4,30.27408);
-locationDao.insert(local);
-</code></pre><p>我们创建了一个Location的对象，然后调用<code>locationDao.insert()</code>方法就把local的数据插入到location的表中，是不是简单到难以让人置信?!只需要三行代码，而不再需要原生的ContentValues了。不得不感叹greenDAO太方便了。</p>
-<p>除了添加数据的，greenDAO还提供删除数据的方法：<code>locationDao.deleteByKey(id);</code>id为当前要删除的那行的主键。</p>
-<p>更新数据的方法：<code>locationDao.update(local);</code>local为新的数据。</p>
-<p>查询数据的方法： </p>
-<ul>
-<li><code>locationDao.queryRaw(String where, String...selectionArg)</code>,可以看到greenDAO支持sql语句查询。</li>
-<li><p>greenDAO还支持一种更为简单的查询方式，不再需要你去写sql语句(查询Location的lon大于120度和lat大于30度)： </p>
-<pre><code>List&lt;Location&gt; list = locationDao.queryBuilder()
-                        .where(LocationDao.Properties.Lat.gt(30d), LocationDao.Properties.Lon.gt(120d))
-                        .build()
-                        .list();
+
+public ScrollViewGroup(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+    mScroller = new Scroller(context);
+}
 </code></pre></li>
-</ul>
-<p>好了，关于greenDAO的简单使用就先到这里，至于深入使用我们有机会再讲吧！</p>
-<p>依据惯例，下面提供本Demo的源码:</p>
-<p><a href="/uploads/20151124/GreenDaoDemo.rar">GreenDaoDemo.rar</a></p>
+<li><p>重写View的computeScroll()方法，下面的代码基本是不会变化的：</p>
+<pre><code>@Override
+public void computeScroll() {
+    super.computeScroll();
+    if (mScroller.computeScrollOffset()) {
+        scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+        postInvalidate();
+    }
+}
+</code></pre></li>
+<li><p>调用startScroll()方法，startX和startY为开始滚动的坐标点，dx和dy为对应的偏移量：</p>
+<pre><code>mScroller.startScroll (int startX, int startY, int dx, int dy);
+invalidate();
+</code></pre></li>
+</ol>
+<p>上面的三步就是Scroller的基本用法了。那接下来的任务就是解析Scroller的滚动原理了。</p>
+<p>而在这之前，我们还有一件事要办，那就是搞清楚scrollTo()和scrollBy()的原理。scrollTo()和scrollBy()的区别我这里就不重复叙述了，不懂的可以自行google或百度。下面贴出scrollTo()的源码：</p>
+<pre><code>public void scrollTo(int x, int y) {
+    if (mScrollX != x || mScrollY != y) {
+        int oldX = mScrollX;
+        int oldY = mScrollY;
+        mScrollX = x;
+        mScrollY = y;
+        invalidateParentCaches();
+        onScrollChanged(mScrollX, mScrollY, oldX, oldY);
+        if (!awakenScrollBars()) {
+            postInvalidateOnAnimation();
+        }
+    }
+}
+</code></pre><p>设置好mScrollX和mScrollY之后，调用了<code>onScrollChanged(mScrollX, mScrollY, oldX, oldY);</code>，View就会被重新绘制。这样就达到了滑动的效果。</p>
+<p>下面我们再来看看scrollBy()：</p>
+<pre><code>public void scrollBy(int x, int y) {
+    scrollTo(mScrollX + x, mScrollY + y);
+}
+</code></pre><p>这样简短的代码相信大家都懂了，原来scrollBy()内部是调用了scrollTo()的。但是scrollTo()/scrollBy()的滚动都是瞬间完成的，怎么样才能实现平滑滚动呢。</p>
+<p>不知道大家有没有这样一种想法：如果我们把要滚动的偏移量分成若干份小的偏移量，当然这份量要大。然后用scrollTo()/scrollBy()每次都滚动小份的偏移量。在一定的时间内，不就成了平滑滚动了吗？没错，Scroller正是借助这一原理来实现平滑滚动的。下面我们就来看看源码吧！</p>
+<p>根据“三部曲”中第一部，先来看看Scroller的构造器：</p>
+<pre><code>public Scroller(Context context, Interpolator interpolator, boolean flywheel) {
+    mFinished = true;
+    if (interpolator == null) {
+        mInterpolator = new ViscousFluidInterpolator();
+    } else {
+        mInterpolator = interpolator;
+    }
+    mPpi = context.getResources().getDisplayMetrics().density * 160.0f;
+    mDeceleration = computeDeceleration(ViewConfiguration.getScrollFriction());
+    mFlywheel = flywheel;
+
+    mPhysicalCoeff = computeDeceleration(0.84f); // look and feel tuning
+}
+</code></pre><p>在构造器中做的主要就是指定了插补器，如果没有指定插补器，那么就用默认的ViscousFluidInterpolator。</p>
+<p>我们再来看看Scroller的startScroll()：</p>
+<pre><code>public void startScroll(int startX, int startY, int dx, int dy, int duration) {
+    mMode = SCROLL_MODE;
+    mFinished = false;
+    mDuration = duration;
+    mStartTime = AnimationUtils.currentAnimationTimeMillis();
+    mStartX = startX;
+    mStartY = startY;
+    mFinalX = startX + dx;
+    mFinalY = startY + dy;
+    mDeltaX = dx;
+    mDeltaY = dy;
+    mDurationReciprocal = 1.0f / (float) mDuration;
+}
+</code></pre><p>我们发现，在startScroll()里面并没有开始滚动，而是设置了一堆变量的初始值，那么到底是什么让View开始滚动的？我们应该把目标集中在startScroll()的下一句<code>invalidate();</code>身上。我们可以这样理解：首先在startScroll()设置好了一堆初始值，之后调用了<code>invalidate();</code>让View重新绘制，这里又有一个很重要的点，在draw()中会调用<code>computeScroll()</code>这个方法！</p>
+<p>源码太长了，在这里就不贴出来了。想看的童鞋在View类里面搜<code>boolean draw(Canvas canvas, ViewGroup parent, long drawingTime)</code>这个方法就能看到了。通过ViewGroup.drawChild()方法就会调用子View的draw()方法。而在View类里面的<code>computeScroll()</code>是一个空的方法，需要我们去实现：</p>
+<pre><code> /**
+ * Called by a parent to request that a child update its values for mScrollX
+ * and mScrollY if necessary. This will typically be done if the child is
+ * animating a scroll using a {@link android.widget.Scroller Scroller}
+ * object.
+ */
+public void computeScroll() {
+}
+</code></pre><p>而在上面“三部曲”的第二部中，我们就已经实现了<code>computeScroll()</code>。首先判断了<code>computeScrollOffset()</code>，我们来看看相关源码：</p>
+<pre><code>/**
+ * Call this when you want to know the new location.  If it returns true,
+ * the animation is not yet finished.
+ */ 
+public boolean computeScrollOffset() {
+    if (mFinished) {
+        return false;
+    }
+
+    int timePassed = (int)(AnimationUtils.currentAnimationTimeMillis() - mStartTime);
+
+    if (timePassed &lt; mDuration) {
+        switch (mMode) {
+        case SCROLL_MODE:
+            final float x = mInterpolator.getInterpolation(timePassed * mDurationReciprocal);
+            mCurrX = mStartX + Math.round(x * mDeltaX);
+            mCurrY = mStartY + Math.round(x * mDeltaY);
+            break;
+        case FLING_MODE:
+            final float t = (float) timePassed / mDuration;
+            final int index = (int) (NB_SAMPLES * t);
+            float distanceCoef = 1.f;
+            float velocityCoef = 0.f;
+            if (index &lt; NB_SAMPLES) {
+                final float t_inf = (float) index / NB_SAMPLES;
+                final float t_sup = (float) (index + 1) / NB_SAMPLES;
+                final float d_inf = SPLINE_POSITION[index];
+                final float d_sup = SPLINE_POSITION[index + 1];
+                velocityCoef = (d_sup - d_inf) / (t_sup - t_inf);
+                distanceCoef = d_inf + (t - t_inf) * velocityCoef;
+            }
+
+            mCurrVelocity = velocityCoef * mDistance / mDuration * 1000.0f;
+
+            mCurrX = mStartX + Math.round(distanceCoef * (mFinalX - mStartX));
+            // Pin to mMinX &lt;= mCurrX &lt;= mMaxX
+            mCurrX = Math.min(mCurrX, mMaxX);
+            mCurrX = Math.max(mCurrX, mMinX);
+
+            mCurrY = mStartY + Math.round(distanceCoef * (mFinalY - mStartY));
+            // Pin to mMinY &lt;= mCurrY &lt;= mMaxY
+            mCurrY = Math.min(mCurrY, mMaxY);
+            mCurrY = Math.max(mCurrY, mMinY);
+
+            if (mCurrX == mFinalX &amp;&amp; mCurrY == mFinalY) {
+                mFinished = true;
+            }
+
+            break;
+        }
+    }
+    else {
+        mCurrX = mFinalX;
+        mCurrY = mFinalY;
+        mFinished = true;
+    }
+    return true;
+}
+</code></pre><p>这个方法的返回值有讲究，若返回true则说明Scroller的滑动没有结束；若返回false说明Scroller的滑动结束了。再来看看内部的代码：先是计算出了已经滑动的时间，若已经滑动的时间小于总滑动的时间，则说明滑动没有结束；不然就说明滑动结束了，设置标记<code>mFinished = true;</code>。而在滑动未结束里面又分为了两个mode，不过这两个mode都干了差不多的事，大致就是根据刚才的时间<code>timePassed</code>和插补器来计算出该时间点滚动的距离<code>mCurrX</code>和<code>mCurrY</code>。也就是上面“三部曲”中第二部的mScroller.getCurrX(), mScroller.getCurrY()的值。</p>
+<p>然后在第二部曲中调用scrollTo()方法滚动到指定点(即上面的<code>mCurrX</code>, <code>mCurrY</code>)。之后又调用了<code>postInvalidate();</code>，让View重绘并重新调用<code>computeScroll()</code>以此循环下去，一直到View滚动到指定位置为止，至此Scroller滚动结束。</p>
+<p>其实Scroller的原理还是比较通俗易懂的。我们再来理清一下思路，以一张图的形式来终结今天的Scroller解析：</p>
+<p><img src="/uploads/20160405/20160405235023.png" alt="这里写图片描述"></p>
+<p>好了，如果有什么问题可以在下面留言。</p>
+<p>Goodbye!</p>
 </span>
       
     </div>
@@ -426,7 +497,9 @@ locationDao.insert(local);
       
         <div class="post-tags">
           
-            <a href="/tags/greenDAO/" rel="tag">#greenDAO</a>
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/源码解析/" rel="tag">#源码解析</a>
           
         </div>
       
@@ -435,17 +508,13 @@ locationDao.insert(local);
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/12/简单实现满屏表情下落的动画效果，你也可以/" rel="next" title="简单实现满屏表情下落的动画效果，你也可以">
-                <i class="fa fa-chevron-left"></i> 简单实现满屏表情下落的动画效果，你也可以
+              <a href="/2016/04/03/Android安全机制之反编译/" rel="next" title="Android安全机制之反编译">
+                <i class="fa fa-chevron-left"></i> Android安全机制之反编译
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/12/05/实现炫酷的CheckBox，就这么简单/" rel="prev" title="实现炫酷的CheckBox，就这么简单">
-                实现炫酷的CheckBox，就这么简单 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -472,8 +541,8 @@ locationDao.insert(local);
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/11/24/初探Android ORM框架之greenDAO/"
-           data-title="初探Android ORM框架之greenDAO" data-url="http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/">
+      <div class="ds-thread" data-thread-key="2016/04/05/深入解析Scroller滚动原理/"
+           data-title="深入解析Scroller滚动原理" data-url="http://yuqirong.me/2016/04/05/深入解析Scroller滚动原理/">
       </div>
     
   </div>
