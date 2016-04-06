@@ -3,7 +3,7 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: blog for yuqirong
+title: Qirong Yu's Blog
 subtitle: 
 description: 向前跑 迎着冷眼和嘲笑
 author: 俞其荣
@@ -50,10 +50,24 @@ social:
   
 
 # title, chinese available
-#links_title: Links
+links_title: 友情链接
 # links
-#links:
-#  MacTalk: http://macshuo.com/
+links:
+  郭霖的专栏: http://guolin.tech/
+  Hongyang: http://blog.csdn.net/lmj623565791/
+  任玉刚: http://blog.csdn.net/singwhatiwanna/
+  Srain: http://liaohuqiu.net/
+  胡凯: http://hukai.me/
+  stormzhang: http://stormzhang.com/
+  Drakeet的个人博客: http://drakeet.me/
+  eclipse_xu: https://github.com/xuyisheng/
+#  张涛-开源实验室: http://www.kymjs.com/
+#  开发技术前线: http://www.devtf.cn/
+#  大头鬼Bruce: http://blog.csdn.net/lzyzsd/
+#  Xiaoke's Blog: http://blog.mcxiaoke.com/
+#  Baoyz's Blog: http://www.baoyz.com/
+#  Qi Tang's Blog: http://itangqi.me/
+#  赵凯强: http://blog.csdn.net/zhaokaiqiang1992/
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
