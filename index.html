@@ -242,15 +242,231 @@
 
     
     
+
+    
       
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/04/18/带你实现仿美团的下拉刷新/" itemprop="url">
+                  带你实现仿美团的下拉刷新
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-04-18T15:34:03+08:00" content="2016-04-18">
+              2016-04-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+                
+                
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/18/带你实现仿美团的下拉刷新/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/18/带你实现仿美团的下拉刷新/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
       
-        
-        
-        
       
 
       
+        
+          <span itemprop="articleBody">
+            
+            有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：
+
+我们可以大致地分析一下：首先根据下拉改变的 paddingTop 来动态地缩放“绿色椭圆物”,然后当 headerView 的 paddingTop 大于0时，播放美团小人出现的帧动画，最后就是手指松开时播放刷新中的帧动画了。
+基本上思路就是上面分析的那样了，那么我们下面一步就是要获取帧动画的素材了。我们先下载好美团的 apk ，解压后在 res/drawable-xhdpi-v4 里，我们可以得到相关的图片了。如果嫌麻烦，文末有本 Dem
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/04/18/带你实现仿美团的下拉刷新/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/04/10/FloatingActionButton在滚动时显示或隐藏/" itemprop="url">
+                  FloatingActionButton在滚动时显示或隐藏
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-04-10T19:51:22+08:00" content="2016-04-10">
+              2016-04-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Tips/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Tips</span>
+                  </a>
+                </span>
+                
+                
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/10/FloatingActionButton在滚动时显示或隐藏/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/10/FloatingActionButton在滚动时显示或隐藏/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            在Material Design中，FloatingActionButton(即FAB)是一个很重要的元素。而通常在列表向下滚动的时候，FAB应该会隐藏；而在向上滚动时，FAB应该会显示出来。本篇就记录其中一种实现FAB显示或隐藏的方案，主要应用了属性动画。
+其实关于FAB的显示和隐藏，Google官方就提供了其中一种方案：fab.hidden()和fab.show()。但是自带的是FAB缩放的效果。并不是上下移动的效果。
+那么我们就来看看如何实现FAB上下移动的效果吧！
+首先在你想要滑动的View(比如说RecyclerView等)的布局上加上：
+app:layout_behavior=&q
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/04/10/FloatingActionButton在滚动时显示或隐藏/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
 
     
       
@@ -1184,230 +1400,6 @@ public class DisplayUtil {
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/02/28/《Android群英传》笔记(上)/" itemprop="url">
-                  《Android群英传》笔记(上)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2016-02-28T20:20:04+08:00" content="2016-02-28">
-              2016-02-28
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Book-Note/" itemprop="url" rel="index">
-                    <span itemprop="name">Book Note</span>
-                  </a>
-                </span>
-                
-                
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/28/《Android群英传》笔记(上)/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/28/《Android群英传》笔记(上)/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            第三章：Android控件架构与自定义控件详解3.1 Android控件架构控件分为两类：View和ViewGroup，通过ViewGroup整个界面形成一个树形结构，并且ViewGroup负责对子View的测量与绘制以及传递交互事件。通常在Activity中使用的findViewById()方法，就是在控件树中以树的深度优先遍历来查找对应元素。在每颗控件树的顶部，都有一个ViewParent对象，这就是整棵树的控制核心，所有的交互管理事件都由它来统一调度和分配。
-
-如上图所示，每个Activity都包含一个Window对象，在Android中Window对象通常由PhoneWindow来实现
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/02/28/《Android群英传》笔记(上)/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/02/26/使用RecyclerView实现仿喵街效果/" itemprop="url">
-                  使用RecyclerView实现仿喵街效果
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2016-02-26T19:50:18+08:00" content="2016-02-26">
-              2016-02-26
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
-                
-                
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/26/使用RecyclerView实现仿喵街效果/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/26/使用RecyclerView实现仿喵街效果/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            又到更新博客的时间了，本次给大家带来的是在RecyclerView的基础上实现喵街的效果。那么喵街是什么效果呢？下面就贴出效果图：
-
-值得一提的是，这是旧版本的特效，新版本的喵街已经去掉了这种效果。
-看完了效果，接下来就是动手的时间了。
-我们先来分析一下思路：我们先给RecyclerView添加一个OnScrollListener，然后分别去获得firstVisiblePosition和firstCompletelyVisiblePosition。这里要注意一下，firstVisiblePosition是第一个在屏幕中可见的itemView对应的position，而firstCompletel
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/02/26/使用RecyclerView实现仿喵街效果/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
 
   </section>
 
@@ -1454,7 +1446,7 @@ public class DisplayUtil {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-count">35</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1468,7 +1460,7 @@ public class DisplayUtil {
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">13</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

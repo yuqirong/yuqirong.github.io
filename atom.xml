@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-04-05T16:04:28.032Z</updated>
+  <updated>2016-04-18T09:20:33.697Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -13,6 +13,330 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[带你实现仿美团的下拉刷新]]></title>
+    <link href="http://yuqirong.me/2016/04/18/%E5%B8%A6%E4%BD%A0%E5%AE%9E%E7%8E%B0%E4%BB%BF%E7%BE%8E%E5%9B%A2%E7%9A%84%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0/"/>
+    <id>http://yuqirong.me/2016/04/18/带你实现仿美团的下拉刷新/</id>
+    <published>2016-04-18T07:34:03.000Z</published>
+    <updated>2016-04-18T09:20:33.697Z</updated>
+    <content type="html"><![CDATA[<p>有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：</p>
+<p><img src="/uploads/20160418/20160418160532.gif" alt="这里写图片描述"></p>
+<p>我们可以大致地分析一下：首先根据下拉改变的 paddingTop 来动态地缩放“绿色椭圆物”,然后当 headerView 的 paddingTop 大于0时，播放美团小人出现的帧动画，最后就是手指松开时播放刷新中的帧动画了。</p>
+<p>基本上思路就是上面分析的那样了，那么我们下面一步就是要获取帧动画的素材了。我们先下载好美团的 apk ，解压后在 res/drawable-xhdpi-v4 里，我们可以得到相关的图片了。如果嫌麻烦，文末有本 Demo 的下载链接，里面就有素材图片。</p>
+<p>有了图片后我们先写个帧动画的 drawable.xml ：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;animation-list xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+
+    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_01&quot; android:duration=&quot;100&quot;/&gt;
+    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_02&quot; android:duration=&quot;100&quot;/&gt;
+    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_03&quot; android:duration=&quot;100&quot;/&gt;
+    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_04&quot; android:duration=&quot;100&quot;/&gt;
+    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_05&quot; android:duration=&quot;100&quot;/&gt;
+
+&lt;/animation-list&gt;
+</code></pre><p>一共有两个 drawable.xml ，另外一个和这个类似，就不贴出来了。</p>
+<p>现在开始编写代码了，创建一个 MeiTuanListView ，继承自 ListView :</p>
+<pre><code>public class MeiTuanListView extends ListView {
+
+    // 普通状态模式
+    private static final int NONE_MODE = 0;
+    // 下拉刷新模式
+    private static final int PULL_DOWN_MODE = 1;
+    // 可松开刷新模式
+    private static final int RELEASE_REFRESH_MODE = 2;
+    // 刷新中模式
+    private static final int REFRESHING_MODE = 3;
+    // 模式
+    private int mode = NONE_MODE;
+    // 阻值
+    private static final int RATIO = 3;
+    // 下拉刷新头部
+    private View headerRefreshView;
+    // 头部高度
+    private int refreshViewHeight;
+    // 手指按下的Y值
+    private float downY;
+    // 刷新监听器
+    private OnRefreshListener listener;
+    // “绿色椭圆物”的自定义View
+    private MeiTuanOvalView mtOvalView;
+    // 帧动画的ImageView
+    private ImageView aniImageView;
+    // 动画是否已经开始
+    private boolean isStart;
+    // 只有在listview顶端时下拉才可以刷新
+    private boolean canRefresh;
+
+    private static final String TAG = &quot;MeiTuanListView&quot;;
+
+    public MeiTuanListView(Context context) {
+        this(context, null);
+    }
+
+    public MeiTuanListView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public MeiTuanListView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        initView();
+    }
+
+    private void initView() {
+        setOverScrollMode(View.OVER_SCROLL_NEVER);
+        headerRefreshView = LayoutInflater.from(getContext()).inflate(R.layout.layout_header, null);
+        mtOvalView = (MeiTuanOvalView) headerRefreshView.findViewById(R.id.mtFirstView);
+        aniImageView = (ImageView) headerRefreshView.findViewById(R.id.iv);
+        // 去测量
+        headerRefreshView.measure(0, 0);
+        refreshViewHeight = headerRefreshView.getMeasuredHeight();
+        headerRefreshView.setPadding(0, -refreshViewHeight, 0, 0);
+        addHeaderView(headerRefreshView, null, false);
+    }
+</code></pre><p>在<code>initView()</code>中，初始化了下拉刷新的头部，并且设置了 setPadding (关于 ListView 下拉刷新的原理大家应该都懂吧？！)。</p>
+<p>layout_header.xml 的布局如下：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:gravity=&quot;center&quot;&gt;
+
+    &lt;com.yuqirong.meituanlistview.view.MeiTuanOvalView
+        android:id=&quot;@+id/mtFirstView&quot;
+        android:layout_width=&quot;45dp&quot;
+        android:layout_height=&quot;wrap_content&quot; /&gt;
+
+    &lt;ImageView
+        android:id=&quot;@+id/iv_anim&quot;
+        android:layout_width=&quot;45dp&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:visibility=&quot;gone&quot; /&gt;
+
+&lt;/RelativeLayout&gt;
+</code></pre><p>MeiTuanOvalView 这个是关于“绿色椭圆物”的自定义View，会根据 <code>headerView.getPaddingTop()</code> 的值自动缩放，这里就不讲解了，源码还是比较简单的，相关代码可以下载 Demo 查看。而 <code>iv_anim</code> 主要是用来播放帧动画的 ImageView 。</p>
+<p>下拉刷新的主要代码都在 <code>onTouchEvent(MotionEvent ev)</code> 里：</p>
+<pre><code>@Override
+public boolean onTouchEvent(MotionEvent ev) {
+    switch (ev.getAction()) {
+        case MotionEvent.ACTION_DOWN:
+            // 在listview顶端时才可下拉刷新
+            if (getFirstVisiblePosition() == 0) {
+                Log.i(TAG, &quot;canRefresh : &quot; + canRefresh);
+                // 记录手指按下的Y坐标
+                downY = ev.getY();
+                canRefresh = true;
+            }
+            break;
+        case MotionEvent.ACTION_MOVE:
+            if (mode != REFRESHING_MODE &amp;&amp; canRefresh) {
+                float moveY = ev.getY();
+                float offsetY = moveY - downY;
+                // 动态改变paddingTop值
+                headerRefreshView.setPadding(0, (int) (headerRefreshView.getPaddingTop() + offsetY / RATIO), 0, 0);
+                if (headerRefreshView.getPaddingTop() &lt;= 0) {
+                    mode = PULL_DOWN_MODE;
+                    mtOvalView.setVisibility(VISIBLE);
+                    aniImageView.setVisibility(GONE);
+                    mtOvalView.setScale((refreshViewHeight + headerRefreshView.getPaddingTop()) * 1f / refreshViewHeight);
+                    isStart = false;
+                } else {
+                    mode = RELEASE_REFRESH_MODE;
+                    if (!isStart) {
+                        mtOvalView.setVisibility(GONE);
+                        aniImageView.setVisibility(VISIBLE);
+                        aniImageView.setImageResource(R.drawable.pull_end_imag_frame);
+                        AnimationDrawable animationDrawable = (AnimationDrawable) aniImageView.getDrawable();
+                        // 只执行一次动画
+                        animationDrawable.setOneShot(true);
+                        animationDrawable.start();
+                        isStart = true;
+                    }
+                }
+                downY = moveY;
+            }
+            break;
+        case MotionEvent.ACTION_UP:
+            if (mode != REFRESHING_MODE &amp;&amp; canRefresh) {
+                if (headerRefreshView.getPaddingTop() &gt; 0) {
+                    mode = REFRESHING_MODE;
+                    headerRefreshView.setPadding(0, 0, 0, 0);
+                    aniImageView.setImageResource(R.drawable.refreshing_image_frame);
+                    AnimationDrawable animationDrawable = (AnimationDrawable) aniImageView.getDrawable();
+                    animationDrawable.start();
+                    if (listener != null) {
+                        listener.refreshing();
+                    }
+                } else {
+                    mode = NONE_MODE;
+                    headerRefreshView.setPadding(0, -refreshViewHeight, 0, 0);
+                    mtOvalView.setScale(0f);
+                    isStart = false;
+                    canRefresh = false;
+                }
+            }
+            break;
+    }
+    return super.onTouchEvent(ev);
+}
+</code></pre><p>里面的代码逻辑还是比较简单的：</p>
+<ul>
+<li>ACTION_DOWN ：首先判断了当 ListView 在顶端时才可以下拉刷新，并且记录了手指按下的Y坐标；</li>
+<li>ACTION_MOVE ：根据滑动的 offsetY 来动态地设置 headerView 的 paddingTop 。我们可以看到在 <code>if (headerRefreshView.getPaddingTop() &lt;= 0)</code> 里面根据 paddingTop 的值来动态地设置 <code>mtOvalView</code> 的 scale ，并且在 <code>setScale()</code> 方法里面会调用 <code>invalidate()</code> ，从而让 <code>mtOvalView</code> 去重绘。不然 <code>headerRefreshView.getPaddingTop()</code> 大于0时就播放了美团小人出场的动画。</li>
+<li>ACTION_UP ：当手指松开的时候，还是判断了 <code>headerRefreshView.getPaddingTop()</code> 的值。若大于0则把 headerView 全部显示出来，播放刷新中的动画，并且回调了刷新监听器的接口；小于0则把 headerView 重新隐藏起来。并重置相关的值。</li>
+</ul>
+<p>要注意的一点是，在 <code>onTouchEvent(MotionEvent ev)</code> 里要返回 <code>super.onTouchEvent(ev)</code> 。不能是直接返回 <code>true</code> 。因为在 <code>super.onTouchEvent(ev)</code> 里处理了 ListView 滑动的相关逻辑。</p>
+<p>当获取到最新数据后，可以调用<code>notifyRefreshFinished()</code>方法完成下拉刷新：</p>
+<pre><code>public interface OnRefreshListener {
+    void refreshing();
+}
+
+public void setOnRefreshListener(OnRefreshListener listener) {
+    this.listener = listener;
+}
+
+// 刷新完成后调用
+public void notifyRefreshFinished() {
+    mode = NONE_MODE;
+    headerRefreshView.setPadding(0, -refreshViewHeight, 0, 0);
+    aniImageView.setVisibility(GONE);
+    mtOvalView.setVisibility(VISIBLE);
+    isStart = false;
+    canRefresh = false;
+}
+</code></pre><p>最后就是附上效果图了：</p>
+<p><img src="/uploads/20160418/20160418165251.gif" alt="这里写图片描述"></p>
+<p>到这里整体就讲解得差不多了，至于 MeiTuanListView 的使用示例以及 MeiTuanOvalView 的源码可以在 Demo 里查看。</p>
+<p>Demo下载链接：</p>
+<p><a href="/uploads/20160418/MeiTuanListView.rar">MeiTuanListView.rar</a></p>
+<p>good bye!</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：</p>
+<p><img src="/uploads/20160418/20160418160532.gif" alt="]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[FloatingActionButton在滚动时显示或隐藏]]></title>
+    <link href="http://yuqirong.me/2016/04/10/FloatingActionButton%E5%9C%A8%E6%BB%9A%E5%8A%A8%E6%97%B6%E6%98%BE%E7%A4%BA%E6%88%96%E9%9A%90%E8%97%8F/"/>
+    <id>http://yuqirong.me/2016/04/10/FloatingActionButton在滚动时显示或隐藏/</id>
+    <published>2016-04-10T11:51:22.000Z</published>
+    <updated>2016-04-13T12:27:55.483Z</updated>
+    <content type="html"><![CDATA[<p>在Material Design中，FloatingActionButton(即FAB)是一个很重要的元素。而通常在列表向下滚动的时候，FAB应该会隐藏；而在向上滚动时，FAB应该会显示出来。本篇就记录其中一种实现FAB显示或隐藏的方案，主要应用了属性动画。</p>
+<p>其实关于FAB的显示和隐藏，Google官方就提供了其中一种方案：<code>fab.hidden()</code>和<code>fab.show()</code>。但是自带的是FAB缩放的效果。并不是上下移动的效果。</p>
+<p>那么我们就来看看如何实现FAB上下移动的效果吧！</p>
+<p>首先在你想要滑动的View(比如说RecyclerView等)的布局上加上：</p>
+<pre><code>app:layout_behavior=&quot;@string/appbar_scrolling_view_behavior&quot;
+</code></pre><p>然后再附上FAB的xml：</p>
+<pre><code>&lt;android.support.design.widget.FloatingActionButton
+   android:id=&quot;@+id/fab&quot;
+   android:layout_width=&quot;wrap_content&quot;
+   android:layout_height=&quot;wrap_content&quot;
+   android:layout_gravity=&quot;bottom|end&quot;
+   android:layout_margin=&quot;@dimen/fab_margin&quot;
+   app:layout_behavior=&quot;com.yuqirong.rxnews.ui.view.ScrollAwareFABBehavior&quot;
+   android:src=&quot;@android:drawable/ic_dialog_email&quot; /&gt;
+</code></pre><p>注意其中的layout_behavior，是我们自己实现的一个类：</p>
+<pre><code>public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
+
+    private static final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
+    private boolean mIsAnimatingOut = false;
+
+    public ScrollAwareFABBehavior(Context context, AttributeSet attrs) {
+        super();
+    }
+
+    @Override
+    public boolean onStartNestedScroll(final CoordinatorLayout coordinatorLayout, final FloatingActionButton child,
+                                       final View directTargetChild, final View target, final int nestedScrollAxes) {
+        // Ensure we react to vertical scrolling
+        return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL
+                || super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, nestedScrollAxes);
+    }
+
+    @Override
+    public void onNestedScroll(final CoordinatorLayout coordinatorLayout, final FloatingActionButton child,
+                               final View target, final int dxConsumed, final int dyConsumed,
+                               final int dxUnconsumed, final int dyUnconsumed) {
+        super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+        if (dyConsumed &gt; 0 &amp;&amp; !this.mIsAnimatingOut &amp;&amp; child.getVisibility() == View.VISIBLE) {
+            // User scrolled down and the FAB is currently visible -&gt; hide the FAB
+            animateOut(child);
+        } else if (dyConsumed &lt; 0 &amp;&amp; child.getVisibility() != View.VISIBLE) {
+            // User scrolled up and the FAB is currently not visible -&gt; show the FAB
+            animateIn(child);
+        }
+    }
+
+    // Same animation that FloatingActionButton.Behavior uses to hide the FAB when the AppBarLayout exits
+    private void animateOut(final FloatingActionButton button) {
+        if (Build.VERSION.SDK_INT &gt;= 14) {
+            ViewCompat.animate(button).translationY(button.getHeight() + getMarginBottom(button)).setInterpolator(INTERPOLATOR).withLayer()
+                    .setListener(new ViewPropertyAnimatorListener() {
+                        public void onAnimationStart(View view) {
+                            ScrollAwareFABBehavior.this.mIsAnimatingOut = true;
+                        }
+
+                        public void onAnimationCancel(View view) {
+                            ScrollAwareFABBehavior.this.mIsAnimatingOut = false;
+                        }
+
+                        public void onAnimationEnd(View view) {
+                            ScrollAwareFABBehavior.this.mIsAnimatingOut = false;
+                            view.setVisibility(View.GONE);
+                        }
+                    }).start();
+        } else {
+            button.hide();
+        }
+    }
+
+    // Same animation that FloatingActionButton.Behavior uses to show the FAB when the AppBarLayout enters
+    private void animateIn(FloatingActionButton button) {
+        button.setVisibility(View.VISIBLE);
+        if (Build.VERSION.SDK_INT &gt;= 14) {
+            ViewCompat.animate(button).translationY(0)
+                    .setInterpolator(INTERPOLATOR).withLayer().setListener(null)
+                    .start();
+        } else {
+            button.show();
+        }
+    }
+
+    private int getMarginBottom(View v) {
+        int marginBottom = 0;
+        final ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
+        if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+            marginBottom = ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin;
+        }
+        return marginBottom;
+    }
+
+}
+</code></pre><p>我们主要看<code>onNestedScroll()</code>这个方法，在方法里主要判断了一下是向上滑还是向下滑。再分别去调用<code>animateOut()</code>和<code>animateIn()</code>。那我们就来看看<code>animateOut()</code>。(<code>animateIn()</code>和<code>animateOut()</code>的原理一样的，我们只看<code>animateOut()</code>吧)</p>
+<p>在<code>animateOut()</code>根据SDK的版本判断，若大于或等于14使用属性动画；不然就是使用了自带的<code>hide()</code>方法。代码还是比较简单的，相信大家都能看得懂。当然如下想在SDK 14以下使用上下移动的效果，那就要用NineOldAndroids这个库了。</p>
+<p>效果就是如下所示了：</p>
+<p><img src="/uploads/20160413/20160413202356.gif" alt="这里写图片描述"></p>
+<p>好了，今天就到这了。bye！</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>在Material Design中，FloatingActionButton(即FAB)是一个很重要的元素。而通常在列表向下滚动的时候，FAB应该会隐藏；而在向上滚动时，FAB应该会显示出来。本篇就记录其中一种实现FAB显示或隐藏的方案，主要应用了属性动画。</p>
+<p>]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="Material Design" scheme="http://yuqirong.me/tags/Material-Design/"/>
+    
+      <category term="Android Tips" scheme="http://yuqirong.me/categories/Android-Tips/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[深入解析Scroller滚动原理]]></title>
@@ -264,7 +588,7 @@ public boolean computeScrollOffset() {
     <link href="http://yuqirong.me/2016/03/31/%E3%80%8AAndroid%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8A)/"/>
     <id>http://yuqirong.me/2016/03/31/《Android开发艺术探索》笔记(上)/</id>
     <published>2016-03-31T11:49:28.000Z</published>
-    <updated>2016-04-05T12:05:37.486Z</updated>
+    <updated>2016-04-14T12:32:57.356Z</updated>
     <content type="html"><![CDATA[<h1 id="u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F"><a href="#u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F" class="headerlink" title="第一章：Activity的生命周期和启动模式"></a>第一章：Activity的生命周期和启动模式</h1><h2 id="1-1_Activity_u7684_u751F_u547D_u5468_u671F_u5168_u9762_u5206_u6790"><a href="#1-1_Activity_u7684_u751F_u547D_u5468_u671F_u5168_u9762_u5206_u6790" class="headerlink" title="1.1 Activity的生命周期全面分析"></a>1.1 Activity的生命周期全面分析</h2><p><strong>典型情况下的生命周期分析</strong></p>
 <p>onStart()和onStop()是从Activity是否可见这个角度来回调的，而onResume()和onPause()是从Activity是否位于前台这个角度来回调的。</p>
 <p>Activity A打开Activity B时，为了不影响B的显示，最好不要在Activity A的onPause()里执行一些耗时操作，可以考虑将这些操作放到onStop()里，这时B已经可见了。</p>
@@ -288,9 +612,10 @@ public boolean computeScrollOffset() {
 <pre><code>E/AndroidRuntime(674):andriod.util.AndroidRuntimeException: Calling startActivity from outside of an Activity context requires the FLAG_ACTIVITY_NEW_TASK flag.Is this really what you want?
 </code></pre><p>  这是因为standard模式的Activity默认会进入启动它的Activity所属的任务栈中，但是由于非Activity类型的Context(如ApplicationContext)并没有所谓的任务栈，所以这就有问题了。解决这个问题的方法是为待启动Activity指定FLAG_ACTIVITY_NEW_TASK标记位，这样启动的时候就会为它创建一个新的任务栈，这个时候待启动Activity实际上是以singleTask模式启动的。</p>
 </li>
-<li><p>singleTop 栈顶复用模式。若该Activity已经位于任务栈的栈顶，那么该Activity不会被重新创建，同时它的onNewIntent()方法会被回调，通过此方法的参数我们可以取出当前请求的信息。而且它的onCreate()和onStart()并不会被调用。执行的是onNewIntent()–&gt;onResume()。 如果该Activity已存在但不是位于栈顶，则该Activity仍然会被重新创建。</p>
+<li><p>singleTop 栈顶复用模式。若该Activity已经位于任务栈的栈顶，那么该Activity不会被重新创建，同时它的onNewIntent()方法会被回调，通过此方法的参数我们可以取出当前请求的信息。而且它的onCreate()和onStart()并不会被调用。执行的是onPause() –&gt; onNewIntent() –&gt; onResume()。 如果该Activity已存在但不是位于栈顶，则该Activity仍然会被重新创建。</p>
 </li>
 <li><p>singleTask 栈内复用模式。这是一种单实例模式，在这种模式下，只要Activity在一个栈中存在，那么多次启动此Activity都不会重新创建实例，和singleTop一样，系统也会回调其onNewsIntent()。具体一点，当一个具有singleTask模式的Activity请求启动后，比如说Activity A，系统首先会寻找是否存在A想要的任务栈，如果不存在，就重新创建一个任务栈，然后创建A的实例后把A放到栈中。如果存在把A所需的任务栈，这时要看A是否在栈中有实例存在，如果有实例存在，那么系统就会把A调到栈顶(会把在栈中所有处于A之上的Activity全部出栈)并调用它的onNewsIntent()方法，如果实例不存在，就创建A的实例并把A压入栈中。</p>
+<p>  设ActivityA的 android:launchMode=”singleTask” 方式，且ActivityA正处于栈中，但不是栈顶，栈顶为ActivityB，点击按钮启动ActivityA，则：<br>  B: onPause() -&gt; A: onNewIntent() -&gt; A:onRestart() -&gt; A: onStart() -&gt; A:onResume() -&gt; B: onStop() -&gt; B: onDestroy()</p>
 </li>
 <li><p>singleInstance 单实例模式。这是一种加强的singleTask模式，它除了具有singleTask模式的所有特性外，还加强了一点，那就是具有此种模式的Activity只能单独地位于一个任务栈中。换句话说，比如Activity A是singleInstance模式，当A启动后，系统会为它创建一个新的任务栈，然后A独自在这个新的任务栈中，由于栈内复用的特性，后续的请求均不会创建新的Activity。除非这个独特的任务栈被系统销毁了。</p>
 </li>
@@ -502,7 +827,10 @@ public boolean onInterceptTouchEvent(MotionEvent event) {
         return true;
     }
 }
-</code></pre><h1 id="u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406"><a href="#u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406" class="headerlink" title="第四章：View的工作原理"></a>第四章：View的工作原理</h1><h2 id="4-1__u521D_u8BC6ViewRoot_u548CDecorView"><a href="#4-1__u521D_u8BC6ViewRoot_u548CDecorView" class="headerlink" title="4.1 初识ViewRoot和DecorView"></a>4.1 初识ViewRoot和DecorView</h2>]]></content>
+</code></pre><h1 id="u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406"><a href="#u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406" class="headerlink" title="第四章：View的工作原理"></a>第四章：View的工作原理</h1><h2 id="4-1__u521D_u8BC6ViewRoot_u548CDecorView"><a href="#4-1__u521D_u8BC6ViewRoot_u548CDecorView" class="headerlink" title="4.1 初识ViewRoot和DecorView"></a>4.1 初识ViewRoot和DecorView</h2><p>ViewRoot对应于ViewRootImpl类，它是连接WindowManager和DecorView的纽带，View的三大流程均是通过ViewRoot来完成。在ActivityThread中，当Activity对象被创建完毕后，会将DecorView添加到Window中，同时会创建ViewRootImpl对象，并将ViewRootImpl对象和DecorView建立关联，这个过程可参看如下源码：</p>
+<pre><code>root = new ViewRootImpl(view.getContext(), display);
+root.setView(view, wparams, panelParentView);
+</code></pre>]]></content>
     <summary type="html">
     <![CDATA[<h1 id="u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F"><a href="#u7B2C_u4E00_u7AE0_uFF1AActivi]]>
     </summary>
@@ -520,7 +848,7 @@ public boolean onInterceptTouchEvent(MotionEvent event) {
     <link href="http://yuqirong.me/2016/03/23/%E5%88%9D%E6%8E%A2MD%E5%BC%8F%E8%BD%AC%E5%9C%BA%E5%8A%A8%E7%94%BB/"/>
     <id>http://yuqirong.me/2016/03/23/初探MD式转场动画/</id>
     <published>2016-03-23T08:44:22.000Z</published>
-    <updated>2016-03-23T15:27:42.318Z</updated>
+    <updated>2016-04-13T12:30:31.327Z</updated>
     <content type="html"><![CDATA[<p>最近在做MD设计风格的APP，所以在转场动画上当然也得符合MD了。下面就是效果图：</p>
 <p><img src="/uploads/20160323/20160323165423.gif" alt="这里写图片描述"></p>
 <p>一开始并未了解过这种转场动画，原来是Google在SDK中已经给我们提供了。<code>ActivityOptions</code>是 Android 5.0 及以上使用的，但是也提供了<code>ActivityOptionsCompat</code>向下兼容。</p>
@@ -624,6 +952,8 @@ public void onBackPressed() {
     </summary>
     
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="Material Design" scheme="http://yuqirong.me/tags/Material-Design/"/>
     
       <category term="Android Tips" scheme="http://yuqirong.me/categories/Android-Tips/"/>
     
@@ -4022,167 +4352,6 @@ private void showWindow() {
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
     
       <category term="Android Tips" scheme="http://yuqirong.me/categories/Android-Tips/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[再见2015，你好2016]]></title>
-    <link href="http://yuqirong.me/2016/01/01/%E5%86%8D%E8%A7%812015%EF%BC%8C%E4%BD%A0%E5%A5%BD2016/"/>
-    <id>http://yuqirong.me/2016/01/01/再见2015，你好2016/</id>
-    <published>2016-01-01T12:54:54.000Z</published>
-    <updated>2016-04-03T06:21:17.365Z</updated>
-    <content type="html"><![CDATA[<blockquote class="blockquote-center"><p>夕阳下的奔跑，那是我逝去的青春</p>
-</blockquote>
-<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>转眼间2015年悄然流走，而2016年已经来临。蓦然回首，在2015年里经历了太多。</p>
-<p>在这短短的一年里，得到了很多，同时也失去了很多。</p>
-<h1 id="u518D_u89C12015"><a href="#u518D_u89C12015" class="headerlink" title="再见2015"></a>再见2015</h1><p>2015，完成了我从大三到大四的转变，同时也是抉择人生道路的重要时刻。和其他人一样，在考研和就业的分叉路上也纠结了很久。但是在2015年里，努力地学习编程，幻想着有一天能够成为大牛，这似乎离考研的路越走越远。</p>
-<p>细细回想似乎写程序也已经满一年多了，从一开始的Java到现在的Android，这中间也弯弯曲曲地走了不少的弯路。还记得刚开始学习Android时，对于一切知识都急于求成，但却似乎忘了基础；以为自己什么都懂，其实只是一只“纸老虎”。最关键的是，把心慢下来，一点一滴积累才是正道，学习的路上没有捷径。</p>
-<h1 id="u4F60_u597D2016"><a href="#u4F60_u597D2016" class="headerlink" title="你好2016"></a>你好2016</h1><p>至于2016的到来，真的是“手足无措”。时间总是在不经意间流逝，而当你幡然醒悟时，只能扼腕叹息。其实更重要的是，在2016年的6月，我们要毕业了。离开同学，离开老师，离开校园。这其中纵然有千万缕不舍，但是人终究要面临着成长。之前从没想象过毕业，总以为离我们很遥远，但其实却很近。我们都已经习惯了在校园里慵懒的生活，闲暇之余可以和同学之间玩玩游戏，在草地上晒晒太阳，在图书馆安静地看看书。而这一切在2016都要发生重大的转变，这似乎就是我不愿意2016到来的原因了。</p>
-<p>人们总是在展望未来，却忘了把握当下。最无厘头的一句话“我在2016年的新年目标就是完成2015年那些本该在2014年完成的我在2013年就信誓旦旦要完成的2012年制定的目标…”。当然希望每个人都要脚踏实地，认认真真地完成自己订下的目标。也希望自己在新的一年里积累更多的知识，技术节节高升，早日走向人生的巅峰。</p>
-<p>最后，献上一首《同学的你》，纪念即将告别的校园生活。</p>
-<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="http://music.163.com/outchain/player?type=2&id=28387594&auto=0&height=66"></iframe>]]></content>
-    <summary type="html">
-    <![CDATA[<blockquote class="blockquote-center"><p>夕阳下的奔跑，那是我逝去的青春</p>
-</blockquote>
-<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" ti]]>
-    </summary>
-    
-      <category term="岁月如歌" scheme="http://yuqirong.me/tags/%E5%B2%81%E6%9C%88%E5%A6%82%E6%AD%8C/"/>
-    
-      <category term="岁月如歌" scheme="http://yuqirong.me/categories/%E5%B2%81%E6%9C%88%E5%A6%82%E6%AD%8C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[自定义实现水波纹动画，让你的app不再单调]]></title>
-    <link href="http://yuqirong.me/2015/12/27/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0%E6%B0%B4%E6%B3%A2%E7%BA%B9%E5%8A%A8%E7%94%BB%EF%BC%8C%E8%AE%A9%E4%BD%A0%E7%9A%84app%E4%B8%8D%E5%86%8D%E5%8D%95%E8%B0%83/"/>
-    <id>http://yuqirong.me/2015/12/27/自定义实现水波纹动画，让你的app不再单调/</id>
-    <published>2015-12-27T15:05:17.000Z</published>
-    <updated>2016-02-21T14:21:00.308Z</updated>
-    <content type="html"><![CDATA[<p>在开发Android应用的过程中，动画是一个很重要的点。好的动画可以给用户一种耳目一新的感觉。比如说京东app里下拉刷新中的动画是一个奔跑的快递员，这样用户会有一种耳目一新的感觉。所以我们何尝不提供一种新的动画方式呢？而今天给大家带来的就是水波纹动画。</p>
-<p>至于效果怎样，我们一起来看看：</p>
-<p><img src="/uploads/20151227/20151227231546.gif" alt="这里填写图片描述"></p>
-<p>是不是觉得有新意多了呢？那就一起来看看吧，先简单讲述一下思路：首先波浪的形状主要是根据三角函数决定的。三角函数相信大家在中学的课程中学习过吧。通用公式就是f(x)=Asin(ωx+φ) + b。其中A就是波浪的振幅，ω与时间周期有关，x就是屏幕宽度的像素点，φ是初相，可以让波浪产生偏移，最后的b就是水位的高度了。最后根据这公式算出y坐标，用<code>canvas.drawLine(startX, startY, stopX, stopY, paint);</code>来画出竖直的线条，这样就形成了波浪。</p>
-<p>整体的思路就如下面示意图所示，当红色的线条间距越来越小，密度越来越大时就形成了波浪：</p>
-<p><img src="/uploads/20151227/20151227230103.png" alt="这里填写图片描述"></p>
-<p>讲完了思路，那下面我们就来分析一下代码吧。</p>
-<p>首先看一下“自定义View三部曲”中的第一部，自定义属性：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;resources&gt;
-
-    &lt;declare-styleable name=&quot;WaveView&quot;&gt;
-        &lt;attr name=&quot;waveColor&quot; format=&quot;color|reference&quot;&gt;&lt;/attr&gt;
-        &lt;attr name=&quot;secondWaveColor&quot; format=&quot;color|reference&quot;&gt;&lt;/attr&gt;
-        &lt;attr name=&quot;waveHeight&quot; format=&quot;dimension|reference&quot;&gt;&lt;/attr&gt;
-    &lt;/declare-styleable&gt;
-
-&lt;/resources&gt;
-</code></pre><p>我们先定义了三个属性，分别是前波浪颜色、后波浪颜色以及波浪的振幅高度。</p>
-<p>然后就是在构造器中初始化自定义的属性。</p>
-<pre><code>public WaveView(Context context) {
-    this(context, null);
-}
-
-public WaveView(Context context, AttributeSet attrs) {
-    this(context, attrs, 0);
-}
-
-public WaveView(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.WaveView);
-    defaultWaveColor = getResources().getColor(R.color.indigo_color);
-    waveColor = a.getColor(R.styleable.WaveView_waveColor, defaultWaveColor);
-    defaultSecondWaveColor = getResources().getColor(R.color.second_indigo_color);
-    secondWaveColor = a.getColor(R.styleable.WaveView_secondWaveColor, defaultSecondWaveColor);
-    defaultWaveHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-    waveHeight = a.getDimension(R.styleable.WaveView_waveHeight, defaultWaveHeight);
-    a.recycle();
-    mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-}
-</code></pre><p>前面的代码很简单，接下来要重写<code>onSizeChanged(int w, int h, int oldw, int oldh)</code>:</p>
-<pre><code>@Override
-protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-    super.onSizeChanged(w, h, oldw, oldh);
-    this.w = (float) (Math.PI * 2 / w);
-}
-</code></pre><p>这里的w就是上面f(x)=Asin(ωx+φ) + b公式中的ω，而ω=2π/T。也就是说周期就是屏幕宽度。所以在一个屏幕内正好可以显示出正弦函数的一个周期。</p>
-<p>下面就是三部曲的第二部：重写<code>onMeasure(int widthMeasureSpec, int heightMeasureSpec)</code>：</p>
-<pre><code>@Override
-protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-    int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-    if (widthMode == MeasureSpec.EXACTLY) {
-        mWidth = widthSize;
-    } else {
-        mWidth = 200;
-    }
-
-    int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-    int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-    if (heightMode == MeasureSpec.EXACTLY) {
-        mHeight = heightSize;
-    } else {
-        mHeight = 200;
-    }
-    setMeasuredDimension(mWidth, mHeight);
-}
-</code></pre><p>onMeasure()中就是测量了View的宽高度，如果不是MeasureSpec.EXACTLY的模式就直接赋值200(这里没有把200px转化为200dp,偷懒了ㄟ(▔ ,▔)ㄏ)。相信大家都会了。</p>
-<p>最后就是<code>onDraw(Canvas canvas)</code>，也就是三部曲中的最后一部：</p>
-<pre><code>@Override
-protected void onDraw(Canvas canvas) {
-    // 水位的高度
-    waterHeight = waterHeight + 10;
-    // 正弦函数y的坐标
-    float startY;
-    canvas.save();
-
-    if (System.currentTimeMillis() - startTime &lt; 100) {
-        try {
-            Thread.sleep(100 + startTime - System.currentTimeMillis());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-    double temp = Math.toDegrees(speed);
-    speed++;
-
-    // 先绘制第二条波浪
-    mPaint.setColor(secondWaveColor);
-    // 遍历每个像素点，并在竖直上画线
-    for (int i = 0; i &lt; mWidth; i++) {
-        // 和第一条波浪相比产生的偏移量为8,至于偏移量大小可以自己决定
-        startY = (float) (waveHeight * Math.sin(w * i + temp + 8) + mHeight - waveHeight - waterHeight);
-        canvas.drawLine(i, startY, i, mHeight, mPaint);
-    }
-
-    // 再绘制第一条波浪
-    mPaint.setColor(waveColor);
-    for (int i = 0; i &lt; mWidth; i++) {
-        startY = (float) (waveHeight * Math.sin(w * i + temp) + mHeight - waveHeight - waterHeight);
-        canvas.drawLine(i, startY, i, mHeight, mPaint);
-    }
-    Log.i(TAG, &quot;waterHeight : &quot; + waterHeight);
-    canvas.restore();
-    // 不断重绘
-    invalidate();
-    startTime = System.currentTimeMillis();
-}
-</code></pre><p>在<code>onDraw(Canvas canvas)</code>的一开始waterHeight不断自增，以此来实现水位不断上涨的效果，然后就是线程的休眠来控制绘制的频率。之后在绘制第二条波浪时初相加上一个偏移量，这样就可以与第一条波浪形成交错的效果。整体代码并不复杂，主要是坐标上的计算。</p>
-<p>到这里基本就讲得差不多了，以下是本案例的源码：</p>
-<p><a href="/uploads/20151227/WaveView.rar">WaveView.rar</a></p>
-<p>最后，预祝大家元旦快乐！</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>在开发Android应用的过程中，动画是一个很重要的点。好的动画可以给用户一种耳目一新的感觉。比如说京东app里下拉刷新中的动画是一个奔跑的快递员，这样用户会有一种耳目一新的感觉。所以我们何尝不提供一种新的动画方式呢？而今天给大家带来的就是水波纹动画。</p>
-<p>至于效]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
-    
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
   </entry>
   

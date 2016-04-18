@@ -1,0 +1,1046 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qirong Yu's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：
+
+我们可以大致地分析一下：首先根据下拉改变的 paddingTop 来动态地缩放“绿色椭圆物”,然后当 headerView 的 paddingTop 大于0时，播放美团小人出现的帧动画，最后就是手指松开时播放刷新中的帧动画了。
+基本上思路就是上">
+<meta property="og:type" content="article">
+<meta property="og:title" content="带你实现仿美团的下拉刷新">
+<meta property="og:url" content="http://yuqirong.me/2016/04/18/带你实现仿美团的下拉刷新/index.html">
+<meta property="og:site_name" content="Qirong Yu's Blog">
+<meta property="og:description" content="有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：
+
+我们可以大致地分析一下：首先根据下拉改变的 paddingTop 来动态地缩放“绿色椭圆物”,然后当 headerView 的 paddingTop 大于0时，播放美团小人出现的帧动画，最后就是手指松开时播放刷新中的帧动画了。
+基本上思路就是上">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160418/20160418160532.gif">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160418/20160418165251.gif">
+<meta property="og:updated_time" content="2016-04-18T09:20:33.697Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="带你实现仿美团的下拉刷新">
+<meta name="twitter:description" content="有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：
+
+我们可以大致地分析一下：首先根据下拉改变的 paddingTop 来动态地缩放“绿色椭圆物”,然后当 headerView 的 paddingTop 大于0时，播放美团小人出现的帧动画，最后就是手指松开时播放刷新中的帧动画了。
+基本上思路就是上">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always',
+    motion: true
+  };
+</script>
+
+  <title> 带你实现仿美团的下拉刷新 | Qirong Yu's Blog </title>
+  <meta name="baidu-site-verification" content="MBYnGIEEPN" />
+  <meta name="baidu-site-verification" content="1Hx0jVHsgl" />
+  <meta name="baidu-site-verification" content="L0MgAErI0s" />
+  <meta name="google-site-verification" content="_hYRHLLoBRM6L31myWhOPTxzGtawe9z1zmCqcJ-aHA0" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Qirong Yu's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-question-circle fa-fw"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '8ZRfk21kUz89L8Xi6hZm','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                带你实现仿美团的下拉刷新
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-04-18T15:34:03+08:00" content="2016-04-18">
+              2016-04-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+                
+                
+  								<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
+								
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/18/带你实现仿美团的下拉刷新/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/18/带你实现仿美团的下拉刷新/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：</p>
+<p><img src="/uploads/20160418/20160418160532.gif" alt="这里写图片描述"></p>
+<p>我们可以大致地分析一下：首先根据下拉改变的 paddingTop 来动态地缩放“绿色椭圆物”,然后当 headerView 的 paddingTop 大于0时，播放美团小人出现的帧动画，最后就是手指松开时播放刷新中的帧动画了。</p>
+<p>基本上思路就是上面分析的那样了，那么我们下面一步就是要获取帧动画的素材了。我们先下载好美团的 apk ，解压后在 res/drawable-xhdpi-v4 里，我们可以得到相关的图片了。如果嫌麻烦，文末有本 Demo 的下载链接，里面就有素材图片。</p>
+<p>有了图片后我们先写个帧动画的 drawable.xml ：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;animation-list xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+
+    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_01&quot; android:duration=&quot;100&quot;/&gt;
+    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_02&quot; android:duration=&quot;100&quot;/&gt;
+    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_03&quot; android:duration=&quot;100&quot;/&gt;
+    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_04&quot; android:duration=&quot;100&quot;/&gt;
+    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_05&quot; android:duration=&quot;100&quot;/&gt;
+
+&lt;/animation-list&gt;
+</code></pre><p>一共有两个 drawable.xml ，另外一个和这个类似，就不贴出来了。</p>
+<p>现在开始编写代码了，创建一个 MeiTuanListView ，继承自 ListView :</p>
+<pre><code>public class MeiTuanListView extends ListView {
+
+    // 普通状态模式
+    private static final int NONE_MODE = 0;
+    // 下拉刷新模式
+    private static final int PULL_DOWN_MODE = 1;
+    // 可松开刷新模式
+    private static final int RELEASE_REFRESH_MODE = 2;
+    // 刷新中模式
+    private static final int REFRESHING_MODE = 3;
+    // 模式
+    private int mode = NONE_MODE;
+    // 阻值
+    private static final int RATIO = 3;
+    // 下拉刷新头部
+    private View headerRefreshView;
+    // 头部高度
+    private int refreshViewHeight;
+    // 手指按下的Y值
+    private float downY;
+    // 刷新监听器
+    private OnRefreshListener listener;
+    // “绿色椭圆物”的自定义View
+    private MeiTuanOvalView mtOvalView;
+    // 帧动画的ImageView
+    private ImageView aniImageView;
+    // 动画是否已经开始
+    private boolean isStart;
+    // 只有在listview顶端时下拉才可以刷新
+    private boolean canRefresh;
+
+    private static final String TAG = &quot;MeiTuanListView&quot;;
+
+    public MeiTuanListView(Context context) {
+        this(context, null);
+    }
+
+    public MeiTuanListView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public MeiTuanListView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        initView();
+    }
+
+    private void initView() {
+        setOverScrollMode(View.OVER_SCROLL_NEVER);
+        headerRefreshView = LayoutInflater.from(getContext()).inflate(R.layout.layout_header, null);
+        mtOvalView = (MeiTuanOvalView) headerRefreshView.findViewById(R.id.mtFirstView);
+        aniImageView = (ImageView) headerRefreshView.findViewById(R.id.iv);
+        // 去测量
+        headerRefreshView.measure(0, 0);
+        refreshViewHeight = headerRefreshView.getMeasuredHeight();
+        headerRefreshView.setPadding(0, -refreshViewHeight, 0, 0);
+        addHeaderView(headerRefreshView, null, false);
+    }
+</code></pre><p>在<code>initView()</code>中，初始化了下拉刷新的头部，并且设置了 setPadding (关于 ListView 下拉刷新的原理大家应该都懂吧？！)。</p>
+<p>layout_header.xml 的布局如下：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:gravity=&quot;center&quot;&gt;
+
+    &lt;com.yuqirong.meituanlistview.view.MeiTuanOvalView
+        android:id=&quot;@+id/mtFirstView&quot;
+        android:layout_width=&quot;45dp&quot;
+        android:layout_height=&quot;wrap_content&quot; /&gt;
+
+    &lt;ImageView
+        android:id=&quot;@+id/iv_anim&quot;
+        android:layout_width=&quot;45dp&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:visibility=&quot;gone&quot; /&gt;
+
+&lt;/RelativeLayout&gt;
+</code></pre><p>MeiTuanOvalView 这个是关于“绿色椭圆物”的自定义View，会根据 <code>headerView.getPaddingTop()</code> 的值自动缩放，这里就不讲解了，源码还是比较简单的，相关代码可以下载 Demo 查看。而 <code>iv_anim</code> 主要是用来播放帧动画的 ImageView 。</p>
+<p>下拉刷新的主要代码都在 <code>onTouchEvent(MotionEvent ev)</code> 里：</p>
+<pre><code>@Override
+public boolean onTouchEvent(MotionEvent ev) {
+    switch (ev.getAction()) {
+        case MotionEvent.ACTION_DOWN:
+            // 在listview顶端时才可下拉刷新
+            if (getFirstVisiblePosition() == 0) {
+                Log.i(TAG, &quot;canRefresh : &quot; + canRefresh);
+                // 记录手指按下的Y坐标
+                downY = ev.getY();
+                canRefresh = true;
+            }
+            break;
+        case MotionEvent.ACTION_MOVE:
+            if (mode != REFRESHING_MODE &amp;&amp; canRefresh) {
+                float moveY = ev.getY();
+                float offsetY = moveY - downY;
+                // 动态改变paddingTop值
+                headerRefreshView.setPadding(0, (int) (headerRefreshView.getPaddingTop() + offsetY / RATIO), 0, 0);
+                if (headerRefreshView.getPaddingTop() &lt;= 0) {
+                    mode = PULL_DOWN_MODE;
+                    mtOvalView.setVisibility(VISIBLE);
+                    aniImageView.setVisibility(GONE);
+                    mtOvalView.setScale((refreshViewHeight + headerRefreshView.getPaddingTop()) * 1f / refreshViewHeight);
+                    isStart = false;
+                } else {
+                    mode = RELEASE_REFRESH_MODE;
+                    if (!isStart) {
+                        mtOvalView.setVisibility(GONE);
+                        aniImageView.setVisibility(VISIBLE);
+                        aniImageView.setImageResource(R.drawable.pull_end_imag_frame);
+                        AnimationDrawable animationDrawable = (AnimationDrawable) aniImageView.getDrawable();
+                        // 只执行一次动画
+                        animationDrawable.setOneShot(true);
+                        animationDrawable.start();
+                        isStart = true;
+                    }
+                }
+                downY = moveY;
+            }
+            break;
+        case MotionEvent.ACTION_UP:
+            if (mode != REFRESHING_MODE &amp;&amp; canRefresh) {
+                if (headerRefreshView.getPaddingTop() &gt; 0) {
+                    mode = REFRESHING_MODE;
+                    headerRefreshView.setPadding(0, 0, 0, 0);
+                    aniImageView.setImageResource(R.drawable.refreshing_image_frame);
+                    AnimationDrawable animationDrawable = (AnimationDrawable) aniImageView.getDrawable();
+                    animationDrawable.start();
+                    if (listener != null) {
+                        listener.refreshing();
+                    }
+                } else {
+                    mode = NONE_MODE;
+                    headerRefreshView.setPadding(0, -refreshViewHeight, 0, 0);
+                    mtOvalView.setScale(0f);
+                    isStart = false;
+                    canRefresh = false;
+                }
+            }
+            break;
+    }
+    return super.onTouchEvent(ev);
+}
+</code></pre><p>里面的代码逻辑还是比较简单的：</p>
+<ul>
+<li>ACTION_DOWN ：首先判断了当 ListView 在顶端时才可以下拉刷新，并且记录了手指按下的Y坐标；</li>
+<li>ACTION_MOVE ：根据滑动的 offsetY 来动态地设置 headerView 的 paddingTop 。我们可以看到在 <code>if (headerRefreshView.getPaddingTop() &lt;= 0)</code> 里面根据 paddingTop 的值来动态地设置 <code>mtOvalView</code> 的 scale ，并且在 <code>setScale()</code> 方法里面会调用 <code>invalidate()</code> ，从而让 <code>mtOvalView</code> 去重绘。不然 <code>headerRefreshView.getPaddingTop()</code> 大于0时就播放了美团小人出场的动画。</li>
+<li>ACTION_UP ：当手指松开的时候，还是判断了 <code>headerRefreshView.getPaddingTop()</code> 的值。若大于0则把 headerView 全部显示出来，播放刷新中的动画，并且回调了刷新监听器的接口；小于0则把 headerView 重新隐藏起来。并重置相关的值。</li>
+</ul>
+<p>要注意的一点是，在 <code>onTouchEvent(MotionEvent ev)</code> 里要返回 <code>super.onTouchEvent(ev)</code> 。不能是直接返回 <code>true</code> 。因为在 <code>super.onTouchEvent(ev)</code> 里处理了 ListView 滑动的相关逻辑。</p>
+<p>当获取到最新数据后，可以调用<code>notifyRefreshFinished()</code>方法完成下拉刷新：</p>
+<pre><code>public interface OnRefreshListener {
+    void refreshing();
+}
+
+public void setOnRefreshListener(OnRefreshListener listener) {
+    this.listener = listener;
+}
+
+// 刷新完成后调用
+public void notifyRefreshFinished() {
+    mode = NONE_MODE;
+    headerRefreshView.setPadding(0, -refreshViewHeight, 0, 0);
+    aniImageView.setVisibility(GONE);
+    mtOvalView.setVisibility(VISIBLE);
+    isStart = false;
+    canRefresh = false;
+}
+</code></pre><p>最后就是附上效果图了：</p>
+<p><img src="/uploads/20160418/20160418165251.gif" alt="这里写图片描述"></p>
+<p>到这里整体就讲解得差不多了，至于 MeiTuanListView 的使用示例以及 MeiTuanOvalView 的源码可以在 Demo 里查看。</p>
+<p>Demo下载链接：</p>
+<p><a href="/uploads/20160418/MeiTuanListView.rar">MeiTuanListView.rar</a></p>
+<p>good bye!</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/10/FloatingActionButton在滚动时显示或隐藏/" rel="next" title="FloatingActionButton在滚动时显示或隐藏">
+                <i class="fa fa-chevron-left"></i> FloatingActionButton在滚动时显示或隐藏
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/04/18/带你实现仿美团的下拉刷新/"
+           data-title="带你实现仿美团的下拉刷新" data-url="http://yuqirong.me/2016/04/18/带你实现仿美团的下拉刷新/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar/27073358153.jpg" alt="俞其荣" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">35</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Google+
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i> Twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Instagram
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> 知乎
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">          
+								<a href="http://guolin.tech/" target="_blank" rel="external nofollow">郭霖的专栏</a>
+              </span>
+            
+              <span class="links-of-author-item">          
+								<a href="http://blog.csdn.net/lmj623565791/" target="_blank" rel="external nofollow">Hongyang</a>
+              </span>
+            
+              <span class="links-of-author-item">          
+								<a href="http://blog.csdn.net/singwhatiwanna/" target="_blank" rel="external nofollow">任玉刚</a>
+              </span>
+            
+              <span class="links-of-author-item">          
+								<a href="http://liaohuqiu.net/" target="_blank" rel="external nofollow">Srain</a>
+              </span>
+            
+              <span class="links-of-author-item">          
+								<a href="http://hukai.me/" target="_blank" rel="external nofollow">胡凯</a>
+              </span>
+            
+              <span class="links-of-author-item">          
+								<a href="http://stormzhang.com/" target="_blank" rel="external nofollow">stormzhang</a>
+              </span>
+            
+              <span class="links-of-author-item">          
+								<a href="http://drakeet.me/" target="_blank" rel="external nofollow">Drakeet的个人博客</a>
+              </span>
+            
+              <span class="links-of-author-item">          
+								<a href="https://github.com/xuyisheng/" target="_blank" rel="external nofollow">eclipse_xu</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣
+   
+   &nbsp;&nbsp;|&nbsp;&nbsp;
+  <script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/sitemap.xml">Google网站地图</a></span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/baidusitemap.xml">百度网站地图</a></span>
+  
+  </span>
+</div>
+
+<div class="powered-by">
+	由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+	<a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>
+</div>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;本站总点击 <span id="busuanzi_value_site_pv"></span> 次
+&nbsp;&nbsp;|&nbsp;&nbsp;您是第 <span id="busuanzi_value_site_uv"></span> 位访客
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"yuqirong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '/js/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

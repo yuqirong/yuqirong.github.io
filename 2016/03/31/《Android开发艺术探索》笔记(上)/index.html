@@ -63,7 +63,7 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
 <meta property="og:description" content="第一章：Activity的生命周期和启动模式1.1 Activity的生命周期全面分析典型情况下的生命周期分析
 onStart()和onStop()是从Activity是否可见这个角度来回调的，而onResume()和onPause()是从Activity是否位于前台这个角度来回调的。
 Activity A打开Activity B时，为了不影响B的显示，最好不要在Activity A的onPaus">
-<meta property="og:updated_time" content="2016-04-05T12:05:37.486Z">
+<meta property="og:updated_time" content="2016-04-14T12:32:57.356Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Android开发艺术探索》笔记(上)">
 <meta name="twitter:description" content="第一章：Activity的生命周期和启动模式1.1 Activity的生命周期全面分析典型情况下的生命周期分析
@@ -347,9 +347,10 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
 <pre><code>E/AndroidRuntime(674):andriod.util.AndroidRuntimeException: Calling startActivity from outside of an Activity context requires the FLAG_ACTIVITY_NEW_TASK flag.Is this really what you want?
 </code></pre><p>  这是因为standard模式的Activity默认会进入启动它的Activity所属的任务栈中，但是由于非Activity类型的Context(如ApplicationContext)并没有所谓的任务栈，所以这就有问题了。解决这个问题的方法是为待启动Activity指定FLAG_ACTIVITY_NEW_TASK标记位，这样启动的时候就会为它创建一个新的任务栈，这个时候待启动Activity实际上是以singleTask模式启动的。</p>
 </li>
-<li><p>singleTop 栈顶复用模式。若该Activity已经位于任务栈的栈顶，那么该Activity不会被重新创建，同时它的onNewIntent()方法会被回调，通过此方法的参数我们可以取出当前请求的信息。而且它的onCreate()和onStart()并不会被调用。执行的是onNewIntent()–&gt;onResume()。 如果该Activity已存在但不是位于栈顶，则该Activity仍然会被重新创建。</p>
+<li><p>singleTop 栈顶复用模式。若该Activity已经位于任务栈的栈顶，那么该Activity不会被重新创建，同时它的onNewIntent()方法会被回调，通过此方法的参数我们可以取出当前请求的信息。而且它的onCreate()和onStart()并不会被调用。执行的是onPause() –&gt; onNewIntent() –&gt; onResume()。 如果该Activity已存在但不是位于栈顶，则该Activity仍然会被重新创建。</p>
 </li>
 <li><p>singleTask 栈内复用模式。这是一种单实例模式，在这种模式下，只要Activity在一个栈中存在，那么多次启动此Activity都不会重新创建实例，和singleTop一样，系统也会回调其onNewsIntent()。具体一点，当一个具有singleTask模式的Activity请求启动后，比如说Activity A，系统首先会寻找是否存在A想要的任务栈，如果不存在，就重新创建一个任务栈，然后创建A的实例后把A放到栈中。如果存在把A所需的任务栈，这时要看A是否在栈中有实例存在，如果有实例存在，那么系统就会把A调到栈顶(会把在栈中所有处于A之上的Activity全部出栈)并调用它的onNewsIntent()方法，如果实例不存在，就创建A的实例并把A压入栈中。</p>
+<p>  设ActivityA的 android:launchMode=”singleTask” 方式，且ActivityA正处于栈中，但不是栈顶，栈顶为ActivityB，点击按钮启动ActivityA，则：<br>  B: onPause() -&gt; A: onNewIntent() -&gt; A:onRestart() -&gt; A: onStart() -&gt; A:onResume() -&gt; B: onStop() -&gt; B: onDestroy()</p>
 </li>
 <li><p>singleInstance 单实例模式。这是一种加强的singleTask模式，它除了具有singleTask模式的所有特性外，还加强了一点，那就是具有此种模式的Activity只能单独地位于一个任务栈中。换句话说，比如Activity A是singleInstance模式，当A启动后，系统会为它创建一个新的任务栈，然后A独自在这个新的任务栈中，由于栈内复用的特性，后续的请求均不会创建新的Activity。除非这个独特的任务栈被系统销毁了。</p>
 </li>
@@ -561,7 +562,10 @@ public boolean onInterceptTouchEvent(MotionEvent event) {
         return true;
     }
 }
-</code></pre><h1 id="u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406"><a href="#u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406" class="headerlink" title="第四章：View的工作原理"></a>第四章：View的工作原理</h1><h2 id="4-1__u521D_u8BC6ViewRoot_u548CDecorView"><a href="#4-1__u521D_u8BC6ViewRoot_u548CDecorView" class="headerlink" title="4.1 初识ViewRoot和DecorView"></a>4.1 初识ViewRoot和DecorView</h2></span>
+</code></pre><h1 id="u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406"><a href="#u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406" class="headerlink" title="第四章：View的工作原理"></a>第四章：View的工作原理</h1><h2 id="4-1__u521D_u8BC6ViewRoot_u548CDecorView"><a href="#4-1__u521D_u8BC6ViewRoot_u548CDecorView" class="headerlink" title="4.1 初识ViewRoot和DecorView"></a>4.1 初识ViewRoot和DecorView</h2><p>ViewRoot对应于ViewRootImpl类，它是连接WindowManager和DecorView的纽带，View的三大流程均是通过ViewRoot来完成。在ActivityThread中，当Activity对象被创建完毕后，会将DecorView添加到Window中，同时会创建ViewRootImpl对象，并将ViewRootImpl对象和DecorView建立关联，这个过程可参看如下源码：</p>
+<pre><code>root = new ViewRootImpl(view.getContext(), display);
+root.setView(view, wparams, panelParentView);
+</code></pre></span>
       
     </div>
 
@@ -662,7 +666,7 @@ public boolean onInterceptTouchEvent(MotionEvent event) {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-count">35</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -676,7 +680,7 @@ public boolean onInterceptTouchEvent(MotionEvent event) {
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">13</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
