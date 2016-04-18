@@ -22,4 +22,4 @@ comments: false
 * LinkIn : https://cn.linkedin.com/in/yuqirong
 * Weibo : http://weibo.com/yyyuqirong
 * 知乎 : https://www.zhihu.com/people/yuqirong
-* Email : <15757176636@163.com>
+* Email : <yqr271228943@gmail.com>

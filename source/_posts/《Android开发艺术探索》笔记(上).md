@@ -47,9 +47,12 @@ Activity按照优先级从高到低，可以分为如下三种：
 
 	这是因为standard模式的Activity默认会进入启动它的Activity所属的任务栈中，但是由于非Activity类型的Context(如ApplicationContext)并没有所谓的任务栈，所以这就有问题了。解决这个问题的方法是为待启动Activity指定FLAG\_ACTIVITY\_NEW\_TASK标记位，这样启动的时候就会为它创建一个新的任务栈，这个时候待启动Activity实际上是以singleTask模式启动的。
 
-* singleTop 栈顶复用模式。若该Activity已经位于任务栈的栈顶，那么该Activity不会被重新创建，同时它的onNewIntent()方法会被回调，通过此方法的参数我们可以取出当前请求的信息。而且它的onCreate()和onStart()并不会被调用。执行的是onNewIntent()-->onResume()。 如果该Activity已存在但不是位于栈顶，则该Activity仍然会被重新创建。
+* singleTop 栈顶复用模式。若该Activity已经位于任务栈的栈顶，那么该Activity不会被重新创建，同时它的onNewIntent()方法会被回调，通过此方法的参数我们可以取出当前请求的信息。而且它的onCreate()和onStart()并不会被调用。执行的是onPause() --> onNewIntent() --> onResume()。 如果该Activity已存在但不是位于栈顶，则该Activity仍然会被重新创建。
 
 * singleTask 栈内复用模式。这是一种单实例模式，在这种模式下，只要Activity在一个栈中存在，那么多次启动此Activity都不会重新创建实例，和singleTop一样，系统也会回调其onNewsIntent()。具体一点，当一个具有singleTask模式的Activity请求启动后，比如说Activity A，系统首先会寻找是否存在A想要的任务栈，如果不存在，就重新创建一个任务栈，然后创建A的实例后把A放到栈中。如果存在把A所需的任务栈，这时要看A是否在栈中有实例存在，如果有实例存在，那么系统就会把A调到栈顶(会把在栈中所有处于A之上的Activity全部出栈)并调用它的onNewsIntent()方法，如果实例不存在，就创建A的实例并把A压入栈中。
+
+	设ActivityA的 android:launchMode="singleTask" 方式，且ActivityA正处于栈中，但不是栈顶，栈顶为ActivityB，点击按钮启动ActivityA，则：
+	B: onPause() -> A: onNewIntent() -> A:onRestart() -> A: onStart() -> A:onResume() -> B: onStop() -> B: onDestroy()
 
 * singleInstance 单实例模式。这是一种加强的singleTask模式，它除了具有singleTask模式的所有特性外，还加强了一点，那就是具有此种模式的Activity只能单独地位于一个任务栈中。换句话说，比如Activity A是singleInstance模式，当A启动后，系统会为它创建一个新的任务栈，然后A独自在这个新的任务栈中，由于栈内复用的特性，后续的请求均不会创建新的Activity。除非这个独特的任务栈被系统销毁了。
 
@@ -333,3 +336,10 @@ TouchSlop是系统所能识别出的被认为是滑动的最小距离。这是�
 
 4.1 初识ViewRoot和DecorView
 --------
+ViewRoot对应于ViewRootImpl类，它是连接WindowManager和DecorView的纽带，View的三大流程均是通过ViewRoot来完成。在ActivityThread中，当Activity对象被创建完毕后，会将DecorView添加到Window中，同时会创建ViewRootImpl对象，并将ViewRootImpl对象和DecorView建立关联，这个过程可参看如下源码：
+
+	root = new ViewRootImpl(view.getContext(), display);
+	root.setView(view, wparams, panelParentView);
+
+
+

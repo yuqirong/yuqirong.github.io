@@ -1,7 +1,7 @@
 title: 初探MD式转场动画
 date: 2016-03-23 16:44:22
 categories: Android Tips
-tags: [Android]
+tags: [Android,Material Design]
 ---
 最近在做MD设计风格的APP，所以在转场动画上当然也得符合MD了。下面就是效果图：
 
