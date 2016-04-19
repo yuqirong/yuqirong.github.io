@@ -270,6 +270,120 @@
             
               
                 
+                <a class="post-title-link" href="/2016/03/07/实现WebView中JS和App之间的交互/" itemprop="url">
+                  实现WebView中JS和App之间的交互
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-03-07T19:53:12+08:00" content="2016-03-07">
+              2016-03-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Tips/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Tips</span>
+                  </a>
+                </span>
+                
+                
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/07/实现WebView中JS和App之间的交互/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/07/实现WebView中JS和App之间的交互/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。
+
+之后在脑海中回想到 WebView 中的JS可以和app产生交互，于是搜索了一下，果然网上有类似的实现效果。看了一下，在这里就做一个简单的笔记了以便之后查看。
+在 WebView 中想要JS和app产生交互，就不得不提一个方法，那就是addJavascriptInterface(Object object, String name)：
+
+第一个
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/03/07/实现WebView中JS和App之间的交互/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/02/28/《Android群英传》笔记(上)/" itemprop="url">
                   《Android群英传》笔记(上)
                 </a>
@@ -1267,119 +1381,6 @@ activity_main.xml：
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/01/05/对view的getLeft()、getTop()等的笔记/" itemprop="url">
-                  对view的getLeft()、getTop()等的笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2016-01-05T20:01:48+08:00" content="2016-01-05">
-              2016-01-05
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android-Tips/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Tips</span>
-                  </a>
-                </span>
-                
-                
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/01/05/对view的getLeft()、getTop()等的笔记/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/对view的getLeft()、getTop()等的笔记/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用view.getTop()来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:layout_width=&quot;match_parent&quot;
-    
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/01/05/对view的getLeft()、getTop()等的笔记/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
 
   </section>
 
@@ -1426,7 +1427,7 @@ activity_main.xml：
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">35</span>
+              <span class="site-state-item-count">36</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -270,6 +270,119 @@
             
               
                 
+                <a class="post-title-link" href="/2016/01/05/对view的getLeft()、getTop()等的笔记/" itemprop="url">
+                  对view的getLeft()、getTop()等的笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-01-05T20:01:48+08:00" content="2016-01-05">
+              2016-01-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Tips/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Tips</span>
+                  </a>
+                </span>
+                
+                
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/05/对view的getLeft()、getTop()等的笔记/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/对view的getLeft()、getTop()等的笔记/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用view.getTop()来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/01/05/对view的getLeft()、getTop()等的笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/01/01/再见2015，你好2016/" itemprop="url">
                   再见2015，你好2016
                 </a>
@@ -1274,121 +1387,6 @@ public class DropLook {
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/10/19/给你的ScrollView设置滑动距离监听器/" itemprop="url">
-                  给你的ScrollView设置滑动距离监听器
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2015-10-19T19:44:21+08:00" content="2015-10-19">
-              2015-10-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android-Tips/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Tips</span>
-                  </a>
-                </span>
-                
-                
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/10/19/给你的ScrollView设置滑动距离监听器/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/19/给你的ScrollView设置滑动距离监听器/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            ScrollView是我们经常使用的一个UI控件，也许你在使用ScrollView的过程中会发现，当你想监听ScrollView滑动的距离时却没有合适的监听器！当然在API 23中有setOnScrollChangeListener(View.OnScrollChangeListener l)可以使用，但是并不兼容低版本的API。那怎么办呢？只好重写ScrollView来实现对滑动距离的监听了。
-话不多说，直接上代码：
-public class MyScrollView extends ScrollView {
-
-    private OnScrollListener listener;
-
-
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/19/给你的ScrollView设置滑动距离监听器/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
 
   </section>
 
@@ -1435,7 +1433,7 @@ public class MyScrollView extends ScrollView {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">35</span>
+              <span class="site-state-item-count">36</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

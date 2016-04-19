@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-04-18T09:20:33.697Z</updated>
+  <updated>2016-04-19T06:30:13.187Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -15,11 +15,170 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[快速打造带有视差效果的ListView]]></title>
+    <link href="http://yuqirong.me/2016/04/19/%E5%BF%AB%E9%80%9F%E6%89%93%E9%80%A0%E5%B8%A6%E6%9C%89%E8%A7%86%E5%B7%AE%E6%95%88%E6%9E%9C%E7%9A%84ListView/"/>
+    <id>http://yuqirong.me/2016/04/19/快速打造带有视差效果的ListView/</id>
+    <published>2016-04-19T05:35:32.000Z</published>
+    <updated>2016-04-19T06:30:13.187Z</updated>
+    <content type="html"><![CDATA[<p>在上一篇博文中，我们实现了仿美团的下拉刷新。而今天的主题还是与 ListView 有关，这次是来实现具有视差效果的 ListView 。</p>
+<p>那么到底什么是视差效果呢？一起来看效果图就知道了：</p>
+<p><img src="/uploads/20160419/20160419141952.gif" alt="这里写图片描述"></p>
+<p>我们可以看到 ListView 的 HeaderView 会跟随 ListView 的滑动而变大，HeaderView里的图片会有缩放效果。这些可以使用属性动画来实现。接下来我们就来动手吧！</p>
+<p>首先自定义几个属性，在之后可以用到：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;resources&gt;
+    &lt;declare-styleable name=&quot;ZoomListView&quot;&gt;
+        &lt;!-- headerView的高度 --&gt;
+        &lt;attr name=&quot;header_height&quot; format=&quot;dimension|reference&quot;&gt;&lt;/attr&gt;
+        &lt;!-- headerView的最大高度 --&gt;
+        &lt;attr name=&quot;header_max_height&quot; format=&quot;dimension|reference&quot;&gt;&lt;/attr&gt;
+        &lt;!-- headerView里面的图片最大的伸缩量 --&gt;
+        &lt;attr name=&quot;header_max_scale&quot; format=&quot;float&quot;&gt;&lt;/attr&gt;
+    &lt;/declare-styleable&gt;
+&lt;/resources&gt;
+</code></pre><p>之后创建 ZoomListView 类，继承自 ListView ：</p>
+<pre><code>public class ZoomListView extends ListView {
+
+    // 最大的伸缩量
+    private final float defaultHeaderMaxScale = 1.2f;
+    // 头部最大的高度
+    private float headerMaxHeight;
+    // 头部初始高度
+    private float headerHeight;
+    // 头部默认初始高度
+    private float defaultHeaderHeight;
+    // 头部默认最大的高度
+    private float defaultHeaderMaxHeight;
+    private ImageView headerView;
+    private ViewGroup.LayoutParams layoutParams;
+    private LinearLayout linearLayout;
+    // 最大的缩放值
+    private float headerMaxScale;
+
+
+    public ZoomListView(Context context) {
+        this(context, null);
+    }
+
+    public ZoomListView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public ZoomListView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        defaultHeaderHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160, context.getResources().getDisplayMetrics());
+        defaultHeaderMaxHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, context.getResources().getDisplayMetrics());
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ZoomListView);
+        headerHeight = a.getDimension(R.styleable.ZoomListView_header_height, defaultHeaderHeight);
+        headerMaxHeight = a.getDimension(R.styleable.ZoomListView_header_max_height, defaultHeaderMaxHeight);
+        headerMaxScale = a.getFloat(R.styleable.ZoomListView_header_max_scale, defaultHeaderMaxScale);
+        a.recycle();
+        initView();
+    }    
+</code></pre><p>到这里都是按部就班式的，设置好自定义属性的初始值，之后调用 <code>initView()</code> ，那就来看看 <code>initView()</code> 方法：</p>
+<pre><code>private void initView() {
+    headerView = new ImageView(getContext());
+    headerView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+    linearLayout = new LinearLayout(getContext());
+    linearLayout.addView(headerView);
+    layoutParams = headerView.getLayoutParams();
+    if (layoutParams == null) {
+        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) headerHeight);
+    } else {
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutParams.height = (int) headerHeight;
+    }
+    headerView.setLayoutParams(layoutParams);
+    addHeaderView(linearLayout);
+}
+
+public void setDrawableId(int id) {
+    headerView.setImageResource(id);
+}
+</code></pre><p>可以看出在 <code>initView()</code> 里我们创建了 headerView ，并添加到了ListView的头部。而 <code>setDrawableId(int id)</code> 就是给 headerView 设置相关图片的。</p>
+<p>下面就是视差效果的主要实现代码了：</p>
+<pre><code> @Override
+protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+    if (deltaY &lt; 0 &amp;&amp; isTouchEvent) {
+        if (headerView.getHeight() &lt; headerMaxHeight) {
+            int newHeight = headerView.getHeight()
+                    + Math.abs(deltaY / 3);
+            headerView.getLayoutParams().height = newHeight;
+            headerView.requestLayout();
+            float temp = 1 + (headerMaxScale - 1f) * (headerView.getHeight() - headerHeight) / (headerMaxHeight - headerHeight);
+            headerView.animate().scaleX(temp)
+                    .scaleY(temp).setDuration(0).start();
+        }
+    }
+    return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+}
+</code></pre><p>我们重写了 <code>overScrollBy()</code> 方法，当 deltaY 小于0时(即 ListView 已经到顶端，但是用户手势还是向下拉)，去动态地设置 headerView 的高度以及 headerView 的 scale 值。这样就可以产生 headerView 变高以及图片放大的效果了。</p>
+<p>接下来要考虑的问题就是当用户松开手指时，要恢复回原来的样子。所以我们应该在 <code>onTouchEvent(MotionEvent ev)</code> 里去实现相关操作：</p>
+<pre><code>@Override
+public boolean onTouchEvent(MotionEvent ev) {
+    switch (ev.getAction()) {
+        case MotionEvent.ACTION_UP:
+                startAnim();
+            break;
+    }
+    return super.onTouchEvent(ev);
+}
+
+// 开始执行动画
+private void startAnim() {
+    ValueAnimator animator = ValueAnimator.ofFloat(headerView.getHeight(), headerHeight);
+    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            float fraction = (float) animation.getAnimatedValue();
+            headerView.getLayoutParams().height = (int) fraction;
+            headerView.requestLayout();
+        }
+    });
+    animator.setDuration(500);
+    animator.setInterpolator(new LinearInterpolator());
+
+    ValueAnimator animator2 = ValueAnimator.ofFloat(headerView.getScaleX(), 1f);
+    animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            float fraction = (float) animation.getAnimatedValue();
+            headerView.setScaleX(fraction);
+            headerView.setScaleY(fraction);
+        }
+    });
+    animator2.setDuration(500);
+    animator2.setInterpolator(new LinearInterpolator());
+    animator.start();
+    animator2.start();
+}
+</code></pre><p>上面的代码简单点来说，就是在 ACTION_UP 时，去开始两个属性动画，一个属性动画是将 headerView 的高度恢复成原来的值，另一个属性动画就是把 headerView 的 scale 重新恢复为1f。相信大家都可以看懂的。</p>
+<p>ZoomListView 整体的代码就这些了，很简短。下面附上下载的链接：</p>
+<p><a href="/uploads/20160419/ZoomListView.rar">ZoomListView.rar</a></p>
+<p>good luck ! ~~</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>在上一篇博文中，我们实现了仿美团的下拉刷新。而今天的主题还是与 ListView 有关，这次是来实现具有视差效果的 ListView 。</p>
+<p>那么到底什么是视差效果呢？一起来看效果图就知道了：</p>
+<p><img src="/uploads/20160419/]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
+    
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[带你实现仿美团的下拉刷新]]></title>
     <link href="http://yuqirong.me/2016/04/18/%E5%B8%A6%E4%BD%A0%E5%AE%9E%E7%8E%B0%E4%BB%BF%E7%BE%8E%E5%9B%A2%E7%9A%84%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0/"/>
     <id>http://yuqirong.me/2016/04/18/带你实现仿美团的下拉刷新/</id>
     <published>2016-04-18T07:34:03.000Z</published>
-    <updated>2016-04-18T09:20:33.697Z</updated>
+    <updated>2016-04-19T05:48:19.840Z</updated>
     <content type="html"><![CDATA[<p>有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：</p>
 <p><img src="/uploads/20160418/20160418160532.gif" alt="这里写图片描述"></p>
 <p>我们可以大致地分析一下：首先根据下拉改变的 paddingTop 来动态地缩放“绿色椭圆物”,然后当 headerView 的 paddingTop 大于0时，播放美团小人出现的帧动画，最后就是手指松开时播放刷新中的帧动画了。</p>
@@ -217,6 +376,8 @@ public void notifyRefreshFinished() {
     </summary>
     
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
@@ -4291,67 +4452,6 @@ private void showWindow() {
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[对view的getLeft()、getTop()等的笔记]]></title>
-    <link href="http://yuqirong.me/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop()%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/"/>
-    <id>http://yuqirong.me/2016/01/05/对view的getLeft()、getTop()等的笔记/</id>
-    <published>2016-01-05T12:01:48.000Z</published>
-    <updated>2016-02-19T14:24:47.890Z</updated>
-    <content type="html"><![CDATA[<p>在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用<code>view.getTop()</code>来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;
-    android:orientation=&quot;vertical&quot;&gt;
-
-
-    &lt;LinearLayout
-        android:id=&quot;@+id/ll_01&quot;
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;60dp&quot;
-        android:orientation=&quot;vertical&quot;
-        android:background=&quot;@android:color/holo_green_light&quot;&gt;
-
-        &lt;TextView
-            android:id=&quot;@+id/tv_01&quot;
-            android:layout_width=&quot;match_parent&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:text=&quot;我是第一行文字&quot; /&gt;
-    &lt;/LinearLayout&gt;
-
-    &lt;LinearLayout
-        android:id=&quot;@+id/ll_02&quot;
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;60dp&quot;
-        android:orientation=&quot;vertical&quot;
-        android:background=&quot;@android:color/holo_blue_light&quot;&gt;
-
-        &lt;TextView
-            android:id=&quot;@+id/tv_02&quot;
-            android:layout_width=&quot;match_parent&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:text=&quot;我是第二行文字&quot; /&gt;
-    &lt;/LinearLayout&gt;
-
-&lt;/LinearLayout&gt;
-</code></pre><p>上面是一个很简单的布局，UI效果图如下：</p>
-<p><img src="/uploads/20160105/20160105202531.png" alt="这里填写图片的描述"></p>
-<p>当我们用<code>tv_01.getTop()</code>的时候，得到的返回值是0，符合我的想象。但是用<code>tv_02.getTop()</code>，得到的值也为0。而我原以为<code>tv_02.getTop()</code>的值为<code>ll_01</code>的高度，也就是<code>tv_02</code>距离屏幕顶部的长度。但是结果和我的想象不一致。</p>
-<p>后来我才知道原来<code>getTop()</code>方法返回的是该view距离<strong>父容器顶部</strong>的距离，所以理所应当<code>tv_02.getTop()</code>距离<code>ll_02</code>顶部的距离也为0了，同样的<code>getLeft()</code>、<code>getBottom()</code>、<code>getRight()</code>也是一个道理，以此类推。</p>
-<p>那么问题来了，如何按我之前的想法一样，得到<code>tv_02</code>距离<strong>屏幕顶部</strong>的值呢？很简单，我们只要<code>tv_02.getTop() + ll_02.getTop()</code>就好了。相信聪明的你已经懂了。</p>
-<p>看来在开发中还有不少的细节需要我们注意，特此一记。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用<code>view.getTop()</code>来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：</p>
-<pre><code>&lt;?xml versi]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="Android Tips" scheme="http://yuqirong.me/categories/Android-Tips/"/>
     
   </entry>
   
