@@ -1,5 +1,11 @@
 <!doctype html>
-<html class="theme-next   use-motion ">
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -26,13 +32,36 @@
 
 
 
-  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
 
 
 
 <link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
   <meta name="keywords" content="Android,《Android群英传》," />
@@ -46,7 +75,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
 
 
 
@@ -94,10 +123,16 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
 
 
 <script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
   var CONFIG = {
-    scheme: 'Mist',
-    sidebar: 'always',
-    motion: true
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
   };
 </script>
 
@@ -110,15 +145,6 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-  <!--[if lte IE 8]>
-  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
-    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
-      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
-           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
-           style='margin-left:auto;margin-right:auto;display: block;'/>
-    </a>
-  </div>
-<![endif]-->
   
 
 
@@ -136,7 +162,16 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
 
 
 
-  <div class="container one-column page-post-detail">
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -165,7 +200,7 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
   
 
   
-    <ul id="menu" class="menu menu-left">
+    <ul id="menu" class="menu">
       
         
         <li class="menu-item menu-item-home">
@@ -211,7 +246,7 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
         <li class="menu-item menu-item-guestbook">
           <a href="/guestbook" rel="section">
             
-              <i class="menu-item-icon fa fa-question-circle fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-comment fa-fw"></i> <br />
             
             留言
           </a>
@@ -229,6 +264,16 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
       
 
       
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
       
     </ul>
   
@@ -236,11 +281,9 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
   
     <div class="site-search">
       
-  
   <form class="site-search-form">
-    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
-  </form>
-
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
 
 <script type="text/javascript">
   (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
@@ -262,8 +305,9 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
 
     <main id="main" class="main">
       <div class="main-inner">
-        <div id="content" class="content">
-          
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
     
@@ -294,7 +338,10 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2016-03-08T20:22:27+08:00" content="2016-03-08">
               2016-03-08
             </time>
@@ -302,17 +349,17 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Book-Note/" itemprop="url" rel="index">
                     <span itemprop="name">Book Note</span>
                   </a>
                 </span>
-                
-                
-  								<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
-								
 
                 
                 
@@ -334,18 +381,21 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
-        <span itemprop="articleBody"><h1 id="u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><a href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7" class="headerlink" title="第六章：Android绘图机制与处理技巧"></a>第六章：Android绘图机制与处理技巧</h1><h2 id="6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F"><a href="#6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F" class="headerlink" title="6.1 屏幕的尺寸信息"></a>6.1 屏幕的尺寸信息</h2><p>系统屏幕密度如下</p>
+        <h1 id="u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><a href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7" class="headerlink" title="第六章：Android绘图机制与处理技巧"></a>第六章：Android绘图机制与处理技巧</h1><h2 id="6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F"><a href="#6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F" class="headerlink" title="6.1 屏幕的尺寸信息"></a>6.1 屏幕的尺寸信息</h2><p>系统屏幕密度如下</p>
 <ul>
 <li>ldpi—120—240X320分辨率</li>
 <li>mdpi—160—320X480分辨率</li>
@@ -1113,7 +1163,19 @@ int heapSize = manager.getLargeMemoryClass();
 </ul>
 </li>
 </ul>
-<h2 id="10-3_Lint_u5DE5_u5177"><a href="#10-3_Lint_u5DE5_u5177" class="headerlink" title="10.3 Lint工具"></a>10.3 Lint工具</h2><h2 id="10-4__u4F7F_u7528Android_Studio_u7684Memory_Monitor_u5DE5_u5177"><a href="#10-4__u4F7F_u7528Android_Studio_u7684Memory_Monitor_u5DE5_u5177" class="headerlink" title="10.4 使用Android Studio的Memory Monitor工具"></a>10.4 使用Android Studio的Memory Monitor工具</h2><h2 id="10-5__u4F7F_u7528TraceView_u5DE5_u5177_u4F18_u5316App_u6027_u80FD"><a href="#10-5__u4F7F_u7528TraceView_u5DE5_u5177_u4F18_u5316App_u6027_u80FD" class="headerlink" title="10.5 使用TraceView工具优化App性能"></a>10.5 使用TraceView工具优化App性能</h2><h2 id="10-6__u4F7F_u7528MAT_u5DE5_u5177_u5206_u6790App_u5185_u5B58_u72B6_u6001"><a href="#10-6__u4F7F_u7528MAT_u5DE5_u5177_u5206_u6790App_u5185_u5B58_u72B6_u6001" class="headerlink" title="10.6 使用MAT工具分析App内存状态"></a>10.6 使用MAT工具分析App内存状态</h2><h2 id="10-7__u4F7F_u7528Dumpsys_u547D_u4EE4_u5206_u6790_u7CFB_u7EDF_u72B6_u6001"><a href="#10-7__u4F7F_u7528Dumpsys_u547D_u4EE4_u5206_u6790_u7CFB_u7EDF_u72B6_u6001" class="headerlink" title="10.7 使用Dumpsys命令分析系统状态"></a>10.7 使用Dumpsys命令分析系统状态</h2></span>
+<h2 id="10-3_Lint_u5DE5_u5177"><a href="#10-3_Lint_u5DE5_u5177" class="headerlink" title="10.3 Lint工具"></a>10.3 Lint工具</h2><h2 id="10-4__u4F7F_u7528Android_Studio_u7684Memory_Monitor_u5DE5_u5177"><a href="#10-4__u4F7F_u7528Android_Studio_u7684Memory_Monitor_u5DE5_u5177" class="headerlink" title="10.4 使用Android Studio的Memory Monitor工具"></a>10.4 使用Android Studio的Memory Monitor工具</h2><h2 id="10-5__u4F7F_u7528TraceView_u5DE5_u5177_u4F18_u5316App_u6027_u80FD"><a href="#10-5__u4F7F_u7528TraceView_u5DE5_u5177_u4F18_u5316App_u6027_u80FD" class="headerlink" title="10.5 使用TraceView工具优化App性能"></a>10.5 使用TraceView工具优化App性能</h2><h2 id="10-6__u4F7F_u7528MAT_u5DE5_u5177_u5206_u6790App_u5185_u5B58_u72B6_u6001"><a href="#10-6__u4F7F_u7528MAT_u5DE5_u5177_u5206_u6790App_u5185_u5B58_u72B6_u6001" class="headerlink" title="10.6 使用MAT工具分析App内存状态"></a>10.6 使用MAT工具分析App内存状态</h2><h2 id="10-7__u4F7F_u7528Dumpsys_u547D_u4EE4_u5206_u6790_u7CFB_u7EDF_u72B6_u6001"><a href="#10-7__u4F7F_u7528Dumpsys_u547D_u4EE4_u5206_u6790_u7CFB_u7EDF_u72B6_u6001" class="headerlink" title="10.7 使用Dumpsys命令分析系统状态"></a>10.7 使用Dumpsys命令分析系统状态</h2>
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
       
     </div>
 
@@ -1157,16 +1219,34 @@ int heapSize = manager.getLargeMemoryClass();
 
     <div class="post-spread">
       
+        <div class="ds-share flat" data-thread-key="2016/03/08/《Android群英传》笔记(下)/"
+     data-title="《Android群英传》笔记(下)"
+     data-content=""
+     data-url="http://yuqirong.me/2016/03/08/《Android群英传》笔记(下)/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
     </div>
   </div>
 
 
-        </div>
+          </div>
+          
 
-        
 
-
-        
+          
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2016/03/08/《Android群英传》笔记(下)/"
@@ -1176,10 +1256,9 @@ int heapSize = manager.getLargeMemoryClass();
   </div>
 
 
-      </div>
-
-      
+        </div>
         
+          
   
   <div class="sidebar-toggle">
     <div class="sidebar-toggle-line-wrap">
@@ -1207,10 +1286,12 @@ int heapSize = manager.getLargeMemoryClass();
 
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" src="/uploads/avatar/27073358153.jpg" alt="俞其荣" itemprop="image"/>
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar/27073358153.jpg"
+               alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
+          <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
         </div>
-        <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
@@ -1219,19 +1300,23 @@ int heapSize = manager.getLargeMemoryClass();
             </a>
           </div>
 
-          <div class="site-state-item site-state-categories">
-            <a href="/categories">
-              <span class="site-state-item-count">6</span>
-              <span class="site-state-item-name">分类</span>
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
               </a>
-          </div>
+            </div>
+          
 
-          <div class="site-state-item site-state-tags">
-            <a href="/tags">
-              <span class="site-state-item-count">13</span>
-              <span class="site-state-item-name">标签</span>
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
               </a>
-          </div>
+            </div>
+          
 
         </nav>
 
@@ -1250,93 +1335,154 @@ int heapSize = manager.getLargeMemoryClass();
               <span class="links-of-author-item">
                 <a href="https://github.com/yuqirong" target="_blank">
                   
-                    <i class="fa fa-github"></i> GitHub
+                    <i class="fa fa-github"></i>
                   
+                  GitHub
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="https://plus.google.com/116756215081118586533" target="_blank">
                   
-                    <i class="fa fa-globe"></i> Google+
+                    <i class="fa fa-google-plus"></i>
                   
+                  Google+
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="https://twitter.com/yyyuqirong" target="_blank">
                   
-                    <i class="fa fa-twitter"></i> Twitter
+                    <i class="fa fa-twitter"></i>
                   
+                  Twitter
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="https://www.instagram.com/yyyuqirong" target="_blank">
                   
-                    <i class="fa fa-globe"></i> Instagram
+                    <i class="fa fa-instagram"></i>
                   
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i>
+                  
+                  LinkedIn
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="https://www.zhihu.com/people/yuqirong" target="_blank">
                   
-                    <i class="fa fa-globe"></i> 知乎
+                    <i class="fa fa-globe"></i>
                   
+                  知乎
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="http://weibo.com/yyyuqirong" target="_blank">
                   
-                    <i class="fa fa-weibo"></i> Weibo
+                    <i class="fa fa-weibo"></i>
                   
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yqr271228943@gmail.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i>
+                  
+                  Email
                 </a>
               </span>
             
           
         </div>
+        
+        <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
 
         
         
 
-        <div class="links-of-author motion-element">
+        
+        <div class="links-of-blogroll motion-element">
           
-            <p class="site-author-name">友情链接</p>
-            
-              <span class="links-of-author-item">          
-								<a href="http://guolin.tech/" target="_blank" rel="external nofollow">郭霖的专栏</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://blog.csdn.net/lmj623565791/" target="_blank" rel="external nofollow">Hongyang</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://blog.csdn.net/singwhatiwanna/" target="_blank" rel="external nofollow">任玉刚</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://liaohuqiu.net/" target="_blank" rel="external nofollow">Srain</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://hukai.me/" target="_blank" rel="external nofollow">胡凯</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://stormzhang.com/" target="_blank" rel="external nofollow">stormzhang</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://drakeet.me/" target="_blank" rel="external nofollow">Drakeet的个人博客</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="https://github.com/xuyisheng/" target="_blank" rel="external nofollow">eclipse_xu</a>
-              </span>
-            
+            <div class="links-of-blogroll-title">友情链接</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://guolin.tech/" target="_blank">郭霖的专栏</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lmj623565791/" target="_blank">Hongyang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/singwhatiwanna/" target="_blank">任玉刚</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://liaohuqiu.net/" target="_blank">Srain</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hukai.me/" target="_blank">胡凯</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://stormzhang.com/" target="_blank">stormzhang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://drakeet.me/" target="_blank">Drakeet的个人博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/xuyisheng/" target="_blank">eclipse_xu</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.kymjs.com/" target="_blank">张涛-开源实验室</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.devtf.cn/" target="_blank">开发技术前线</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lzyzsd/" target="_blank">大头鬼Bruce</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.mcxiaoke.com/" target="_blank">Xiaoke's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.baoyz.com/" target="_blank">Baoyz's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://itangqi.me/" target="_blank">Qi Tang's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/zhaokaiqiang1992/" target="_blank">赵凯强</a>
+                </li>
+              
+            </ul>
           
         </div>
 
@@ -1344,9 +1490,6 @@ int heapSize = manager.getLargeMemoryClass();
 
       
         <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc-indicator-top post-toc-indicator">
-            <i class="fa fa-angle-double-up"></i>
-          </div>
           <div class="post-toc">
             
               
@@ -1355,9 +1498,6 @@ int heapSize = manager.getLargeMemoryClass();
               <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><span class="nav-number">1.</span> <span class="nav-text">第六章：Android绘图机制与处理技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F"><span class="nav-number">1.1.</span> <span class="nav-text">6.1 屏幕的尺寸信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2_2D_u7ED8_u56FE_u57FA_u7840"><span class="nav-number">1.2.</span> <span class="nav-text">6.2 2D绘图基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3_Android_XML_u7ED8_u56FE"><span class="nav-number">1.3.</span> <span class="nav-text">6.3 Android XML绘图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-4_Android_u7ED8_u56FE_u6280_u5DE7"><span class="nav-number">1.4.</span> <span class="nav-text">6.4 Android绘图技巧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-5_Android_u56FE_u50CF_u5904_u7406_u4E4B_u8272_u5F69_u7279_u6548_u5904_u7406"><span class="nav-number">1.5.</span> <span class="nav-text">6.5 Android图像处理之色彩特效处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-6_Android_u56FE_u50CF_u5904_u7406_u4E4B_u56FE_u5F62_u7279_u6548_u5904_u7406"><span class="nav-number">1.6.</span> <span class="nav-text">6.6 Android图像处理之图形特效处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406"><span class="nav-number">1.7.</span> <span class="nav-text">6.7 Android图像处理之画笔特效处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-8_View_u4E4B_u5B6A_u751F_u5144_u5F1F_u2014_u2014SurfaceView"><span class="nav-number">1.8.</span> <span class="nav-text">6.8 View之孪生兄弟——SurfaceView</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E03_u7AE0_uFF1AAndroid_u52A8_u753B_u673A_u5236_u4E0E_u4F7F_u7528_u6280_u5DE7"><span class="nav-number">2.</span> <span class="nav-text">第七章：Android动画机制与使用技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1_Android_View_u52A8_u753B_u6846_u67B6"><span class="nav-number">2.1.</span> <span class="nav-text">7.1 Android View动画框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2_Android_u5C5E_u6027_u52A8_u753B_u5206_u6790"><span class="nav-number">2.2.</span> <span class="nav-text">7.2 Android属性动画分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-3_Android_u5E03_u5C40_u52A8_u753B"><span class="nav-number">2.3.</span> <span class="nav-text">7.3 Android布局动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-4_Interpolators_28_u63D2_u503C_u5668_29"><span class="nav-number">2.4.</span> <span class="nav-text">7.4 Interpolators(插值器)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-5__u81EA_u5B9A_u4E49_u52A8_u753B"><span class="nav-number">2.5.</span> <span class="nav-text">7.5 自定义动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-6_Android_5-X_SVG__u77E2_u91CF_u52A8_u753B_u673A_u5236"><span class="nav-number">2.6.</span> <span class="nav-text">7.6 Android 5.X SVG 矢量动画机制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u516B_u7AE0_uFF1AActivity_u4E0EActivity_u8C03_u7528_u6808_u5206_u6790"><span class="nav-number">3.</span> <span class="nav-text">第八章：Activity与Activity调用栈分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#8-1_Activity"><span class="nav-number">3.1.</span> <span class="nav-text">8.1 Activity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-2_Android_u4EFB_u52A1_u6808_u7B80_u4ECB"><span class="nav-number">3.2.</span> <span class="nav-text">8.2 Android任务栈简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-3_AndroidMainifest_u542F_u52A8_u6A21_u5F0F"><span class="nav-number">3.3.</span> <span class="nav-text">8.3 AndroidMainifest启动模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-4_Intent_Flag_u542F_u52A8_u6A21_u5F0F"><span class="nav-number">3.4.</span> <span class="nav-text">8.4 Intent Flag启动模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-5__u6E05_u7A7A_u4EFB_u52A1_u6808"><span class="nav-number">3.5.</span> <span class="nav-text">8.5 清空任务栈</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E5D_u7AE0_uFF1AAndroid_u7CFB_u7EDF_u4FE1_u606F_u4E0E_u5B89_u5168_u673A_u5236"><span class="nav-number">4.</span> <span class="nav-text">第九章：Android系统信息与安全机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#9-1_Android_u7CFB_u7EDF_u4FE1_u606F_u83B7_u53D6"><span class="nav-number">4.1.</span> <span class="nav-text">9.1 Android系统信息获取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-2_Android_Apk_u5E94_u7528_u4FE1_u606F_u83B7_u53D6_u4E4BPackageManager"><span class="nav-number">4.2.</span> <span class="nav-text">9.2 Android Apk应用信息获取之PackageManager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-3_Android_Apk_u5E94_u7528_u4FE1_u606F_u83B7_u53D6_u4E4BActivityManager"><span class="nav-number">4.3.</span> <span class="nav-text">9.3 Android Apk应用信息获取之ActivityManager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-4__u89E3_u6790Packages-xml_u83B7_u53D6_u7CFB_u7EDF_u4FE1_u606F"><span class="nav-number">4.4.</span> <span class="nav-text">9.4 解析Packages.xml获取系统信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-5_Android_u5B89_u5168_u673A_u5236"><span class="nav-number">4.5.</span> <span class="nav-text">9.5 Android安全机制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u5341_u7AE0_uFF1AAndroid_u6027_u80FD_u4F18_u5316"><span class="nav-number">5.</span> <span class="nav-text">第十章：Android性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#10-1__u5E03_u5C40_u4F18_u5316"><span class="nav-number">5.1.</span> <span class="nav-text">10.1 布局优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-2__u5185_u5B58_u4F18_u5316"><span class="nav-number">5.2.</span> <span class="nav-text">10.2 内存优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-3_Lint_u5DE5_u5177"><span class="nav-number">5.3.</span> <span class="nav-text">10.3 Lint工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-4__u4F7F_u7528Android_Studio_u7684Memory_Monitor_u5DE5_u5177"><span class="nav-number">5.4.</span> <span class="nav-text">10.4 使用Android Studio的Memory Monitor工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-5__u4F7F_u7528TraceView_u5DE5_u5177_u4F18_u5316App_u6027_u80FD"><span class="nav-number">5.5.</span> <span class="nav-text">10.5 使用TraceView工具优化App性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-6__u4F7F_u7528MAT_u5DE5_u5177_u5206_u6790App_u5185_u5B58_u72B6_u6001"><span class="nav-number">5.6.</span> <span class="nav-text">10.6 使用MAT工具分析App内存状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-7__u4F7F_u7528Dumpsys_u547D_u4EE4_u5206_u6790_u7CFB_u7EDF_u72B6_u6001"><span class="nav-number">5.7.</span> <span class="nav-text">10.7 使用Dumpsys命令分析系统状态</span></a></li></ol></li></ol></div>
             
           </div>
-          <div class="post-toc-indicator-bottom post-toc-indicator">
-            <i class="fa fa-angle-double-down"></i>
-          </div>
         </section>
       
 
@@ -1365,7 +1505,8 @@ int heapSize = manager.getLargeMemoryClass();
   </aside>
 
 
-      
+        
+      </div>
     </main>
 
     <footer id="footer" class="footer">
@@ -1375,11 +1516,11 @@ int heapSize = manager.getLargeMemoryClass();
   &copy;  2015 - 
   <span itemprop="copyrightYear">2016</span>
   <span class="with-love">
-    <i class="icon-next-heart fa fa-heart"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">俞其荣
-   
-   &nbsp;&nbsp;|&nbsp;&nbsp;
+  
+  &nbsp;&nbsp;|&nbsp;&nbsp;
   <script type="text/javascript">
   var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
   document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
@@ -1392,13 +1533,13 @@ int heapSize = manager.getLargeMemoryClass();
 </div>
 
 <div class="powered-by">
-	由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
 </div>
 
 <div class="theme-info">
   主题 -
-	<a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
-    NexT.Mist
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
   </a>
 </div>
 
@@ -1422,16 +1563,83 @@ int heapSize = manager.getLargeMemoryClass();
       </div>
     </footer>
 
-    <div class="back-to-top"></div>
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
   </div>
 
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
   <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
 
   
-  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
 
   
-    
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
 
   
     
@@ -1443,203 +1651,25 @@ int heapSize = manager.getLargeMemoryClass();
       var ds = document.createElement('script');
       ds.type = 'text/javascript';ds.async = true;
       ds.id = 'duoshuo-script';
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '/js/embed.js';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '/js/src/embed.js';
       ds.charset = 'UTF-8';
       (document.getElementsByTagName('head')[0]
       || document.getElementsByTagName('body')[0]).appendChild(ds);
     })();
   </script>
-    
-     
-
-
-    
-  
 
   
-  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
-  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
 
 
-  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
-  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
-<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
-
-<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
 
 
-  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
 
   
-  
-<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
-
-
-<script type="text/javascript" id="sidebar.toc.highlight">
-  $(document).ready(function () {
-    var tocSelector = '.post-toc';
-    var $tocSelector = $(tocSelector);
-    var activeCurrentSelector = '.active-current';
-
-    $tocSelector
-      .on('activate.bs.scrollspy', function () {
-        var $currentActiveElement = $(tocSelector + ' .active').last();
-
-        removeCurrentActiveClass();
-        $currentActiveElement.addClass('active-current');
-
-        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
-      })
-      .on('clear.bs.scrollspy', function () {
-        removeCurrentActiveClass();
-      });
-
-    function removeCurrentActiveClass () {
-      $(tocSelector + ' ' + activeCurrentSelector)
-        .removeClass(activeCurrentSelector.substring(1));
-    }
-
-    function processTOC () {
-      getTOCMaxHeight();
-      toggleTOCOverflowIndicators();
-    }
-
-    function getTOCMaxHeight () {
-      var height = $('.sidebar').height() -
-                   $tocSelector.position().top -
-                   $('.post-toc-indicator-bottom').height();
-
-      $tocSelector.css('height', height);
-
-      return height;
-    }
-
-    function toggleTOCOverflowIndicators () {
-      tocOverflowIndicator(
-        '.post-toc-indicator-top',
-        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
-      );
-
-      tocOverflowIndicator(
-        '.post-toc-indicator-bottom',
-        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
-      )
-    }
-
-    $(document).on('sidebar.motion.complete', function () {
-      processTOC();
-    });
-
-    $('body').scrollspy({ target: tocSelector });
-    $(window).on('resize', function () {
-      if ( $('.sidebar').hasClass('sidebar-active') ) {
-        processTOC();
-      }
-    });
-
-    onScroll($tocSelector);
-
-    function onScroll (element) {
-      element.on('mousewheel DOMMouseScroll', function (event) {
-          var oe = event.originalEvent;
-          var delta = oe.wheelDelta || -oe.detail;
-
-          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
-          event.preventDefault();
-
-          toggleTOCOverflowIndicators();
-      });
-    }
-
-    function tocOverflowIndicator (indicator, action) {
-      var $indicator = $(indicator);
-      var opacity = action === 'show' ? 1 : 0;
-      $indicator.velocity ?
-        $indicator.velocity('stop').velocity({
-          opacity: opacity
-        }, { duration: 100 }) :
-        $indicator.stop().animate({
-          opacity: opacity
-        }, 100);
-    }
-
-  });
-</script>
-
-<script type="text/javascript" id="sidebar.nav">
-  $(document).ready(function () {
-    var html = $('html');
-    var TAB_ANIMATE_DURATION = 200;
-    var hasVelocity = $.isFunction(html.velocity);
-
-    $('.sidebar-nav li').on('click', function () {
-      var item = $(this);
-      var activeTabClassName = 'sidebar-nav-active';
-      var activePanelClassName = 'sidebar-panel-active';
-      if (item.hasClass(activeTabClassName)) {
-        return;
-      }
-
-      var currentTarget = $('.' + activePanelClassName);
-      var target = $('.' + item.data('target'));
-
-      hasVelocity ?
-        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
-          target
-            .velocity('stop')
-            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
-            .addClass(activePanelClassName);
-        }) :
-        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
-          currentTarget.hide();
-          target
-            .stop()
-            .css({'opacity': 0, 'display': 'block'})
-            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
-              currentTarget.removeClass(activePanelClassName);
-              target.addClass(activePanelClassName);
-            });
-        });
-
-      item.siblings().removeClass(activeTabClassName);
-      item.addClass(activeTabClassName);
-    });
-
-    $('.post-toc a').on('click', function (e) {
-      e.preventDefault();
-      var targetSelector = escapeSelector(this.getAttribute('href'));
-      var offset = $(targetSelector).offset().top;
-      hasVelocity ?
-        html.velocity('stop').velocity('scroll', {
-          offset: offset  + 'px',
-          mobileHA: false
-        }) :
-        $('html, body').stop().animate({
-          scrollTop: offset
-        }, 500);
-    });
-
-    // Expand sidebar on post detail page by default, when post has a toc.
-    motionMiddleWares.sidebar = function () {
-      var $tocContent = $('.post-toc-content');
-      if (CONFIG.sidebar === 'post') {
-        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
-          displaySidebar();
-        }
-      }
-    };
-  });
-</script>
-
-
-
-  <script type="text/javascript" src="/js/bootstrap.js"></script>
-
   
   
 
   
+
   
 
 </body>

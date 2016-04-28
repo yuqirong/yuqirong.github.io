@@ -1,5 +1,11 @@
 <!doctype html>
-<html class="theme-next   use-motion ">
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -26,13 +32,36 @@
 
 
 
-  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
 
 
 
 <link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
 
@@ -44,7 +73,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
 
 
 
@@ -64,10 +93,16 @@
 
 
 <script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
   var CONFIG = {
-    scheme: 'Mist',
-    sidebar: 'always',
-    motion: true
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
   };
 </script>
 
@@ -80,15 +115,6 @@
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-  <!--[if lte IE 8]>
-  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
-    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
-      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
-           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
-           style='margin-left:auto;margin-right:auto;display: block;'/>
-    </a>
-  </div>
-<![endif]-->
   
 
 
@@ -106,9 +132,18 @@
 
 
 
-  <div class="container one-column 
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left 
    page-home 
-">
+ ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -137,7 +172,7 @@
   
 
   
-    <ul id="menu" class="menu menu-left">
+    <ul id="menu" class="menu">
       
         
         <li class="menu-item menu-item-home">
@@ -183,7 +218,7 @@
         <li class="menu-item menu-item-guestbook">
           <a href="/guestbook" rel="section">
             
-              <i class="menu-item-icon fa fa-question-circle fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-comment fa-fw"></i> <br />
             
             留言
           </a>
@@ -201,6 +236,16 @@
       
 
       
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
       
     </ul>
   
@@ -208,11 +253,9 @@
   
     <div class="site-search">
       
-  
   <form class="site-search-form">
-    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
-  </form>
-
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
 
 <script type="text/javascript">
   (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
@@ -234,24 +277,10 @@
 
     <main id="main" class="main">
       <div class="main-inner">
-        <div id="content" class="content">
-          
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
   <section id="posts" class="posts-expand">
-
-    
-
-    
-    
-      
-      
-        
-        
-        
-      
-
-      
-    
-
     
       
 
@@ -284,7 +313,10 @@
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2016-04-19T13:35:32+08:00" content="2016-04-19">
               2016-04-19
             </time>
@@ -292,15 +324,17 @@
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Android-Blog/" itemprop="url" rel="index">
                     <span itemprop="name">Android Blog</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -322,21 +356,23 @@
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            在上一篇博文中，我们实现了仿美团的下拉刷新。而今天的主题还是与 ListView 有关，这次是来实现具有视差效果的 ListView 。
+          
+          在上一篇博文中，我们实现了仿美团的下拉刷新。而今天的主题还是与 ListView 有关，这次是来实现具有视差效果的 ListView 。
 那么到底什么是视差效果呢？一起来看效果图就知道了：
 
 我们可以看到 ListView 的 HeaderView 会跟随 ListView 的滑动而变大，HeaderView里的图片会有缩放效果。这些可以使用属性动画来实现。接下来我们就来动手吧！
@@ -344,14 +380,22 @@
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;resources&gt;
     &l
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/04/19/快速打造带有视差效果的ListView/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -400,7 +444,10 @@
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2016-04-18T15:34:03+08:00" content="2016-04-18">
               2016-04-18
             </time>
@@ -408,15 +455,17 @@
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Android-Blog/" itemprop="url" rel="index">
                     <span itemprop="name">Android Blog</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -438,32 +487,42 @@
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：
+          
+          有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：
 
 我们可以大致地分析一下：首先根据下拉改变的 paddingTop 来动态地缩放“绿色椭圆物”,然后当 headerView 的 paddingTop 大于0时，播放美团小人出现的帧动画，最后就是手指松开时播放刷新中的帧动画了。
 基本上思路就是上面分析的那样了，那么我们下面一步就是要获取帧动画的素材了。我们先下载好美团的 apk ，解压后在 res/drawable-xhdpi-v4 里，我们可以得到相关的图片了。如果嫌麻烦，文末有本 Dem
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/04/18/带你实现仿美团的下拉刷新/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -512,7 +571,10 @@
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2016-04-10T19:51:22+08:00" content="2016-04-10">
               2016-04-10
             </time>
@@ -520,15 +582,17 @@
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Android-Tips/" itemprop="url" rel="index">
                     <span itemprop="name">Android Tips</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -550,33 +614,43 @@
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            在Material Design中，FloatingActionButton(即FAB)是一个很重要的元素。而通常在列表向下滚动的时候，FAB应该会隐藏；而在向上滚动时，FAB应该会显示出来。本篇就记录其中一种实现FAB显示或隐藏的方案，主要应用了属性动画。
+          
+          在Material Design中，FloatingActionButton(即FAB)是一个很重要的元素。而通常在列表向下滚动的时候，FAB应该会隐藏；而在向上滚动时，FAB应该会显示出来。本篇就记录其中一种实现FAB显示或隐藏的方案，主要应用了属性动画。
 其实关于FAB的显示和隐藏，Google官方就提供了其中一种方案：fab.hidden()和fab.show()。但是自带的是FAB缩放的效果。并不是上下移动的效果。
 那么我们就来看看如何实现FAB上下移动的效果吧！
 首先在你想要滑动的View(比如说RecyclerView等)的布局上加上：
 app:layout_behavior=&q
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/04/10/FloatingActionButton在滚动时显示或隐藏/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -625,7 +699,10 @@ app:layout_behavior=&q
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2016-04-05T20:21:10+08:00" content="2016-04-05">
               2016-04-05
             </time>
@@ -633,15 +710,17 @@ app:layout_behavior=&q
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Android-Blog/" itemprop="url" rel="index">
                     <span itemprop="name">Android Blog</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -663,21 +742,23 @@ app:layout_behavior=&q
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            最近在看《Android开发艺术探索》这本书，不得不赞一句主席写得真好，受益匪浅。在书中的相关章节有介绍用Scroller来实现平滑滚动的效果。而我们今天就来探究一下为什么Scroller能够实现平滑滚动。
+          
+          最近在看《Android开发艺术探索》这本书，不得不赞一句主席写得真好，受益匪浅。在书中的相关章节有介绍用Scroller来实现平滑滚动的效果。而我们今天就来探究一下为什么Scroller能够实现平滑滚动。
 首先我们先来看一下Scroller的用法，基本可概括为“三部曲”：
 
 创建一个Scroller对象，一般在View的构造器中创建：
@@ -686,14 +767,22 @@ public ScrollViewGroup(Context context) {
 }
 
 public ScrollViewGroup(Context context, AttributeSet attrs) 
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/04/05/深入解析Scroller滚动原理/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -742,7 +831,10 @@ public ScrollViewGroup(Context context, AttributeSet attrs)
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2016-04-03T00:59:11+08:00" content="2016-04-03">
               2016-04-03
             </time>
@@ -750,15 +842,17 @@ public ScrollViewGroup(Context context, AttributeSet attrs)
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Android-Blog/" itemprop="url" rel="index">
                     <span itemprop="name">Android Blog</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -780,33 +874,43 @@ public ScrollViewGroup(Context context, AttributeSet attrs)
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            今天我们就来探讨一下反编译，其实反编译在我一开始学习Android的时候就听说过，但是一直没有去尝试。初次接触应该就是那次“蜻蜓FM v5.0.1 apk”事件了( 此处应有掌声(¯ □ ¯) )。那时根据网上的教程第一次反编译了“蜻蜓FM”的apk，看到了传说中的“普罗米修斯方法”以及“宙斯类”(不得不感慨开发小哥的智商)。之后就是在阅读《Android群英传》时也有相关反编译的内容，觉得有必要记录一下。所以这就是本片写博文的起源了。
+          
+          今天我们就来探讨一下反编译，其实反编译在我一开始学习Android的时候就听说过，但是一直没有去尝试。初次接触应该就是那次“蜻蜓FM v5.0.1 apk”事件了( 此处应有掌声(¯ □ ¯) )。那时根据网上的教程第一次反编译了“蜻蜓FM”的apk，看到了传说中的“普罗米修斯方法”以及“宙斯类”(不得不感慨开发小哥的智商)。之后就是在阅读《Android群英传》时也有相关反编译的内容，觉得有必要记录一下。所以这就是本片写博文的起源了。
 首先关于反编译，我们先要准备几个工具：
 
 apktool：aoktool主要是用来反编译资源文件的，也就是XML了。
 Dex2jar：Dex2jar就是反编译
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/04/03/Android安全机制之反编译/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -855,7 +959,10 @@ Dex2jar：Dex2jar就是反编译
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2016-03-31T19:49:28+08:00" content="2016-03-31">
               2016-03-31
             </time>
@@ -863,15 +970,17 @@ Dex2jar：Dex2jar就是反编译
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Book-Note/" itemprop="url" rel="index">
                     <span itemprop="name">Book Note</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -893,33 +1002,43 @@ Dex2jar：Dex2jar就是反编译
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            第一章：Activity的生命周期和启动模式1.1 Activity的生命周期全面分析典型情况下的生命周期分析
+          
+          第一章：Activity的生命周期和启动模式1.1 Activity的生命周期全面分析典型情况下的生命周期分析
 onStart()和onStop()是从Activity是否可见这个角度来回调的，而onResume()和onPause()是从Activity是否位于前台这个角度来回调的。
 Activity A打开Activity B时，为了不影响B的显示，最好不要在Activity A的onPause()里执行一些耗时操作，可以考虑将这些操作放到onStop()里，这时B已经可见了。
 异常情况下的生命周期分析
 由于Activity是在异常情况下终止的，系统会调用onSaveInstanceSta
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/03/31/《Android开发艺术探索》笔记(上)/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -968,7 +1087,10 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2016-03-23T16:44:22+08:00" content="2016-03-23">
               2016-03-23
             </time>
@@ -976,15 +1098,17 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Android-Tips/" itemprop="url" rel="index">
                     <span itemprop="name">Android Tips</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -1006,35 +1130,45 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            最近在做MD设计风格的APP，所以在转场动画上当然也得符合MD了。下面就是效果图：
+          
+          最近在做MD设计风格的APP，所以在转场动画上当然也得符合MD了。下面就是效果图：
 
 一开始并未了解过这种转场动画，原来是Google在SDK中已经给我们提供了。ActivityOptions是 Android 5.0 及以上使用的，但是也提供了ActivityOptionsCompat向下兼容。
 下面我们就来看看吧：
 layout_item.xml(ListView的item布局)：
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;RelativeLayout xmlns:android=&quot;h
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/03/23/初探MD式转场动画/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -1083,7 +1217,10 @@ layout_item.xml(ListView的item布局)：
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2016-03-22T15:53:24+08:00" content="2016-03-22">
               2016-03-22
             </time>
@@ -1091,15 +1228,17 @@ layout_item.xml(ListView的item布局)：
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Android-Blog/" itemprop="url" rel="index">
                     <span itemprop="name">Android Blog</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -1121,21 +1260,23 @@ layout_item.xml(ListView的item布局)：
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            有段时间没写博客了，趁今天有空就写了一篇。今天的主题就是仿联系人界面。相信大家在平时都见过，就是可以实现快速索引的侧边栏。比如在美团中选择城市的界面：
+          
+          有段时间没写博客了，趁今天有空就写了一篇。今天的主题就是仿联系人界面。相信大家在平时都见过，就是可以实现快速索引的侧边栏。比如在美团中选择城市的界面：
 
 我们可以看到在右侧有一个支持快速索引的栏。接下来，我们就要实现这种索引栏。
 首先是attrs.xml，定义了三个自定义属性：
@@ -1143,14 +1284,22 @@ layout_item.xml(ListView的item布局)：
 &lt;resources&gt;
     &lt;declare-styleable name=&quot;QuickIndexBar&quot;&gt;
         // 字体的颜色
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/03/22/快速打造仿Android联系人界面/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -1199,7 +1348,10 @@ layout_item.xml(ListView的item布局)：
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2016-03-17T23:13:58+08:00" content="2016-03-17">
               2016-03-17
             </time>
@@ -1207,15 +1359,17 @@ layout_item.xml(ListView的item布局)：
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/岁月如歌/" itemprop="url" rel="index">
                     <span itemprop="name">岁月如歌</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -1237,21 +1391,23 @@ layout_item.xml(ListView的item布局)：
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            素什锦年，稍纵即逝半载青春，流转指间
+          
+          素什锦年，稍纵即逝半载青春，流转指间
 
 冬去春来，又一载。
 曾几何时，一身白衣，穿行多少过往；几经周转，茫与人海之中。
@@ -1263,14 +1419,22 @@ layout_item.xml(ListView的item布局)：
 仰天大笑，岂是蓬蒿人？
 ————记于开题答辩之日
 
-            
-          </span>
+          
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/03/17/夜半一忆/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -1319,7 +1483,10 @@ layout_item.xml(ListView的item布局)：
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2016-03-08T20:22:27+08:00" content="2016-03-08">
               2016-03-08
             </time>
@@ -1327,15 +1494,17 @@ layout_item.xml(ListView的item布局)：
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Book-Note/" itemprop="url" rel="index">
                     <span itemprop="name">Book Note</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -1357,21 +1526,23 @@ layout_item.xml(ListView的item布局)：
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            第六章：Android绘图机制与处理技巧6.1 屏幕的尺寸信息系统屏幕密度如下
+          
+          第六章：Android绘图机制与处理技巧6.1 屏幕的尺寸信息系统屏幕密度如下
 
 ldpi—120—240X320分辨率
 mdpi—160—320X480分辨率
@@ -1386,14 +1557,22 @@ public class DisplayUtil {
 
     /**
  
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/03/08/《Android群英传》笔记(下)/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -1411,7 +1590,6 @@ public class DisplayUtil {
 
 
     
-
   </section>
 
   
@@ -1421,17 +1599,15 @@ public class DisplayUtil {
 
 
 
+          </div>
+          
+
+
+          
+
         </div>
-
         
-
-
-        
-
-      </div>
-
-      
-        
+          
   
   <div class="sidebar-toggle">
     <div class="sidebar-toggle-line-wrap">
@@ -1450,10 +1626,12 @@ public class DisplayUtil {
 
       <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" src="/uploads/avatar/27073358153.jpg" alt="俞其荣" itemprop="image"/>
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar/27073358153.jpg"
+               alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
+          <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
         </div>
-        <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
@@ -1462,19 +1640,23 @@ public class DisplayUtil {
             </a>
           </div>
 
-          <div class="site-state-item site-state-categories">
-            <a href="/categories">
-              <span class="site-state-item-count">6</span>
-              <span class="site-state-item-name">分类</span>
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
               </a>
-          </div>
+            </div>
+          
 
-          <div class="site-state-item site-state-tags">
-            <a href="/tags">
-              <span class="site-state-item-count">13</span>
-              <span class="site-state-item-name">标签</span>
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
               </a>
-          </div>
+            </div>
+          
 
         </nav>
 
@@ -1493,93 +1675,154 @@ public class DisplayUtil {
               <span class="links-of-author-item">
                 <a href="https://github.com/yuqirong" target="_blank">
                   
-                    <i class="fa fa-github"></i> GitHub
+                    <i class="fa fa-github"></i>
                   
+                  GitHub
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="https://plus.google.com/116756215081118586533" target="_blank">
                   
-                    <i class="fa fa-globe"></i> Google+
+                    <i class="fa fa-google-plus"></i>
                   
+                  Google+
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="https://twitter.com/yyyuqirong" target="_blank">
                   
-                    <i class="fa fa-twitter"></i> Twitter
+                    <i class="fa fa-twitter"></i>
                   
+                  Twitter
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="https://www.instagram.com/yyyuqirong" target="_blank">
                   
-                    <i class="fa fa-globe"></i> Instagram
+                    <i class="fa fa-instagram"></i>
                   
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i>
+                  
+                  LinkedIn
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="https://www.zhihu.com/people/yuqirong" target="_blank">
                   
-                    <i class="fa fa-globe"></i> 知乎
+                    <i class="fa fa-globe"></i>
                   
+                  知乎
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="http://weibo.com/yyyuqirong" target="_blank">
                   
-                    <i class="fa fa-weibo"></i> Weibo
+                    <i class="fa fa-weibo"></i>
                   
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yqr271228943@gmail.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i>
+                  
+                  Email
                 </a>
               </span>
             
           
         </div>
+        
+        <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
 
         
         
 
-        <div class="links-of-author motion-element">
+        
+        <div class="links-of-blogroll motion-element">
           
-            <p class="site-author-name">友情链接</p>
-            
-              <span class="links-of-author-item">          
-								<a href="http://guolin.tech/" target="_blank" rel="external nofollow">郭霖的专栏</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://blog.csdn.net/lmj623565791/" target="_blank" rel="external nofollow">Hongyang</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://blog.csdn.net/singwhatiwanna/" target="_blank" rel="external nofollow">任玉刚</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://liaohuqiu.net/" target="_blank" rel="external nofollow">Srain</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://hukai.me/" target="_blank" rel="external nofollow">胡凯</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://stormzhang.com/" target="_blank" rel="external nofollow">stormzhang</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://drakeet.me/" target="_blank" rel="external nofollow">Drakeet的个人博客</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="https://github.com/xuyisheng/" target="_blank" rel="external nofollow">eclipse_xu</a>
-              </span>
-            
+            <div class="links-of-blogroll-title">友情链接</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://guolin.tech/" target="_blank">郭霖的专栏</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lmj623565791/" target="_blank">Hongyang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/singwhatiwanna/" target="_blank">任玉刚</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://liaohuqiu.net/" target="_blank">Srain</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hukai.me/" target="_blank">胡凯</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://stormzhang.com/" target="_blank">stormzhang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://drakeet.me/" target="_blank">Drakeet的个人博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/xuyisheng/" target="_blank">eclipse_xu</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.kymjs.com/" target="_blank">张涛-开源实验室</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.devtf.cn/" target="_blank">开发技术前线</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lzyzsd/" target="_blank">大头鬼Bruce</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.mcxiaoke.com/" target="_blank">Xiaoke's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.baoyz.com/" target="_blank">Baoyz's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://itangqi.me/" target="_blank">Qi Tang's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/zhaokaiqiang1992/" target="_blank">赵凯强</a>
+                </li>
+              
+            </ul>
           
         </div>
 
@@ -1591,7 +1834,8 @@ public class DisplayUtil {
   </aside>
 
 
-      
+        
+      </div>
     </main>
 
     <footer id="footer" class="footer">
@@ -1601,11 +1845,11 @@ public class DisplayUtil {
   &copy;  2015 - 
   <span itemprop="copyrightYear">2016</span>
   <span class="with-love">
-    <i class="icon-next-heart fa fa-heart"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">俞其荣
-   
-   &nbsp;&nbsp;|&nbsp;&nbsp;
+  
+  &nbsp;&nbsp;|&nbsp;&nbsp;
   <script type="text/javascript">
   var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
   document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
@@ -1618,13 +1862,13 @@ public class DisplayUtil {
 </div>
 
 <div class="powered-by">
-	由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
 </div>
 
 <div class="theme-info">
   主题 -
-	<a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
-    NexT.Mist
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
   </a>
 </div>
 
@@ -1648,16 +1892,79 @@ public class DisplayUtil {
       </div>
     </footer>
 
-    <div class="back-to-top"></div>
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
   </div>
 
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
   <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
 
   
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
   
 
   
-    
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
 
   
     
@@ -1669,42 +1976,25 @@ public class DisplayUtil {
       var ds = document.createElement('script');
       ds.type = 'text/javascript';ds.async = true;
       ds.id = 'duoshuo-script';
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '/js/embed.js';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '/js/src/embed.js';
       ds.charset = 'UTF-8';
       (document.getElementsByTagName('head')[0]
       || document.getElementsByTagName('body')[0]).appendChild(ds);
     })();
   </script>
-    
-     
-
-
-    
-  
-
-  
-  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
-  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
-
-
-  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
-  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
-<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
-
-<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
-
-
-  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
 
   
 
-  <script type="text/javascript" src="/js/bootstrap.js"></script>
 
+
+
+
+  
   
   
 
   
+
   
 
 </body>

@@ -1,5 +1,11 @@
 <!doctype html>
-<html class="theme-next   use-motion ">
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -26,13 +32,36 @@
 
 
 
-  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
 
 
 
 <link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
 
@@ -44,7 +73,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
 
 
 
@@ -64,10 +93,16 @@
 
 
 <script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
   var CONFIG = {
-    scheme: 'Mist',
-    sidebar: 'always',
-    motion: true
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
   };
 </script>
 
@@ -80,15 +115,6 @@
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-  <!--[if lte IE 8]>
-  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
-    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
-      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
-           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
-           style='margin-left:auto;margin-right:auto;display: block;'/>
-    </a>
-  </div>
-<![endif]-->
   
 
 
@@ -106,9 +132,18 @@
 
 
 
-  <div class="container one-column 
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left 
    page-home 
-">
+ ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -137,7 +172,7 @@
   
 
   
-    <ul id="menu" class="menu menu-left">
+    <ul id="menu" class="menu">
       
         
         <li class="menu-item menu-item-home">
@@ -183,7 +218,7 @@
         <li class="menu-item menu-item-guestbook">
           <a href="/guestbook" rel="section">
             
-              <i class="menu-item-icon fa fa-question-circle fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-comment fa-fw"></i> <br />
             
             留言
           </a>
@@ -201,6 +236,16 @@
       
 
       
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
       
     </ul>
   
@@ -208,11 +253,9 @@
   
     <div class="site-search">
       
-  
   <form class="site-search-form">
-    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
-  </form>
-
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
 
 <script type="text/javascript">
   (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
@@ -234,20 +277,10 @@
 
     <main id="main" class="main">
       <div class="main-inner">
-        <div id="content" class="content">
-          
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
   <section id="posts" class="posts-expand">
-
-    
-
-    
-    
-      
-      
-
-      
-    
-
     
       
 
@@ -280,7 +313,10 @@
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2015-10-19T19:44:21+08:00" content="2015-10-19">
               2015-10-19
             </time>
@@ -288,15 +324,17 @@
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Android-Tips/" itemprop="url" rel="index">
                     <span itemprop="name">Android Tips</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -318,35 +356,45 @@
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            ScrollView是我们经常使用的一个UI控件，也许你在使用ScrollView的过程中会发现，当你想监听ScrollView滑动的距离时却没有合适的监听器！当然在API 23中有setOnScrollChangeListener(View.OnScrollChangeListener l)可以使用，但是并不兼容低版本的API。那怎么办呢？只好重写ScrollView来实现对滑动距离的监听了。
+          
+          ScrollView是我们经常使用的一个UI控件，也许你在使用ScrollView的过程中会发现，当你想监听ScrollView滑动的距离时却没有合适的监听器！当然在API 23中有setOnScrollChangeListener(View.OnScrollChangeListener l)可以使用，但是并不兼容低版本的API。那怎么办呢？只好重写ScrollView来实现对滑动距离的监听了。
 话不多说，直接上代码：
 public class MyScrollView extends ScrollView {
 
     private OnScrollListener listener;
 
 
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2015/10/19/给你的ScrollView设置滑动距离监听器/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -395,7 +443,10 @@ public class MyScrollView extends ScrollView {
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2015-10-17T19:16:03+08:00" content="2015-10-17">
               2015-10-17
             </time>
@@ -403,15 +454,17 @@ public class MyScrollView extends ScrollView {
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Android-Tips/" itemprop="url" rel="index">
                     <span itemprop="name">Android Tips</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -433,21 +486,23 @@ public class MyScrollView extends ScrollView {
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            在平常的Android开发中我们经常会碰到ScrollView嵌套ListView或者是GridView的情况，若按照一般的流程我们会发现在ScrollView中的ListView显示不全的问题，其实我们可以重写ListView的onMeasure(int widthMeasureSpec, int heightMeasureSpec)方法来解决。
+          
+          在平常的Android开发中我们经常会碰到ScrollView嵌套ListView或者是GridView的情况，若按照一般的流程我们会发现在ScrollView中的ListView显示不全的问题，其实我们可以重写ListView的onMeasure(int widthMeasureSpec, int heightMeasureSpec)方法来解决。
 以下是重写ListView的代码：
 /**
  * 重写ListView，解决与ScrollView的冲突
@@ -455,14 +510,22 @@ public class MyScrollView extends ScrollView {
 public class MyListView extends ListView {
 
     public MyListView(C
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2015/10/17/ScrollView嵌套ListView问题的解决办法/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -511,7 +574,10 @@ public class MyListView extends ListView {
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2015-09-29T13:19:12+08:00" content="2015-09-29">
               2015-09-29
             </time>
@@ -519,15 +585,17 @@ public class MyListView extends ListView {
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Android-Blog/" itemprop="url" rel="index">
                     <span itemprop="name">Android Blog</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -549,30 +617,40 @@ public class MyListView extends ListView {
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            在学习Android的路上，大家肯定会遇到异步消息处理，Android提供给我们一个类来处理相关的问题，那就是Handler。相信大家大多都用过Handler了，下面我们就来看看Handler最简单的用法：
+          
+          在学习Android的路上，大家肯定会遇到异步消息处理，Android提供给我们一个类来处理相关的问题，那就是Handler。相信大家大多都用过Handler了，下面我们就来看看Handler最简单的用法：
 123456789101112131415161718192021222324252627282930public class FirstActivity extends AppCompatActivity &#123;    public static final String TAG = "FirstActivity";    private static Handler handle
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2015/09/29/探究Android异步消息的处理之Handler详解/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -621,7 +699,10 @@ public class MyListView extends ListView {
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2015-08-26T22:13:31+08:00" content="2015-08-26">
               2015-08-26
             </time>
@@ -629,15 +710,17 @@ public class MyListView extends ListView {
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Android-Blog/" itemprop="url" rel="index">
                     <span itemprop="name">Android Blog</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -659,32 +742,42 @@ public class MyListView extends ListView {
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            开头先说一下写这篇博客的初衷，由于博主在找实习的过程中面试经常被问到Activity生命周期有关的问题，所以特此写一篇博客来记一下。 
+          
+          开头先说一下写这篇博客的初衷，由于博主在找实习的过程中面试经常被问到Activity生命周期有关的问题，所以特此写一篇博客来记一下。 
 Activity作为四大组件之一，几乎是每个人开始学习Android最先接触到的。常见的生命周期方法大家肯定都是非常熟悉的，所以Activity生命周期的顺序在这就不必过多叙述了。今天讲一下由FirstActivity启动SecondActivity而调用生命周期方法的顺序问题。
 首先我们创建一个如下图的FirstActivity:很简单，LinearLayout里只有一个Button，用于启动SecondActivity。
 以下为FirstActivity的
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2015/08/26/关于Activity生命周期的小结/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -733,7 +826,10 @@ Activity作为四大组件之一，几乎是每个人开始学习Android最先�
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2015-07-18T19:09:24+08:00" content="2015-07-18">
               2015-07-18
             </time>
@@ -741,15 +837,17 @@ Activity作为四大组件之一，几乎是每个人开始学习Android最先�
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Hexo/" itemprop="url" rel="index">
                     <span itemprop="name">Hexo</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -771,34 +869,44 @@ Activity作为四大组件之一，几乎是每个人开始学习Android最先�
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            在Hexo入门指南(一)中我们已经初步地搭建了我们的博客，但是我们发现Hexo另一大特点我们还没有尝试过——主题。下面我们就来试试更换Hexo的主题吧。
+          
+          在Hexo入门指南(一)中我们已经初步地搭建了我们的博客，但是我们发现Hexo另一大特点我们还没有尝试过——主题。下面我们就来试试更换Hexo的主题吧。
 Hexo的主题非常多，有各式各样的，基本满足了大家的审美需求。其中我们就以NexT主题为例吧。NexT主题很简约，但有非常多的人用。
 下载 NexT 主题在终端窗口下，定位到 Hexo 站点目录下
 $ cd your-hexo-site
 $ git clone https://github.com/iissnan/hexo-theme-next themes/next
 启用 NexT 主题克隆/下载 完成后，打开站点配置文件(也就是xxx.g
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2015/07/18/Hexo入门指南(二)/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -847,7 +955,10 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2015-07-12T20:37:29+08:00" content="2015-07-12">
               2015-07-12
             </time>
@@ -855,15 +966,17 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Hexo/" itemprop="url" rel="index">
                     <span itemprop="name">Hexo</span>
                   </a>
                 </span>
-                
-                
 
                 
                 
@@ -885,31 +998,41 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
 
           
 
+          
+          
+
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-            前言对于一个程序员而言，我想GitHub和个人博客应该程序员的“标配”吧，在个人博客上可以记载一路上的酸甜苦辣，回过头来看看，何尝不是一种享受呢。想不想拥有一个属于自己的博客？接下来本篇博文就来教你如何搭建一款属于自己的博客。
+          
+          前言对于一个程序员而言，我想GitHub和个人博客应该程序员的“标配”吧，在个人博客上可以记载一路上的酸甜苦辣，回过头来看看，何尝不是一种享受呢。想不想拥有一个属于自己的博客？接下来本篇博文就来教你如何搭建一款属于自己的博客。
 在开讲之前，需要我们自己有一个GitHub的账号(相信大多数的程序员都有)，然后在GitHub上创建一个新的Repo,名字叫xxx.github.io(xxx为自己GitHub的用户名，如我的GitHub的用户名叫yuqirong,则要创建repo名就是yuqirong.github.io),搞定了这个我们就做好了第一步。
 经过上面步骤，我们已经拥有了一个初步域名：ht
-            ...
-          </span>
+          ...
+
           <div class="post-more-link text-center">
             <a class="btn" href="/2015/07/12/Hexo入门指南(一)/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
         
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
       
     </div>
 
@@ -927,7 +1050,6 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
 
 
     
-
   </section>
 
   
@@ -937,17 +1059,15 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
 
 
 
+          </div>
+          
+
+
+          
+
         </div>
-
         
-
-
-        
-
-      </div>
-
-      
-        
+          
   
   <div class="sidebar-toggle">
     <div class="sidebar-toggle-line-wrap">
@@ -966,10 +1086,12 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
 
       <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" src="/uploads/avatar/27073358153.jpg" alt="俞其荣" itemprop="image"/>
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar/27073358153.jpg"
+               alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
+          <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
         </div>
-        <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
@@ -978,19 +1100,23 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
             </a>
           </div>
 
-          <div class="site-state-item site-state-categories">
-            <a href="/categories">
-              <span class="site-state-item-count">6</span>
-              <span class="site-state-item-name">分类</span>
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
               </a>
-          </div>
+            </div>
+          
 
-          <div class="site-state-item site-state-tags">
-            <a href="/tags">
-              <span class="site-state-item-count">13</span>
-              <span class="site-state-item-name">标签</span>
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
               </a>
-          </div>
+            </div>
+          
 
         </nav>
 
@@ -1009,93 +1135,154 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
               <span class="links-of-author-item">
                 <a href="https://github.com/yuqirong" target="_blank">
                   
-                    <i class="fa fa-github"></i> GitHub
+                    <i class="fa fa-github"></i>
                   
+                  GitHub
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="https://plus.google.com/116756215081118586533" target="_blank">
                   
-                    <i class="fa fa-globe"></i> Google+
+                    <i class="fa fa-google-plus"></i>
                   
+                  Google+
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="https://twitter.com/yyyuqirong" target="_blank">
                   
-                    <i class="fa fa-twitter"></i> Twitter
+                    <i class="fa fa-twitter"></i>
                   
+                  Twitter
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="https://www.instagram.com/yyyuqirong" target="_blank">
                   
-                    <i class="fa fa-globe"></i> Instagram
+                    <i class="fa fa-instagram"></i>
                   
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i>
+                  
+                  LinkedIn
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="https://www.zhihu.com/people/yuqirong" target="_blank">
                   
-                    <i class="fa fa-globe"></i> 知乎
+                    <i class="fa fa-globe"></i>
                   
+                  知乎
                 </a>
               </span>
             
               <span class="links-of-author-item">
                 <a href="http://weibo.com/yyyuqirong" target="_blank">
                   
-                    <i class="fa fa-weibo"></i> Weibo
+                    <i class="fa fa-weibo"></i>
                   
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yqr271228943@gmail.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i>
+                  
+                  Email
                 </a>
               </span>
             
           
         </div>
+        
+        <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
 
         
         
 
-        <div class="links-of-author motion-element">
+        
+        <div class="links-of-blogroll motion-element">
           
-            <p class="site-author-name">友情链接</p>
-            
-              <span class="links-of-author-item">          
-								<a href="http://guolin.tech/" target="_blank" rel="external nofollow">郭霖的专栏</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://blog.csdn.net/lmj623565791/" target="_blank" rel="external nofollow">Hongyang</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://blog.csdn.net/singwhatiwanna/" target="_blank" rel="external nofollow">任玉刚</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://liaohuqiu.net/" target="_blank" rel="external nofollow">Srain</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://hukai.me/" target="_blank" rel="external nofollow">胡凯</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://stormzhang.com/" target="_blank" rel="external nofollow">stormzhang</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="http://drakeet.me/" target="_blank" rel="external nofollow">Drakeet的个人博客</a>
-              </span>
-            
-              <span class="links-of-author-item">          
-								<a href="https://github.com/xuyisheng/" target="_blank" rel="external nofollow">eclipse_xu</a>
-              </span>
-            
+            <div class="links-of-blogroll-title">友情链接</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://guolin.tech/" target="_blank">郭霖的专栏</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lmj623565791/" target="_blank">Hongyang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/singwhatiwanna/" target="_blank">任玉刚</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://liaohuqiu.net/" target="_blank">Srain</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hukai.me/" target="_blank">胡凯</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://stormzhang.com/" target="_blank">stormzhang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://drakeet.me/" target="_blank">Drakeet的个人博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/xuyisheng/" target="_blank">eclipse_xu</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.kymjs.com/" target="_blank">张涛-开源实验室</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.devtf.cn/" target="_blank">开发技术前线</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lzyzsd/" target="_blank">大头鬼Bruce</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.mcxiaoke.com/" target="_blank">Xiaoke's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.baoyz.com/" target="_blank">Baoyz's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://itangqi.me/" target="_blank">Qi Tang's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/zhaokaiqiang1992/" target="_blank">赵凯强</a>
+                </li>
+              
+            </ul>
           
         </div>
 
@@ -1107,7 +1294,8 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
   </aside>
 
 
-      
+        
+      </div>
     </main>
 
     <footer id="footer" class="footer">
@@ -1117,11 +1305,11 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
   &copy;  2015 - 
   <span itemprop="copyrightYear">2016</span>
   <span class="with-love">
-    <i class="icon-next-heart fa fa-heart"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">俞其荣
-   
-   &nbsp;&nbsp;|&nbsp;&nbsp;
+  
+  &nbsp;&nbsp;|&nbsp;&nbsp;
   <script type="text/javascript">
   var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
   document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
@@ -1134,13 +1322,13 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
 </div>
 
 <div class="powered-by">
-	由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
 </div>
 
 <div class="theme-info">
   主题 -
-	<a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
-    NexT.Mist
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
   </a>
 </div>
 
@@ -1164,16 +1352,79 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
       </div>
     </footer>
 
-    <div class="back-to-top"></div>
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
   </div>
 
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
   <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
 
   
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
   
 
   
-    
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
 
   
     
@@ -1185,42 +1436,25 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
       var ds = document.createElement('script');
       ds.type = 'text/javascript';ds.async = true;
       ds.id = 'duoshuo-script';
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '/js/embed.js';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '/js/src/embed.js';
       ds.charset = 'UTF-8';
       (document.getElementsByTagName('head')[0]
       || document.getElementsByTagName('body')[0]).appendChild(ds);
     })();
   </script>
-    
-     
-
-
-    
-  
-
-  
-  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
-  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
-
-
-  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
-  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
-<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
-
-<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
-
-
-  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
 
   
 
-  <script type="text/javascript" src="/js/bootstrap.js"></script>
 
+
+
+
+  
   
   
 
   
+
   
 
 </body>
