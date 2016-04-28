@@ -45,8 +45,10 @@ social:
   Google+: https://plus.google.com/116756215081118586533
   Twitter: https://twitter.com/yyyuqirong
   Instagram: https://www.instagram.com/yyyuqirong
+  LinkedIn: https://cn.linkedin.com/in/yuqirong
   知乎: https://www.zhihu.com/people/yuqirong
   Weibo: http://weibo.com/yyyuqirong
+  Email: mailto:yqr271228943@gmail.com
   
 
 # title, chinese available
@@ -61,13 +63,19 @@ links:
   stormzhang: http://stormzhang.com/
   Drakeet的个人博客: http://drakeet.me/
   eclipse_xu: https://github.com/xuyisheng/
-#  张涛-开源实验室: http://www.kymjs.com/
-#  开发技术前线: http://www.devtf.cn/
-#  大头鬼Bruce: http://blog.csdn.net/lzyzsd/
-#  Xiaoke's Blog: http://blog.mcxiaoke.com/
-#  Baoyz's Blog: http://www.baoyz.com/
-#  Qi Tang's Blog: http://itangqi.me/
-#  赵凯强: http://blog.csdn.net/zhaokaiqiang1992/
+  张涛-开源实验室: http://www.kymjs.com/
+  开发技术前线: http://www.devtf.cn/
+  大头鬼Bruce: http://blog.csdn.net/lzyzsd/
+  Xiaoke's Blog: http://blog.mcxiaoke.com/
+  Baoyz's Blog: http://www.baoyz.com/
+  Qi Tang's Blog: http://itangqi.me/
+  赵凯强: http://blog.csdn.net/zhaokaiqiang1992/
+
+# Share
+duoshuo_share: true
+
+# 多说热评文章 true 或者 false
+#duoshuo_hotartical: true
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'

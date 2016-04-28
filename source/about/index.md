@@ -23,3 +23,8 @@ comments: false
 * Weibo : http://weibo.com/yyyuqirong
 * 知乎 : https://www.zhihu.com/people/yuqirong
 * Email : <yqr271228943@gmail.com>
+
+## 打赏我吧
+如果您觉得我的博文不错，可以选择用支付宝来打赏我。您的支持和鼓励是我最大的动力！
+
+<img alt="支付宝" src="/uploads/avatar/20160428221107.jpg" width="326" height="439"/>

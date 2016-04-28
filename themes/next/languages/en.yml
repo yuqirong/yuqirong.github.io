@@ -3,6 +3,8 @@ title:
   category: Category
   tag: Tag
 
+author: Author
+
 menu:
   home: Home
   archives: Archives
@@ -14,7 +16,7 @@ menu:
 
 sidebar:
   overview: Overview
-  toc: Table Of Contents
+  toc: Table of Contents
 
 post:
   sticky: Sticky
@@ -22,7 +24,8 @@ post:
   in: In
   read_more: Read more
   untitled: Untitled
-  toc_empty: This post does not have a Table Of Contents
+  toc_empty: This post does not have a Table of Contents
+  visitors: visitors
 
 page:
   totally: Totally
