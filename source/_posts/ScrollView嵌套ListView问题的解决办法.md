@@ -7,59 +7,63 @@ tags: [Android,ScrollView]
 
 以下是重写ListView的代码：
 
-	/**
-	 * 重写ListView，解决与ScrollView的冲突
-	 */
-	public class MyListView extends ListView {
-		
-	    public MyListView(Context context) {
-	        super(context);
-	    }
+``` java
+/**
+ * 重写ListView，解决与ScrollView的冲突
+ */
+public class MyListView extends ListView {
 	
-	    public MyListView(Context context, AttributeSet attrs) {
-	        super(context, attrs);
-	    }
-	
-	    public MyListView(Context context, AttributeSet attrs, int defStyle) {
-	        super(context, attrs, defStyle);
-	    }
-	
-	    @Override
-	    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-	        int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2,
-	                MeasureSpec.AT_MOST);
-	        super.onMeasure(widthMeasureSpec, expandSpec);
-	    }
-	}
+    public MyListView(Context context) {
+        super(context);
+    }
+
+    public MyListView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public MyListView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2,
+                MeasureSpec.AT_MOST);
+        super.onMeasure(widthMeasureSpec, expandSpec);
+    }
+}
+```
 
 同样的，GridView也可以通过重写来解决：
 
-	/**
-	 * 重写GridView，解决与ScrollView的冲突
-	 */
-	public class MyGridView extends GridView {
+``` java
+/**
+ * 重写GridView，解决与ScrollView的冲突
+ */
+public class MyGridView extends GridView {
 
-	    public MyGridView(Context context, AttributeSet attrs) {
-	        super(context, attrs);
-	    }
-	
-	    public MyGridView(Context context) {
-	        super(context);
-	    }
-	
-	    public MyGridView(Context context, AttributeSet attrs, int defStyle) {
-	        super(context, attrs, defStyle);
-	    }
-	
-	    @Override
-	    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-	
-	        int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2,
-	                MeasureSpec.AT_MOST);
-	        super.onMeasure(widthMeasureSpec, expandSpec);
-	    }
-	
-	}
+    public MyGridView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public MyGridView(Context context) {
+        super(context);
+    }
+
+    public MyGridView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
+    @Override
+    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+        int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2,
+                MeasureSpec.AT_MOST);
+        super.onMeasure(widthMeasureSpec, expandSpec);
+    }
+
+}
+```
 
 下面提供MyListView、MyGridView的源码下载：
 

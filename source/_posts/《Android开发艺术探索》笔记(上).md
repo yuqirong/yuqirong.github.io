@@ -112,6 +112,7 @@ Android会为每一个应用分配一个独立的虚拟机，或者说为每个�
 
 通过Serializable来实现对象的序列化和反序列化(User类实现了Serializable接口)：
 
+``` java
 	// 序列化过程
 	User user = new User(0,"jake",true);
 	ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("cache.txt"));
@@ -122,6 +123,7 @@ Android会为每一个应用分配一个独立的虚拟机，或者说为每个�
 	ObjectInputStream in = new ObjectInputStream(new FileInputStream("cache.txt"))；
 	User newUser = (User)in.readObject();
 	in.close();
+```
 
 恢复的对象newUser和user的内容完全一样，但是两者并不是同一个对象。
 

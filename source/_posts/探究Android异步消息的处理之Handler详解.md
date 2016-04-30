@@ -5,7 +5,7 @@ tags: [Android,源码解析]
 ---
 在学习Android的路上，大家肯定会遇到异步消息处理，Android提供给我们一个类来处理相关的问题，那就是Handler。相信大家大多都用过Handler了，下面我们就来看看Handler最简单的用法：
 
-```
+``` java
 public class FirstActivity extends AppCompatActivity {
 
     public static final String TAG = "FirstActivity";
@@ -41,7 +41,7 @@ public class FirstActivity extends AppCompatActivity {
 
 先来看看我们new一个Handler的对象到底发生了什么（只截取了关键源码）：
 
-```
+``` java
 public Handler() {
         this(null, false);
     }
@@ -69,7 +69,7 @@ public Handler(Callback callback, boolean async) {
 可以看到我们平常写的 new Handler()；其实是调用了另外一个构造方法，并且判断了mLooper是不是为空，为空则抛出一个异常**"Can't create handler inside thread that has not called Looper.prepare()"**，mLooper其实是一个Looper类的成员变量，官方文档上对Looper类的解释是 **Class used to run a message loop for a thread.**也就是说Looper用于在一个线程中传递message的。  然后我们根据异常的提示知道要在new一个Handler的对象之前必须
 先调用Looper.prepare()。那接下来就只能先去看看Looper.prepare()方法了：
 
-```
+``` java
 static final ThreadLocal<Looper> sThreadLocal = new ThreadLocal<Looper>();
     private static Looper sMainLooper;  // guarded by Looper.class
 
@@ -164,7 +164,7 @@ prepare()方法就是将一个sThreadLocal和新建的Looper对象相绑定，�
 
 好了，捋一捋思路，当你在新建一个Handler对象时，要先确保调用了Looper.prepare()方法，然后调用Looper.loop()方法让MessageQueue这个队列“动”起来。这样你就成功地创建了一个Handler的对象。然后我们再使用Handler的sendMessage系列方法来发送一个消息。下面我们就来看看sendMessage系列方法里到底干了什么：
 
-```
+``` java
 public boolean sendMessageAtTime(Message msg, long uptimeMillis) {
         MessageQueue queue = mQueue;
         if (queue == null) {
@@ -186,7 +186,7 @@ private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMilli
 ```
 为什么我就贴出一个方法呢？这是因为Handler一系列的sendMessage方法基本上最后都是调用了sendMessageAtTime这个方法。从源码中我们看到主要就是干了把Message加入队列这个事,并把当前的Handler对象赋给了msg的target。再联系上面的Looper.loop方法，我们大概就懂了。好了，我们回过头来看看上面的msg.target.dispatchMessage(msg)主要的功能。其实就是调用了Handler的dispatchMessage方法：
 
-```
+``` java
  public void dispatchMessage(Message msg) {
         if (msg.callback != null) {
             handleCallback(msg);
@@ -204,7 +204,7 @@ private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMilli
 
 也许有人会有疑问了，为什么在主线程中创建Handler对象可以直接使用而不需要调用Looper.prepare()和Looper.loop()两个方法呢？这是因为在ActivityThread里面已经调用了，下面附上ActivityThread的源码：
 
-```
+``` java
 /** 
  * This manages the execution of the main thread in an 
  * application process, scheduling and executing activities, 
@@ -408,6 +408,8 @@ public final class ActivityThread {
     }  
 }  
 ```
-可以看到上面的main方法里已经调用了prepare和loop的方法。好了，今天该讲的差不多了，就到这吧。
+可以看到上面的main方法里的181行和198行已经调用了prepare和loop的方法。因此在主线程中使用Handler不需要再调用prepare和loop方法了。
+
+好了，今天该讲的差不多了，就到这吧。
 
 由于第一次写讲解源码的博客，不便之处请大家多多包涵。有问题的可以在下面评论。

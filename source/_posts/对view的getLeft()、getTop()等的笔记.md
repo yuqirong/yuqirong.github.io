@@ -5,42 +5,44 @@ tags: [Android]
 ---
 在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用`view.getTop()`来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：
 
-	<?xml version="1.0" encoding="utf-8"?>
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:orientation="vertical">
-	
-	
-	    <LinearLayout
-	        android:id="@+id/ll_01"
-	        android:layout_width="match_parent"
-	        android:layout_height="60dp"
-	        android:orientation="vertical"
-	        android:background="@android:color/holo_green_light">
-	
-	        <TextView
-	            android:id="@+id/tv_01"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:text="我是第一行文字" />
-	    </LinearLayout>
-	
-	    <LinearLayout
-	        android:id="@+id/ll_02"
-	        android:layout_width="match_parent"
-	        android:layout_height="60dp"
-	        android:orientation="vertical"
-	        android:background="@android:color/holo_blue_light">
-	
-	        <TextView
-	            android:id="@+id/tv_02"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:text="我是第二行文字" />
-	    </LinearLayout>
-	
-	</LinearLayout>
+``` xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/ll_01"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="vertical"
+        android:background="@android:color/holo_green_light">
+
+        <TextView
+            android:id="@+id/tv_01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="我是第一行文字" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_02"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="vertical"
+        android:background="@android:color/holo_blue_light">
+
+        <TextView
+            android:id="@+id/tv_02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="我是第二行文字" />
+    </LinearLayout>
+
+</LinearLayout>
+```
 
 上面是一个很简单的布局，UI效果图如下：
 

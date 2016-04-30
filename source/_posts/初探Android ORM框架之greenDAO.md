@@ -43,31 +43,33 @@ tags: [greenDAO]
 
 然后在greendaogeneration中创建一个GreenDaoGeneration类，用于生成代码：
 
-	public class GreenDaoGeneration {
+``` java
+public class GreenDaoGeneration {
 
-	    public static void main(String[] arg0) {
-	
-	        try {
-	            Schema schema = new Schema(1, "com.yuqirong.greendao");
-	            addLocation(schema);
-	            new DaoGenerator().generateAll(schema, "C:/Users/yuqirong/Desktop/GreenDaoDemo/app/src/main/java-gen");
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	
-	    }
-	
-	    public static void addLocation(Schema schema){
-	        Entity location= schema.addEntity("Location");
-	        location.addIdProperty();
-	        location.addDoubleProperty("lon");
-	        location.addIntProperty("level");
-	        location.addStringProperty("address");
-	        location.addStringProperty("city_name");
-	        location.addIntProperty("alevel");
-	        location.addDoubleProperty("lat");
-	    }
-	}
+    public static void main(String[] arg0) {
+
+        try {
+            Schema schema = new Schema(1, "com.yuqirong.greendao");
+            addLocation(schema);
+            new DaoGenerator().generateAll(schema, "C:/Users/yuqirong/Desktop/GreenDaoDemo/app/src/main/java-gen");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void addLocation(Schema schema){
+        Entity location= schema.addEntity("Location");
+        location.addIdProperty();
+        location.addDoubleProperty("lon");
+        location.addIntProperty("level");
+        location.addStringProperty("address");
+        location.addStringProperty("city_name");
+        location.addIntProperty("alevel");
+        location.addDoubleProperty("lat");
+    }
+}
+```
 
 其中在创建Schema对象的参数中，第一个表示数据库的版本号，我们传入了“1”，第二个参数是生成代码的包名，我们传入了"com.yuqirong.greendao"，那么生成的代码就自动在"com.yuqirong.greendao"包下了。
 

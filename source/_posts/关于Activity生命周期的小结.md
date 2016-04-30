@@ -13,7 +13,7 @@ Activity作为四大组件之一，几乎是每个人开始学习Android最先�
 
 以下为FirstActivity的布局 activity_first.xml:
 
-```
+``` xml
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -30,7 +30,7 @@ Activity作为四大组件之一，几乎是每个人开始学习Android最先�
 
 FirstActivity的代码如下：
 
-```
+``` java
 public class FirstActivity extends AppCompatActivity {
 
     public static final String TAG = "Activity";

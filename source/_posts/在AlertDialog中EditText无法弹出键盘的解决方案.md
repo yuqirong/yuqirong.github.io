@@ -6,31 +6,31 @@ tags: [Android]
 之前在做项目的过程中，有一个需求就是在AlertDialog中有EditText，可以在EditText中输入内容。但是在实际开发的过程中却发现，点击EditText却始终无法弹出键盘。因为之前在使用AlertDialog的时候，布局中并没有EditText，因此没有发现这个问题。这次算是填了一个隐藏的坑。
 
 例如下面给出了一个例子，首先贴上AlertDialog的`layout.xml`：
+``` xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="200dp"
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-	<?xml version="1.0" encoding="utf-8"?>
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="300dp"
-	    android:layout_height="200dp"
-	    android:background="@android:color/white"
-	    android:orientation="vertical">
-	
-	    <TextView
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Hello friend!"/>
-	
-	    <EditText
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:hint="input content" />
-	
-	    <Button
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="submit"/>
-	
-	</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello friend!"/>
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="input content" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="submit"/>
+
+</LinearLayout>
+```
 AlertDialog的效果图是这样的：
 
 ![这里填写图片的描述](/uploads/20160206/20160206160310.png)
