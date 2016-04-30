@@ -101,7 +101,7 @@
 <meta property="og:image" content="http://yuqirong.me/uploads/20160215/20160215203853.gif">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160215/20160215210800.png">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160215/20160215212234.gif">
-<meta property="og:updated_time" content="2016-03-03T04:52:45.299Z">
+<meta property="og:updated_time" content="2016-04-30T08:28:05.117Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="带你一步步实现可拖拽的GridView控件">
 <meta name="twitter:description" content="经常使用网易新闻的童鞋都知道在网易新闻中有一个新闻栏目管理，其中GridView的item是可以拖拽的，效果十分炫酷。具体效果如下图：
@@ -396,254 +396,30 @@
 <li>当用户手指抬起时，把window移除，使用<code>notifyDataSetChanged()</code>做出GridView更新。</li>
 </ol>
 <p>讲完了思路后，我们就来实践一下吧，把这个控件取名为DragGridView。</p>
-<pre><code>public DragGridView(Context context) {
-    this(context, null);
-}
-
-public DragGridView(Context context, AttributeSet attrs) {
-    this(context, attrs, 0);
-}
-
-public DragGridView(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-    setOnItemLongClickListener(this);
-}
-</code></pre><h1 id="u624B_u6307_u5728Item_u4E0A_u957F_u6309_u65F6"><a href="#u624B_u6307_u5728Item_u4E0A_u957F_u6309_u65F6" class="headerlink" title="手指在Item上长按时"></a>手指在Item上长按时</h1><p>首先在构造器中得到WindowManager对象以及设置长按监听器，所以只有长按item才能拖拽。</p>
-<pre><code>@Override
-public boolean onInterceptTouchEvent(MotionEvent ev) {
-    switch (ev.getAction()) {
-        case MotionEvent.ACTION_DOWN:
-            mWindowX = ev.getRawX();
-            mWindowY = ev.getRawY();
-            break;
-        case MotionEvent.ACTION_MOVE:
-            break;
-        case MotionEvent.ACTION_UP:
-            break;
-    }
-    return super.onInterceptTouchEvent(ev);
-}
-</code></pre><p>然后在<code>onInterceptTouchEvent(MotionEvent ev)</code>中得到手指下落时的<code>ev.getRawX()</code>和<code>ev.getRawY()</code>，以备后面的计算使用。至于<code>getRawX()</code>和<code>getX()</code>的区别这里就不再讲述了，如果有不懂的可以自行百度。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">DragGridView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">DragGridView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">DragGridView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">    mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);</span><br><span class="line">    setOnItemLongClickListener(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="u624B_u6307_u5728Item_u4E0A_u957F_u6309_u65F6"><a href="#u624B_u6307_u5728Item_u4E0A_u957F_u6309_u65F6" class="headerlink" title="手指在Item上长按时"></a>手指在Item上长按时</h1><p>首先在构造器中得到WindowManager对象以及设置长按监听器，所以只有长按item才能拖拽。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onInterceptTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (ev.getAction()) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">            mWindowX = ev.getRawX();</span><br><span class="line">            mWindowY = ev.getRawY();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.onInterceptTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在<code>onInterceptTouchEvent(MotionEvent ev)</code>中得到手指下落时的<code>ev.getRawX()</code>和<code>ev.getRawY()</code>，以备后面的计算使用。至于<code>getRawX()</code>和<code>getX()</code>的区别这里就不再讲述了，如果有不懂的可以自行百度。</p>
 <p>下面就是<code>onItemLongClick(AdapterView&lt;?&gt; parent, View view, int position, long id)</code>方法了，我们在DragGridView中定义了两种模式：<code>MODE_DRAG</code>和<code>MODE_NORMAL</code>，分别对应着item拖拽和item不拖拽：</p>
-<pre><code>@Override
-public boolean onItemLongClick(AdapterView&lt;?&gt; parent, View view, int position, long id) {
-    if (mode == MODE_DRAG) {
-        return false;
-    }
-    this.view = view;
-    this.position = position;
-    this.tempPosition = position;
-    mX = mWindowX - view.getLeft() - this.getLeft();
-    mY = mWindowY - view.getTop() - this.getTop();
-    initWindow();
-    return true;
-}
-</code></pre><p>在onItemLongClick()中先判断了一下模式，只有在<code>MODE_NORMAL</code>的情况下才会添加window。然后计算出mX和mY。可能有些童鞋在mX和mY的计算上看不懂，我给出了一个图示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onItemLongClick</span><span class="params">(AdapterView&lt;?&gt; parent, View view, <span class="keyword">int</span> position, <span class="keyword">long</span> id)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mode == MODE_DRAG) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.view = view;</span><br><span class="line">    <span class="keyword">this</span>.position = position;</span><br><span class="line">    <span class="keyword">this</span>.tempPosition = position;</span><br><span class="line">    mX = mWindowX - view.getLeft() - <span class="keyword">this</span>.getLeft();</span><br><span class="line">    mY = mWindowY - view.getTop() - <span class="keyword">this</span>.getTop();</span><br><span class="line">    initWindow();</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在onItemLongClick()中先判断了一下模式，只有在<code>MODE_NORMAL</code>的情况下才会添加window。然后计算出mX和mY。可能有些童鞋在mX和mY的计算上看不懂，我给出了一个图示：</p>
 <p><img src="/uploads/20160215/20160215210800.png" alt="这里写图片描述"></p>
 <p>其中红点是手指按下的坐标，也就是(mWindowX,mWindowY)这个点；绿边框为DragGridView，因为DragGridView有可能会有margin值；所以this.getLeft()就是绿边框到屏幕的距离，而view.getLeft()就是长按的Item的左边到绿边框的距离。这几个值相减就得到了mX。同理，mY也是这样得到的。</p>
 <p>然后来看看<code>initWindow();</code>这个方法：</p>
-<pre><code>/**
- * 初始化window
- */
-private void initWindow() {
-    if (dragView == null) {
-        dragView = View.inflate(getContext(), R.layout.drag_item, null);
-        TextView tv_text = (TextView) dragView.findViewById(R.id.tv_text);
-        tv_text.setText(((TextView) view.findViewById(R.id.tv_text)).getText());
-    }
-    if (layoutParams == null) {
-        layoutParams = new WindowManager.LayoutParams();
-        layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
-        layoutParams.format = PixelFormat.RGBA_8888;
-        layoutParams.gravity = Gravity.TOP | Gravity.LEFT;
-        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;  //悬浮窗的行为，比如说不可聚焦，非模态对话框等等
-        layoutParams.width = view.getWidth();
-        layoutParams.height = view.getHeight();
-        layoutParams.x = view.getLeft() + this.getLeft();  //悬浮窗X的位置
-        layoutParams.y = view.getTop() + this.getTop();  //悬浮窗Y的位置
-        view.setVisibility(INVISIBLE);
-    }
-
-    mWindowManager.addView(dragView, layoutParams);
-    mode = MODE_DRAG;
-}
-</code></pre><p>在<code>initWindow()</code>中，我们先创建了一个dragView，而dragView里面的内容与长按的Item的内容完全一致。然后创建<code>WindowManager.LayoutParams</code>的对象，把dragView添加到window上去。同时，也要把长按的Item隐藏了。在这里别忘了需要申请显示悬浮窗的权限：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 初始化window</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (dragView == <span class="keyword">null</span>) &#123;</span><br><span class="line">        dragView = View.inflate(getContext(), R.layout.drag_item, <span class="keyword">null</span>);</span><br><span class="line">        TextView tv_text = (TextView) dragView.findViewById(R.id.tv_text);</span><br><span class="line">        tv_text.setText(((TextView) view.findViewById(R.id.tv_text)).getText());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (layoutParams == <span class="keyword">null</span>) &#123;</span><br><span class="line">        layoutParams = <span class="keyword">new</span> WindowManager.LayoutParams();</span><br><span class="line">        layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;</span><br><span class="line">        layoutParams.format = PixelFormat.RGBA_8888;</span><br><span class="line">        layoutParams.gravity = Gravity.TOP | Gravity.LEFT;</span><br><span class="line">        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL</span><br><span class="line">                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;  <span class="comment">//悬浮窗的行为，比如说不可聚焦，非模态对话框等等</span></span><br><span class="line">        layoutParams.width = view.getWidth();</span><br><span class="line">        layoutParams.height = view.getHeight();</span><br><span class="line">        layoutParams.x = view.getLeft() + <span class="keyword">this</span>.getLeft();  <span class="comment">//悬浮窗X的位置</span></span><br><span class="line">        layoutParams.y = view.getTop() + <span class="keyword">this</span>.getTop();  <span class="comment">//悬浮窗Y的位置</span></span><br><span class="line">        view.setVisibility(INVISIBLE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mWindowManager.addView(dragView, layoutParams);</span><br><span class="line">    mode = MODE_DRAG;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>initWindow()</code>中，我们先创建了一个dragView，而dragView里面的内容与长按的Item的内容完全一致。然后创建<code>WindowManager.LayoutParams</code>的对象，把dragView添加到window上去。同时，也要把长按的Item隐藏了。在这里别忘了需要申请显示悬浮窗的权限：</p>
 <pre><code>&lt;uses-permission android:name=&quot;android.permission.SYSTEM_ALERT_WINDOW&quot;/&gt;
 </code></pre><h1 id="u624B_u6307_u6ED1_u52A8_u65F6"><a href="#u624B_u6307_u6ED1_u52A8_u65F6" class="headerlink" title="手指滑动时"></a>手指滑动时</h1><p>在<code>initWindow()</code>之后，我们就要考虑当手指滑动时window也要跟着动了，我们重写<code>onTouchEvent(MotionEvent ev)</code>来监听滑动事件，可以看到下面的<code>updateWindow(ev)</code>方法。</p>
-<pre><code>@Override
-public boolean onTouchEvent(MotionEvent ev) {
-    switch (ev.getAction()) {
-        case MotionEvent.ACTION_DOWN:
-            break;
-        case MotionEvent.ACTION_MOVE:
-            if (mode == MODE_DRAG) {
-                updateWindow(ev);
-            }
-            break;
-        case MotionEvent.ACTION_UP:
-            if (mode == MODE_DRAG) {
-                closeWindow(ev.getX(), ev.getY());
-            }
-            break;
-    }
-    return super.onTouchEvent(ev);
-}
-</code></pre><p>这里贴出<code>updateWindow(ev)</code>方法：</p>
-<pre><code>/**
- * 触摸移动时，window更新
- *
- * @param ev
- */
-private void updateWindow(MotionEvent ev) {
-    if (mode == MODE_DRAG) {
-        float x = ev.getRawX() - mX;
-        float y = ev.getRawY() - mY;
-        if (layoutParams != null) {
-            layoutParams.x = (int) x;
-            layoutParams.y = (int) y;
-            mWindowManager.updateViewLayout(dragView, layoutParams);
-        }
-        float mx = ev.getX();
-        float my = ev.getY();
-        int dropPosition = pointToPosition((int) mx, (int) my);
-        Log.i(TAG, &quot;dropPosition : &quot; + dropPosition + &quot; , tempPosition : &quot; + tempPosition);
-        if (dropPosition == tempPosition || dropPosition == GridView.INVALID_POSITION) {
-            return;
-        }
-        itemMove(dropPosition);
-    }
-}
-</code></pre><p>在这里，mX和mY就派上用场了。根据<code>ev.getRawX()</code>和<code>ev.getRawY()</code>分别减去<code>mX</code>和<code>mY</code>就得到了移动中layoutParams.x和layoutParams.y。再调用<code>updateViewLayout (View view, ViewGroup.LayoutParams params)</code>就出现了window跟随手指滑动而滑动的效果。最后根据 <code>pointToPosition(int x, int y)</code>返回的值来执行<code>itemMove(dropPosition);</code>。</p>
-<pre><code>/**
- * 判断item移动，作出移动动画
- *
- * @param dropPosition
- */
-private void itemMove(int dropPosition) {
-    TranslateAnimation translateAnimation;
-    // 移动的位置在原位置前面时
-    if (dropPosition &lt; tempPosition) {
-        for (int i = dropPosition; i &lt; tempPosition; i++) {
-            View view = getChildAt(i);
-            View nextView = getChildAt(i + 1);
-            float xValue = (nextView.getLeft() - view.getLeft()) * 1f / view.getWidth();
-            float yValue = (nextView.getTop() - view.getTop()) * 1f / view.getHeight();
-            translateAnimation =
-                    new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, xValue, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, yValue);
-            translateAnimation.setInterpolator(new LinearInterpolator());
-            translateAnimation.setFillAfter(true);
-            translateAnimation.setDuration(300);
-            if (i == tempPosition - 1) {
-                translateAnimation.setAnimationListener(animationListener);
-            }
-            view.startAnimation(translateAnimation);
-        }
-    } else {
-        // 移动的位置在原位置后面时
-        for (int i = tempPosition + 1; i &lt;= dropPosition; i++) {
-            View view = getChildAt(i);
-            View prevView = getChildAt(i - 1);
-            float xValue = (prevView.getLeft() - view.getLeft()) * 1f / view.getWidth();
-            float yValue = (prevView.getTop() - view.getTop()) * 1f / view.getHeight();
-            translateAnimation =
-                    new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, xValue, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, yValue);
-            translateAnimation.setInterpolator(new LinearInterpolator());
-            translateAnimation.setFillAfter(true);
-            translateAnimation.setDuration(300);
-            if (i == dropPosition) {
-                translateAnimation.setAnimationListener(animationListener);
-            }
-            view.startAnimation(translateAnimation);
-        }
-    }
-    tempPosition = dropPosition;
-}
-
-/**
- * 动画监听器
- */
-Animation.AnimationListener animationListener = new Animation.AnimationListener() {
-    @Override
-    public void onAnimationStart(Animation animation) {
-
-    }
-
-    @Override
-    public void onAnimationEnd(Animation animation) {
-        // 在动画完成时将adapter里的数据交换位置
-        ListAdapter adapter = getAdapter();
-        if (adapter != null &amp;&amp; adapter instanceof DragGridAdapter) {
-            ((DragGridAdapter) adapter).exchangePosition(position, tempPosition, true);
-        }
-        position = tempPosition;
-    }
-
-    @Override
-    public void onAnimationRepeat(Animation animation) {
-
-    }
-};
-</code></pre><p>上面的代码主要是根据dropPosition使要改变位置的Item来做出平移动画，当最后一个要改变位置的Item平移动画完成之后，在adapter中完成数据集的交换。</p>
-<pre><code>/**
- * 给item交换位置
- *
- * @param originalPosition item原先位置
- * @param nowPosition      item现在位置
- */
-public void exchangePosition(int originalPosition, int nowPosition, boolean isMove) {
-    T t = list.get(originalPosition);
-    list.remove(originalPosition);
-    list.add(nowPosition, t);
-    movePosition = nowPosition;
-    this.isMove = isMove;
-    notifyDataSetChanged();
-}
-
-@Override
-public View getView(int position, View convertView, ViewGroup parent) {
-    Log.i(TAG, &quot;-------------------------------&quot;);
-    for (T t : list){
-        Log.i(TAG, t.toString());
-    }
-    View view = getItemView(position, convertView, parent);
-    if (position == movePosition &amp;&amp; isMove) {
-        view.setVisibility(View.INVISIBLE);
-    }
-    return view;
-}
-</code></pre><h1 id="u624B_u6307_u62AC_u8D77_u65F6"><a href="#u624B_u6307_u62AC_u8D77_u65F6" class="headerlink" title="手指抬起时"></a>手指抬起时</h1><p>在上面<code>onTouchEvent(MotionEvent ev)</code>方法中，可以看到手指抬起时调用了<code>closeWindow(ev.getX(), ev.getY());</code>，那就一起来看看：</p>
-<pre><code> /**
- * 关闭window
- *
- * @param x
- * @param y
- */
-private void closeWindow(float x, float y) {
-    if (dragView != null) {
-        mWindowManager.removeView(dragView);
-        dragView = null;
-        layoutParams = null;
-    }
-    itemDrop();
-    mode = MODE_NORMAL;
-}
-
-/**
- * 手指抬起时，item下落
- */
-private void itemDrop() {
-    if (tempPosition == position || tempPosition == GridView.INVALID_POSITION) {
-        getChildAt(position).setVisibility(VISIBLE);
-    } else {
-        ListAdapter adapter = getAdapter();
-        if (adapter != null &amp;&amp; adapter instanceof DragGridAdapter) {
-            ((DragGridAdapter) adapter).exchangePosition(position, tempPosition, false);
-        }
-    }
-}
-</code></pre><p>可以看出主要做的事情就是移除了window，并且也是调用了<code>exchangePosition(int originalPosition, int nowPosition, boolean isMove)</code>，不同的是第三个参数isMove传入了false，这样所有的Item都显示出来了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (ev.getAction()) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">            <span class="keyword">if</span> (mode == MODE_DRAG) &#123;</span><br><span class="line">                updateWindow(ev);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">            <span class="keyword">if</span> (mode == MODE_DRAG) &#123;</span><br><span class="line">                closeWindow(ev.getX(), ev.getY());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里贴出<code>updateWindow(ev)</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 触摸移动时，window更新</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> ev</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">updateWindow</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mode == MODE_DRAG) &#123;</span><br><span class="line">        <span class="keyword">float</span> x = ev.getRawX() - mX;</span><br><span class="line">        <span class="keyword">float</span> y = ev.getRawY() - mY;</span><br><span class="line">        <span class="keyword">if</span> (layoutParams != <span class="keyword">null</span>) &#123;</span><br><span class="line">            layoutParams.x = (<span class="keyword">int</span>) x;</span><br><span class="line">            layoutParams.y = (<span class="keyword">int</span>) y;</span><br><span class="line">            mWindowManager.updateViewLayout(dragView, layoutParams);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">float</span> mx = ev.getX();</span><br><span class="line">        <span class="keyword">float</span> my = ev.getY();</span><br><span class="line">        <span class="keyword">int</span> dropPosition = pointToPosition((<span class="keyword">int</span>) mx, (<span class="keyword">int</span>) my);</span><br><span class="line">        Log.i(TAG, <span class="string">"dropPosition : "</span> + dropPosition + <span class="string">" , tempPosition : "</span> + tempPosition);</span><br><span class="line">        <span class="keyword">if</span> (dropPosition == tempPosition || dropPosition == GridView.INVALID_POSITION) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        itemMove(dropPosition);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里，mX和mY就派上用场了。根据<code>ev.getRawX()</code>和<code>ev.getRawY()</code>分别减去<code>mX</code>和<code>mY</code>就得到了移动中layoutParams.x和layoutParams.y。再调用<code>updateViewLayout (View view, ViewGroup.LayoutParams params)</code>就出现了window跟随手指滑动而滑动的效果。最后根据 <code>pointToPosition(int x, int y)</code>返回的值来执行<code>itemMove(dropPosition);</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 判断item移动，作出移动动画</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> dropPosition</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">itemMove</span><span class="params">(<span class="keyword">int</span> dropPosition)</span> </span>&#123;</span><br><span class="line">    TranslateAnimation translateAnimation;</span><br><span class="line">	<span class="comment">// 移动的位置在原位置前面时</span></span><br><span class="line">    <span class="keyword">if</span> (dropPosition &lt; tempPosition) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = dropPosition; i &lt; tempPosition; i++) &#123;</span><br><span class="line">            View view = getChildAt(i);</span><br><span class="line">            View nextView = getChildAt(i + <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">float</span> xValue = (nextView.getLeft() - view.getLeft()) * <span class="number">1f</span> / view.getWidth();</span><br><span class="line">            <span class="keyword">float</span> yValue = (nextView.getTop() - view.getTop()) * <span class="number">1f</span> / view.getHeight();</span><br><span class="line">            translateAnimation =</span><br><span class="line">                    <span class="keyword">new</span> TranslateAnimation(Animation.RELATIVE_TO_SELF, <span class="number">0f</span>, Animation.RELATIVE_TO_SELF, xValue, Animation.RELATIVE_TO_SELF, <span class="number">0f</span>, Animation.RELATIVE_TO_SELF, yValue);</span><br><span class="line">            translateAnimation.setInterpolator(<span class="keyword">new</span> LinearInterpolator());</span><br><span class="line">            translateAnimation.setFillAfter(<span class="keyword">true</span>);</span><br><span class="line">            translateAnimation.setDuration(<span class="number">300</span>);</span><br><span class="line">            <span class="keyword">if</span> (i == tempPosition - <span class="number">1</span>) &#123;</span><br><span class="line">                translateAnimation.setAnimationListener(animationListener);</span><br><span class="line">            &#125;</span><br><span class="line">            view.startAnimation(translateAnimation);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="comment">// 移动的位置在原位置后面时</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = tempPosition + <span class="number">1</span>; i &lt;= dropPosition; i++) &#123;</span><br><span class="line">            View view = getChildAt(i);</span><br><span class="line">            View prevView = getChildAt(i - <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">float</span> xValue = (prevView.getLeft() - view.getLeft()) * <span class="number">1f</span> / view.getWidth();</span><br><span class="line">            <span class="keyword">float</span> yValue = (prevView.getTop() - view.getTop()) * <span class="number">1f</span> / view.getHeight();</span><br><span class="line">            translateAnimation =</span><br><span class="line">                    <span class="keyword">new</span> TranslateAnimation(Animation.RELATIVE_TO_SELF, <span class="number">0f</span>, Animation.RELATIVE_TO_SELF, xValue, Animation.RELATIVE_TO_SELF, <span class="number">0f</span>, Animation.RELATIVE_TO_SELF, yValue);</span><br><span class="line">            translateAnimation.setInterpolator(<span class="keyword">new</span> LinearInterpolator());</span><br><span class="line">            translateAnimation.setFillAfter(<span class="keyword">true</span>);</span><br><span class="line">            translateAnimation.setDuration(<span class="number">300</span>);</span><br><span class="line">            <span class="keyword">if</span> (i == dropPosition) &#123;</span><br><span class="line">                translateAnimation.setAnimationListener(animationListener);</span><br><span class="line">            &#125;</span><br><span class="line">            view.startAnimation(translateAnimation);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    tempPosition = dropPosition;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 动画监听器</span><br><span class="line"> */</span></span><br><span class="line">Animation.AnimationListener animationListener = <span class="keyword">new</span> Animation.AnimationListener() &#123;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationStart</span><span class="params">(Animation animation)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationEnd</span><span class="params">(Animation animation)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 在动画完成时将adapter里的数据交换位置</span></span><br><span class="line">        ListAdapter adapter = getAdapter();</span><br><span class="line">        <span class="keyword">if</span> (adapter != <span class="keyword">null</span> &amp;&amp; adapter <span class="keyword">instanceof</span> DragGridAdapter) &#123;</span><br><span class="line">            ((DragGridAdapter) adapter).exchangePosition(position, tempPosition, <span class="keyword">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        position = tempPosition;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationRepeat</span><span class="params">(Animation animation)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>上面的代码主要是根据dropPosition使要改变位置的Item来做出平移动画，当最后一个要改变位置的Item平移动画完成之后，在adapter中完成数据集的交换。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 给item交换位置</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> originalPosition item原先位置</span><br><span class="line"> * <span class="doctag">@param</span> nowPosition      item现在位置</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exchangePosition</span><span class="params">(<span class="keyword">int</span> originalPosition, <span class="keyword">int</span> nowPosition, <span class="keyword">boolean</span> isMove)</span> </span>&#123;</span><br><span class="line">    T t = list.get(originalPosition);</span><br><span class="line">    list.remove(originalPosition);</span><br><span class="line">    list.add(nowPosition, t);</span><br><span class="line">    movePosition = nowPosition;</span><br><span class="line">    <span class="keyword">this</span>.isMove = isMove;</span><br><span class="line">    notifyDataSetChanged();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(<span class="keyword">int</span> position, View convertView, ViewGroup parent)</span> </span>&#123;</span><br><span class="line">    Log.i(TAG, <span class="string">"-------------------------------"</span>);</span><br><span class="line">    <span class="keyword">for</span> (T t : list)&#123;</span><br><span class="line">        Log.i(TAG, t.toString());</span><br><span class="line">    &#125;</span><br><span class="line">    View view = getItemView(position, convertView, parent);</span><br><span class="line">    <span class="keyword">if</span> (position == movePosition &amp;&amp; isMove) &#123;</span><br><span class="line">        view.setVisibility(View.INVISIBLE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> view;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="u624B_u6307_u62AC_u8D77_u65F6"><a href="#u624B_u6307_u62AC_u8D77_u65F6" class="headerlink" title="手指抬起时"></a>手指抬起时</h1><p>在上面<code>onTouchEvent(MotionEvent ev)</code>方法中，可以看到手指抬起时调用了<code>closeWindow(ev.getX(), ev.getY());</code>，那就一起来看看：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 关闭window</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> x</span><br><span class="line"> * <span class="doctag">@param</span> y</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">closeWindow</span><span class="params">(<span class="keyword">float</span> x, <span class="keyword">float</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (dragView != <span class="keyword">null</span>) &#123;</span><br><span class="line">        mWindowManager.removeView(dragView);</span><br><span class="line">        dragView = <span class="keyword">null</span>;</span><br><span class="line">        layoutParams = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    itemDrop();</span><br><span class="line">    mode = MODE_NORMAL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 手指抬起时，item下落</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">itemDrop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tempPosition == position || tempPosition == GridView.INVALID_POSITION) &#123;</span><br><span class="line">        getChildAt(position).setVisibility(VISIBLE);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ListAdapter adapter = getAdapter();</span><br><span class="line">        <span class="keyword">if</span> (adapter != <span class="keyword">null</span> &amp;&amp; adapter <span class="keyword">instanceof</span> DragGridAdapter) &#123;</span><br><span class="line">            ((DragGridAdapter) adapter).exchangePosition(position, tempPosition, <span class="keyword">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出主要做的事情就是移除了window，并且也是调用了<code>exchangePosition(int originalPosition, int nowPosition, boolean isMove)</code>，不同的是第三个参数isMove传入了false，这样所有的Item都显示出来了。</p>
 <p>讲了这么多，来看看最后的效果吧：</p>
 <p><img src="/uploads/20160215/20160215212234.gif" alt="这里写图片描述"></p>
 <p>和网易新闻的效果不相上下吧，完整的源码太长就不贴出了，下面提供源码下载：</p>
@@ -782,7 +558,7 @@ private void itemDrop() {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

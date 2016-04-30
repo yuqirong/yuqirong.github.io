@@ -90,7 +90,7 @@
 <meta property="og:description" content="在Android开发中，相信侧滑菜单大家都不陌生吧，几乎是每个app都必备的。从早期的 SlidingMenu 再到           AndroidResideMenu 最后到Android自带的DrawerLayout，无处不体现着侧滑菜单的诱人魅力。侧滑菜单可以拓展app的内容，充分利用手机屏幕，增加程序的可玩性。既然有这么多可供选择的侧滑菜单使用，那为什么我们还要自己写呢？我觉得我们在使">
 <meta property="og:image" content="http://yuqirong.me/uploads/20151104/20151104205135.gif">
 <meta property="og:image" content="http://yuqirong.me/uploads/20151104/20151104000149.png">
-<meta property="og:updated_time" content="2016-02-21T14:20:45.816Z">
+<meta property="og:updated_time" content="2016-04-30T10:19:36.706Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="史上最简单粗暴实现侧滑菜单">
 <meta name="twitter:description" content="在Android开发中，相信侧滑菜单大家都不陌生吧，几乎是每个app都必备的。从早期的 SlidingMenu 再到           AndroidResideMenu 最后到Android自带的DrawerLayout，无处不体现着侧滑菜单的诱人魅力。侧滑菜单可以拓展app的内容，充分利用手机屏幕，增加程序的可玩性。既然有这么多可供选择的侧滑菜单使用，那为什么我们还要自己写呢？我觉得我们在使">
@@ -377,233 +377,15 @@
 <p>首先来说一下侧滑菜单实现的思路：侧滑菜单的布局为MenuLayout，还有主页的布局为MainLayout。MenuLayout在MainLayout的左边，当手指向右滑动的时候，MainLayout就向右滑动，同时MenuLayout跟着向右滑动，于是就显示出了侧滑菜单。以下是示意图：</p>
 <p><img src="/uploads/20151104/20151104000149.png" alt="这里写图片描述"></p>
 <p>大概地了解思路以后，我们先来看看布局文件。</p>
-<p>layout_slidemenu.xml(侧滑菜单的布局)：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:layout_width=&quot;300dp&quot;
-    android:layout_height=&quot;wrap_content&quot;
-    android:background=&quot;@drawable/menu_bg&quot;
-    android:orientation=&quot;vertical&quot;&gt;
-
-    &lt;ListView
-        android:id=&quot;@+id/lv_menu&quot;
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:cacheColorHint=&quot;@null&quot; /&gt;
-&lt;/LinearLayout&gt;
-</code></pre><p>layout_activity_main.xml(主界面的布局)：</p>
-<pre><code>&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-android:layout_width=&quot;match_parent&quot;
-android:layout_height=&quot;match_parent&quot;
-android:background=&quot;#55666666&quot;
-android:orientation=&quot;vertical&quot; &gt;
-
-    &lt;LinearLayout
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;60dp&quot;
-        android:background=&quot;@drawable/top_bar_bg&quot;
-        android:gravity=&quot;center_vertical&quot; &gt;
-
-        &lt;ImageView
-            android:id=&quot;@+id/iv_menu&quot;
-            android:layout_width=&quot;wrap_content&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:layout_margin=&quot;10dp&quot;
-            android:layout_gravity=&quot;center_vertical&quot;
-            android:background=&quot;@drawable/img_menu&quot; /&gt;
-
-        &lt;TextView
-            android:layout_width=&quot;wrap_content&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:layout_marginLeft=&quot;15dp&quot;
-            android:text=&quot;SlidingMenu&quot;
-            android:layout_gravity=&quot;center_vertical&quot;
-            android:textColor=&quot;#ffffff&quot;
-            android:textSize=&quot;22sp&quot; /&gt;
-    &lt;/LinearLayout&gt;
-
-&lt;/LinearLayout&gt;
-</code></pre><p>layout_main.xml(activity的布局)，注意，主界面的布局一定要放在菜单布局的后面：</p>
-<pre><code>&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-xmlns:tools=&quot;http://schemas.android.com/tools&quot;
-android:layout_width=&quot;match_parent&quot;
-android:layout_height=&quot;match_parent&quot; &gt;
-
-    &lt;com.yuqirong.slidingmenu.view.SlidingMenu
-        android:id=&quot;@+id/slideMenu1&quot;
-        android:layout_width=&quot;wrap_content&quot;
-        android:layout_height=&quot;wrap_content&quot; &gt;
-
-        &lt;!-- 菜单界面的布局 --&gt;
-
-        &lt;include layout=&quot;@layout/layout_slidemenu&quot; /&gt;
-
-        &lt;!-- 主界面的布局 --&gt;
-
-        &lt;include layout=&quot;@layout/layout_activity_main&quot; /&gt;
-    &lt;/com.yuqirong.slidingmenu.view.SlidingMenu&gt;
-
-&lt;/RelativeLayout&gt;
-</code></pre><p>看完了布局文件，下面我们就来看看代码(以下为部分代码，并非全部)：</p>
-<pre><code>public class SlidingMenu extends FrameLayout {
-
-    private ViewDragHelper mdDragHelper;
-
-    public SlidingMenu(Context context) {
-        this(context, null);
-    }
-
-    public SlidingMenu(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public SlidingMenu(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        mdDragHelper = ViewDragHelper.create(this, callback);
-    }
-}
-</code></pre><p>我们创建一个类名叫SlidingMenu，继承自FrameLayout，然后重写构造器。在构造器中新建了一个ViewDragHelper的对象。如果你还不知道ViewDragHelper为何物，建议你去看看<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的<a href="http://blog.csdn.net/lmj623565791/article/details/46858663" target="_blank" rel="external">《Android ViewDragHelper完全解析 自定义ViewGroup神器》</a>，这里就不展开叙述了。在<code>ViewDragHelper.create(Context context,ViewDragHelper.Callback callback)</code>里我们传入了一个回调callback，那接下来就来看看这个callback：</p>
-<pre><code> Callback callback = new Callback() {
-
-    @Override
-    public boolean tryCaptureView(View view, int arg1) {
-        return true;
-    }
-
-    public int getViewHorizontalDragRange(View child) {
-        return menuWidth;
-    }
-
-    @Override
-    public int clampViewPositionHorizontal(View child, int left, int dx) {
-        if (child == mainView) {
-            if (left &lt; 0)
-                return 0;
-            else if (left &gt; menuWidth)
-                return menuWidth;
-            else
-                return left;
-        } else if (child == menuView) {
-            if (left &gt; 0)
-                return 0;
-            else if (left &gt; menuWidth)
-                return menuWidth;
-            else
-                return left;
-        }
-        return 0;
-    }
-
-    public void onViewPositionChanged(View changedView, int left, int top,
-                                      int dx, int dy) {
-        if (changedView == mainView)
-            menuView.offsetLeftAndRight(dx);
-        else
-            mainView.offsetLeftAndRight(dx);
-        invalidate();
-    }
-
-    ;
-
-    public void onViewReleased(View releasedChild, float xvel, float yvel) {
-        if (releasedChild == mainView) {
-            if (status == Status.Open) {
-                // 关闭侧滑菜单
-                close();
-                return;
-            }
-            if (xvel == 0
-                    &amp;&amp; Math.abs(mainView.getLeft()) &gt; menuWidth / 2.0f) {
-                // 打开侧滑菜单
-                open();
-            } else if (xvel &gt; 0) {
-                open();
-            } else {
-                close();
-            }
-        } else {
-            if (xvel == 0
-                    &amp;&amp; Math.abs(mainView.getLeft()) &gt; menuWidth / 2.0f) {
-                // 打开侧滑菜单
-                open();
-            }else if (xvel &gt; 0) {
-                open();
-            } else {
-                // 关闭侧滑菜单
-                close();
-            }
-        }
-    }
-
-};
-</code></pre><p>我们发现在callback中几乎完成了绝大部分的逻辑。首先在<code>tryCaptureView(View view, int arg1)</code>直接返回了true，因为无论在mainView(主View)还是在menuView(菜单View)都应该去捕获，而<code>getViewHorizontalDragRange(View child)</code>返回的应该是menuView的宽度，也就是说滑动的时候最多能滑menuWidth的距离。而menuWidth是在<code>onFinishInflate()</code>中得到的。至于<code>clampViewPositionHorizontal(View child, int left, int dx)</code>和<code>onViewPositionChanged(View changedView, int left, int top,int dx, int dy)</code>两个方法逻辑很简单，相信大家都看得懂。最后在<code>onViewReleased(View releasedChild, float xvel, float yvel)</code>方法中判断了菜单打开或关闭的逻辑，比如在菜单关闭的情况下，只要手指向右滑或是停止滑动时侧滑菜单在屏幕中的宽度大于menuWidth/2这两种情况下，侧滑菜单都是执行open()方法，其它的情况以此类推。下面就来看看open()和close()方法。</p>
-<pre><code>/**
- * 打开菜单
- */
-public void open() {
-    if (mdDragHelper.smoothSlideViewTo(mainView, menuWidth, 0)) {
-        ViewCompat.postInvalidateOnAnimation(this);
-    }
-    preStatus = status;
-    status = Status.Open;
-    if (listener != null &amp;&amp; preStatus == Status.Close) {
-        listener.statusChanged(status);
-    }
-}
-
-/**
- * 关闭菜单
- */
-public void close() {
-    if (mdDragHelper.smoothSlideViewTo(mainView, 0, 0)) {
-        ViewCompat.postInvalidateOnAnimation(this);
-    }
-    preStatus = status;
-    status = Status.Close;
-    if (listener != null &amp;&amp; preStatus == Status.Open) {
-        listener.statusChanged(status);
-    }
-}
-
-/**
- * 切换菜单状态
- */
-public void toggle() {
-    if (status == Status.Close) {
-        open();
-    } else {
-        close();
-    }
-} 
-
-@Override
-public void computeScroll() {
-    super.computeScroll();
-    // 开始执行动画
-    if (mdDragHelper.continueSettling(true)) {
-        ViewCompat.postInvalidateOnAnimation(this);
-    }
-}
-</code></pre><p>我们发现在<code>open()</code>和<code>close()</code>两个方法中都调用了<code>ViewCompat.postInvalidateOnAnimation(this);</code>而<code>postInvalidateOnAnimation(View view)</code>需要重写<code>computeScroll()</code>来实现平滑滚动的效果，一般的写法都如上代码所示，不需要改动。再重新回到<code>open()</code>和<code>close()</code>两个方法，其中的listener就是菜单开关状态的监听器，当状态改变的时候都会回调listener的<code>statusChanged(Status status)</code>方法。</p>
-<p>最后的最后，别忘了在<code>onLayout(boolean changed, int left, int top, int right, int bottom)</code>中把menuView设置在mainView的左边。而menuView和mainView都是在<code>onFinishInflate()</code>中得到的。</p>
-<pre><code>@Override
-protected void onFinishInflate() {
-    super.onFinishInflate();
-    if(getChildCount()!=2){
-        throw new IllegalArgumentException(&quot;子view的数量必须为2个&quot;);
-    }
-    menuView = getChildAt(0);
-    mainView = getChildAt(1);
-    menuWidth = menuView.getLayoutParams().width;
-}
-
-@Override
-protected void onLayout(boolean changed, int left, int top, int right,
-                        int bottom) {
-    menuView.layout(-menuWidth, 0, 0, menuView.getMeasuredHeight());
-    mainView.layout(0, 0, right, bottom);
-}
-</code></pre><p>好了，讲解了这么多，差不多把SlidingMenu的代码逻辑讲解完成了。如果有什么疑问，可以在下面留言。</p>
+<p>layout_slidemenu.xml(侧滑菜单的布局)：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"300dp"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"@drawable/menu_bg"</span></span><br><span class="line">    <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">ListView</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/lv_menu"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:cacheColorHint</span>=<span class="value">"@null"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>layout_activity_main.xml(主界面的布局)：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line"><span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line"><span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line"><span class="attribute">android:background</span>=<span class="value">"#55666666"</span></span><br><span class="line"><span class="attribute">android:orientation</span>=<span class="value">"vertical"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"60dp"</span></span><br><span class="line">        <span class="attribute">android:background</span>=<span class="value">"@drawable/top_bar_bg"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center_vertical"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/iv_menu"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_margin</span>=<span class="value">"10dp"</span></span><br><span class="line">            <span class="attribute">android:layout_gravity</span>=<span class="value">"center_vertical"</span></span><br><span class="line">            <span class="attribute">android:background</span>=<span class="value">"@drawable/img_menu"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">            <span class="attribute">android:text</span>=<span class="value">"SlidingMenu"</span></span><br><span class="line">            <span class="attribute">android:layout_gravity</span>=<span class="value">"center_vertical"</span></span><br><span class="line">            <span class="attribute">android:textColor</span>=<span class="value">"#ffffff"</span></span><br><span class="line">            <span class="attribute">android:textSize</span>=<span class="value">"22sp"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>layout_main.xml(activity的布局)，注意，主界面的布局一定要放在菜单布局的后面：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line"><span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line"><span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line"><span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">com.yuqirong.slidingmenu.view.SlidingMenu</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/slideMenu1"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!-- 菜单界面的布局 --&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">include</span> <span class="attribute">layout</span>=<span class="value">"@layout/layout_slidemenu"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!-- 主界面的布局 --&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">include</span> <span class="attribute">layout</span>=<span class="value">"@layout/layout_activity_main"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">com.yuqirong.slidingmenu.view.SlidingMenu</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>看完了布局文件，下面我们就来看看代码(以下为部分代码，并非全部)：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SlidingMenu</span> <span class="keyword">extends</span> <span class="title">FrameLayout</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ViewDragHelper mdDragHelper;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SlidingMenu</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SlidingMenu</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SlidingMenu</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        mdDragHelper = ViewDragHelper.create(<span class="keyword">this</span>, callback);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们创建一个类名叫SlidingMenu，继承自FrameLayout，然后重写构造器。在构造器中新建了一个ViewDragHelper的对象。如果你还不知道ViewDragHelper为何物，建议你去看看<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的<a href="http://blog.csdn.net/lmj623565791/article/details/46858663" target="_blank" rel="external">《Android ViewDragHelper完全解析 自定义ViewGroup神器》</a>，这里就不展开叙述了。在<code>ViewDragHelper.create(Context context,ViewDragHelper.Callback callback)</code>里我们传入了一个回调callback，那接下来就来看看这个callback：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">Callback callback = <span class="keyword">new</span> Callback() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">tryCaptureView</span><span class="params">(View view, <span class="keyword">int</span> arg1)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getViewHorizontalDragRange</span><span class="params">(View child)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> menuWidth;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">clampViewPositionHorizontal</span><span class="params">(View child, <span class="keyword">int</span> left, <span class="keyword">int</span> dx)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (child == mainView) &#123;</span><br><span class="line">            <span class="keyword">if</span> (left &lt; <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (left &gt; menuWidth)</span><br><span class="line">                <span class="keyword">return</span> menuWidth;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">return</span> left;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (child == menuView) &#123;</span><br><span class="line">            <span class="keyword">if</span> (left &gt; <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (left &gt; menuWidth)</span><br><span class="line">                <span class="keyword">return</span> menuWidth;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">return</span> left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onViewPositionChanged</span><span class="params">(View changedView, <span class="keyword">int</span> left, <span class="keyword">int</span> top,</span><br><span class="line">                                      <span class="keyword">int</span> dx, <span class="keyword">int</span> dy)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (changedView == mainView)</span><br><span class="line">            menuView.offsetLeftAndRight(dx);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            mainView.offsetLeftAndRight(dx);</span><br><span class="line">        invalidate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onViewReleased</span><span class="params">(View releasedChild, <span class="keyword">float</span> xvel, <span class="keyword">float</span> yvel)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (releasedChild == mainView) &#123;</span><br><span class="line">            <span class="keyword">if</span> (status == Status.Open) &#123;</span><br><span class="line">		<span class="comment">// 关闭侧滑菜单</span></span><br><span class="line">		close();</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (xvel == <span class="number">0</span></span><br><span class="line">                    &amp;&amp; Math.abs(mainView.getLeft()) &gt; menuWidth / <span class="number">2.0f</span>) &#123;</span><br><span class="line">		<span class="comment">// 打开侧滑菜单</span></span><br><span class="line">		open();</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (xvel &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                open();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                close();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (xvel == <span class="number">0</span></span><br><span class="line">                    &amp;&amp; Math.abs(mainView.getLeft()) &gt; menuWidth / <span class="number">2.0f</span>) &#123;</span><br><span class="line">		<span class="comment">// 打开侧滑菜单</span></span><br><span class="line">		open();</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span> (xvel &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                open();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="comment">// 关闭侧滑菜单</span></span><br><span class="line">		close();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>我们发现在callback中几乎完成了绝大部分的逻辑。首先在<code>tryCaptureView(View view, int arg1)</code>直接返回了true，因为无论在mainView(主View)还是在menuView(菜单View)都应该去捕获，而<code>getViewHorizontalDragRange(View child)</code>返回的应该是menuView的宽度，也就是说滑动的时候最多能滑menuWidth的距离。而menuWidth是在<code>onFinishInflate()</code>中得到的。至于<code>clampViewPositionHorizontal(View child, int left, int dx)</code>和<code>onViewPositionChanged(View changedView, int left, int top,int dx, int dy)</code>两个方法逻辑很简单，相信大家都看得懂。最后在<code>onViewReleased(View releasedChild, float xvel, float yvel)</code>方法中判断了菜单打开或关闭的逻辑，比如在菜单关闭的情况下，只要手指向右滑或是停止滑动时侧滑菜单在屏幕中的宽度大于menuWidth/2这两种情况下，侧滑菜单都是执行open()方法，其它的情况以此类推。下面就来看看open()和close()方法。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 打开菜单</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">open</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mdDragHelper.smoothSlideViewTo(mainView, menuWidth, <span class="number">0</span>)) &#123;</span><br><span class="line">        ViewCompat.postInvalidateOnAnimation(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    preStatus = status;</span><br><span class="line">    status = Status.Open;</span><br><span class="line">    <span class="keyword">if</span> (listener != <span class="keyword">null</span> &amp;&amp; preStatus == Status.Close) &#123;</span><br><span class="line">        listener.statusChanged(status);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 关闭菜单</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mdDragHelper.smoothSlideViewTo(mainView, <span class="number">0</span>, <span class="number">0</span>)) &#123;</span><br><span class="line">        ViewCompat.postInvalidateOnAnimation(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    preStatus = status;</span><br><span class="line">    status = Status.Close;</span><br><span class="line">    <span class="keyword">if</span> (listener != <span class="keyword">null</span> &amp;&amp; preStatus == Status.Open) &#123;</span><br><span class="line">        listener.statusChanged(status);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 切换菜单状态</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">toggle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (status == Status.Close) &#123;</span><br><span class="line">        open();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">computeScroll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.computeScroll();</span><br><span class="line">    <span class="comment">// 开始执行动画</span></span><br><span class="line">    <span class="keyword">if</span> (mdDragHelper.continueSettling(<span class="keyword">true</span>)) &#123;</span><br><span class="line">        ViewCompat.postInvalidateOnAnimation(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们发现在<code>open()</code>和<code>close()</code>两个方法中都调用了<code>ViewCompat.postInvalidateOnAnimation(this);</code>而<code>postInvalidateOnAnimation(View view)</code>需要重写<code>computeScroll()</code>来实现平滑滚动的效果，一般的写法都如上代码所示，不需要改动。再重新回到<code>open()</code>和<code>close()</code>两个方法，其中的listener就是菜单开关状态的监听器，当状态改变的时候都会回调listener的<code>statusChanged(Status status)</code>方法。</p>
+<p>最后的最后，别忘了在<code>onLayout(boolean changed, int left, int top, int right, int bottom)</code>中把menuView设置在mainView的左边。而menuView和mainView都是在<code>onFinishInflate()</code>中得到的。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onFinishInflate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onFinishInflate();</span><br><span class="line">    <span class="keyword">if</span>(getChildCount()!=<span class="number">2</span>)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"子view的数量必须为2个"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    menuView = getChildAt(<span class="number">0</span>);</span><br><span class="line">    mainView = getChildAt(<span class="number">1</span>);</span><br><span class="line">    menuWidth = menuView.getLayoutParams().width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onLayout</span><span class="params">(<span class="keyword">boolean</span> changed, <span class="keyword">int</span> left, <span class="keyword">int</span> top, <span class="keyword">int</span> right,</span><br><span class="line">                        <span class="keyword">int</span> bottom)</span> </span>&#123;</span><br><span class="line">    menuView.layout(-menuWidth, <span class="number">0</span>, <span class="number">0</span>, menuView.getMeasuredHeight());</span><br><span class="line">    mainView.layout(<span class="number">0</span>, <span class="number">0</span>, right, bottom);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>好了，讲解了这么多，差不多把SlidingMenu的代码逻辑讲解完成了。如果有什么疑问，可以在下面留言。</p>
 <p>国际惯例，下面贴出源码下载链接：</p>
 <p><a href="/uploads/20151104/SlidingMenu.rar">SlidingMenu.rar</a></p>
 <p>~have fun!~</p>
@@ -739,7 +521,7 @@ protected void onLayout(boolean changed, int left, int top, int right,
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

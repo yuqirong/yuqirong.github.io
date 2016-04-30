@@ -91,7 +91,7 @@
 <meta property="og:description" content="在Material Design中，FloatingActionButton(即FAB)是一个很重要的元素。而通常在列表向下滚动的时候，FAB应该会隐藏；而在向上滚动时，FAB应该会显示出来。本篇就记录其中一种实现FAB显示或隐藏的方案，主要应用了属性动画。
 其实关于FAB的显示和隐藏，Google官方就提供了其中一种方案：fab.hidden()和fab.show()。但是自带的是FAB缩放的效">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160413/20160413202356.gif">
-<meta property="og:updated_time" content="2016-04-13T12:27:55.483Z">
+<meta property="og:updated_time" content="2016-04-30T08:17:50.993Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="FloatingActionButton在滚动时显示或隐藏">
 <meta name="twitter:description" content="在Material Design中，FloatingActionButton(即FAB)是一个很重要的元素。而通常在列表向下滚动的时候，FAB应该会隐藏；而在向上滚动时，FAB应该会显示出来。本篇就记录其中一种实现FAB显示或隐藏的方案，主要应用了属性动画。
@@ -377,93 +377,10 @@
 <p>那么我们就来看看如何实现FAB上下移动的效果吧！</p>
 <p>首先在你想要滑动的View(比如说RecyclerView等)的布局上加上：</p>
 <pre><code>app:layout_behavior=&quot;@string/appbar_scrolling_view_behavior&quot;
-</code></pre><p>然后再附上FAB的xml：</p>
-<pre><code>&lt;android.support.design.widget.FloatingActionButton
-   android:id=&quot;@+id/fab&quot;
-   android:layout_width=&quot;wrap_content&quot;
-   android:layout_height=&quot;wrap_content&quot;
-   android:layout_gravity=&quot;bottom|end&quot;
-   android:layout_margin=&quot;@dimen/fab_margin&quot;
-   app:layout_behavior=&quot;com.yuqirong.rxnews.ui.view.ScrollAwareFABBehavior&quot;
-   android:src=&quot;@android:drawable/ic_dialog_email&quot; /&gt;
-</code></pre><p>注意其中的layout_behavior，是我们自己实现的一个类：</p>
-<pre><code>public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
-
-    private static final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
-    private boolean mIsAnimatingOut = false;
-
-    public ScrollAwareFABBehavior(Context context, AttributeSet attrs) {
-        super();
-    }
-
-    @Override
-    public boolean onStartNestedScroll(final CoordinatorLayout coordinatorLayout, final FloatingActionButton child,
-                                       final View directTargetChild, final View target, final int nestedScrollAxes) {
-        // Ensure we react to vertical scrolling
-        return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL
-                || super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, nestedScrollAxes);
-    }
-
-    @Override
-    public void onNestedScroll(final CoordinatorLayout coordinatorLayout, final FloatingActionButton child,
-                               final View target, final int dxConsumed, final int dyConsumed,
-                               final int dxUnconsumed, final int dyUnconsumed) {
-        super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
-        if (dyConsumed &gt; 0 &amp;&amp; !this.mIsAnimatingOut &amp;&amp; child.getVisibility() == View.VISIBLE) {
-            // User scrolled down and the FAB is currently visible -&gt; hide the FAB
-            animateOut(child);
-        } else if (dyConsumed &lt; 0 &amp;&amp; child.getVisibility() != View.VISIBLE) {
-            // User scrolled up and the FAB is currently not visible -&gt; show the FAB
-            animateIn(child);
-        }
-    }
-
-    // Same animation that FloatingActionButton.Behavior uses to hide the FAB when the AppBarLayout exits
-    private void animateOut(final FloatingActionButton button) {
-        if (Build.VERSION.SDK_INT &gt;= 14) {
-            ViewCompat.animate(button).translationY(button.getHeight() + getMarginBottom(button)).setInterpolator(INTERPOLATOR).withLayer()
-                    .setListener(new ViewPropertyAnimatorListener() {
-                        public void onAnimationStart(View view) {
-                            ScrollAwareFABBehavior.this.mIsAnimatingOut = true;
-                        }
-
-                        public void onAnimationCancel(View view) {
-                            ScrollAwareFABBehavior.this.mIsAnimatingOut = false;
-                        }
-
-                        public void onAnimationEnd(View view) {
-                            ScrollAwareFABBehavior.this.mIsAnimatingOut = false;
-                            view.setVisibility(View.GONE);
-                        }
-                    }).start();
-        } else {
-            button.hide();
-        }
-    }
-
-    // Same animation that FloatingActionButton.Behavior uses to show the FAB when the AppBarLayout enters
-    private void animateIn(FloatingActionButton button) {
-        button.setVisibility(View.VISIBLE);
-        if (Build.VERSION.SDK_INT &gt;= 14) {
-            ViewCompat.animate(button).translationY(0)
-                    .setInterpolator(INTERPOLATOR).withLayer().setListener(null)
-                    .start();
-        } else {
-            button.show();
-        }
-    }
-
-    private int getMarginBottom(View v) {
-        int marginBottom = 0;
-        final ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
-        if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
-            marginBottom = ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin;
-        }
-        return marginBottom;
-    }
-
-}
-</code></pre><p>我们主要看<code>onNestedScroll()</code>这个方法，在方法里主要判断了一下是向上滑还是向下滑。再分别去调用<code>animateOut()</code>和<code>animateIn()</code>。那我们就来看看<code>animateOut()</code>。(<code>animateIn()</code>和<code>animateOut()</code>的原理一样的，我们只看<code>animateOut()</code>吧)</p>
+</code></pre><p>然后再附上FAB的xml：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">android.support.design.widget.FloatingActionButton</span></span><br><span class="line">   <span class="attribute">android:id</span>=<span class="value">"@+id/fab"</span></span><br><span class="line">   <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">   <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">   <span class="attribute">android:layout_gravity</span>=<span class="value">"bottom|end"</span></span><br><span class="line">   <span class="attribute">android:layout_margin</span>=<span class="value">"@dimen/fab_margin"</span></span><br><span class="line">   <span class="attribute">app:layout_behavior</span>=<span class="value">"com.yuqirong.rxnews.ui.view.ScrollAwareFABBehavior"</span></span><br><span class="line">   <span class="attribute">android:src</span>=<span class="value">"@android:drawable/ic_dialog_email"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>注意其中的layout_behavior，是我们自己实现的一个类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScrollAwareFABBehavior</span> <span class="keyword">extends</span> <span class="title">FloatingActionButton</span>.<span class="title">Behavior</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Interpolator INTERPOLATOR = <span class="keyword">new</span> FastOutSlowInInterpolator();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> mIsAnimatingOut = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ScrollAwareFABBehavior</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onStartNestedScroll</span><span class="params">(<span class="keyword">final</span> CoordinatorLayout coordinatorLayout, <span class="keyword">final</span> FloatingActionButton child,</span><br><span class="line">                                       <span class="keyword">final</span> View directTargetChild, <span class="keyword">final</span> View target, <span class="keyword">final</span> <span class="keyword">int</span> nestedScrollAxes)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Ensure we react to vertical scrolling</span></span><br><span class="line">        <span class="keyword">return</span> nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL</span><br><span class="line">                || <span class="keyword">super</span>.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, nestedScrollAxes);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNestedScroll</span><span class="params">(<span class="keyword">final</span> CoordinatorLayout coordinatorLayout, <span class="keyword">final</span> FloatingActionButton child,</span><br><span class="line">                               <span class="keyword">final</span> View target, <span class="keyword">final</span> <span class="keyword">int</span> dxConsumed, <span class="keyword">final</span> <span class="keyword">int</span> dyConsumed,</span><br><span class="line">                               <span class="keyword">final</span> <span class="keyword">int</span> dxUnconsumed, <span class="keyword">final</span> <span class="keyword">int</span> dyUnconsumed)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);</span><br><span class="line">        <span class="keyword">if</span> (dyConsumed &gt; <span class="number">0</span> &amp;&amp; !<span class="keyword">this</span>.mIsAnimatingOut &amp;&amp; child.getVisibility() == View.VISIBLE) &#123;</span><br><span class="line">            <span class="comment">// User scrolled down and the FAB is currently visible -&gt; hide the FAB</span></span><br><span class="line">            animateOut(child);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dyConsumed &lt; <span class="number">0</span> &amp;&amp; child.getVisibility() != View.VISIBLE) &#123;</span><br><span class="line">            <span class="comment">// User scrolled up and the FAB is currently not visible -&gt; show the FAB</span></span><br><span class="line">            animateIn(child);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Same animation that FloatingActionButton.Behavior uses to hide the FAB when the AppBarLayout exits</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">animateOut</span><span class="params">(<span class="keyword">final</span> FloatingActionButton button)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= <span class="number">14</span>) &#123;</span><br><span class="line">            ViewCompat.animate(button).translationY(button.getHeight() + getMarginBottom(button)).setInterpolator(INTERPOLATOR).withLayer()</span><br><span class="line">                    .setListener(<span class="keyword">new</span> ViewPropertyAnimatorListener() &#123;</span><br><span class="line">                        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationStart</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">                            ScrollAwareFABBehavior.<span class="keyword">this</span>.mIsAnimatingOut = <span class="keyword">true</span>;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationCancel</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">                            ScrollAwareFABBehavior.<span class="keyword">this</span>.mIsAnimatingOut = <span class="keyword">false</span>;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationEnd</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">                            ScrollAwareFABBehavior.<span class="keyword">this</span>.mIsAnimatingOut = <span class="keyword">false</span>;</span><br><span class="line">                            view.setVisibility(View.GONE);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;).start();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            button.hide();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Same animation that FloatingActionButton.Behavior uses to show the FAB when the AppBarLayout enters</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">animateIn</span><span class="params">(FloatingActionButton button)</span> </span>&#123;</span><br><span class="line">        button.setVisibility(View.VISIBLE);</span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= <span class="number">14</span>) &#123;</span><br><span class="line">            ViewCompat.animate(button).translationY(<span class="number">0</span>)</span><br><span class="line">                    .setInterpolator(INTERPOLATOR).withLayer().setListener(<span class="keyword">null</span>)</span><br><span class="line">                    .start();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            button.show();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">getMarginBottom</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> marginBottom = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">final</span> ViewGroup.LayoutParams layoutParams = v.getLayoutParams();</span><br><span class="line">        <span class="keyword">if</span> (layoutParams <span class="keyword">instanceof</span> ViewGroup.MarginLayoutParams) &#123;</span><br><span class="line">            marginBottom = ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> marginBottom;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们主要看<code>onNestedScroll()</code>这个方法，在方法里主要判断了一下是向上滑还是向下滑。再分别去调用<code>animateOut()</code>和<code>animateIn()</code>。那我们就来看看<code>animateOut()</code>。(<code>animateIn()</code>和<code>animateOut()</code>的原理一样的，我们只看<code>animateOut()</code>吧)</p>
 <p>在<code>animateOut()</code>根据SDK的版本判断，若大于或等于14使用属性动画；不然就是使用了自带的<code>hide()</code>方法。代码还是比较简单的，相信大家都能看得懂。当然如下想在SDK 14以下使用上下移动的效果，那就要用NineOldAndroids这个库了。</p>
 <p>效果就是如下所示了：</p>
 <p><img src="/uploads/20160413/20160413202356.gif" alt="这里写图片描述"></p>
@@ -600,7 +517,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

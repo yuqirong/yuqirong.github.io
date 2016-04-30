@@ -96,7 +96,7 @@
 基本上思路就是上">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160418/20160418160532.gif">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160418/20160418165251.gif">
-<meta property="og:updated_time" content="2016-04-19T05:48:19.840Z">
+<meta property="og:updated_time" content="2016-04-30T08:24:47.051Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="带你实现仿美团的下拉刷新">
 <meta name="twitter:description" content="有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：
@@ -384,161 +384,17 @@
 <p>我们可以大致地分析一下：首先根据下拉改变的 paddingTop 来动态地缩放“绿色椭圆物”,然后当 headerView 的 paddingTop 大于0时，播放美团小人出现的帧动画，最后就是手指松开时播放刷新中的帧动画了。</p>
 <p>基本上思路就是上面分析的那样了，那么我们下面一步就是要获取帧动画的素材了。我们先下载好美团的 apk ，解压后在 res/drawable-xhdpi-v4 里，我们可以得到相关的图片了。如果嫌麻烦，文末有本 Demo 的下载链接，里面就有素材图片。</p>
 <p>有了图片后我们先写个帧动画的 drawable.xml ：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;animation-list xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
-
-    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_01&quot; android:duration=&quot;100&quot;/&gt;
-    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_02&quot; android:duration=&quot;100&quot;/&gt;
-    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_03&quot; android:duration=&quot;100&quot;/&gt;
-    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_04&quot; android:duration=&quot;100&quot;/&gt;
-    &lt;item android:drawable=&quot;@drawable/pull_end_image_frame_05&quot; android:duration=&quot;100&quot;/&gt;
-
-&lt;/animation-list&gt;
-</code></pre><p>一共有两个 drawable.xml ，另外一个和这个类似，就不贴出来了。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">animation-list</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:drawable</span>=<span class="value">"@drawable/pull_end_image_frame_01"</span> <span class="attribute">android:duration</span>=<span class="value">"100"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:drawable</span>=<span class="value">"@drawable/pull_end_image_frame_02"</span> <span class="attribute">android:duration</span>=<span class="value">"100"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:drawable</span>=<span class="value">"@drawable/pull_end_image_frame_03"</span> <span class="attribute">android:duration</span>=<span class="value">"100"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:drawable</span>=<span class="value">"@drawable/pull_end_image_frame_04"</span> <span class="attribute">android:duration</span>=<span class="value">"100"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:drawable</span>=<span class="value">"@drawable/pull_end_image_frame_05"</span> <span class="attribute">android:duration</span>=<span class="value">"100"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">animation-list</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>一共有两个 drawable.xml ，另外一个和这个类似，就不贴出来了。</p>
 <p>现在开始编写代码了，创建一个 MeiTuanListView ，继承自 ListView :</p>
-<pre><code>public class MeiTuanListView extends ListView {
-
-    // 普通状态模式
-    private static final int NONE_MODE = 0;
-    // 下拉刷新模式
-    private static final int PULL_DOWN_MODE = 1;
-    // 可松开刷新模式
-    private static final int RELEASE_REFRESH_MODE = 2;
-    // 刷新中模式
-    private static final int REFRESHING_MODE = 3;
-    // 模式
-    private int mode = NONE_MODE;
-    // 阻值
-    private static final int RATIO = 3;
-    // 下拉刷新头部
-    private View headerRefreshView;
-    // 头部高度
-    private int refreshViewHeight;
-    // 手指按下的Y值
-    private float downY;
-    // 刷新监听器
-    private OnRefreshListener listener;
-    // “绿色椭圆物”的自定义View
-    private MeiTuanOvalView mtOvalView;
-    // 帧动画的ImageView
-    private ImageView aniImageView;
-    // 动画是否已经开始
-    private boolean isStart;
-    // 只有在listview顶端时下拉才可以刷新
-    private boolean canRefresh;
-
-    private static final String TAG = &quot;MeiTuanListView&quot;;
-
-    public MeiTuanListView(Context context) {
-        this(context, null);
-    }
-
-    public MeiTuanListView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public MeiTuanListView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initView();
-    }
-
-    private void initView() {
-        setOverScrollMode(View.OVER_SCROLL_NEVER);
-        headerRefreshView = LayoutInflater.from(getContext()).inflate(R.layout.layout_header, null);
-        mtOvalView = (MeiTuanOvalView) headerRefreshView.findViewById(R.id.mtFirstView);
-        aniImageView = (ImageView) headerRefreshView.findViewById(R.id.iv);
-        // 去测量
-        headerRefreshView.measure(0, 0);
-        refreshViewHeight = headerRefreshView.getMeasuredHeight();
-        headerRefreshView.setPadding(0, -refreshViewHeight, 0, 0);
-        addHeaderView(headerRefreshView, null, false);
-    }
-</code></pre><p>在<code>initView()</code>中，初始化了下拉刷新的头部，并且设置了 setPadding (关于 ListView 下拉刷新的原理大家应该都懂吧？！)。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MeiTuanListView</span> <span class="keyword">extends</span> <span class="title">ListView</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 普通状态模式</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> NONE_MODE = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 下拉刷新模式</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PULL_DOWN_MODE = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 可松开刷新模式</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> RELEASE_REFRESH_MODE = <span class="number">2</span>;</span><br><span class="line">    <span class="comment">// 刷新中模式</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> REFRESHING_MODE = <span class="number">3</span>;</span><br><span class="line">	<span class="comment">// 模式</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mode = NONE_MODE;</span><br><span class="line">	<span class="comment">// 阻值</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> RATIO = <span class="number">3</span>;</span><br><span class="line">    <span class="comment">// 下拉刷新头部</span></span><br><span class="line">    <span class="keyword">private</span> View headerRefreshView;</span><br><span class="line">    <span class="comment">// 头部高度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> refreshViewHeight;</span><br><span class="line">    <span class="comment">// 手指按下的Y值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> downY;</span><br><span class="line">    <span class="comment">// 刷新监听器</span></span><br><span class="line">    <span class="keyword">private</span> OnRefreshListener listener;</span><br><span class="line">    <span class="comment">// “绿色椭圆物”的自定义View</span></span><br><span class="line">    <span class="keyword">private</span> MeiTuanOvalView mtOvalView;</span><br><span class="line">    <span class="comment">// 帧动画的ImageView</span></span><br><span class="line">    <span class="keyword">private</span> ImageView aniImageView;</span><br><span class="line">    <span class="comment">// 动画是否已经开始</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> isStart;</span><br><span class="line">    <span class="comment">// 只有在listview顶端时下拉才可以刷新</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> canRefresh;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"MeiTuanListView"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">MeiTuanListView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MeiTuanListView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MeiTuanListView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        initView();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initView</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        setOverScrollMode(View.OVER_SCROLL_NEVER);</span><br><span class="line">        headerRefreshView = LayoutInflater.from(getContext()).inflate(R.layout.layout_header, <span class="keyword">null</span>);</span><br><span class="line">        mtOvalView = (MeiTuanOvalView) headerRefreshView.findViewById(R.id.mtFirstView);</span><br><span class="line">        aniImageView = (ImageView) headerRefreshView.findViewById(R.id.iv);</span><br><span class="line">        <span class="comment">// 去测量</span></span><br><span class="line">        headerRefreshView.measure(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">        refreshViewHeight = headerRefreshView.getMeasuredHeight();</span><br><span class="line">        headerRefreshView.setPadding(<span class="number">0</span>, -refreshViewHeight, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">        addHeaderView(headerRefreshView, <span class="keyword">null</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>initView()</code>中，初始化了下拉刷新的头部，并且设置了 setPadding (关于 ListView 下拉刷新的原理大家应该都懂吧？！)。</p>
 <p>layout_header.xml 的布局如下：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;wrap_content&quot;
-    android:gravity=&quot;center&quot;&gt;
-
-    &lt;com.yuqirong.meituanlistview.view.MeiTuanOvalView
-        android:id=&quot;@+id/mtFirstView&quot;
-        android:layout_width=&quot;45dp&quot;
-        android:layout_height=&quot;wrap_content&quot; /&gt;
-
-    &lt;ImageView
-        android:id=&quot;@+id/iv_anim&quot;
-        android:layout_width=&quot;45dp&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:visibility=&quot;gone&quot; /&gt;
-
-&lt;/RelativeLayout&gt;
-</code></pre><p>MeiTuanOvalView 这个是关于“绿色椭圆物”的自定义View，会根据 <code>headerView.getPaddingTop()</code> 的值自动缩放，这里就不讲解了，源码还是比较简单的，相关代码可以下载 Demo 查看。而 <code>iv_anim</code> 主要是用来播放帧动画的 ImageView 。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">    <span class="attribute">android:gravity</span>=<span class="value">"center"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">com.yuqirong.meituanlistview.view.MeiTuanOvalView</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/mtFirstView"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"45dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/iv_anim"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"45dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:visibility</span>=<span class="value">"gone"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>MeiTuanOvalView 这个是关于“绿色椭圆物”的自定义View，会根据 <code>headerView.getPaddingTop()</code> 的值自动缩放，这里就不讲解了，源码还是比较简单的，相关代码可以下载 Demo 查看。而 <code>iv_anim</code> 主要是用来播放帧动画的 ImageView 。</p>
 <p>下拉刷新的主要代码都在 <code>onTouchEvent(MotionEvent ev)</code> 里：</p>
-<pre><code>@Override
-public boolean onTouchEvent(MotionEvent ev) {
-    switch (ev.getAction()) {
-        case MotionEvent.ACTION_DOWN:
-            // 在listview顶端时才可下拉刷新
-            if (getFirstVisiblePosition() == 0) {
-                Log.i(TAG, &quot;canRefresh : &quot; + canRefresh);
-                // 记录手指按下的Y坐标
-                downY = ev.getY();
-                canRefresh = true;
-            }
-            break;
-        case MotionEvent.ACTION_MOVE:
-            if (mode != REFRESHING_MODE &amp;&amp; canRefresh) {
-                float moveY = ev.getY();
-                float offsetY = moveY - downY;
-                // 动态改变paddingTop值
-                headerRefreshView.setPadding(0, (int) (headerRefreshView.getPaddingTop() + offsetY / RATIO), 0, 0);
-                if (headerRefreshView.getPaddingTop() &lt;= 0) {
-                    mode = PULL_DOWN_MODE;
-                    mtOvalView.setVisibility(VISIBLE);
-                    aniImageView.setVisibility(GONE);
-                    mtOvalView.setScale((refreshViewHeight + headerRefreshView.getPaddingTop()) * 1f / refreshViewHeight);
-                    isStart = false;
-                } else {
-                    mode = RELEASE_REFRESH_MODE;
-                    if (!isStart) {
-                        mtOvalView.setVisibility(GONE);
-                        aniImageView.setVisibility(VISIBLE);
-                        aniImageView.setImageResource(R.drawable.pull_end_imag_frame);
-                        AnimationDrawable animationDrawable = (AnimationDrawable) aniImageView.getDrawable();
-                        // 只执行一次动画
-                        animationDrawable.setOneShot(true);
-                        animationDrawable.start();
-                        isStart = true;
-                    }
-                }
-                downY = moveY;
-            }
-            break;
-        case MotionEvent.ACTION_UP:
-            if (mode != REFRESHING_MODE &amp;&amp; canRefresh) {
-                if (headerRefreshView.getPaddingTop() &gt; 0) {
-                    mode = REFRESHING_MODE;
-                    headerRefreshView.setPadding(0, 0, 0, 0);
-                    aniImageView.setImageResource(R.drawable.refreshing_image_frame);
-                    AnimationDrawable animationDrawable = (AnimationDrawable) aniImageView.getDrawable();
-                    animationDrawable.start();
-                    if (listener != null) {
-                        listener.refreshing();
-                    }
-                } else {
-                    mode = NONE_MODE;
-                    headerRefreshView.setPadding(0, -refreshViewHeight, 0, 0);
-                    mtOvalView.setScale(0f);
-                    isStart = false;
-                    canRefresh = false;
-                }
-            }
-            break;
-    }
-    return super.onTouchEvent(ev);
-}
-</code></pre><p>里面的代码逻辑还是比较简单的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (ev.getAction()) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">            <span class="comment">// 在listview顶端时才可下拉刷新</span></span><br><span class="line">            <span class="keyword">if</span> (getFirstVisiblePosition() == <span class="number">0</span>) &#123;</span><br><span class="line">                Log.i(TAG, <span class="string">"canRefresh : "</span> + canRefresh);</span><br><span class="line">				<span class="comment">// 记录手指按下的Y坐标</span></span><br><span class="line">                downY = ev.getY();</span><br><span class="line">                canRefresh = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">            <span class="keyword">if</span> (mode != REFRESHING_MODE &amp;&amp; canRefresh) &#123;</span><br><span class="line">                <span class="keyword">float</span> moveY = ev.getY();</span><br><span class="line">                <span class="keyword">float</span> offsetY = moveY - downY;</span><br><span class="line">				<span class="comment">// 动态改变paddingTop值</span></span><br><span class="line">                headerRefreshView.setPadding(<span class="number">0</span>, (<span class="keyword">int</span>) (headerRefreshView.getPaddingTop() + offsetY / RATIO), <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">                <span class="keyword">if</span> (headerRefreshView.getPaddingTop() &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">                    mode = PULL_DOWN_MODE;</span><br><span class="line">                    mtOvalView.setVisibility(VISIBLE);</span><br><span class="line">                    aniImageView.setVisibility(GONE);</span><br><span class="line">                    mtOvalView.setScale((refreshViewHeight + headerRefreshView.getPaddingTop()) * <span class="number">1f</span> / refreshViewHeight);</span><br><span class="line">                    isStart = <span class="keyword">false</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    mode = RELEASE_REFRESH_MODE;</span><br><span class="line">                    <span class="keyword">if</span> (!isStart) &#123;</span><br><span class="line">                        mtOvalView.setVisibility(GONE);</span><br><span class="line">                        aniImageView.setVisibility(VISIBLE);</span><br><span class="line">                        aniImageView.setImageResource(R.drawable.pull_end_imag_frame);</span><br><span class="line">                        AnimationDrawable animationDrawable = (AnimationDrawable) aniImageView.getDrawable();</span><br><span class="line">                        <span class="comment">// 只执行一次动画</span></span><br><span class="line">                        animationDrawable.setOneShot(<span class="keyword">true</span>);</span><br><span class="line">                        animationDrawable.start();</span><br><span class="line">                        isStart = <span class="keyword">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                downY = moveY;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">            <span class="keyword">if</span> (mode != REFRESHING_MODE &amp;&amp; canRefresh) &#123;</span><br><span class="line">                <span class="keyword">if</span> (headerRefreshView.getPaddingTop() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    mode = REFRESHING_MODE;</span><br><span class="line">                    headerRefreshView.setPadding(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">                    aniImageView.setImageResource(R.drawable.refreshing_image_frame);</span><br><span class="line">                    AnimationDrawable animationDrawable = (AnimationDrawable) aniImageView.getDrawable();</span><br><span class="line">                    animationDrawable.start();</span><br><span class="line">                    <span class="keyword">if</span> (listener != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        listener.refreshing();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    mode = NONE_MODE;</span><br><span class="line">                    headerRefreshView.setPadding(<span class="number">0</span>, -refreshViewHeight, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">                    mtOvalView.setScale(<span class="number">0f</span>);</span><br><span class="line">                    isStart = <span class="keyword">false</span>;</span><br><span class="line">                    canRefresh = <span class="keyword">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>里面的代码逻辑还是比较简单的：</p>
 <ul>
 <li>ACTION_DOWN ：首先判断了当 ListView 在顶端时才可以下拉刷新，并且记录了手指按下的Y坐标；</li>
 <li>ACTION_MOVE ：根据滑动的 offsetY 来动态地设置 headerView 的 paddingTop 。我们可以看到在 <code>if (headerRefreshView.getPaddingTop() &lt;= 0)</code> 里面根据 paddingTop 的值来动态地设置 <code>mtOvalView</code> 的 scale ，并且在 <code>setScale()</code> 方法里面会调用 <code>invalidate()</code> ，从而让 <code>mtOvalView</code> 去重绘。不然 <code>headerRefreshView.getPaddingTop()</code> 大于0时就播放了美团小人出场的动画。</li>
@@ -546,24 +402,8 @@ public boolean onTouchEvent(MotionEvent ev) {
 </ul>
 <p>要注意的一点是，在 <code>onTouchEvent(MotionEvent ev)</code> 里要返回 <code>super.onTouchEvent(ev)</code> 。不能是直接返回 <code>true</code> 。因为在 <code>super.onTouchEvent(ev)</code> 里处理了 ListView 滑动的相关逻辑。</p>
 <p>当获取到最新数据后，可以调用<code>notifyRefreshFinished()</code>方法完成下拉刷新：</p>
-<pre><code>public interface OnRefreshListener {
-    void refreshing();
-}
-
-public void setOnRefreshListener(OnRefreshListener listener) {
-    this.listener = listener;
-}
-
-// 刷新完成后调用
-public void notifyRefreshFinished() {
-    mode = NONE_MODE;
-    headerRefreshView.setPadding(0, -refreshViewHeight, 0, 0);
-    aniImageView.setVisibility(GONE);
-    mtOvalView.setVisibility(VISIBLE);
-    isStart = false;
-    canRefresh = false;
-}
-</code></pre><p>最后就是附上效果图了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OnRefreshListener</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">refreshing</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setOnRefreshListener</span><span class="params">(OnRefreshListener listener)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.listener = listener;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 刷新完成后调用</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">notifyRefreshFinished</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    mode = NONE_MODE;</span><br><span class="line">    headerRefreshView.setPadding(<span class="number">0</span>, -refreshViewHeight, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    aniImageView.setVisibility(GONE);</span><br><span class="line">    mtOvalView.setVisibility(VISIBLE);</span><br><span class="line">    isStart = <span class="keyword">false</span>;</span><br><span class="line">    canRefresh = <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后就是附上效果图了：</p>
 <p><img src="/uploads/20160418/20160418165251.gif" alt="这里写图片描述"></p>
 <p>到这里整体就讲解得差不多了，至于 MeiTuanListView 的使用示例以及 MeiTuanOvalView 的源码可以在 Demo 里查看。</p>
 <p>Demo下载链接：</p>
@@ -701,7 +541,7 @@ public void notifyRefreshFinished() {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

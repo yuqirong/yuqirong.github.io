@@ -97,7 +97,7 @@
 我们可以看到 ListView 的 HeaderView 会跟随 ListView 的滑动而变大，HeaderView里的图片会有缩放效果。这些可以使用属性动画来实现。接下来我们就来动手吧！
 首先自定义几个属">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160419/20160419141952.gif">
-<meta property="og:updated_time" content="2016-04-19T06:30:13.187Z">
+<meta property="og:updated_time" content="2016-04-30T09:05:21.235Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="快速打造带有视差效果的ListView">
 <meta name="twitter:description" content="在上一篇博文中，我们实现了仿美团的下拉刷新。而今天的主题还是与 ListView 有关，这次是来实现具有视差效果的 ListView 。
@@ -386,136 +386,18 @@
 <p><img src="/uploads/20160419/20160419141952.gif" alt="这里写图片描述"></p>
 <p>我们可以看到 ListView 的 HeaderView 会跟随 ListView 的滑动而变大，HeaderView里的图片会有缩放效果。这些可以使用属性动画来实现。接下来我们就来动手吧！</p>
 <p>首先自定义几个属性，在之后可以用到：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;resources&gt;
-    &lt;declare-styleable name=&quot;ZoomListView&quot;&gt;
-        &lt;!-- headerView的高度 --&gt;
-        &lt;attr name=&quot;header_height&quot; format=&quot;dimension|reference&quot;&gt;&lt;/attr&gt;
-        &lt;!-- headerView的最大高度 --&gt;
-        &lt;attr name=&quot;header_max_height&quot; format=&quot;dimension|reference&quot;&gt;&lt;/attr&gt;
-        &lt;!-- headerView里面的图片最大的伸缩量 --&gt;
-        &lt;attr name=&quot;header_max_scale&quot; format=&quot;float&quot;&gt;&lt;/attr&gt;
-    &lt;/declare-styleable&gt;
-&lt;/resources&gt;
-</code></pre><p>之后创建 ZoomListView 类，继承自 ListView ：</p>
-<pre><code>public class ZoomListView extends ListView {
-
-    // 最大的伸缩量
-    private final float defaultHeaderMaxScale = 1.2f;
-    // 头部最大的高度
-    private float headerMaxHeight;
-    // 头部初始高度
-    private float headerHeight;
-    // 头部默认初始高度
-    private float defaultHeaderHeight;
-    // 头部默认最大的高度
-    private float defaultHeaderMaxHeight;
-    private ImageView headerView;
-    private ViewGroup.LayoutParams layoutParams;
-    private LinearLayout linearLayout;
-    // 最大的缩放值
-    private float headerMaxScale;
-
-
-    public ZoomListView(Context context) {
-        this(context, null);
-    }
-
-    public ZoomListView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public ZoomListView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        defaultHeaderHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160, context.getResources().getDisplayMetrics());
-        defaultHeaderMaxHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, context.getResources().getDisplayMetrics());
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ZoomListView);
-        headerHeight = a.getDimension(R.styleable.ZoomListView_header_height, defaultHeaderHeight);
-        headerMaxHeight = a.getDimension(R.styleable.ZoomListView_header_max_height, defaultHeaderMaxHeight);
-        headerMaxScale = a.getFloat(R.styleable.ZoomListView_header_max_scale, defaultHeaderMaxScale);
-        a.recycle();
-        initView();
-    }    
-</code></pre><p>到这里都是按部就班式的，设置好自定义属性的初始值，之后调用 <code>initView()</code> ，那就来看看 <code>initView()</code> 方法：</p>
-<pre><code>private void initView() {
-    headerView = new ImageView(getContext());
-    headerView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-    linearLayout = new LinearLayout(getContext());
-    linearLayout.addView(headerView);
-    layoutParams = headerView.getLayoutParams();
-    if (layoutParams == null) {
-        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) headerHeight);
-    } else {
-        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        layoutParams.height = (int) headerHeight;
-    }
-    headerView.setLayoutParams(layoutParams);
-    addHeaderView(linearLayout);
-}
-
-public void setDrawableId(int id) {
-    headerView.setImageResource(id);
-}
-</code></pre><p>可以看出在 <code>initView()</code> 里我们创建了 headerView ，并添加到了ListView的头部。而 <code>setDrawableId(int id)</code> 就是给 headerView 设置相关图片的。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">declare-styleable</span> <span class="attribute">name</span>=<span class="value">"ZoomListView"</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- headerView的高度 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"header_height"</span> <span class="attribute">format</span>=<span class="value">"dimension|reference"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- headerView的最大高度 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"header_max_height"</span> <span class="attribute">format</span>=<span class="value">"dimension|reference"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- headerView里面的图片最大的伸缩量 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"header_max_scale"</span> <span class="attribute">format</span>=<span class="value">"float"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">declare-styleable</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>之后创建 ZoomListView 类，继承自 ListView ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ZoomListView</span> <span class="keyword">extends</span> <span class="title">ListView</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 最大的伸缩量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">float</span> defaultHeaderMaxScale = <span class="number">1.2f</span>;</span><br><span class="line">    <span class="comment">// 头部最大的高度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> headerMaxHeight;</span><br><span class="line">    <span class="comment">// 头部初始高度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> headerHeight;</span><br><span class="line">    <span class="comment">// 头部默认初始高度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> defaultHeaderHeight;</span><br><span class="line">    <span class="comment">// 头部默认最大的高度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> defaultHeaderMaxHeight;</span><br><span class="line">    <span class="keyword">private</span> ImageView headerView;</span><br><span class="line">    <span class="keyword">private</span> ViewGroup.LayoutParams layoutParams;</span><br><span class="line">    <span class="keyword">private</span> LinearLayout linearLayout;</span><br><span class="line">    <span class="comment">// 最大的缩放值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> headerMaxScale;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ZoomListView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ZoomListView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ZoomListView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        defaultHeaderHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, <span class="number">160</span>, context.getResources().getDisplayMetrics());</span><br><span class="line">        defaultHeaderMaxHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, <span class="number">240</span>, context.getResources().getDisplayMetrics());</span><br><span class="line">        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ZoomListView);</span><br><span class="line">        headerHeight = a.getDimension(R.styleable.ZoomListView_header_height, defaultHeaderHeight);</span><br><span class="line">        headerMaxHeight = a.getDimension(R.styleable.ZoomListView_header_max_height, defaultHeaderMaxHeight);</span><br><span class="line">        headerMaxScale = a.getFloat(R.styleable.ZoomListView_header_max_scale, defaultHeaderMaxScale);</span><br><span class="line">        a.recycle();</span><br><span class="line">        initView();</span><br><span class="line">    &#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到这里都是按部就班式的，设置好自定义属性的初始值，之后调用 <code>initView()</code> ，那就来看看 <code>initView()</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initView</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    headerView = <span class="keyword">new</span> ImageView(getContext());</span><br><span class="line">    headerView.setScaleType(ImageView.ScaleType.CENTER_CROP);</span><br><span class="line">    linearLayout = <span class="keyword">new</span> LinearLayout(getContext());</span><br><span class="line">    linearLayout.addView(headerView);</span><br><span class="line">    layoutParams = headerView.getLayoutParams();</span><br><span class="line">    <span class="keyword">if</span> (layoutParams == <span class="keyword">null</span>) &#123;</span><br><span class="line">        layoutParams = <span class="keyword">new</span> ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (<span class="keyword">int</span>) headerHeight);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;</span><br><span class="line">        layoutParams.height = (<span class="keyword">int</span>) headerHeight;</span><br><span class="line">    &#125;</span><br><span class="line">    headerView.setLayoutParams(layoutParams);</span><br><span class="line">    addHeaderView(linearLayout);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setDrawableId</span><span class="params">(<span class="keyword">int</span> id)</span> </span>&#123;</span><br><span class="line">    headerView.setImageResource(id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出在 <code>initView()</code> 里我们创建了 headerView ，并添加到了ListView的头部。而 <code>setDrawableId(int id)</code> 就是给 headerView 设置相关图片的。</p>
 <p>下面就是视差效果的主要实现代码了：</p>
-<pre><code> @Override
-protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
-    if (deltaY &lt; 0 &amp;&amp; isTouchEvent) {
-        if (headerView.getHeight() &lt; headerMaxHeight) {
-            int newHeight = headerView.getHeight()
-                    + Math.abs(deltaY / 3);
-            headerView.getLayoutParams().height = newHeight;
-            headerView.requestLayout();
-            float temp = 1 + (headerMaxScale - 1f) * (headerView.getHeight() - headerHeight) / (headerMaxHeight - headerHeight);
-            headerView.animate().scaleX(temp)
-                    .scaleY(temp).setDuration(0).start();
-        }
-    }
-    return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
-}
-</code></pre><p>我们重写了 <code>overScrollBy()</code> 方法，当 deltaY 小于0时(即 ListView 已经到顶端，但是用户手势还是向下拉)，去动态地设置 headerView 的高度以及 headerView 的 scale 值。这样就可以产生 headerView 变高以及图片放大的效果了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">overScrollBy</span><span class="params">(<span class="keyword">int</span> deltaX, <span class="keyword">int</span> deltaY, <span class="keyword">int</span> scrollX, <span class="keyword">int</span> scrollY, <span class="keyword">int</span> scrollRangeX, <span class="keyword">int</span> scrollRangeY, <span class="keyword">int</span> maxOverScrollX, <span class="keyword">int</span> maxOverScrollY, <span class="keyword">boolean</span> isTouchEvent)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (deltaY &lt; <span class="number">0</span> &amp;&amp; isTouchEvent) &#123;</span><br><span class="line">        <span class="keyword">if</span> (headerView.getHeight() &lt; headerMaxHeight) &#123;</span><br><span class="line">            <span class="keyword">int</span> newHeight = headerView.getHeight()</span><br><span class="line">                    + Math.abs(deltaY / <span class="number">3</span>);</span><br><span class="line">            headerView.getLayoutParams().height = newHeight;</span><br><span class="line">            headerView.requestLayout();</span><br><span class="line">            <span class="keyword">float</span> temp = <span class="number">1</span> + (headerMaxScale - <span class="number">1f</span>) * (headerView.getHeight() - headerHeight) / (headerMaxHeight - headerHeight);</span><br><span class="line">            headerView.animate().scaleX(temp)</span><br><span class="line">                    .scaleY(temp).setDuration(<span class="number">0</span>).start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们重写了 <code>overScrollBy()</code> 方法，当 deltaY 小于0时(即 ListView 已经到顶端，但是用户手势还是向下拉)，去动态地设置 headerView 的高度以及 headerView 的 scale 值。这样就可以产生 headerView 变高以及图片放大的效果了。</p>
 <p>接下来要考虑的问题就是当用户松开手指时，要恢复回原来的样子。所以我们应该在 <code>onTouchEvent(MotionEvent ev)</code> 里去实现相关操作：</p>
-<pre><code>@Override
-public boolean onTouchEvent(MotionEvent ev) {
-    switch (ev.getAction()) {
-        case MotionEvent.ACTION_UP:
-                startAnim();
-            break;
-    }
-    return super.onTouchEvent(ev);
-}
-
-// 开始执行动画
-private void startAnim() {
-    ValueAnimator animator = ValueAnimator.ofFloat(headerView.getHeight(), headerHeight);
-    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            float fraction = (float) animation.getAnimatedValue();
-            headerView.getLayoutParams().height = (int) fraction;
-            headerView.requestLayout();
-        }
-    });
-    animator.setDuration(500);
-    animator.setInterpolator(new LinearInterpolator());
-
-    ValueAnimator animator2 = ValueAnimator.ofFloat(headerView.getScaleX(), 1f);
-    animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            float fraction = (float) animation.getAnimatedValue();
-            headerView.setScaleX(fraction);
-            headerView.setScaleY(fraction);
-        }
-    });
-    animator2.setDuration(500);
-    animator2.setInterpolator(new LinearInterpolator());
-    animator.start();
-    animator2.start();
-}
-</code></pre><p>上面的代码简单点来说，就是在 ACTION_UP 时，去开始两个属性动画，一个属性动画是将 headerView 的高度恢复成原来的值，另一个属性动画就是把 headerView 的 scale 重新恢复为1f。相信大家都可以看懂的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (ev.getAction()) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">                startAnim();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(ev);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 开始执行动画</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">startAnim</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ValueAnimator animator = ValueAnimator.ofFloat(headerView.getHeight(), headerHeight);</span><br><span class="line">    animator.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">float</span> fraction = (<span class="keyword">float</span>) animation.getAnimatedValue();</span><br><span class="line">            headerView.getLayoutParams().height = (<span class="keyword">int</span>) fraction;</span><br><span class="line">            headerView.requestLayout();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    animator.setDuration(<span class="number">500</span>);</span><br><span class="line">    animator.setInterpolator(<span class="keyword">new</span> LinearInterpolator());</span><br><span class="line"></span><br><span class="line">    ValueAnimator animator2 = ValueAnimator.ofFloat(headerView.getScaleX(), <span class="number">1f</span>);</span><br><span class="line">    animator2.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">float</span> fraction = (<span class="keyword">float</span>) animation.getAnimatedValue();</span><br><span class="line">            headerView.setScaleX(fraction);</span><br><span class="line">            headerView.setScaleY(fraction);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    animator2.setDuration(<span class="number">500</span>);</span><br><span class="line">    animator2.setInterpolator(<span class="keyword">new</span> LinearInterpolator());</span><br><span class="line">    animator.start();</span><br><span class="line">    animator2.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码简单点来说，就是在 ACTION_UP 时，去开始两个属性动画，一个属性动画是将 headerView 的高度恢复成原来的值，另一个属性动画就是把 headerView 的 scale 重新恢复为1f。相信大家都可以看懂的。</p>
 <p>ZoomListView 整体的代码就这些了，很简短。下面附上下载的链接：</p>
 <p><a href="/uploads/20160419/ZoomListView.rar">ZoomListView.rar</a></p>
 <p>good luck ! ~~</p>
@@ -557,6 +439,10 @@ private void startAnim() {
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/04/27/自定义实现ViewPager指示器/" rel="prev" title="自定义实现ViewPager指示器">
+                自定义实现ViewPager指示器 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -647,7 +533,7 @@ private void startAnim() {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

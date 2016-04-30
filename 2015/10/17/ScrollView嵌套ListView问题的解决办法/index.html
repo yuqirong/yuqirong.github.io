@@ -84,23 +84,20 @@
 
 <meta name="description" content="在平常的Android开发中我们经常会碰到ScrollView嵌套ListView或者是GridView的情况，若按照一般的流程我们会发现在ScrollView中的ListView显示不全的问题，其实我们可以重写ListView的onMeasure(int widthMeasureSpec, int heightMeasureSpec)方法来解决。
 以下是重写ListView的代码：
-/**
- *">
+123456">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ScrollView嵌套ListView问题的解决办法">
 <meta property="og:url" content="http://yuqirong.me/2015/10/17/ScrollView嵌套ListView问题的解决办法/index.html">
 <meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="在平常的Android开发中我们经常会碰到ScrollView嵌套ListView或者是GridView的情况，若按照一般的流程我们会发现在ScrollView中的ListView显示不全的问题，其实我们可以重写ListView的onMeasure(int widthMeasureSpec, int heightMeasureSpec)方法来解决。
 以下是重写ListView的代码：
-/**
- *">
-<meta property="og:updated_time" content="2016-02-18T11:52:40.750Z">
+123456">
+<meta property="og:updated_time" content="2016-04-30T08:19:13.972Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ScrollView嵌套ListView问题的解决办法">
 <meta name="twitter:description" content="在平常的Android开发中我们经常会碰到ScrollView嵌套ListView或者是GridView的情况，若按照一般的流程我们会发现在ScrollView中的ListView显示不全的问题，其实我们可以重写ListView的onMeasure(int widthMeasureSpec, int heightMeasureSpec)方法来解决。
 以下是重写ListView的代码：
-/**
- *">
+123456">
 
 
 
@@ -379,58 +376,10 @@
       
         <p>在平常的Android开发中我们经常会碰到ScrollView嵌套ListView或者是GridView的情况，若按照一般的流程我们会发现在ScrollView中的ListView显示不全的问题，其实我们可以重写ListView的<code>onMeasure(int widthMeasureSpec, int heightMeasureSpec)</code>方法来解决。</p>
 <p>以下是重写ListView的代码：</p>
-<pre><code>/**
- * 重写ListView，解决与ScrollView的冲突
- */
-public class MyListView extends ListView {
-
-    public MyListView(Context context) {
-        super(context);
-    }
-
-    public MyListView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public MyListView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE &gt;&gt; 2,
-                MeasureSpec.AT_MOST);
-        super.onMeasure(widthMeasureSpec, expandSpec);
-    }
-}
-</code></pre><p>同样的，GridView也可以通过重写来解决：</p>
-<pre><code>/**
- * 重写GridView，解决与ScrollView的冲突
- */
-public class MyGridView extends GridView {
-
-    public MyGridView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public MyGridView(Context context) {
-        super(context);
-    }
-
-    public MyGridView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
-    @Override
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE &gt;&gt; 2,
-                MeasureSpec.AT_MOST);
-        super.onMeasure(widthMeasureSpec, expandSpec);
-    }
-
-}
-</code></pre><p>下面提供MyListView、MyGridView的源码下载：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 重写ListView，解决与ScrollView的冲突</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyListView</span> <span class="keyword">extends</span> <span class="title">ListView</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyListView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyListView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyListView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyle)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyle);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE &gt;&gt; <span class="number">2</span>,</span><br><span class="line">                MeasureSpec.AT_MOST);</span><br><span class="line">        <span class="keyword">super</span>.onMeasure(widthMeasureSpec, expandSpec);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同样的，GridView也可以通过重写来解决：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 重写GridView，解决与ScrollView的冲突</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyGridView</span> <span class="keyword">extends</span> <span class="title">GridView</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyGridView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyGridView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyGridView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyle)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyle);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE &gt;&gt; <span class="number">2</span>,</span><br><span class="line">                MeasureSpec.AT_MOST);</span><br><span class="line">        <span class="keyword">super</span>.onMeasure(widthMeasureSpec, expandSpec);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面提供MyListView、MyGridView的源码下载：</p>
 <p><a href="/uploads/20151017/MyListView.java">MyListView.java</a></p>
 <p><a href="/uploads/20151017/MyGridView.java">MyGridView.java</a></p>
 
@@ -565,7 +514,7 @@ public class MyGridView extends GridView {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

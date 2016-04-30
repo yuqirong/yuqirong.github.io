@@ -92,7 +92,7 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
 <meta property="og:description" content="第一章：Activity的生命周期和启动模式1.1 Activity的生命周期全面分析典型情况下的生命周期分析
 onStart()和onStop()是从Activity是否可见这个角度来回调的，而onResume()和onPause()是从Activity是否位于前台这个角度来回调的。
 Activity A打开Activity B时，为了不影响B的显示，最好不要在Activity A的onPaus">
-<meta property="og:updated_time" content="2016-04-14T12:32:57.356Z">
+<meta property="og:updated_time" content="2016-04-30T08:00:55.206Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Android开发艺术探索》笔记(上)">
 <meta name="twitter:description" content="第一章：Activity的生命周期和启动模式1.1 Activity的生命周期全面分析典型情况下的生命周期分析
@@ -443,17 +443,8 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
 </ol>
 <h2 id="2-3_IPC_u57FA_u7840_u6982_u5FF5_u4ECB_u7ECD"><a href="#2-3_IPC_u57FA_u7840_u6982_u5FF5_u4ECB_u7ECD" class="headerlink" title="2.3 IPC基础概念介绍"></a>2.3 IPC基础概念介绍</h2><p><strong>Serializable接口</strong></p>
 <p>通过Serializable来实现对象的序列化和反序列化(User类实现了Serializable接口)：</p>
-<pre><code>// 序列化过程
-User user = new User(0,&quot;jake&quot;,true);
-ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(&quot;cache.txt&quot;));
-out.writeObject(user);
-out.close();
-
-// 反序列化过程
-ObjectInputStream in = new ObjectInputStream(new FileInputStream(&quot;cache.txt&quot;))；
-User newUser = (User)in.readObject();
-in.close();
-</code></pre><p>恢复的对象newUser和user的内容完全一样，但是两者并不是同一个对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 序列化过程</span></span><br><span class="line">User user = <span class="keyword">new</span> User(<span class="number">0</span>,<span class="string">"jake"</span>,<span class="keyword">true</span>);</span><br><span class="line">ObjectOutputStream out = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"cache.txt"</span>));</span><br><span class="line">out.writeObject(user);</span><br><span class="line">out.close();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 反序列化过程</span></span><br><span class="line">ObjectInputStream in = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"cache.txt"</span>))；</span><br><span class="line">User newUser = (User)in.readObject();</span><br><span class="line">in.close();</span><br></pre></td></tr></table></figure>
+<p>恢复的对象newUser和user的内容完全一样，但是两者并不是同一个对象。</p>
 <p>原则上序列化后的数据中的serialVerionUID只有和当前类的serialVersionUID相同才能够正常地被反序列化。</p>
 <p>有两个需要注意一下：</p>
 <ul>
@@ -747,7 +738,7 @@ root.setView(view, wparams, panelParentView);
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

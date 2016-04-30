@@ -83,23 +83,20 @@
 
 
 <meta name="description" content="之前在做项目的过程中，有一个需求就是在AlertDialog中有EditText，可以在EditText中输入内容。但是在实际开发的过程中却发现，点击EditText却始终无法弹出键盘。因为之前在使用AlertDialog的时候，布局中并没有EditText，因此没有发现这个问题。这次算是填了一个隐藏的坑。
-例如下面给出了一个例子，首先贴上AlertDialog的layout.xml：
-&amp;lt;?">
+例如下面给出了一个例子，首先贴上AlertDialog的layout.xml：123456">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在AlertDialog中EditText无法弹出键盘的解决方案">
 <meta property="og:url" content="http://yuqirong.me/2016/02/06/在AlertDialog中EditText无法弹出键盘的解决方案/index.html">
 <meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="之前在做项目的过程中，有一个需求就是在AlertDialog中有EditText，可以在EditText中输入内容。但是在实际开发的过程中却发现，点击EditText却始终无法弹出键盘。因为之前在使用AlertDialog的时候，布局中并没有EditText，因此没有发现这个问题。这次算是填了一个隐藏的坑。
-例如下面给出了一个例子，首先贴上AlertDialog的layout.xml：
-&amp;lt;?">
+例如下面给出了一个例子，首先贴上AlertDialog的layout.xml：123456">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160206/20160206160310.png">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160206/20160206161311.png">
-<meta property="og:updated_time" content="2016-03-02T11:34:38.470Z">
+<meta property="og:updated_time" content="2016-04-30T08:55:55.248Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在AlertDialog中EditText无法弹出键盘的解决方案">
 <meta name="twitter:description" content="之前在做项目的过程中，有一个需求就是在AlertDialog中有EditText，可以在EditText中输入内容。但是在实际开发的过程中却发现，点击EditText却始终无法弹出键盘。因为之前在使用AlertDialog的时候，布局中并没有EditText，因此没有发现这个问题。这次算是填了一个隐藏的坑。
-例如下面给出了一个例子，首先贴上AlertDialog的layout.xml：
-&amp;lt;?">
+例如下面给出了一个例子，首先贴上AlertDialog的layout.xml：123456">
 
 
 
@@ -377,31 +374,8 @@
 
       
         <p>之前在做项目的过程中，有一个需求就是在AlertDialog中有EditText，可以在EditText中输入内容。但是在实际开发的过程中却发现，点击EditText却始终无法弹出键盘。因为之前在使用AlertDialog的时候，布局中并没有EditText，因此没有发现这个问题。这次算是填了一个隐藏的坑。</p>
-<p>例如下面给出了一个例子，首先贴上AlertDialog的<code>layout.xml</code>：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:layout_width=&quot;300dp&quot;
-    android:layout_height=&quot;200dp&quot;
-    android:background=&quot;@android:color/white&quot;
-    android:orientation=&quot;vertical&quot;&gt;
-
-    &lt;TextView
-        android:layout_width=&quot;wrap_content&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:text=&quot;Hello friend!&quot;/&gt;
-
-    &lt;EditText
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:hint=&quot;input content&quot; /&gt;
-
-    &lt;Button
-        android:layout_width=&quot;wrap_content&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:text=&quot;submit&quot;/&gt;
-
-&lt;/LinearLayout&gt;
-</code></pre><p>AlertDialog的效果图是这样的：</p>
+<p>例如下面给出了一个例子，首先贴上AlertDialog的<code>layout.xml</code>：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"300dp"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"200dp"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">    <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"Hello friend!"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">EditText</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:hint</span>=<span class="value">"input content"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">Button</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"submit"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>AlertDialog的效果图是这样的：</p>
 <p><img src="/uploads/20160206/20160206160310.png" alt="这里填写图片的描述"></p>
 <p>我们会发现无论怎么点击EditText也无法弹出键盘，其实我们只要加上<code>alertDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);</code>这一句，就可以让键盘弹出了。</p>
 <p><img src="/uploads/20160206/20160206161311.png" alt="这里填写图片的描述"></p>
@@ -539,7 +513,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -91,7 +91,7 @@
 <meta property="og:description" content="在上一篇博文中，我们用WindowManager的方法实现了Tab栏的悬浮功能。如果你没有看过上篇博文，请点击《轻松实现app中的导航Tab栏悬浮功能》。
 当然，用WindowManager来实现由一个缺点就是当没有显示悬浮窗的权限时，该功能就无法体现出来。而在本篇博文中，我们用第二种方法，也就是不断地重新设置Tab栏的布局位置来实现悬浮功能，弥补了第一种方法的缺点。效果图这里就不放了，相信大家都">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160114/20160114223247.gif">
-<meta property="og:updated_time" content="2016-02-24T14:16:17.719Z">
+<meta property="og:updated_time" content="2016-04-30T08:49:26.137Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="实现导航Tab栏悬浮功能之改进版">
 <meta name="twitter:description" content="在上一篇博文中，我们用WindowManager的方法实现了Tab栏的悬浮功能。如果你没有看过上篇博文，请点击《轻松实现app中的导航Tab栏悬浮功能》。
@@ -375,238 +375,11 @@
         <p>在上一篇博文中，我们用WindowManager的方法实现了Tab栏的悬浮功能。如果你没有看过上篇博文，请点击<a href="/2016/01/12/%E8%BD%BB%E6%9D%BE%E5%AE%9E%E7%8E%B0app%E4%B8%AD%E7%9A%84%E5%AF%BC%E8%88%AATab%E6%A0%8F%E6%82%AC%E6%B5%AE%E5%8A%9F%E8%83%BD/">《轻松实现app中的导航Tab栏悬浮功能》</a>。</p>
 <p>当然，用WindowManager来实现由一个缺点就是当没有显示悬浮窗的权限时，该功能就无法体现出来。而在本篇博文中，我们用第二种方法，也就是不断地重新设置Tab栏的布局位置来实现悬浮功能，弥补了第一种方法的缺点。效果图这里就不放了，相信大家都看过啦。</p>
 <p>不废话了，直接上代码。</p>
-<p>activity_main.xml：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:id=&quot;@+id/ll_main&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;
-    android:orientation=&quot;vertical&quot;&gt;
-
-    &lt;RelativeLayout
-        android:id=&quot;@+id/rl_title&quot;
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;50dp&quot;
-        android:background=&quot;@color/colorPrimary&quot;&gt;
-
-        &lt;ImageView
-            android:id=&quot;@+id/iv_back&quot;
-            android:layout_width=&quot;wrap_content&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:layout_centerVertical=&quot;true&quot;
-            android:layout_marginLeft=&quot;10dp&quot;
-            android:src=&quot;@drawable/new_img_back&quot; /&gt;
-
-        &lt;TextView
-            android:layout_width=&quot;wrap_content&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:layout_centerInParent=&quot;true&quot;
-            android:text=&quot;@string/app_name&quot;
-            android:textColor=&quot;@android:color/white&quot;
-            android:textSize=&quot;18sp&quot; /&gt;
-
-    &lt;/RelativeLayout&gt;
-
-    &lt;com.yuqirong.tabsuspenddemo.view.MyScrollView
-        android:id=&quot;@+id/mScrollView&quot;
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;match_parent&quot;&gt;
-
-        &lt;LinearLayout
-            android:layout_width=&quot;match_parent&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:background=&quot;#cccccc&quot;
-            android:orientation=&quot;vertical&quot;&gt;
-
-            &lt;ImageView
-                android:id=&quot;@+id/iv_pic&quot;
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;180dp&quot;
-                android:scaleType=&quot;centerCrop&quot;
-                android:src=&quot;@drawable/ic_bg_personal_page&quot; /&gt;
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;55dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;15dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;15dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;15dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;15dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;15dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;15dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;15dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-            &lt;include layout=&quot;@layout/tab_layout&quot; /&gt;
-
-        &lt;/LinearLayout&gt;
-    &lt;/com.yuqirong.tabsuspenddemo.view.MyScrollView&gt;
-&lt;/LinearLayout&gt;
-</code></pre><p>tab_layout.xml：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:id=&quot;@+id/ll_tab&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;40dp&quot;
-    android:background=&quot;@color/colorPrimary&quot;
-    android:orientation=&quot;horizontal&quot;&gt;
-
-    &lt;TextView
-        android:layout_width=&quot;0dp&quot;
-        android:layout_height=&quot;match_parent&quot;
-        android:layout_weight=&quot;1&quot;
-        android:gravity=&quot;center&quot;
-        android:text=&quot;分类&quot;
-        android:textColor=&quot;@android:color/white&quot;
-        android:textSize=&quot;18sp&quot; /&gt;
-
-    &lt;TextView
-        android:layout_width=&quot;0dp&quot;
-        android:layout_height=&quot;match_parent&quot;
-        android:layout_weight=&quot;1&quot;
-        android:gravity=&quot;center&quot;
-        android:text=&quot;排序&quot;
-        android:textColor=&quot;@android:color/white&quot;
-        android:textSize=&quot;18sp&quot; /&gt;
-
-    &lt;TextView
-        android:layout_width=&quot;0dp&quot;
-        android:layout_height=&quot;match_parent&quot;
-        android:layout_weight=&quot;1&quot;
-        android:gravity=&quot;center&quot;
-        android:text=&quot;筛选&quot;
-        android:textColor=&quot;@android:color/white&quot;
-        android:textSize=&quot;18sp&quot; /&gt;
-
-&lt;/LinearLayout&gt;
-</code></pre><p>我们发现在activity_main.xml里Tab栏悬浮窗的布局放在了最后，这是因为当悬浮窗悬浮在顶部时，应该在所有的UI控件上方，所以在xml里放在了最后。</p>
-<p>接下来看看MainActivity：</p>
-<pre><code>public class MainActivity extends AppCompatActivity implements MyScrollView.OnScrollListener {
-
-    private static final String TAG = &quot;MainActivity&quot;;
-    private MyScrollView mScrollView;
-    private LinearLayout ll_tab;
-    private ImageView iv_pic;
-    private int picBottom;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
-        mScrollView = (MyScrollView) findViewById(R.id.mScrollView);
-        mScrollView.setOnScrollListener(this);
-        ll_tab = (LinearLayout) findViewById(R.id.ll_tab);
-        iv_pic = (ImageView) findViewById(R.id.iv_pic);
-        findViewById(R.id.ll_main).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                onScroll(mScrollView.getScrollY());
-            }
-        });
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            picBottom = iv_pic.getBottom();
-        }
-    }
-
-    @Override
-    public void onScroll(int scrollY) {
-        int top = Math.max(scrollY, picBottom);
-        ll_tab.layout(0, top, ll_tab.getWidth(), top + ll_tab.getHeight());
-    }
-
-}
-</code></pre><p>我们惊奇地发现在Activity里的代码竟然这么短！但是这是这么短，实现了一模一样的功能。</p>
+<p>activity_main.xml：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:id</span>=<span class="value">"@+id/ll_main"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">RelativeLayout</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/rl_title"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"50dp"</span></span><br><span class="line">        <span class="attribute">android:background</span>=<span class="value">"@color/colorPrimary"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/iv_back"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_centerVertical</span>=<span class="value">"true"</span></span><br><span class="line">            <span class="attribute">android:layout_marginLeft</span>=<span class="value">"10dp"</span></span><br><span class="line">            <span class="attribute">android:src</span>=<span class="value">"@drawable/new_img_back"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_centerInParent</span>=<span class="value">"true"</span></span><br><span class="line">            <span class="attribute">android:text</span>=<span class="value">"@string/app_name"</span></span><br><span class="line">            <span class="attribute">android:textColor</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">            <span class="attribute">android:textSize</span>=<span class="value">"18sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">com.yuqirong.tabsuspenddemo.view.MyScrollView</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/mScrollView"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:background</span>=<span class="value">"#cccccc"</span></span><br><span class="line">            <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">                <span class="attribute">android:id</span>=<span class="value">"@+id/iv_pic"</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"180dp"</span></span><br><span class="line">                <span class="attribute">android:scaleType</span>=<span class="value">"centerCrop"</span></span><br><span class="line">                <span class="attribute">android:src</span>=<span class="value">"@drawable/ic_bg_personal_page"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"55dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">include</span> <span class="attribute">layout</span>=<span class="value">"@layout/tab_layout"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">com.yuqirong.tabsuspenddemo.view.MyScrollView</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>tab_layout.xml：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:id</span>=<span class="value">"@+id/ll_tab"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"40dp"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"@color/colorPrimary"</span></span><br><span class="line">    <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"0dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_weight</span>=<span class="value">"1"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"分类"</span></span><br><span class="line">        <span class="attribute">android:textColor</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">        <span class="attribute">android:textSize</span>=<span class="value">"18sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"0dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_weight</span>=<span class="value">"1"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"排序"</span></span><br><span class="line">        <span class="attribute">android:textColor</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">        <span class="attribute">android:textSize</span>=<span class="value">"18sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"0dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_weight</span>=<span class="value">"1"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"筛选"</span></span><br><span class="line">        <span class="attribute">android:textColor</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">        <span class="attribute">android:textSize</span>=<span class="value">"18sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>我们发现在activity_main.xml里Tab栏悬浮窗的布局放在了最后，这是因为当悬浮窗悬浮在顶部时，应该在所有的UI控件上方，所以在xml里放在了最后。</p>
+<p>接下来看看MainActivity：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> <span class="keyword">implements</span> <span class="title">MyScrollView</span>.<span class="title">OnScrollListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"MainActivity"</span>;</span><br><span class="line">    <span class="keyword">private</span> MyScrollView mScrollView;</span><br><span class="line">    <span class="keyword">private</span> LinearLayout ll_tab;</span><br><span class="line">    <span class="keyword">private</span> ImageView iv_pic;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> picBottom;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        getSupportActionBar().hide();</span><br><span class="line">        mScrollView = (MyScrollView) findViewById(R.id.mScrollView);</span><br><span class="line">        mScrollView.setOnScrollListener(<span class="keyword">this</span>);</span><br><span class="line">        ll_tab = (LinearLayout) findViewById(R.id.ll_tab);</span><br><span class="line">        iv_pic = (ImageView) findViewById(R.id.iv_pic);</span><br><span class="line">        findViewById(R.id.ll_main).getViewTreeObserver().addOnGlobalLayoutListener(<span class="keyword">new</span> ViewTreeObserver.OnGlobalLayoutListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onGlobalLayout</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                onScroll(mScrollView.getScrollY());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onWindowFocusChanged</span><span class="params">(<span class="keyword">boolean</span> hasFocus)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onWindowFocusChanged(hasFocus);</span><br><span class="line">        <span class="keyword">if</span> (hasFocus) &#123;</span><br><span class="line">            picBottom = iv_pic.getBottom();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScroll</span><span class="params">(<span class="keyword">int</span> scrollY)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> top = Math.max(scrollY, picBottom);</span><br><span class="line">        ll_tab.layout(<span class="number">0</span>, top, ll_tab.getWidth(), top + ll_tab.getHeight());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们惊奇地发现在Activity里的代码竟然这么短！但是这是这么短，实现了一模一样的功能。</p>
 <p>首先在父布局中添加了OnGlobalLayoutListener，以便当布局的状态或者控件的可见性改变时去重新设置Tab栏的布局。之后在<code>onWindowFocusChanged(boolean hasFocus)</code>里得到<code>iv_pic.getBottom()</code>的值，也就是<code>iv_pic</code>的高度。也就是说你一开始想把<code>ll_tab</code>布局在<code>iv_pic</code>的下面。因此可以当作Tab栏距离ScrollView顶部的距离。</p>
 <p>最后在<code>onScroll(int scrollY)</code>中比较scrollY，picBottom的最大值。当<code>scrollY&lt;picBottom</code>时，<code>ll_tab</code>会跟随ScrollView的滑动而滑动；当<code>scrollY&gt;picBottom</code>时，<code>ll_tab</code>布局的顶部的坐标始终是ScrollView的滑动距离，这样就造成了<code>ll_tab</code>悬浮在顶部的“假象”。</p>
 <p>好了，一起来看看效果吧：</p>
@@ -745,7 +518,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

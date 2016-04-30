@@ -94,7 +94,7 @@
 之后在脑海中回想到 WebView 中的JS可以和app产生交互，于是搜索了一下，果然网上有类似的实现效果。看了一下，在这里就做一个简单的笔记了以">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160307/20160307200816.png">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160307/20160307225743.gif">
-<meta property="og:updated_time" content="2016-03-07T15:04:30.507Z">
+<meta property="og:updated_time" content="2016-04-30T08:48:22.056Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="实现WebView中JS和App之间的交互">
 <meta name="twitter:description" content="今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。
@@ -385,88 +385,13 @@
 <li>第二个参数：用来显示 JavaScript 中的实例的名称。</li>
 </ul>
 <p>这里只是给出了参数的解释，如果你没看懂，那接下来就告诉你答案。</p>
-<p>那就开始吧，在创建新的 project 之前，我们先把要加载的 test.html 写好，放在 assets 目录下：</p>
-<pre><code>&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;WebView Test&lt;/title&gt;
-        &lt;script type=&quot;text/javascript&quot;&gt;
-        function btnShowToast(){
-            window.testJS.showToast();
-        }
-
-        function btnGoActivity(){
-            window.testJS.goActivity();
-        }
-        &lt;/script&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;This is a website&lt;/p&gt;
-        &lt;br&gt;
-        &lt;button onclick=&apos;btnShowToast();&apos;&gt;show Toast&lt;/button&gt;
-        &lt;button onclick=&apos;btnGoActivity();&apos;&gt;go Activity&lt;/button&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre><p>上面的 html 很简单，相信有点基础的同学都能看得懂。要注意的是在JS函数中的 testJS 是要和 WebView 约定好的，这里就取名叫 testJS 吧，在下面会用到。还有<code>showToast()</code>和<code>goActivity()</code>也是约定好的函数名。我们预期的效果是点击 show Toast 按钮会显示Toast，而点击 go Activity 按钮会跳转到另外一个 Activity 上。</p>
-<p>下面创建了一个 project ，名叫 WebViewDemo ，工程中 MainActivity 的 layout.xml 就只有一个 WebView 了：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;
-    tools:context=&quot;com.yuqirong.webviewdemo.MainActivity&quot;&gt;
-
-    &lt;WebView
-        android:id=&quot;@+id/mWebView&quot;
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;match_parent&quot; /&gt;
-
-&lt;/RelativeLayout&gt;
-</code></pre><p>MainActivity 的代码很短，就直接贴出来了：</p>
-<pre><code>public class MainActivity extends AppCompatActivity {
-
-    private WebView mWebView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mWebView = (WebView) findViewById(R.id.mWebView);
-        // 设置支持JS
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        // 增加JS交互的接口
-        mWebView.addJavascriptInterface(new AndroidJSInterface(this), &quot;testJS&quot;);
-        mWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return false;
-            }
-        });
-        String url = &quot;file:///android_asset/test.html&quot;;
-        mWebView.loadUrl(url);
-    }
-}
-</code></pre><p>我们可以看到，如果想要和JS交互，那么<code>mWebView.getSettings().setJavaScriptEnabled(true);</code>这句是必不可少的，再看到下面一行代码：<code>mWebView.addJavascriptInterface(new AndroidJSInterface(this), &quot;testJS&quot;);</code>，这里注意一下第二个参数，没错，就是在 html 中的 testJS ！</p>
-<p>再看回第一个参数，发现 new 了一个 AndroidJSInterface 类，下面就是 AndroidJSInterface 的代码：</p>
-<pre><code>public class AndroidJSInterface {
-
-    private Context context;
-
-    public AndroidJSInterface(Context context) {
-        this.context = context;
-    }
-
-    @JavascriptInterface
-    public void goActivity() {
-        context.startActivity(new Intent(context, SecondActivity.class));
-    }
-
-    @JavascriptInterface
-    public void showToast() {
-        Toast.makeText(context, &quot;hello js&quot;, Toast.LENGTH_SHORT).show();
-    }
-
-}
-</code></pre><p>我们可以看到上面的<code>showToast()</code>和<code>goActivity()</code>方法名和 html 里面的一定要一样，不然无法触发了。然后在方法的内部实现你想要的逻辑。</p>
+<p>那就开始吧，在创建新的 project 之前，我们先把要加载的 test.html 写好，放在 assets 目录下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="title">title</span>&gt;</span>WebView Test<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript"></span><br><span class="line">		<span class="function"><span class="keyword">function</span> <span class="title">btnShowToast</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		    <span class="built_in">window</span>.testJS.showToast();</span><br><span class="line">		&#125;</span><br><span class="line">	</span><br><span class="line">		<span class="function"><span class="keyword">function</span> <span class="title">btnGoActivity</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		    <span class="built_in">window</span>.testJS.goActivity();</span><br><span class="line">		&#125;</span><br><span class="line">	    </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">p</span>&gt;</span>This is a website<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">br</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">button</span> <span class="attribute">onclick</span>=<span class="value">'btnShowToast();'</span>&gt;</span>show Toast<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">button</span> <span class="attribute">onclick</span>=<span class="value">'btnGoActivity();'</span>&gt;</span>go Activity<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>上面的 html 很简单，相信有点基础的同学都能看得懂。要注意的是在JS函数中的 testJS 是要和 WebView 约定好的，这里就取名叫 testJS 吧，在下面会用到。还有<code>showToast()</code>和<code>goActivity()</code>也是约定好的函数名。我们预期的效果是点击 show Toast 按钮会显示Toast，而点击 go Activity 按钮会跳转到另外一个 Activity 上。</p>
+<p>下面创建了一个 project ，名叫 WebViewDemo ，工程中 MainActivity 的 layout.xml 就只有一个 WebView 了：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">tools:context</span>=<span class="value">"com.yuqirong.webviewdemo.MainActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">WebView</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/mWebView"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span> /&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>MainActivity 的代码很短，就直接贴出来了：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> WebView mWebView;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        mWebView = (WebView) findViewById(R.id.mWebView);</span><br><span class="line">        <span class="comment">// 设置支持JS</span></span><br><span class="line">        mWebView.getSettings().setJavaScriptEnabled(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">// 增加JS交互的接口</span></span><br><span class="line">        mWebView.addJavascriptInterface(<span class="keyword">new</span> AndroidJSInterface(<span class="keyword">this</span>), <span class="string">"testJS"</span>);</span><br><span class="line">        mWebView.setWebViewClient(<span class="keyword">new</span> WebViewClient() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">shouldOverrideUrlLoading</span><span class="params">(WebView view, String url)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        String url = <span class="string">"file:///android_asset/test.html"</span>;</span><br><span class="line">        mWebView.loadUrl(url);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们可以看到，如果想要和JS交互，那么<code>mWebView.getSettings().setJavaScriptEnabled(true);</code>这句是必不可少的，再看到下面一行代码：<code>mWebView.addJavascriptInterface(new AndroidJSInterface(this), &quot;testJS&quot;);</code>，这里注意一下第二个参数，没错，就是在 html 中的 testJS ！</p>
+<p>再看回第一个参数，发现 new 了一个 AndroidJSInterface 类，下面就是 AndroidJSInterface 的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AndroidJSInterface</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Context context;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AndroidJSInterface</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.context = context;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@JavascriptInterface</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">goActivity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        context.startActivity(<span class="keyword">new</span> Intent(context, SecondActivity.class));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@JavascriptInterface</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showToast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Toast.makeText(context, <span class="string">"hello js"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们可以看到上面的<code>showToast()</code>和<code>goActivity()</code>方法名和 html 里面的一定要一样，不然无法触发了。然后在方法的内部实现你想要的逻辑。</p>
 <p>经过上面的步骤，就可以实现和JS交互了，一起来看看效果吧：</p>
 <p><img src="/uploads/20160307/20160307225743.gif" alt="这里写图片的描述"></p>
 <p>源码下载：</p>
@@ -603,7 +528,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

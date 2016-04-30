@@ -95,7 +95,7 @@
 <meta property="og:image" content="http://yuqirong.me/uploads/20160112/20160112210653.gif">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160112/20160112201753.png">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160112/20160112204356.gif">
-<meta property="og:updated_time" content="2016-02-22T12:45:22.651Z">
+<meta property="og:updated_time" content="2016-04-30T08:42:33.994Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="轻松实现app中的导航Tab栏悬浮功能">
 <meta name="twitter:description" content="又到了更博的时间了，今天给大家带来的就是“导航Tab栏悬浮功能”了。通常大家在玩手机的过程中应该会注意到很多的app都有这种功能，比如说外卖达人常用的“饿了么”。下面就给出了“饿了么”导航Tab栏悬浮的效果图。
@@ -385,250 +385,21 @@
 <p>好了，根据上面的就得到了对ScrollView滑动的监听了。接下来要思考的问题就是如何让Tab栏实现悬浮的效果呢？这里给出的方法有两种，第一种就是使用WindowManager来动态地添加一个View悬浮在顶部；第二种就是随着ScrollView的滑动不断重新设置Tab栏的布局位置。</p>
 <p>我们先来看看第一种实现方法，首先是xml布局了。</p>
 <p>Activity的布局，activity_main.xml：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;
-    android:orientation=&quot;vertical&quot;&gt;
-
-    &lt;RelativeLayout
-        android:id=&quot;@+id/rl_title&quot;
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;50dp&quot;
-        android:background=&quot;@color/colorPrimary&quot;&gt;
-
-        &lt;ImageView
-            android:id=&quot;@+id/iv_back&quot;
-            android:layout_width=&quot;wrap_content&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:layout_centerVertical=&quot;true&quot;
-            android:layout_marginLeft=&quot;10dp&quot;
-            android:src=&quot;@drawable/new_img_back&quot; /&gt;
-
-        &lt;TextView
-            android:layout_width=&quot;wrap_content&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:layout_centerInParent=&quot;true&quot;
-            android:text=&quot;@string/app_name&quot;
-            android:textColor=&quot;@android:color/white&quot;
-            android:textSize=&quot;18sp&quot; /&gt;
-
-    &lt;/RelativeLayout&gt;
-
-    &lt;com.yuqirong.tabsuspenddemo.view.MyScrollView
-        android:id=&quot;@+id/mScrollView&quot;
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;match_parent&quot;&gt;
-
-        &lt;LinearLayout
-            android:layout_width=&quot;match_parent&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:background=&quot;#cccccc&quot;
-            android:orientation=&quot;vertical&quot;&gt;
-
-            &lt;ImageView
-                android:id=&quot;@+id/iv_pic&quot;
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;180dp&quot;
-                android:scaleType=&quot;centerCrop&quot;
-                android:src=&quot;@drawable/ic_bg_personal_page&quot; /&gt;
-
-            &lt;include layout=&quot;@layout/tab_layout&quot; /&gt;
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;15dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;15dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;15dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;15dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;15dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;15dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-            &lt;LinearLayout
-                android:layout_width=&quot;match_parent&quot;
-                android:layout_height=&quot;90dp&quot;
-                android:layout_marginBottom=&quot;5dp&quot;
-                android:layout_marginLeft=&quot;15dp&quot;
-                android:layout_marginRight=&quot;15dp&quot;
-                android:layout_marginTop=&quot;15dp&quot;
-                android:background=&quot;@android:color/white&quot;
-                android:orientation=&quot;horizontal&quot;&gt;
-
-            &lt;/LinearLayout&gt;
-
-        &lt;/LinearLayout&gt;
-    &lt;/com.yuqirong.tabsuspenddemo.view.MyScrollView&gt;
-&lt;/LinearLayout&gt;
-</code></pre><p>Tab栏的布局，tab_layout.xml：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:id=&quot;@+id/ll_tab&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;40dp&quot;
-    android:background=&quot;@color/colorPrimary&quot;
-    android:orientation=&quot;horizontal&quot;&gt;
-
-    &lt;TextView
-        android:layout_width=&quot;0dp&quot;
-        android:layout_height=&quot;match_parent&quot;
-        android:layout_weight=&quot;1&quot;
-        android:gravity=&quot;center&quot;
-        android:text=&quot;分类&quot;
-        android:textColor=&quot;@android:color/white&quot;
-        android:textSize=&quot;18sp&quot; /&gt;
-
-    &lt;TextView
-        android:layout_width=&quot;0dp&quot;
-        android:layout_height=&quot;match_parent&quot;
-        android:layout_weight=&quot;1&quot;
-        android:gravity=&quot;center&quot;
-        android:text=&quot;排序&quot;
-        android:textColor=&quot;@android:color/white&quot;
-        android:textSize=&quot;18sp&quot; /&gt;
-
-    &lt;TextView
-        android:layout_width=&quot;0dp&quot;
-        android:layout_height=&quot;match_parent&quot;
-        android:layout_weight=&quot;1&quot;
-        android:gravity=&quot;center&quot;
-        android:text=&quot;筛选&quot;
-        android:textColor=&quot;@android:color/white&quot;
-        android:textSize=&quot;18sp&quot; /&gt;
-
-&lt;/LinearLayout&gt;
-</code></pre><p>上面布局中的很多空白LinearLayout主要是拉长ScrollView，效果图就是这样的：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">RelativeLayout</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/rl_title"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"50dp"</span></span><br><span class="line">        <span class="attribute">android:background</span>=<span class="value">"@color/colorPrimary"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/iv_back"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_centerVertical</span>=<span class="value">"true"</span></span><br><span class="line">            <span class="attribute">android:layout_marginLeft</span>=<span class="value">"10dp"</span></span><br><span class="line">            <span class="attribute">android:src</span>=<span class="value">"@drawable/new_img_back"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_centerInParent</span>=<span class="value">"true"</span></span><br><span class="line">            <span class="attribute">android:text</span>=<span class="value">"@string/app_name"</span></span><br><span class="line">            <span class="attribute">android:textColor</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">            <span class="attribute">android:textSize</span>=<span class="value">"18sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">com.yuqirong.tabsuspenddemo.view.MyScrollView</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/mScrollView"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:background</span>=<span class="value">"#cccccc"</span></span><br><span class="line">            <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">                <span class="attribute">android:id</span>=<span class="value">"@+id/iv_pic"</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"180dp"</span></span><br><span class="line">                <span class="attribute">android:scaleType</span>=<span class="value">"centerCrop"</span></span><br><span class="line">                <span class="attribute">android:src</span>=<span class="value">"@drawable/ic_bg_personal_page"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">include</span> <span class="attribute">layout</span>=<span class="value">"@layout/tab_layout"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">                <span class="attribute">android:layout_height</span>=<span class="value">"90dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginLeft</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginRight</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:layout_marginTop</span>=<span class="value">"15dp"</span></span><br><span class="line">                <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">                <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line">            </span><br><span class="line">        <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">com.yuqirong.tabsuspenddemo.view.MyScrollView</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Tab栏的布局，tab_layout.xml：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:id</span>=<span class="value">"@+id/ll_tab"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"40dp"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"@color/colorPrimary"</span></span><br><span class="line">    <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"0dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_weight</span>=<span class="value">"1"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"分类"</span></span><br><span class="line">        <span class="attribute">android:textColor</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">        <span class="attribute">android:textSize</span>=<span class="value">"18sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"0dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_weight</span>=<span class="value">"1"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"排序"</span></span><br><span class="line">        <span class="attribute">android:textColor</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">        <span class="attribute">android:textSize</span>=<span class="value">"18sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"0dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_weight</span>=<span class="value">"1"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"筛选"</span></span><br><span class="line">        <span class="attribute">android:textColor</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">        <span class="attribute">android:textSize</span>=<span class="value">"18sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上面布局中的很多空白LinearLayout主要是拉长ScrollView，效果图就是这样的：</p>
 <p><img src="/uploads/20160112/20160112201753.png" alt="这里填写图片的描述"></p>
 <p>然后我们来看看<code>onCreate(Bundle savedInstanceState)</code>：</p>
-<pre><code>@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    getSupportActionBar().hide();
-    setContentView(R.layout.activity_main);
-    mScrollView = (MyScrollView) findViewById(R.id.mScrollView);
-    mScrollView.setOnScrollListener(this);
-    ll_tab = (LinearLayout) findViewById(R.id.ll_tab);
-    windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-}
-</code></pre><p>我们先在<code>onCreate(Bundle savedInstanceState)</code>中给ScrollView添加了滑动距离监听器以及得到了一个windowManager的对象。还有一点需要注意的是：我们调用了<code>getSupportActionBar().hide();</code>去掉了标题栏(MainActivity继承了AppCompatActivity)。这是因为标题栏的存在导致了在计算悬浮窗y轴的值时要额外加上标题栏的高度(当然你也可以保留标题栏，然后计算时再加上标题栏的高度^_^!)。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    getSupportActionBar().hide();</span><br><span class="line">    setContentView(R.layout.activity_main);</span><br><span class="line">    mScrollView = (MyScrollView) findViewById(R.id.mScrollView);</span><br><span class="line">    mScrollView.setOnScrollListener(<span class="keyword">this</span>);</span><br><span class="line">    ll_tab = (LinearLayout) findViewById(R.id.ll_tab);</span><br><span class="line">    windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们先在<code>onCreate(Bundle savedInstanceState)</code>中给ScrollView添加了滑动距离监听器以及得到了一个windowManager的对象。还有一点需要注意的是：我们调用了<code>getSupportActionBar().hide();</code>去掉了标题栏(MainActivity继承了AppCompatActivity)。这是因为标题栏的存在导致了在计算悬浮窗y轴的值时要额外加上标题栏的高度(当然你也可以保留标题栏，然后计算时再加上标题栏的高度^_^!)。</p>
 <p>然后在onWindowFocusChanged(boolean hasFocus)得到Tab栏的高度、getTop()值等，以便下面备用。如果你对getLeft()、getTop()、getRight()和getBottom()还不了解的话，可以看看我的另一篇Tip： <a href="/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop()%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/">《对view的getLeft()、getTop()等的笔记》</a>。</p>
-<pre><code>@Override
-public void onWindowFocusChanged(boolean hasFocus) {
-    super.onWindowFocusChanged(hasFocus);
-    if (hasFocus) {
-        tabHeight = ll_tab.getHeight();
-        tabTop = ll_tab.getTop();
-        scrollTop = mScrollView.getTop();
-    }
-}
-</code></pre><p>之后在滑动监听器的回调方法<code>onScroll(int scrollY)</code>中来控制显示还是隐藏悬浮窗。</p>
-<pre><code> @Override
-public void onScroll(int scrollY) {
-    Log.i(TAG, &quot;scrollY = &quot; + scrollY + &quot;, tabTop = &quot; + tabTop);
-    if (scrollY &gt; tabTop) {
-        // 如果没显示
-        if (!isShowWindow) {
-            showWindow();
-        }
-    } else {
-        // 如果显示了
-        if (isShowWindow) {
-            removeWindow();
-        }
-    }
-}
-</code></pre><p>上面的代码比较简单，不用我过多叙述了。下面是removeWindow()、showWindow()两个方法：</p>
-<pre><code>// 显示window
-private void removeWindow() {
-    if (ll_tab_temp != null)
-        windowManager.removeView(ll_tab_temp);
-    isShowWindow = false;
-}
-
-// 移除window
-private void showWindow() {
-    if (ll_tab_temp == null) {
-        ll_tab_temp = LayoutInflater.from(this).inflate(R.layout.tab_layout, null);
-    }
-    if (layoutParams == null) {
-        layoutParams = new WindowManager.LayoutParams();
-        layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE; //悬浮窗的类型，一般设为2002，表示在所有应用程序之上，但在状态栏之下
-        layoutParams.format = PixelFormat.RGBA_8888;
-        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;  //悬浮窗的行为，比如说不可聚焦，非模态对话框等等
-        layoutParams.gravity = Gravity.TOP;  //悬浮窗的对齐方式
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        layoutParams.height = tabHeight;
-        layoutParams.x = 0;  //悬浮窗X的位置
-        layoutParams.y = scrollTop;  //悬浮窗Y的位置
-    }
-    windowManager.addView(ll_tab_temp, layoutParams);
-    isShowWindow = true;
-}
-</code></pre><p>这两个方法也很简单，而且有注释，相信大家可以看懂。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onWindowFocusChanged</span><span class="params">(<span class="keyword">boolean</span> hasFocus)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onWindowFocusChanged(hasFocus);</span><br><span class="line">    <span class="keyword">if</span> (hasFocus) &#123;</span><br><span class="line">        tabHeight = ll_tab.getHeight();</span><br><span class="line">        tabTop = ll_tab.getTop();</span><br><span class="line">        scrollTop = mScrollView.getTop();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>之后在滑动监听器的回调方法<code>onScroll(int scrollY)</code>中来控制显示还是隐藏悬浮窗。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScroll</span><span class="params">(<span class="keyword">int</span> scrollY)</span> </span>&#123;</span><br><span class="line">    Log.i(TAG, <span class="string">"scrollY = "</span> + scrollY + <span class="string">", tabTop = "</span> + tabTop);</span><br><span class="line">    <span class="keyword">if</span> (scrollY &gt; tabTop) &#123;</span><br><span class="line">		<span class="comment">// 如果没显示</span></span><br><span class="line">        <span class="keyword">if</span> (!isShowWindow) &#123;</span><br><span class="line">            showWindow();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="comment">// 如果显示了</span></span><br><span class="line">        <span class="keyword">if</span> (isShowWindow) &#123;</span><br><span class="line">            removeWindow();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码比较简单，不用我过多叙述了。下面是removeWindow()、showWindow()两个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 显示window</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">removeWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (ll_tab_temp != <span class="keyword">null</span>)</span><br><span class="line">        windowManager.removeView(ll_tab_temp);</span><br><span class="line">    isShowWindow = <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 移除window</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">showWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (ll_tab_temp == <span class="keyword">null</span>) &#123;</span><br><span class="line">        ll_tab_temp = LayoutInflater.from(<span class="keyword">this</span>).inflate(R.layout.tab_layout, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (layoutParams == <span class="keyword">null</span>) &#123;</span><br><span class="line">        layoutParams = <span class="keyword">new</span> WindowManager.LayoutParams();</span><br><span class="line">        layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE; <span class="comment">//悬浮窗的类型，一般设为2002，表示在所有应用程序之上，但在状态栏之下</span></span><br><span class="line">        layoutParams.format = PixelFormat.RGBA_8888;</span><br><span class="line">        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL</span><br><span class="line">                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;  <span class="comment">//悬浮窗的行为，比如说不可聚焦，非模态对话框等等</span></span><br><span class="line">        layoutParams.gravity = Gravity.TOP;  <span class="comment">//悬浮窗的对齐方式</span></span><br><span class="line">        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;</span><br><span class="line">        layoutParams.height = tabHeight;</span><br><span class="line">        layoutParams.x = <span class="number">0</span>;  <span class="comment">//悬浮窗X的位置</span></span><br><span class="line">        layoutParams.y = scrollTop;  <span class="comment">//悬浮窗Y的位置</span></span><br><span class="line">    &#125;</span><br><span class="line">    windowManager.addView(ll_tab_temp, layoutParams);</span><br><span class="line">    isShowWindow = <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这两个方法也很简单，而且有注释，相信大家可以看懂。</p>
 <p>最后，不要忘了在AndroidManifest.xml里申请显示悬浮窗的权限：</p>
 <pre><code>&lt;uses-permission android:name=&quot;android.permission.SYSTEM_ALERT_WINDOW&quot; /&gt;
 </code></pre><p>到这里，整体的代码就这些了。一起来看看效果吧：</p>
@@ -767,7 +538,7 @@ private void showWindow() {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -86,7 +86,7 @@
 
 我们可以看到在右侧有一个支持快速索引的栏。接下来，我们就要实现这种索引栏。
 首先是attrs.xml，定义了三个自定义属性：
-&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?">
+1234567891011&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&amp;gt;&amp;lt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="快速打造仿Android联系人界面">
 <meta property="og:url" content="http://yuqirong.me/2016/03/22/快速打造仿Android联系人界面/index.html">
@@ -95,17 +95,17 @@
 
 我们可以看到在右侧有一个支持快速索引的栏。接下来，我们就要实现这种索引栏。
 首先是attrs.xml，定义了三个自定义属性：
-&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?">
+1234567891011&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&amp;gt;&amp;lt">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160322/20160322200035.png">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160322/20160322211942.gif">
-<meta property="og:updated_time" content="2016-03-22T13:24:29.627Z">
+<meta property="og:updated_time" content="2016-04-30T09:11:28.413Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="快速打造仿Android联系人界面">
 <meta name="twitter:description" content="有段时间没写博客了，趁今天有空就写了一篇。今天的主题就是仿联系人界面。相信大家在平时都见过，就是可以实现快速索引的侧边栏。比如在美团中选择城市的界面：
 
 我们可以看到在右侧有一个支持快速索引的栏。接下来，我们就要实现这种索引栏。
 首先是attrs.xml，定义了三个自定义属性：
-&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?">
+1234567891011&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&amp;gt;&amp;lt">
 
 
 
@@ -386,157 +386,18 @@
 <p><img src="/uploads/20160322/20160322200035.png" alt="这里写图片描述"></p>
 <p>我们可以看到在右侧有一个支持快速索引的栏。接下来，我们就要实现这种索引栏。</p>
 <p>首先是<code>attrs.xml</code>，定义了三个自定义属性：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;resources&gt;
-    &lt;declare-styleable name=&quot;QuickIndexBar&quot;&gt;
-        // 字体的颜色
-        &lt;attr name=&quot;font_color&quot; format=&quot;color|reference&quot;&gt;&lt;/attr&gt;
-        // 选中时字体的颜色
-        &lt;attr name=&quot;selected_font_color&quot; format=&quot;color|reference&quot;&gt;&lt;/attr&gt;
-        // 字体的大小
-        &lt;attr name=&quot;font_size&quot; format=&quot;dimension|reference&quot;&gt;&lt;/attr&gt;
-    &lt;/declare-styleable&gt;
-&lt;/resources&gt;
-</code></pre><p>之后我们创建一个类继承自<code>View</code>，类名就叫<code>QuickIndexBar</code>：</p>
-<pre><code>// 默认字体颜色
-private int defaultFontColor = Color.WHITE;
-// 默认选中字体颜色
-private int defaultSelectedFontColor = Color.GRAY;
-// 字体颜色
-private int fontColor;
-// 选中字体颜色
-private int selectedFontColor;
- // 字体大小
-private float fontSize;
-// 默认字体大小
-private float defaultfontSize = 12;
-// 上次触摸的字母单元格
-int lastSelected = -1;
-// 这次触摸的字母单元格
-int selected = -1;
-
-public QuickIndexBar(Context context) {
-    this(context, null);
-}
-
-public QuickIndexBar(Context context, AttributeSet attrs) {
-    this(context, attrs, 0);
-}
-
-public QuickIndexBar(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-
-    TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.QuickIndexBar);
-    fontColor = a.getColor(R.styleable.QuickIndexBar_font_color, defaultFontColor);
-    selectedFontColor = a.getColor(R.styleable.QuickIndexBar_selected_font_color, defaultSelectedFontColor);
-    fontSize = a.getDimension(R.styleable.QuickIndexBar_font_size,
-            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, defaultfontSize,
-                    getContext().getResources().getDisplayMetrics()));
-    a.recycle();
-    mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    mPaint.setColor(fontColor);
-    mPaint.setTypeface(Typeface.DEFAULT_BOLD);
-    mPaint.setTextSize(fontSize);
-
-}
-</code></pre><p>上面的代码就是在构造器中初始化了自定义属性，大家应该都能看懂。</p>
-<pre><code>// 快速索引的字母
-public static final String[] INDEX_ARRAYS = new String[]{&quot;#&quot;, &quot;A&quot;, &quot;B&quot;,
-        &quot;C&quot;, &quot;D&quot;, &quot;E&quot;, &quot;F&quot;, &quot;G&quot;, &quot;H&quot;, &quot;I&quot;, &quot;J&quot;, &quot;K&quot;, &quot;L&quot;, &quot;M&quot;, &quot;N&quot;, &quot;O&quot;,
-        &quot;P&quot;, &quot;Q&quot;, &quot;R&quot;, &quot;S&quot;, &quot;T&quot;, &quot;U&quot;, &quot;V&quot;, &quot;W&quot;, &quot;X&quot;, &quot;Y&quot;, &quot;Z&quot;};
-// 控件的宽度
-private int width;
-// 控件的高度
-private int height;
-// 字母单元格的宽度
-private float cellHeight;
-
-/**
- * 得到控件的大小
- */
-@Override
-protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-    super.onSizeChanged(w, h, oldw, oldh);
-    width = getMeasuredWidth();
-    height = getMeasuredHeight();
-    //  得到字母单元格的高度
-    cellHeight = height * 1.0f / INDEX_ARRAYS.length;
-}
-</code></pre><p>然后在<code>onSizeChanged(int w, int h, int oldw, int oldh)</code>中获取<code>width</code>和<code>height</code>。还要计算<code>cellHeight</code>,也就是<code>INDEX_ARRAYS</code>中每个字符串所占用的高度，以便在<code>onDraw(Canvas canvas)</code>中使用。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">declare-styleable</span> <span class="attribute">name</span>=<span class="value">"QuickIndexBar"</span>&gt;</span></span><br><span class="line">        // 字体的颜色</span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"font_color"</span> <span class="attribute">format</span>=<span class="value">"color|reference"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">        // 选中时字体的颜色</span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"selected_font_color"</span> <span class="attribute">format</span>=<span class="value">"color|reference"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">        // 字体的大小</span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"font_size"</span> <span class="attribute">format</span>=<span class="value">"dimension|reference"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">declare-styleable</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>之后我们创建一个类继承自<code>View</code>，类名就叫<code>QuickIndexBar</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 默认字体颜色</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> defaultFontColor = Color.WHITE;</span><br><span class="line"><span class="comment">// 默认选中字体颜色</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> defaultSelectedFontColor = Color.GRAY;</span><br><span class="line"><span class="comment">// 字体颜色</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> fontColor;</span><br><span class="line"><span class="comment">// 选中字体颜色</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> selectedFontColor;</span><br><span class="line"><span class="comment">// 字体大小</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">float</span> fontSize;</span><br><span class="line"><span class="comment">// 默认字体大小</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">float</span> defaultfontSize = <span class="number">12</span>;</span><br><span class="line"><span class="comment">// 上次触摸的字母单元格</span></span><br><span class="line"><span class="keyword">int</span> lastSelected = -<span class="number">1</span>;</span><br><span class="line"><span class="comment">// 这次触摸的字母单元格</span></span><br><span class="line"><span class="keyword">int</span> selected = -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">QuickIndexBar</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">QuickIndexBar</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">QuickIndexBar</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line"></span><br><span class="line">    TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.QuickIndexBar);</span><br><span class="line">    fontColor = a.getColor(R.styleable.QuickIndexBar_font_color, defaultFontColor);</span><br><span class="line">    selectedFontColor = a.getColor(R.styleable.QuickIndexBar_selected_font_color, defaultSelectedFontColor);</span><br><span class="line">    fontSize = a.getDimension(R.styleable.QuickIndexBar_font_size,</span><br><span class="line">            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, defaultfontSize,</span><br><span class="line">                    getContext().getResources().getDisplayMetrics()));</span><br><span class="line">    a.recycle();</span><br><span class="line">    mPaint = <span class="keyword">new</span> Paint(Paint.ANTI_ALIAS_FLAG);</span><br><span class="line">    mPaint.setColor(fontColor);</span><br><span class="line">    mPaint.setTypeface(Typeface.DEFAULT_BOLD);</span><br><span class="line">    mPaint.setTextSize(fontSize);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码就是在构造器中初始化了自定义属性，大家应该都能看懂。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 快速索引的字母</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] INDEX_ARRAYS = <span class="keyword">new</span> String[]&#123;<span class="string">"#"</span>, <span class="string">"A"</span>, <span class="string">"B"</span>,</span><br><span class="line">        <span class="string">"C"</span>, <span class="string">"D"</span>, <span class="string">"E"</span>, <span class="string">"F"</span>, <span class="string">"G"</span>, <span class="string">"H"</span>, <span class="string">"I"</span>, <span class="string">"J"</span>, <span class="string">"K"</span>, <span class="string">"L"</span>, <span class="string">"M"</span>, <span class="string">"N"</span>, <span class="string">"O"</span>,</span><br><span class="line">        <span class="string">"P"</span>, <span class="string">"Q"</span>, <span class="string">"R"</span>, <span class="string">"S"</span>, <span class="string">"T"</span>, <span class="string">"U"</span>, <span class="string">"V"</span>, <span class="string">"W"</span>, <span class="string">"X"</span>, <span class="string">"Y"</span>, <span class="string">"Z"</span>&#125;;</span><br><span class="line"><span class="comment">// 控件的宽度</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> width;</span><br><span class="line"><span class="comment">// 控件的高度</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> height;</span><br><span class="line"><span class="comment">// 字母单元格的宽度</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">float</span> cellHeight;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 得到控件的大小</span><br><span class="line"> */</span></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onSizeChanged</span><span class="params">(<span class="keyword">int</span> w, <span class="keyword">int</span> h, <span class="keyword">int</span> oldw, <span class="keyword">int</span> oldh)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onSizeChanged(w, h, oldw, oldh);</span><br><span class="line">    width = getMeasuredWidth();</span><br><span class="line">    height = getMeasuredHeight();</span><br><span class="line">    <span class="comment">//  得到字母单元格的高度</span></span><br><span class="line">    cellHeight = height * <span class="number">1.0f</span> / INDEX_ARRAYS.length;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在<code>onSizeChanged(int w, int h, int oldw, int oldh)</code>中获取<code>width</code>和<code>height</code>。还要计算<code>cellHeight</code>,也就是<code>INDEX_ARRAYS</code>中每个字符串所占用的高度，以便在<code>onDraw(Canvas canvas)</code>中使用。</p>
 <p>我们来看看<code>onDraw(Canvas canvas)</code>：</p>
-<pre><code>@Override
-protected void onDraw(Canvas canvas) {
-    // 遍历画出index
-    for (int i = 0; i &lt; INDEX_ARRAYS.length; i++) {
-        // 测出字体的宽度
-        float x = width / 2 - mPaint.measureText(INDEX_ARRAYS[i]) / 2;
-        // 得到字体的高度
-        Paint.FontMetrics fm = mPaint.getFontMetrics();
-        double fontHeight = Math.ceil(fm.descent - fm.ascent);
-
-        float y = (float) ((i + 1) * cellHeight - cellHeight / 2 + fontHeight / 2);
-        if (i == selected) {
-            mPaint.setColor(lastSelected == -1 ? fontColor : selectedFontColor);
-        } else {
-            mPaint.setColor(fontColor);
-        }
-        // 绘制索引的字母 (x,y)为字母左下角的坐标
-        canvas.drawText(INDEX_ARRAYS[i], x, y, mPaint);
-    }
-
-}
-</code></pre><p>在代码中去遍历<code>INDEX_ARRAYS</code>，测量出字母的宽度和高度。这里要注意的是，<code>canvas.drawText(String text, float x, float y, Paint paint)</code>中的 x,y 指的是字母左下角的坐标，并不是“原点”。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 遍历画出index</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; INDEX_ARRAYS.length; i++) &#123;</span><br><span class="line">        <span class="comment">// 测出字体的宽度</span></span><br><span class="line">        <span class="keyword">float</span> x = width / <span class="number">2</span> - mPaint.measureText(INDEX_ARRAYS[i]) / <span class="number">2</span>;</span><br><span class="line">        <span class="comment">// 得到字体的高度</span></span><br><span class="line">        Paint.FontMetrics fm = mPaint.getFontMetrics();</span><br><span class="line">        <span class="keyword">double</span> fontHeight = Math.ceil(fm.descent - fm.ascent);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">float</span> y = (<span class="keyword">float</span>) ((i + <span class="number">1</span>) * cellHeight - cellHeight / <span class="number">2</span> + fontHeight / <span class="number">2</span>);</span><br><span class="line">        <span class="keyword">if</span> (i == selected) &#123;</span><br><span class="line">            mPaint.setColor(lastSelected == -<span class="number">1</span> ? fontColor : selectedFontColor);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            mPaint.setColor(fontColor);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 绘制索引的字母 (x,y)为字母左下角的坐标</span></span><br><span class="line">        canvas.drawText(INDEX_ARRAYS[i], x, y, mPaint);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在代码中去遍历<code>INDEX_ARRAYS</code>，测量出字母的宽度和高度。这里要注意的是，<code>canvas.drawText(String text, float x, float y, Paint paint)</code>中的 x,y 指的是字母左下角的坐标，并不是“原点”。</p>
 <p>别忘了我们还要对<code>QuickIndexBar</code>的触摸事件作出处理。所以我们要重写onTouchEvent(MotionEvent event)：</p>
-<pre><code>/**
- * 设置当索引改变的监听器
- */
-public interface OnIndexChangeListener {
-    /**
-     * 当索引改变
-     *
-     * @param selectIndex 索引值
-     */
-    void onIndexChange(int selectIndex);
-
-    /**
-     * 当手指抬起
-     */
-    void onActionUp();
-}
-
-public void setOnIndexChangeListener(OnIndexChangeListener listener) {
-    this.listener = listener;
-}
-
-@Override
-public boolean onTouchEvent(MotionEvent event) {
-    float y;
-    switch (event.getAction()) {
-        case MotionEvent.ACTION_DOWN:
-        case MotionEvent.ACTION_MOVE:
-            y = event.getY();
-            // 计算出触摸的是哪个字母单元格
-            selected = (int) (y / cellHeight);
-            if (selected &gt;= 0 &amp;&amp; selected &lt; INDEX_ARRAYS.length) {
-                if (selected != lastSelected) {
-                    if (listener != null) {
-                        listener.onIndexChange(selected); // 回调监听器的方法
-                    }
-                    Log.i(TAG, INDEX_ARRAYS[selected]);
-                }
-                lastSelected = selected;
-            }
-            break;
-        case MotionEvent.ACTION_UP:
-            // 把上次的字母单元格重置
-            lastSelected = -1;
-            listener.onActionUp();
-            break;
-    }
-    invalidate(); // 重绘视图
-    return true;
-}
-</code></pre><p>在<code>ACTION_DOWN</code>和<code>ACTION_MOVE</code>计算出了触摸的y值对应的是索引中的哪个字母，然后回调了监听器；而在<code>ACTION_UP</code>中重置了<code>lastSelected</code>，回调了监听器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 设置当索引改变的监听器</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OnIndexChangeListener</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 当索引改变</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> selectIndex 索引值</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onIndexChange</span><span class="params">(<span class="keyword">int</span> selectIndex)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 当手指抬起</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onActionUp</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setOnIndexChangeListener</span><span class="params">(OnIndexChangeListener listener)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.listener = listener;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">float</span> y;</span><br><span class="line">    <span class="keyword">switch</span> (event.getAction()) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">            y = event.getY();</span><br><span class="line">            <span class="comment">// 计算出触摸的是哪个字母单元格</span></span><br><span class="line">            selected = (<span class="keyword">int</span>) (y / cellHeight);</span><br><span class="line">            <span class="keyword">if</span> (selected &gt;= <span class="number">0</span> &amp;&amp; selected &lt; INDEX_ARRAYS.length) &#123;</span><br><span class="line">                <span class="keyword">if</span> (selected != lastSelected) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (listener != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        listener.onIndexChange(selected); <span class="comment">// 回调监听器的方法</span></span><br><span class="line">                    &#125;</span><br><span class="line">                    Log.i(TAG, INDEX_ARRAYS[selected]);</span><br><span class="line">                &#125;</span><br><span class="line">                lastSelected = selected;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">            <span class="comment">// 把上次的字母单元格重置</span></span><br><span class="line">            lastSelected = -<span class="number">1</span>;</span><br><span class="line">            listener.onActionUp();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    invalidate(); <span class="comment">// 重绘视图</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>ACTION_DOWN</code>和<code>ACTION_MOVE</code>计算出了触摸的y值对应的是索引中的哪个字母，然后回调了监听器；而在<code>ACTION_UP</code>中重置了<code>lastSelected</code>，回调了监听器。</p>
 <p>这样，我们就把<code>QuickIndexBar</code>写好了，关于<code>QuickIndexBar</code>使用的代码就不贴出来了，太长了。如果有需要，可以下载下面的Demo，里面都有注释。Demo的效果图如下：</p>
 <p><img src="/uploads/20160322/20160322211942.gif" alt="这里写图片描述"></p>
 <p>好了，今天就到这里了。have fun!</p>
@@ -676,7 +537,7 @@ public boolean onTouchEvent(MotionEvent event) {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -88,7 +88,7 @@
 <meta property="og:url" content="http://yuqirong.me/2015/10/19/给你的ScrollView设置滑动距离监听器/index.html">
 <meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="ScrollView是我们经常使用的一个UI控件，也许你在使用ScrollView的过程中会发现，当你想监听ScrollView滑动的距离时却没有合适的监听器！当然在API 23中有setOnScrollChangeListener(View.OnScrollChangeListener l)可以使用，但是并不兼容低版本的API。那怎么办呢？只好重写ScrollView来实现对滑动距离的监听了。">
-<meta property="og:updated_time" content="2016-02-18T12:15:43.233Z">
+<meta property="og:updated_time" content="2016-04-30T08:31:50.932Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="给你的ScrollView设置滑动距离监听器">
 <meta name="twitter:description" content="ScrollView是我们经常使用的一个UI控件，也许你在使用ScrollView的过程中会发现，当你想监听ScrollView滑动的距离时却没有合适的监听器！当然在API 23中有setOnScrollChangeListener(View.OnScrollChangeListener l)可以使用，但是并不兼容低版本的API。那怎么办呢？只好重写ScrollView来实现对滑动距离的监听了。">
@@ -370,81 +370,11 @@
       
         <p>ScrollView是我们经常使用的一个UI控件，也许你在使用ScrollView的过程中会发现，当你想监听ScrollView滑动的距离时却没有合适的监听器！当然在API 23中有<code>setOnScrollChangeListener(View.OnScrollChangeListener l)</code>可以使用，但是并不兼容低版本的API。那怎么办呢？只好重写ScrollView来实现对滑动距离的监听了。</p>
 <p>话不多说，直接上代码：</p>
-<pre><code>public class MyScrollView extends ScrollView {
-
-    private OnScrollListener listener;
-
-    /**
-     * 设置滑动距离监听器
-     */
-    public void setOnScrollListener(OnScrollListener listener) {
-        this.listener = listener;
-    }
-
-    public MyScrollView(Context context) {
-        super(context);
-    }
-
-    public MyScrollView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public MyScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    // 滑动距离监听器
-    public interface OnScrollListener{
-
-        /**
-         * 在滑动的时候调用，scrollY为已滑动的距离
-         */
-        void onScroll(int scrollY);
-    }
-
-    @Override
-    public void computeScroll() {
-        super.computeScroll();
-        if(listener!=null){
-            listener.onScroll(getScrollY());
-        }
-    }
-}
-</code></pre><p>上面重写的MyScrollView是在<code>computeScroll()</code>实现监听，因为ScrollView内部是通过Scroller来实现的，当滑动的时候会去调用<code>computeScroll()</code>方法，从而达到监听的效果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyScrollView</span> <span class="keyword">extends</span> <span class="title">ScrollView</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> OnScrollListener listener;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * 设置滑动距离监听器</span><br><span class="line">	 */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setOnScrollListener</span><span class="params">(OnScrollListener listener)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.listener = listener;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyScrollView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyScrollView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyScrollView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 滑动距离监听器</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OnScrollListener</span></span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/**</span><br><span class="line">		 * 在滑动的时候调用，scrollY为已滑动的距离</span><br><span class="line">		 */</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">onScroll</span><span class="params">(<span class="keyword">int</span> scrollY)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">computeScroll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.computeScroll();</span><br><span class="line">        <span class="keyword">if</span>(listener!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            listener.onScroll(getScrollY());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面重写的MyScrollView是在<code>computeScroll()</code>实现监听，因为ScrollView内部是通过Scroller来实现的，当滑动的时候会去调用<code>computeScroll()</code>方法，从而达到监听的效果。</p>
 <p>当然还有另一种方法，就是在<code>onScrollChanged(int l, int t, int oldl, int oldt)</code>去监听，最后的效果是一样的：</p>
-<pre><code>public class MyScrollView extends ScrollView {
-
-    private OnScrollListener listener;
-
-    public void setOnScrollListener(OnScrollListener listener) {
-        this.listener = listener;
-    }
-
-    public MyScrollView(Context context) {
-        super(context);
-    }
-
-    public MyScrollView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public MyScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    public interface OnScrollListener{
-        void onScroll(int scrollY);
-    }
-
-     @Override  
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {  
-        super.onScrollChanged(l, t, oldl, oldt);  
-        if(listener != null){  
-            listener.onScroll(t);  
-        }  
-    }  
-}
-</code></pre><p>下面提供MyScrollView的源码下载：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyScrollView</span> <span class="keyword">extends</span> <span class="title">ScrollView</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> OnScrollListener listener;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setOnScrollListener</span><span class="params">(OnScrollListener listener)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.listener = listener;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyScrollView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyScrollView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyScrollView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OnScrollListener</span></span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">onScroll</span><span class="params">(<span class="keyword">int</span> scrollY)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">     <span class="annotation">@Override</span>  </span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onScrollChanged</span><span class="params">(<span class="keyword">int</span> l, <span class="keyword">int</span> t, <span class="keyword">int</span> oldl, <span class="keyword">int</span> oldt)</span> </span>&#123;  </span><br><span class="line">        <span class="keyword">super</span>.onScrollChanged(l, t, oldl, oldt);  </span><br><span class="line">        <span class="keyword">if</span>(listener != <span class="keyword">null</span>)&#123;  </span><br><span class="line">            listener.onScroll(t);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面提供MyScrollView的源码下载：</p>
 <p><a href="/uploads/20151019/MyScrollView.java">MyScrollView.java(通过computeScroll监听)</a></p>
 <p><a href="/uploads/20151019/MyScrollView2.java">MyScrollView.java(通过onScrollChanged监听)</a></p>
 
@@ -579,7 +509,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

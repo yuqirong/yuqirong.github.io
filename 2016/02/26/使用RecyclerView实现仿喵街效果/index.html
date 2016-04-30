@@ -98,7 +98,7 @@
 我们先来分析一下思路：我们先给RecyclerView添加一个OnScrollListener，然后分别去获得firstVisiblePosition和first">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160226/20160226205314.gif">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160226/20160226210235.gif">
-<meta property="og:updated_time" content="2016-03-05T09:45:43.291Z">
+<meta property="og:updated_time" content="2016-04-30T08:54:43.791Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用RecyclerView实现仿喵街效果">
 <meta name="twitter:description" content="又到更新博客的时间了，本次给大家带来的是在RecyclerView的基础上实现喵街的效果。那么喵街是什么效果呢？下面就贴出效果图：
@@ -387,117 +387,13 @@
 <p>值得一提的是，这是旧版本的特效，新版本的喵街已经去掉了这种效果。</p>
 <p>看完了效果，接下来就是动手的时间了。</p>
 <p>我们先来分析一下思路：我们先给RecyclerView添加一个OnScrollListener，然后分别去获得firstVisiblePosition和firstCompletelyVisiblePosition。这里要注意一下，firstVisiblePosition是第一个在屏幕中<strong>可见</strong>的itemView对应的position，而firstCompletelyVisiblePosition是是第一个在屏幕中<strong>完全可见</strong>的itemView对应的position。之后在滚动中去动态地设置itemView的高度。整体的思路就这样了，下面我们直接来看代码。</p>
-<p>创建几个自定义的属性，以便后面备用：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;resources&gt;
-    &lt;declare-styleable name=&quot;ExpandRecyclerView&quot;&gt;
-        &lt;!-- item最大的高度 --&gt;
-        &lt;attr name=&quot;max_item_height&quot; format=&quot;dimension&quot;&gt;&lt;/attr&gt;
-        &lt;!-- item普通的高度 --&gt;
-        &lt;attr name=&quot;normal_item_height&quot; format=&quot;dimension&quot;&gt;&lt;/attr&gt;
-    &lt;/declare-styleable&gt;
-&lt;/resources&gt;
-</code></pre><p>之后我们新建一个类继承自RecyclerView，类名就叫ExpandRecyclerView。</p>
-<pre><code>//最大item的高度
-private float maxItemHeight;
-//普通item的高度
-private float normalItemHeight;
-// 默认最大的item高度
-private float defaultMaxItemHeight;
-// 默认普通的item高度
-private float defaultNormalItemHeight;
-
-public ExpandRecyclerView(Context context) {
-    this(context, null);
-}
-
-public ExpandRecyclerView(Context context, AttributeSet attrs) {
-    this(context, attrs, 0);
-}
-
-public ExpandRecyclerView(Context context, AttributeSet attrs, int defStyle) {
-    super(context, attrs, defStyle);
-    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ExpandRecyclerView);
-    defaultMaxItemHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 256, context.getResources().getDisplayMetrics());
-    defaultNormalItemHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120, context.getResources().getDisplayMetrics());
-    maxItemHeight = a.getDimension(R.styleable.ExpandRecyclerView_max_item_height, defaultMaxItemHeight);
-    normalItemHeight = a.getDimension(R.styleable.ExpandRecyclerView_normal_item_height, defaultNormalItemHeight);
-    a.recycle();
-
-    setHasFixedSize(true);
-    setLayoutManager(new LinearLayoutManager(context));
-    setItemAnimator(new DefaultItemAnimator());
-    this.addOnScrollListener(listener);
-}
-</code></pre><p>在构造器中我们得到了<code>maxItemHeight</code>和<code>normalItemHeight</code>，之后设置了OnScrollListener。</p>
-<pre><code>OnScrollListener listener = new RecyclerView.OnScrollListener() {
-
-    @Override
-    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        super.onScrolled(recyclerView, dx, dy);
-        Log.i(TAG,&quot;dy : &quot; + dy);
-        LinearLayoutManager mLinearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        // 在屏幕中第一个可见的position
-        int firstVisiblePosition = mLinearLayoutManager.findFirstVisibleItemPosition();
-        // 得到第一个可见的ViewHolder
-        RecyclerView.ViewHolder firstVisibleViewHolder =
-                recyclerView.findViewHolderForLayoutPosition(firstVisiblePosition);
-        // 在屏幕中第一个完全可见的position
-        int firstCompletelyVisiblePosition = mLinearLayoutManager.findFirstCompletelyVisibleItemPosition();
-        // 得到第一个完全可见的ViewHolder
-        RecyclerView.ViewHolder firstCompletelyVisibleViewHolder =
-                recyclerView.findViewHolderForLayoutPosition(firstCompletelyVisiblePosition);
-
-        Log.i(TAG, &quot;firstVisiblePosition : &quot; + firstVisiblePosition + &quot; , firstCompletelyVisiblePosition : &quot; + firstCompletelyVisiblePosition);
-        // 当firstVisibleViewHolder被滑出屏幕时
-        if (firstVisibleViewHolder.itemView.getLayoutParams().height - dy &lt; maxItemHeight
-                &amp;&amp; firstVisibleViewHolder.itemView.getLayoutParams().height - dy &gt;= normalItemHeight) {
-            // 高度减小
-            firstVisibleViewHolder.itemView.getLayoutParams().height -= dy;
-            firstVisibleViewHolder.itemView.setLayoutParams(firstVisibleViewHolder.itemView.getLayoutParams());
-        }
-        // 当firstCompletelyVisibleViewHolder慢慢滑到屏幕顶部时
-        if (firstCompletelyVisibleViewHolder.itemView.getLayoutParams().height + dy &lt;= maxItemHeight
-                &amp;&amp; firstCompletelyVisibleViewHolder.itemView.getLayoutParams().height + dy &gt;= normalItemHeight) {
-            // 高度增加
-            firstCompletelyVisibleViewHolder.itemView.getLayoutParams().height += dy;
-            firstCompletelyVisibleViewHolder.itemView.setLayoutParams(firstCompletelyVisibleViewHolder.itemView.getLayoutParams());
-        }
-
-    }
-
-};
-</code></pre><p>在<code>onScrolled(RecyclerView recyclerView, int dx, int dy)</code>里大部分的代码都加上注释了，就是根据<code>dy</code>去动态地改变了<code>firstVisibleViewHolder</code>和<code>firstCompletelyVisibleViewHolder</code>的高度。</p>
-<p>上面的搞定了之后，别忘了要在Adapter里去初始化设置Item的高度。</p>
-<pre><code>/**
- * 设置适配器
- *
- * @param adapter
- */
-@Override
-public void setAdapter(Adapter adapter) {
-    super.setAdapter(adapter);
-    if (adapter instanceof ExpandRecyclerViewAdapter) {
-        ExpandRecyclerViewAdapter mAdapter = (ExpandRecyclerViewAdapter) adapter;
-        //设置最大的item高度
-        mAdapter.setMaxItemHeight(maxItemHeight);
-        //设置普通的item高度
-        mAdapter.setNormalItemHeight(normalItemHeight);
-    }
-}
-</code></pre><p>ExpandRecyclerViewAdapter的代码，重写<code>onBindViewHolder(RecyclerView.ViewHolder holder, int position)</code>：</p>
-<pre><code>@Override
-public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(position == 0){
-            holder.itemView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) maxItemHeight));
-        }else{
-            holder.itemView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) normalItemHeight));
-        }
-        bindCustomViewHolder(holder, position);
-}
-
-public abstract void bindCustomViewHolder(RecyclerView.ViewHolder holder, int position);
-</code></pre><p>好了，整体的代码就这些了，下面贴出运行效果：</p>
+<p>创建几个自定义的属性，以便后面备用：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">declare-styleable</span> <span class="attribute">name</span>=<span class="value">"ExpandRecyclerView"</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- item最大的高度 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"max_item_height"</span> <span class="attribute">format</span>=<span class="value">"dimension"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- item普通的高度 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"normal_item_height"</span> <span class="attribute">format</span>=<span class="value">"dimension"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">declare-styleable</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>之后我们新建一个类继承自RecyclerView，类名就叫ExpandRecyclerView。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//最大item的高度</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">float</span> maxItemHeight;</span><br><span class="line"><span class="comment">//普通item的高度</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">float</span> normalItemHeight;</span><br><span class="line"><span class="comment">// 默认最大的item高度</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">float</span> defaultMaxItemHeight;</span><br><span class="line"><span class="comment">// 默认普通的item高度</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">float</span> defaultNormalItemHeight;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ExpandRecyclerView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ExpandRecyclerView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ExpandRecyclerView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyle)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(context, attrs, defStyle);</span><br><span class="line">    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ExpandRecyclerView);</span><br><span class="line">    defaultMaxItemHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, <span class="number">256</span>, context.getResources().getDisplayMetrics());</span><br><span class="line">    defaultNormalItemHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, <span class="number">120</span>, context.getResources().getDisplayMetrics());</span><br><span class="line">    maxItemHeight = a.getDimension(R.styleable.ExpandRecyclerView_max_item_height, defaultMaxItemHeight);</span><br><span class="line">    normalItemHeight = a.getDimension(R.styleable.ExpandRecyclerView_normal_item_height, defaultNormalItemHeight);</span><br><span class="line">    a.recycle();</span><br><span class="line"></span><br><span class="line">    setHasFixedSize(<span class="keyword">true</span>);</span><br><span class="line">    setLayoutManager(<span class="keyword">new</span> LinearLayoutManager(context));</span><br><span class="line">    setItemAnimator(<span class="keyword">new</span> DefaultItemAnimator());</span><br><span class="line">    <span class="keyword">this</span>.addOnScrollListener(listener);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在构造器中我们得到了<code>maxItemHeight</code>和<code>normalItemHeight</code>，之后设置了OnScrollListener。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">OnScrollListener listener = <span class="keyword">new</span> RecyclerView.OnScrollListener() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScrolled</span><span class="params">(RecyclerView recyclerView, <span class="keyword">int</span> dx, <span class="keyword">int</span> dy)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onScrolled(recyclerView, dx, dy);</span><br><span class="line">        Log.i(TAG,<span class="string">"dy : "</span> + dy);</span><br><span class="line">        LinearLayoutManager mLinearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();</span><br><span class="line">        <span class="comment">// 在屏幕中第一个可见的position</span></span><br><span class="line">        <span class="keyword">int</span> firstVisiblePosition = mLinearLayoutManager.findFirstVisibleItemPosition();</span><br><span class="line">        <span class="comment">// 得到第一个可见的ViewHolder</span></span><br><span class="line">        RecyclerView.ViewHolder firstVisibleViewHolder =</span><br><span class="line">                recyclerView.findViewHolderForLayoutPosition(firstVisiblePosition);</span><br><span class="line">        <span class="comment">// 在屏幕中第一个完全可见的position</span></span><br><span class="line">        <span class="keyword">int</span> firstCompletelyVisiblePosition = mLinearLayoutManager.findFirstCompletelyVisibleItemPosition();</span><br><span class="line">        <span class="comment">// 得到第一个完全可见的ViewHolder</span></span><br><span class="line">        RecyclerView.ViewHolder firstCompletelyVisibleViewHolder =</span><br><span class="line">                recyclerView.findViewHolderForLayoutPosition(firstCompletelyVisiblePosition);</span><br><span class="line"></span><br><span class="line">        Log.i(TAG, <span class="string">"firstVisiblePosition : "</span> + firstVisiblePosition + <span class="string">" , firstCompletelyVisiblePosition : "</span> + firstCompletelyVisiblePosition);</span><br><span class="line">        <span class="comment">// 当firstVisibleViewHolder被滑出屏幕时</span></span><br><span class="line">        <span class="keyword">if</span> (firstVisibleViewHolder.itemView.getLayoutParams().height - dy &lt; maxItemHeight</span><br><span class="line">                &amp;&amp; firstVisibleViewHolder.itemView.getLayoutParams().height - dy &gt;= normalItemHeight) &#123;</span><br><span class="line">            <span class="comment">// 高度减小</span></span><br><span class="line">            firstVisibleViewHolder.itemView.getLayoutParams().height -= dy;</span><br><span class="line">            firstVisibleViewHolder.itemView.setLayoutParams(firstVisibleViewHolder.itemView.getLayoutParams());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 当firstCompletelyVisibleViewHolder慢慢滑到屏幕顶部时</span></span><br><span class="line">        <span class="keyword">if</span> (firstCompletelyVisibleViewHolder.itemView.getLayoutParams().height + dy &lt;= maxItemHeight</span><br><span class="line">                &amp;&amp; firstCompletelyVisibleViewHolder.itemView.getLayoutParams().height + dy &gt;= normalItemHeight) &#123;</span><br><span class="line">            <span class="comment">// 高度增加</span></span><br><span class="line">            firstCompletelyVisibleViewHolder.itemView.getLayoutParams().height += dy;</span><br><span class="line">            firstCompletelyVisibleViewHolder.itemView.setLayoutParams(firstCompletelyVisibleViewHolder.itemView.getLayoutParams());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>在<code>onScrolled(RecyclerView recyclerView, int dx, int dy)</code>里大部分的代码都加上注释了，就是根据<code>dy</code>去动态地改变了<code>firstVisibleViewHolder</code>和<code>firstCompletelyVisibleViewHolder</code>的高度。</p>
+<p>上面的搞定了之后，别忘了要在Adapter里去初始化设置Item的高度。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 设置适配器</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> adapter</span><br><span class="line"> */</span></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAdapter</span><span class="params">(Adapter adapter)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.setAdapter(adapter);</span><br><span class="line">    <span class="keyword">if</span> (adapter <span class="keyword">instanceof</span> ExpandRecyclerViewAdapter) &#123;</span><br><span class="line">        ExpandRecyclerViewAdapter mAdapter = (ExpandRecyclerViewAdapter) adapter;</span><br><span class="line">        <span class="comment">//设置最大的item高度</span></span><br><span class="line">        mAdapter.setMaxItemHeight(maxItemHeight);</span><br><span class="line">        <span class="comment">//设置普通的item高度</span></span><br><span class="line">        mAdapter.setNormalItemHeight(normalItemHeight);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>ExpandRecyclerViewAdapter的代码，重写<code>onBindViewHolder(RecyclerView.ViewHolder holder, int position)</code>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindViewHolder</span><span class="params">(RecyclerView.ViewHolder holder, <span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(position == <span class="number">0</span>)&#123;</span><br><span class="line">            holder.itemView.setLayoutParams(<span class="keyword">new</span> RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (<span class="keyword">int</span>) maxItemHeight));</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            holder.itemView.setLayoutParams(<span class="keyword">new</span> RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (<span class="keyword">int</span>) normalItemHeight));</span><br><span class="line">        &#125;</span><br><span class="line">        bindCustomViewHolder(holder, position);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">bindCustomViewHolder</span><span class="params">(RecyclerView.ViewHolder holder, <span class="keyword">int</span> position)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>好了，整体的代码就这些了，下面贴出运行效果：</p>
 <p><img src="/uploads/20160226/20160226210235.gif" alt="这里写图片描述"></p>
 <p>源码下载：</p>
 <p><a href="/uploads/20160226/ExpandRecyclerView.rar">ExpandRecyclerView.rar</a></p>
@@ -637,7 +533,7 @@ public abstract void bindCustomViewHolder(RecyclerView.ViewHolder holder, int po
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

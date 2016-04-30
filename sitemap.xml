@@ -2,43 +2,153 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yuqirong.me/about/index.html</loc>
-    <lastmod>2016-04-28T14:30:53.111Z</lastmod>
+    <loc>http://yuqirong.me/2016/04/27/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0ViewPager%E6%8C%87%E7%A4%BA%E5%99%A8/</loc>
+    <lastmod>2016-04-30T10:26:07.703Z</lastmod>
   </url>
   
   <url>
-    <loc>http://yuqirong.me/2016/04/19/%E5%BF%AB%E9%80%9F%E6%89%93%E9%80%A0%E5%B8%A6%E6%9C%89%E8%A7%86%E5%B7%AE%E6%95%88%E6%9E%9C%E7%9A%84ListView/</loc>
-    <lastmod>2016-04-19T06:30:13.187Z</lastmod>
+    <loc>http://yuqirong.me/2015/09/29/%E6%8E%A2%E7%A9%B6Android%E5%BC%82%E6%AD%A5%E6%B6%88%E6%81%AF%E7%9A%84%E5%A4%84%E7%90%86%E4%B9%8BHandler%E8%AF%A6%E8%A7%A3/</loc>
+    <lastmod>2016-04-30T10:24:41.122Z</lastmod>
   </url>
   
   <url>
-    <loc>http://yuqirong.me/2016/04/18/%E5%B8%A6%E4%BD%A0%E5%AE%9E%E7%8E%B0%E4%BB%BF%E7%BE%8E%E5%9B%A2%E7%9A%84%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0/</loc>
-    <lastmod>2016-04-19T05:48:19.840Z</lastmod>
+    <loc>http://yuqirong.me/2015/11/04/%E5%8F%B2%E4%B8%8A%E6%9C%80%E7%AE%80%E5%8D%95%E7%B2%97%E6%9A%B4%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91%E8%8F%9C%E5%8D%95/</loc>
+    <lastmod>2016-04-30T10:19:36.706Z</lastmod>
   </url>
   
   <url>
-    <loc>http://yuqirong.me/2016/03/31/%E3%80%8AAndroid%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8A)/</loc>
-    <lastmod>2016-04-14T12:32:57.356Z</lastmod>
+    <loc>http://yuqirong.me/2015/12/05/%E5%AE%9E%E7%8E%B0%E7%82%AB%E9%85%B7%E7%9A%84CheckBox%EF%BC%8C%E5%B0%B1%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/</loc>
+    <lastmod>2016-04-30T10:15:16.151Z</lastmod>
   </url>
   
   <url>
-    <loc>http://yuqirong.me/2015/08/26/%E5%85%B3%E4%BA%8EActivity%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E5%B0%8F%E7%BB%93/</loc>
-    <lastmod>2016-04-14T11:46:16.208Z</lastmod>
+    <loc>http://yuqirong.me/2016/01/22/%E8%87%AA%E5%AE%9A%E4%B9%89ViewGroup%E6%89%93%E9%80%A0%E6%B5%81%E5%BC%8F%E5%B8%83%E5%B1%80/</loc>
+    <lastmod>2016-04-30T09:17:21.533Z</lastmod>
   </url>
   
   <url>
-    <loc>http://yuqirong.me/2016/03/23/%E5%88%9D%E6%8E%A2MD%E5%BC%8F%E8%BD%AC%E5%9C%BA%E5%8A%A8%E7%94%BB/</loc>
-    <lastmod>2016-04-13T12:30:31.327Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2016/04/10/FloatingActionButton%E5%9C%A8%E6%BB%9A%E5%8A%A8%E6%97%B6%E6%98%BE%E7%A4%BA%E6%88%96%E9%9A%90%E8%97%8F/</loc>
-    <lastmod>2016-04-13T12:27:55.483Z</lastmod>
+    <loc>http://yuqirong.me/2016/03/22/%E5%BF%AB%E9%80%9F%E6%89%93%E9%80%A0%E4%BB%BFAndroid%E8%81%94%E7%B3%BB%E4%BA%BA%E7%95%8C%E9%9D%A2/</loc>
+    <lastmod>2016-04-30T09:11:28.413Z</lastmod>
   </url>
   
   <url>
     <loc>http://yuqirong.me/2016/04/05/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90Scroller%E6%BB%9A%E5%8A%A8%E5%8E%9F%E7%90%86/</loc>
-    <lastmod>2016-04-05T16:04:28.032Z</lastmod>
+    <lastmod>2016-04-30T09:09:40.979Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/04/19/%E5%BF%AB%E9%80%9F%E6%89%93%E9%80%A0%E5%B8%A6%E6%9C%89%E8%A7%86%E5%B7%AE%E6%95%88%E6%9E%9C%E7%9A%84ListView/</loc>
+    <lastmod>2016-04-30T09:05:21.235Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2015/12/27/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0%E6%B0%B4%E6%B3%A2%E7%BA%B9%E5%8A%A8%E7%94%BB%EF%BC%8C%E8%AE%A9%E4%BD%A0%E7%9A%84app%E4%B8%8D%E5%86%8D%E5%8D%95%E8%B0%83/</loc>
+    <lastmod>2016-04-30T09:00:04.306Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2015/10/23/%E8%87%AA%E5%AE%9A%E4%B9%89View%E4%B9%8B%E5%AE%9E%E7%8E%B0%E6%96%87%E5%AD%97%E7%99%BE%E5%88%86%E6%AF%94%E8%BF%9B%E5%BA%A6%E6%9D%A1/</loc>
+    <lastmod>2016-04-30T08:58:50.505Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/02/06/%E5%9C%A8AlertDialog%E4%B8%ADEditText%E6%97%A0%E6%B3%95%E5%BC%B9%E5%87%BA%E9%94%AE%E7%9B%98%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</loc>
+    <lastmod>2016-04-30T08:55:55.248Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/02/26/%E4%BD%BF%E7%94%A8RecyclerView%E5%AE%9E%E7%8E%B0%E4%BB%BF%E5%96%B5%E8%A1%97%E6%95%88%E6%9E%9C/</loc>
+    <lastmod>2016-04-30T08:54:43.791Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/01/14/%E5%AE%9E%E7%8E%B0%E5%AF%BC%E8%88%AATab%E6%A0%8F%E6%82%AC%E6%B5%AE%E5%8A%9F%E8%83%BD%E4%B9%8B%E6%94%B9%E8%BF%9B%E7%89%88/</loc>
+    <lastmod>2016-04-30T08:49:26.137Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/03/07/%E5%AE%9E%E7%8E%B0WebView%E4%B8%ADJS%E5%92%8CApp%E4%B9%8B%E9%97%B4%E7%9A%84%E4%BA%A4%E4%BA%92/</loc>
+    <lastmod>2016-04-30T08:48:22.056Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2015/12/13/%E8%AE%A9%E4%BD%A0%E7%9A%84ListView%E6%9B%B4%E7%82%AB%E9%85%B7%EF%BC%8C%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91%E5%88%A0%E9%99%A4%E6%95%88%E6%9E%9C/</loc>
+    <lastmod>2016-04-30T08:44:13.817Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/01/12/%E8%BD%BB%E6%9D%BE%E5%AE%9E%E7%8E%B0app%E4%B8%AD%E7%9A%84%E5%AF%BC%E8%88%AATab%E6%A0%8F%E6%82%AC%E6%B5%AE%E5%8A%9F%E8%83%BD/</loc>
+    <lastmod>2016-04-30T08:42:33.994Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2015/11/12/%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%BB%A1%E5%B1%8F%E8%A1%A8%E6%83%85%E4%B8%8B%E8%90%BD%E7%9A%84%E5%8A%A8%E7%94%BB%E6%95%88%E6%9E%9C%EF%BC%8C%E4%BD%A0%E4%B9%9F%E5%8F%AF%E4%BB%A5/</loc>
+    <lastmod>2016-04-30T08:34:12.109Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2015/08/26/%E5%85%B3%E4%BA%8EActivity%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E5%B0%8F%E7%BB%93/</loc>
+    <lastmod>2016-04-30T08:32:33.333Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2015/10/19/%E7%BB%99%E4%BD%A0%E7%9A%84ScrollView%E8%AE%BE%E7%BD%AE%E6%BB%91%E5%8A%A8%E8%B7%9D%E7%A6%BB%E7%9B%91%E5%90%AC%E5%99%A8/</loc>
+    <lastmod>2016-04-30T08:31:50.932Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop()%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2016-04-30T08:31:17.663Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/02/03/%E5%AF%B9LayoutInflater%E7%9A%84%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2016-04-30T08:30:05.398Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/02/15/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AD%A5%E6%AD%A5%E5%AE%9E%E7%8E%B0%E5%8F%AF%E6%8B%96%E6%8B%BD%E7%9A%84GridView%E6%8E%A7%E4%BB%B6/</loc>
+    <lastmod>2016-04-30T08:28:05.117Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/04/18/%E5%B8%A6%E4%BD%A0%E5%AE%9E%E7%8E%B0%E4%BB%BF%E7%BE%8E%E5%9B%A2%E7%9A%84%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0/</loc>
+    <lastmod>2016-04-30T08:24:47.051Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/03/23/%E5%88%9D%E6%8E%A2MD%E5%BC%8F%E8%BD%AC%E5%9C%BA%E5%8A%A8%E7%94%BB/</loc>
+    <lastmod>2016-04-30T08:22:09.788Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2015/11/24/%E5%88%9D%E6%8E%A2Android%20ORM%E6%A1%86%E6%9E%B6%E4%B9%8BgreenDAO/</loc>
+    <lastmod>2016-04-30T08:20:29.195Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2015/10/17/ScrollView%E5%B5%8C%E5%A5%97ListView%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</loc>
+    <lastmod>2016-04-30T08:19:13.972Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/04/10/FloatingActionButton%E5%9C%A8%E6%BB%9A%E5%8A%A8%E6%97%B6%E6%98%BE%E7%A4%BA%E6%88%96%E9%9A%90%E8%97%8F/</loc>
+    <lastmod>2016-04-30T08:17:50.993Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2016-04-30T08:09:53.318Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/03/31/%E3%80%8AAndroid%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8A)/</loc>
+    <lastmod>2016-04-30T08:00:55.206Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/about/index.html</loc>
+    <lastmod>2016-04-28T14:30:53.111Z</lastmod>
   </url>
   
   <url>
@@ -72,113 +182,8 @@
   </url>
   
   <url>
-    <loc>http://yuqirong.me/2016/03/22/%E5%BF%AB%E9%80%9F%E6%89%93%E9%80%A0%E4%BB%BFAndroid%E8%81%94%E7%B3%BB%E4%BA%BA%E7%95%8C%E9%9D%A2/</loc>
-    <lastmod>2016-03-22T13:24:29.627Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2016/03/07/%E5%AE%9E%E7%8E%B0WebView%E4%B8%ADJS%E5%92%8CApp%E4%B9%8B%E9%97%B4%E7%9A%84%E4%BA%A4%E4%BA%92/</loc>
-    <lastmod>2016-03-07T15:04:30.507Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2016/02/26/%E4%BD%BF%E7%94%A8RecyclerView%E5%AE%9E%E7%8E%B0%E4%BB%BF%E5%96%B5%E8%A1%97%E6%95%88%E6%9E%9C/</loc>
-    <lastmod>2016-03-05T09:45:43.291Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2016/02/15/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AD%A5%E6%AD%A5%E5%AE%9E%E7%8E%B0%E5%8F%AF%E6%8B%96%E6%8B%BD%E7%9A%84GridView%E6%8E%A7%E4%BB%B6/</loc>
-    <lastmod>2016-03-03T04:52:45.299Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2016/02/06/%E5%9C%A8AlertDialog%E4%B8%ADEditText%E6%97%A0%E6%B3%95%E5%BC%B9%E5%87%BA%E9%94%AE%E7%9B%98%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</loc>
-    <lastmod>2016-03-02T11:34:38.470Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2016/02/03/%E5%AF%B9LayoutInflater%E7%9A%84%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2016-03-02T11:28:20.568Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2015/12/05/%E5%AE%9E%E7%8E%B0%E7%82%AB%E9%85%B7%E7%9A%84CheckBox%EF%BC%8C%E5%B0%B1%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/</loc>
-    <lastmod>2016-03-02T08:52:24.219Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2015/12/13/%E8%AE%A9%E4%BD%A0%E7%9A%84ListView%E6%9B%B4%E7%82%AB%E9%85%B7%EF%BC%8C%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91%E5%88%A0%E9%99%A4%E6%95%88%E6%9E%9C/</loc>
-    <lastmod>2016-03-02T08:51:02.245Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2016/01/14/%E5%AE%9E%E7%8E%B0%E5%AF%BC%E8%88%AATab%E6%A0%8F%E6%82%AC%E6%B5%AE%E5%8A%9F%E8%83%BD%E4%B9%8B%E6%94%B9%E8%BF%9B%E7%89%88/</loc>
-    <lastmod>2016-02-24T14:16:17.719Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2016/01/22/%E8%87%AA%E5%AE%9A%E4%B9%89ViewGroup%E6%89%93%E9%80%A0%E6%B5%81%E5%BC%8F%E5%B8%83%E5%B1%80/</loc>
-    <lastmod>2016-02-24T14:15:31.817Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://yuqirong.me/2015/07/18/Hexo%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97(%E4%BA%8C)/</loc>
     <lastmod>2016-02-23T14:49:46.257Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2016/01/12/%E8%BD%BB%E6%9D%BE%E5%AE%9E%E7%8E%B0app%E4%B8%AD%E7%9A%84%E5%AF%BC%E8%88%AATab%E6%A0%8F%E6%82%AC%E6%B5%AE%E5%8A%9F%E8%83%BD/</loc>
-    <lastmod>2016-02-22T12:45:22.651Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2015/12/27/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0%E6%B0%B4%E6%B3%A2%E7%BA%B9%E5%8A%A8%E7%94%BB%EF%BC%8C%E8%AE%A9%E4%BD%A0%E7%9A%84app%E4%B8%8D%E5%86%8D%E5%8D%95%E8%B0%83/</loc>
-    <lastmod>2016-02-21T14:21:00.308Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2015/10/23/%E8%87%AA%E5%AE%9A%E4%B9%89View%E4%B9%8B%E5%AE%9E%E7%8E%B0%E6%96%87%E5%AD%97%E7%99%BE%E5%88%86%E6%AF%94%E8%BF%9B%E5%BA%A6%E6%9D%A1/</loc>
-    <lastmod>2016-02-21T14:20:55.950Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2015/09/29/%E6%8E%A2%E7%A9%B6Android%E5%BC%82%E6%AD%A5%E6%B6%88%E6%81%AF%E7%9A%84%E5%A4%84%E7%90%86%E4%B9%8BHandler%E8%AF%A6%E8%A7%A3/</loc>
-    <lastmod>2016-02-21T14:20:49.855Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2015/11/04/%E5%8F%B2%E4%B8%8A%E6%9C%80%E7%AE%80%E5%8D%95%E7%B2%97%E6%9A%B4%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91%E8%8F%9C%E5%8D%95/</loc>
-    <lastmod>2016-02-21T14:20:45.816Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2015/11/12/%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%BB%A1%E5%B1%8F%E8%A1%A8%E6%83%85%E4%B8%8B%E8%90%BD%E7%9A%84%E5%8A%A8%E7%94%BB%E6%95%88%E6%9E%9C%EF%BC%8C%E4%BD%A0%E4%B9%9F%E5%8F%AF%E4%BB%A5/</loc>
-    <lastmod>2016-02-21T14:20:31.424Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2015/11/24/%E5%88%9D%E6%8E%A2Android%20ORM%E6%A1%86%E6%9E%B6%E4%B9%8BgreenDAO/</loc>
-    <lastmod>2016-02-21T14:20:16.913Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2016-02-21T14:20:08.513Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop()%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2016-02-19T14:24:47.890Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2015/10/19/%E7%BB%99%E4%BD%A0%E7%9A%84ScrollView%E8%AE%BE%E7%BD%AE%E6%BB%91%E5%8A%A8%E8%B7%9D%E7%A6%BB%E7%9B%91%E5%90%AC%E5%99%A8/</loc>
-    <lastmod>2016-02-18T12:15:43.233Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/2015/10/17/ScrollView%E5%B5%8C%E5%A5%97ListView%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</loc>
-    <lastmod>2016-02-18T11:52:40.750Z</lastmod>
   </url>
   
   <url>

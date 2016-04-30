@@ -87,10 +87,7 @@
 
 看完上面的效果图，大家一定都迫不及待地想要试一试了，那就让我们来动手吧。
 首先我们定义一个实体类DropLook:
-/**
- * 下落的表情
- */
-public c">
+1234567891011121314151617">
 <meta property="og:type" content="article">
 <meta property="og:title" content="简单实现满屏表情下落的动画效果，你也可以">
 <meta property="og:url" content="http://yuqirong.me/2015/11/12/简单实现满屏表情下落的动画效果，你也可以/index.html">
@@ -100,12 +97,9 @@ public c">
 
 看完上面的效果图，大家一定都迫不及待地想要试一试了，那就让我们来动手吧。
 首先我们定义一个实体类DropLook:
-/**
- * 下落的表情
- */
-public c">
+1234567891011121314151617">
 <meta property="og:image" content="http://yuqirong.me/uploads/20151112/20151112224542.gif">
-<meta property="og:updated_time" content="2016-02-21T14:20:31.424Z">
+<meta property="og:updated_time" content="2016-04-30T08:34:12.109Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简单实现满屏表情下落的动画效果，你也可以">
 <meta name="twitter:description" content="首先我相信大家一定玩过微信吧。之前在玩微信的时候，给好友发一句“圣诞快乐”就会有满屏的圣诞树往下掉，当时觉得这个动画好酷。正好在公司的项目中需要用到这样的动画效果。于是写了一个小Demo,就有了这篇文章。
@@ -113,10 +107,7 @@ public c">
 
 看完上面的效果图，大家一定都迫不及待地想要试一试了，那就让我们来动手吧。
 首先我们定义一个实体类DropLook:
-/**
- * 下落的表情
- */
-public c">
+1234567891011121314151617">
 
 
 
@@ -398,289 +389,19 @@ public c">
 <p><img src="/uploads/20151112/20151112224542.gif" alt="这里写图片描述"></p>
 <p>看完上面的效果图，大家一定都迫不及待地想要试一试了，那就让我们来动手吧。</p>
 <p>首先我们定义一个实体类DropLook:</p>
-<pre><code>/**
- * 下落的表情
- */
-public class DropLook {
-
-    // x轴坐标
-    private float x;
-    // y轴坐标
-    private float y;
-    // 初始旋转角度
-    private float rotation;
-    // 下落速度
-    private float speed;
-    // 旋转速度
-    private float rotationSpeed;
-    // 宽度
-    private int width;
-    // 高度
-    private int height;
-    // 图片
-    private Bitmap bitmap;
-
-    public float getX() {
-        return x;
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public float getRotationSpeed() {
-        return rotationSpeed;
-    }
-
-    public void setRotationSpeed(float rotationSpeed) {
-        this.rotationSpeed = rotationSpeed;
-    }
-
-    public float getRotation() {
-        return rotation;
-    }
-
-    public void setRotation(float rotation) {
-        this.rotation = rotation;
-    }
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-}
-</code></pre><p>我们定义的实体类很简单，只是设置了如宽高、x，y坐标、下落速度等。接下来我们再创建一个DropLookFactory类，用来创建DropLook对象。</p>
-<pre><code>public class DropLookFactory {
-
-    private DropLookFactory() {
-
-    }
-
-    public static DropLook createDropLook(int width, int height,Bitmap originalBitmap) {
-        DropLook look = new DropLook();
-        if (originalBitmap == null) {
-            throw new NullPointerException(&quot;originalBitmap cannot be null&quot;);
-        }
-        // 设置与图片等宽
-        look.setWidth(originalBitmap.getWidth());
-        // 设置与图片等高
-        look.setHeight(originalBitmap.getHeight());
-        // 设置起始位置的X坐标
-        look.setX((float) Math.random() * (width - look.getWidth()));
-        // 设置起始位置的Y坐标
-        look.setY((float) Math.random() * (height - look.getHeight()));
-        // 设置速度
-        look.setSpeed(20 + (float) Math.random() * 40);
-        // 设置初始旋转角度
-        look.setRotation((float) Math.random() * 180 - 90);
-        // 设置旋转速度
-        look.setRotationSpeed((float) Math.random() * 90 - 60);
-        // 设置图片
-        look.setBitmap(originalBitmap);
-        return look;
-    }
-
-}
-</code></pre><p>其中<code>createDropLook(Context context, float xRange, Bitmap originalBitmap)</code>的第一个参数代表着下落表情在x轴上的范围，第二个参数代表在y轴上的范围，第三个参数是表情的图片。在createDropLook方法中相信大家都看得懂，主要就是用随机数初始化DropLook的坐标及下落速度等。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 下落的表情</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DropLook</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// x轴坐标</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> x;</span><br><span class="line">    <span class="comment">// y轴坐标</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> y;</span><br><span class="line">    <span class="comment">// 初始旋转角度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> rotation;</span><br><span class="line">    <span class="comment">// 下落速度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> speed;</span><br><span class="line">    <span class="comment">// 旋转速度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> rotationSpeed;</span><br><span class="line">    <span class="comment">// 宽度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> width;</span><br><span class="line">    <span class="comment">// 高度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> height;</span><br><span class="line">    <span class="comment">// 图片</span></span><br><span class="line">    <span class="keyword">private</span> Bitmap bitmap;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getX</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setX</span><span class="params">(<span class="keyword">float</span> x)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.x = x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getY</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setY</span><span class="params">(<span class="keyword">float</span> y)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.y = y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getRotationSpeed</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> rotationSpeed;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRotationSpeed</span><span class="params">(<span class="keyword">float</span> rotationSpeed)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.rotationSpeed = rotationSpeed;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getRotation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> rotation;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRotation</span><span class="params">(<span class="keyword">float</span> rotation)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.rotation = rotation;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getSpeed</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> speed;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSpeed</span><span class="params">(<span class="keyword">float</span> speed)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.speed = speed;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getWidth</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> width;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setWidth</span><span class="params">(<span class="keyword">int</span> width)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.width = width;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Bitmap <span class="title">getBitmap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> bitmap;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBitmap</span><span class="params">(Bitmap bitmap)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.bitmap = bitmap;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getHeight</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> height;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setHeight</span><span class="params">(<span class="keyword">int</span> height)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.height = height;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们定义的实体类很简单，只是设置了如宽高、x，y坐标、下落速度等。接下来我们再创建一个DropLookFactory类，用来创建DropLook对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DropLookFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">DropLookFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> DropLook <span class="title">createDropLook</span><span class="params">(<span class="keyword">int</span> width, <span class="keyword">int</span> height,Bitmap originalBitmap)</span> </span>&#123;</span><br><span class="line">        DropLook look = <span class="keyword">new</span> DropLook();</span><br><span class="line">        <span class="keyword">if</span> (originalBitmap == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"originalBitmap cannot be null"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 设置与图片等宽</span></span><br><span class="line">        look.setWidth(originalBitmap.getWidth());</span><br><span class="line">        <span class="comment">// 设置与图片等高</span></span><br><span class="line">        look.setHeight(originalBitmap.getHeight());</span><br><span class="line">        <span class="comment">// 设置起始位置的X坐标</span></span><br><span class="line">        look.setX((<span class="keyword">float</span>) Math.random() * (width - look.getWidth()));</span><br><span class="line">        <span class="comment">// 设置起始位置的Y坐标</span></span><br><span class="line">        look.setY((<span class="keyword">float</span>) Math.random() * (height - look.getHeight()));</span><br><span class="line">        <span class="comment">// 设置速度</span></span><br><span class="line">        look.setSpeed(<span class="number">20</span> + (<span class="keyword">float</span>) Math.random() * <span class="number">40</span>);</span><br><span class="line">        <span class="comment">// 设置初始旋转角度</span></span><br><span class="line">        look.setRotation((<span class="keyword">float</span>) Math.random() * <span class="number">180</span> - <span class="number">90</span>);</span><br><span class="line">        <span class="comment">// 设置旋转速度</span></span><br><span class="line">        look.setRotationSpeed((<span class="keyword">float</span>) Math.random() * <span class="number">90</span> - <span class="number">60</span>);</span><br><span class="line">        <span class="comment">// 设置图片</span></span><br><span class="line">        look.setBitmap(originalBitmap);</span><br><span class="line">        <span class="keyword">return</span> look;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中<code>createDropLook(Context context, float xRange, Bitmap originalBitmap)</code>的第一个参数代表着下落表情在x轴上的范围，第二个参数代表在y轴上的范围，第三个参数是表情的图片。在createDropLook方法中相信大家都看得懂，主要就是用随机数初始化DropLook的坐标及下落速度等。</p>
 <p>好了，下面就是今天的重头戏DropLookView，先来看看onMeasure(): </p>
-<pre><code> @Override
-protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-    int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-    if (widthMode == MeasureSpec.EXACTLY) {
-        mWidth = widthSize;
-    } else {
-        mWidth = Tools.dip2px(getContext(),200);
-    }
-    int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-    int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-    if (heightMode == MeasureSpec.EXACTLY) {
-        mHeight = heightSize;
-    } else {
-        mHeight = Tools.dip2px(getContext(),200);
-    }
-    setMeasuredDimension(mWidth, mHeight);
-    if (looks.size() == 0) {
-        for (int i = 0; i &lt; DEFAULT_DROP_LOOK_NUMS; ++i) {
-            looks.add(DropLookFactory.createDropLook(mWidth, mHeight, mBitmap));
-        }
-        Log.i(TAG, &quot;num = &quot; + looks.size());
-    }
-}
-</code></pre><p>onMeasure里主要是对View的测量，如果是<code>wrap_content</code>的话设置一个默认的宽高度200dp。然后就是初始化DropLook，looks是DropLook类的集合，用于管理DropLook。而<code>DEFAULT_LOOK_NUMS</code>是默认的looks集合的数量。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onMeasure(widthMeasureSpec, heightMeasureSpec);</span><br><span class="line">    <span class="keyword">int</span> widthSize = MeasureSpec.getSize(widthMeasureSpec);</span><br><span class="line">    <span class="keyword">int</span> widthMode = MeasureSpec.getMode(widthMeasureSpec);</span><br><span class="line">    <span class="keyword">if</span> (widthMode == MeasureSpec.EXACTLY) &#123;</span><br><span class="line">        mWidth = widthSize;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mWidth = Tools.dip2px(getContext(),<span class="number">200</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> heightSize = MeasureSpec.getSize(heightMeasureSpec);</span><br><span class="line">    <span class="keyword">int</span> heightMode = MeasureSpec.getMode(heightMeasureSpec);</span><br><span class="line">    <span class="keyword">if</span> (heightMode == MeasureSpec.EXACTLY) &#123;</span><br><span class="line">        mHeight = heightSize;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mHeight = Tools.dip2px(getContext(),<span class="number">200</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    setMeasuredDimension(mWidth, mHeight);</span><br><span class="line">    <span class="keyword">if</span> (looks.size() == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; DEFAULT_DROP_LOOK_NUMS; ++i) &#123;</span><br><span class="line">            looks.add(DropLookFactory.createDropLook(mWidth, mHeight, mBitmap));</span><br><span class="line">        &#125;</span><br><span class="line">        Log.i(TAG, <span class="string">"num = "</span> + looks.size());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>onMeasure里主要是对View的测量，如果是<code>wrap_content</code>的话设置一个默认的宽高度200dp。然后就是初始化DropLook，looks是DropLook类的集合，用于管理DropLook。而<code>DEFAULT_LOOK_NUMS</code>是默认的looks集合的数量。</p>
 <p>接下来就是最关键的onDraw():</p>
-<pre><code>@Override
-protected void onDraw(Canvas canvas) {
-    super.onDraw(canvas);
-    canvas.save();
-    long nowTime = System.currentTimeMillis();
-    if (nowTime - startTime &lt; 100) {
-        try {
-            Thread.sleep(100 + startTime - nowTime);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    for (int i = 0; i &lt; DEFAULT_DROP_LOOK_NUMS; i++) {
-
-        DropLook look = looks.get(i);
-        mMatrix.setTranslate(-look.getWidth() / 2, -look.getHeight() / 2);
-        mMatrix.postRotate(look.getRotation());
-        mMatrix.postTranslate(look.getWidth() / 2 + look.getX(), look.getHeight() / 2 + look.getY());
-        canvas.drawBitmap(look.getBitmap(), mMatrix, mPaint);
-
-        look.setY(look.getY() + look.getSpeed());
-        if (look.getY() &gt; getHeight()) {
-            look.setY((float) (0 - Math.random() * look.getHeight()));
-        }
-
-        look.setRotation(look.getRotation() + look.getRotationSpeed());
-    }
-
-    canvas.restore();
-    startTime = System.currentTimeMillis();
-    invalidate();
-}
-</code></pre><p>一开始判断时间间隔如果没有超过100ms，就让线程睡眠一会。然后就是用drawBitmap的方法把looks里面逐个绘制出来。并且再把look的y轴坐标加上下落速度等，旋转的角度也是如此。最后就是调用invalidate()不断地重绘。总体上并没有什么难点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line">    canvas.save();</span><br><span class="line">    <span class="keyword">long</span> nowTime = System.currentTimeMillis();</span><br><span class="line">    <span class="keyword">if</span> (nowTime - startTime &lt; <span class="number">100</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">100</span> + startTime - nowTime);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; DEFAULT_DROP_LOOK_NUMS; i++) &#123;</span><br><span class="line"></span><br><span class="line">        DropLook look = looks.get(i);</span><br><span class="line">        mMatrix.setTranslate(-look.getWidth() / <span class="number">2</span>, -look.getHeight() / <span class="number">2</span>);</span><br><span class="line">        mMatrix.postRotate(look.getRotation());</span><br><span class="line">        mMatrix.postTranslate(look.getWidth() / <span class="number">2</span> + look.getX(), look.getHeight() / <span class="number">2</span> + look.getY());</span><br><span class="line">        canvas.drawBitmap(look.getBitmap(), mMatrix, mPaint);</span><br><span class="line"></span><br><span class="line">        look.setY(look.getY() + look.getSpeed());</span><br><span class="line">        <span class="keyword">if</span> (look.getY() &gt; getHeight()) &#123;</span><br><span class="line">            look.setY((<span class="keyword">float</span>) (<span class="number">0</span> - Math.random() * look.getHeight()));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        look.setRotation(look.getRotation() + look.getRotationSpeed());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    canvas.restore();</span><br><span class="line">    startTime = System.currentTimeMillis();</span><br><span class="line">    invalidate();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一开始判断时间间隔如果没有超过100ms，就让线程睡眠一会。然后就是用drawBitmap的方法把looks里面逐个绘制出来。并且再把look的y轴坐标加上下落速度等，旋转的角度也是如此。最后就是调用invalidate()不断地重绘。总体上并没有什么难点。</p>
 <p>以下是DropLookView的完整代码：</p>
-<pre><code>/**
- * 表情下落view
- */
-public class DropLookView extends View {
-
-    // 表情
-    private Bitmap mBitmap;
-    // 所有表情集合
-    List&lt;DropLook&gt; looks = new ArrayList();
-    // view开始时间
-    private long startTime;
-    // view宽度
-    private int mWidth;
-    // view高度
-    private int mHeight;
-    // 画笔
-    private Paint mPaint;
-    // 默认表情下落数
-    private static final int DEFAULT_DROP_LOOK_NUMS = 35;
-
-    private static final String TAG = &quot;DropLookView&quot;;
-
-    private Matrix mMatrix = new Matrix();
-
-    public DropLookView(Context context) {
-        this(context, null);
-    }
-
-    public DropLookView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public DropLookView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        // 图片
-        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.d_5_xiaoku);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        if (widthMode == MeasureSpec.EXACTLY) {
-            mWidth = widthSize;
-        } else {
-            mWidth = Tools.dip2px(getContext(),200);
-        }
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        if (heightMode == MeasureSpec.EXACTLY) {
-            mHeight = heightSize;
-        } else {
-            mHeight = Tools.dip2px(getContext(),200);
-        }
-        setMeasuredDimension(mWidth, mHeight);
-        if (looks.size() == 0) {
-            for (int i = 0; i &lt; DEFAULT_DROP_LOOK_NUMS; ++i) {
-                looks.add(DropLookFactory.createDropLook(mWidth, mHeight, mBitmap));
-            }
-            Log.i(TAG, &quot;num = &quot; + looks.size());
-        }
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.save();
-        long nowTime = System.currentTimeMillis();
-        if (nowTime - startTime &lt; 100) {
-            try {
-                Thread.sleep(100 + startTime - nowTime);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        for (int i = 0; i &lt; DEFAULT_DROP_LOOK_NUMS; i++) {
-
-            DropLook look = looks.get(i);
-            mMatrix.setTranslate(-look.getWidth() / 2, -look.getHeight() / 2);
-            mMatrix.postRotate(look.getRotation());
-            mMatrix.postTranslate(look.getWidth() / 2 + look.getX(), look.getHeight() / 2 + look.getY());
-            canvas.drawBitmap(look.getBitmap(), mMatrix, mPaint);
-
-            look.setY(look.getY() + look.getSpeed());
-            if (look.getY() &gt; getHeight()) {
-                look.setY((float) (0 - Math.random() * look.getHeight()));
-            }
-
-            look.setRotation(look.getRotation() + look.getRotationSpeed());
-        }
-
-        canvas.restore();
-        startTime = System.currentTimeMillis();
-        invalidate();
-    }
-
-}
-</code></pre><p>该讲的也差不多讲完了，其实并没有想象中的那么有难度，实现起来也比较容易。当然DropLookView也有需要改进的地方。比如说可以在布局文件中自定义表情下落的数量等。这些就需要自己根据需求来更改了，那今天就先这样吧。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 表情下落view</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DropLookView</span> <span class="keyword">extends</span> <span class="title">View</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 表情</span></span><br><span class="line">    <span class="keyword">private</span> Bitmap mBitmap;</span><br><span class="line">    <span class="comment">// 所有表情集合</span></span><br><span class="line">    List&lt;DropLook&gt; looks = <span class="keyword">new</span> ArrayList();</span><br><span class="line">    <span class="comment">// view开始时间</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> startTime;</span><br><span class="line">    <span class="comment">// view宽度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mWidth;</span><br><span class="line">    <span class="comment">// view高度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mHeight;</span><br><span class="line">    <span class="comment">// 画笔</span></span><br><span class="line">    <span class="keyword">private</span> Paint mPaint;</span><br><span class="line">    <span class="comment">// 默认表情下落数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_DROP_LOOK_NUMS = <span class="number">35</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"DropLookView"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Matrix mMatrix = <span class="keyword">new</span> Matrix();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DropLookView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DropLookView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DropLookView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        <span class="comment">// 图片</span></span><br><span class="line">        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.d_5_xiaoku);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onMeasure(widthMeasureSpec, heightMeasureSpec);</span><br><span class="line">        <span class="keyword">int</span> widthSize = MeasureSpec.getSize(widthMeasureSpec);</span><br><span class="line">        <span class="keyword">int</span> widthMode = MeasureSpec.getMode(widthMeasureSpec);</span><br><span class="line">        <span class="keyword">if</span> (widthMode == MeasureSpec.EXACTLY) &#123;</span><br><span class="line">            mWidth = widthSize;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            mWidth = Tools.dip2px(getContext(),<span class="number">200</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> heightSize = MeasureSpec.getSize(heightMeasureSpec);</span><br><span class="line">        <span class="keyword">int</span> heightMode = MeasureSpec.getMode(heightMeasureSpec);</span><br><span class="line">        <span class="keyword">if</span> (heightMode == MeasureSpec.EXACTLY) &#123;</span><br><span class="line">            mHeight = heightSize;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            mHeight = Tools.dip2px(getContext(),<span class="number">200</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        setMeasuredDimension(mWidth, mHeight);</span><br><span class="line">        <span class="keyword">if</span> (looks.size() == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; DEFAULT_DROP_LOOK_NUMS; ++i) &#123;</span><br><span class="line">                looks.add(DropLookFactory.createDropLook(mWidth, mHeight, mBitmap));</span><br><span class="line">            &#125;</span><br><span class="line">            Log.i(TAG, <span class="string">"num = "</span> + looks.size());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line">        canvas.save();</span><br><span class="line">        <span class="keyword">long</span> nowTime = System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">if</span> (nowTime - startTime &lt; <span class="number">100</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">100</span> + startTime - nowTime);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; DEFAULT_DROP_LOOK_NUMS; i++) &#123;</span><br><span class="line"></span><br><span class="line">            DropLook look = looks.get(i);</span><br><span class="line">            mMatrix.setTranslate(-look.getWidth() / <span class="number">2</span>, -look.getHeight() / <span class="number">2</span>);</span><br><span class="line">            mMatrix.postRotate(look.getRotation());</span><br><span class="line">            mMatrix.postTranslate(look.getWidth() / <span class="number">2</span> + look.getX(), look.getHeight() / <span class="number">2</span> + look.getY());</span><br><span class="line">            canvas.drawBitmap(look.getBitmap(), mMatrix, mPaint);</span><br><span class="line"></span><br><span class="line">            look.setY(look.getY() + look.getSpeed());</span><br><span class="line">            <span class="keyword">if</span> (look.getY() &gt; getHeight()) &#123;</span><br><span class="line">                look.setY((<span class="keyword">float</span>) (<span class="number">0</span> - Math.random() * look.getHeight()));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            look.setRotation(look.getRotation() + look.getRotationSpeed());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        canvas.restore();</span><br><span class="line">        startTime = System.currentTimeMillis();</span><br><span class="line">        invalidate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该讲的也差不多讲完了，其实并没有想象中的那么有难度，实现起来也比较容易。当然DropLookView也有需要改进的地方。比如说可以在布局文件中自定义表情下落的数量等。这些就需要自己根据需求来更改了，那今天就先这样吧。</p>
 <p>下面是本Demo的完整代码：<br><a href="/uploads/20151112/DropDownView.rar">DropLookView.rar</a></p>
 
       
@@ -814,7 +535,7 @@ public class DropLookView extends View {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
