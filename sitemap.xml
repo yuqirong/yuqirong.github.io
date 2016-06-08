@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yuqirong.me/guestbook/index.html</loc>
+    <lastmod>2016-05-27T11:33:13.120Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://yuqirong.me/2015/10/13/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90AsyncTask%E7%9A%84%E5%8E%9F%E7%90%86/</loc>
     <lastmod>2016-05-01T06:32:34.650Z</lastmod>
   </url>
@@ -189,11 +194,6 @@
   <url>
     <loc>http://yuqirong.me/2015/07/18/Hexo%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97(%E4%BA%8C)/</loc>
     <lastmod>2016-02-23T14:49:46.257Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/guestbook/index.html</loc>
-    <lastmod>2016-02-02T12:25:28.613Z</lastmod>
   </url>
   
   <url>
