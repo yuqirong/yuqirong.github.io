@@ -17,7 +17,7 @@ comments: false
 ## 联系方式
 * GitHub : https://github.com/yuqirong
 * Twitter: https://twitter.com/yyyuqirong
-* Instagram : http://instagram/yyyuqirong
+* Instagram : http://instagram.com/yyyuqirong
 * Google+: https://plus.google.com/116756215081118586533
 * LinkIn : https://cn.linkedin.com/in/yuqirong
 * Weibo : http://weibo.com/yyyuqirong
