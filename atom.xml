@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-06-09T14:57:56.630Z</updated>
+  <updated>2016-06-19T05:55:37.950Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -13,6 +13,220 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[《Pro Git》笔记]]></title>
+    <link href="http://yuqirong.me/2016/06/18/%E3%80%8APro%20Git%E3%80%8B%E7%AC%94%E8%AE%B0/"/>
+    <id>http://yuqirong.me/2016/06/18/《Pro Git》笔记/</id>
+    <published>2016-06-17T16:29:14.000Z</published>
+    <updated>2016-06-19T05:55:37.950Z</updated>
+    <content type="html"><![CDATA[<h1 id="u7B2C_u4E00_u7AE0__u8D77_u6B65"><a href="#u7B2C_u4E00_u7AE0__u8D77_u6B65" class="headerlink" title="第一章 起步"></a>第一章 起步</h1><h2 id="1-5__u521D_u6B21_u8FD0_u884C_Git__u524D_u7684_u914D_u7F6E"><a href="#1-5__u521D_u6B21_u8FD0_u884C_Git__u524D_u7684_u914D_u7F6E" class="headerlink" title="1.5 初次运行 Git 前的配置"></a>1.5 初次运行 Git 前的配置</h2><ul>
+<li><p>Git 配置用户名：</p>
+<p>  git config –global user.name “yuqirong”</p>
+</li>
+<li><p>Git 配置电子邮箱：</p>
+<p>  git config –global user.email “yuqirong@myhexin.com”</p>
+</li>
+<li><p>查看 Git 配置情况：</p>
+<p>  git config –list</p>
+</li>
+<li><p>设置默认使用的文本编辑器：</p>
+<p>  git config –global core.editor emacs</p>
+</li>
+<li><p>设置默认使用的差异分析工具</p>
+<p>  git config –global merge.tool vimdiff</p>
+</li>
+</ul>
+<h1 id="u7B2C_u4E8C_u7AE0_Git__u57FA_u7840"><a href="#u7B2C_u4E8C_u7AE0_Git__u57FA_u7840" class="headerlink" title="第二章 Git 基础"></a>第二章 Git 基础</h1><h2 id="2-1__u53D6_u5F97_u9879_u76EE_u7684_Git__u4ED3_u5E93"><a href="#2-1__u53D6_u5F97_u9879_u76EE_u7684_Git__u4ED3_u5E93" class="headerlink" title="2.1 取得项目的 Git 仓库"></a>2.1 取得项目的 Git 仓库</h2><ul>
+<li><p>对某个项目进行 Git 管理：</p>
+<p>  git init</p>
+</li>
+<li><p>对某个仓库进行克隆：</p>
+<p>  git clone “<a href="https://github.com/yuqirong/yuqirong.github.io.git" target="_blank" rel="external">https://github.com/yuqirong/yuqirong.github.io.git</a>“</p>
+</li>
+<li><p>或者对克隆下来的仓库进行改名：</p>
+<p>  git clone “<a href="https://github.com/yuqirong/yuqirong.github.io.git" target="_blank" rel="external">https://github.com/yuqirong/yuqirong.github.io.git</a>“ yuqirong</p>
+</li>
+<li><p>Git 添加某个文件：</p>
+<p>  git add src/com/yuqirong/Test/a.java</p>
+</li>
+</ul>
+<h2 id="2-2__u8BB0_u5F55_u6BCF_u6B21_u66F4_u65B0_u5230_u4ED3_u5E93"><a href="#2-2__u8BB0_u5F55_u6BCF_u6B21_u66F4_u65B0_u5230_u4ED3_u5E93" class="headerlink" title="2.2 记录每次更新到仓库"></a>2.2 记录每次更新到仓库</h2><ul>
+<li><p>检查当前文件状态：</p>
+<p>  git status</p>
+</li>
+<li><p>查看已暂存的更新：</p>
+<p>  git diff –cached</p>
+</li>
+<li><p>查看未暂存的更新：</p>
+<p>  git diff</p>
+</li>
+<li><p>提交更新：</p>
+<p>  git commit<br>  或<br>  git commit -m “add new file”</p>
+</li>
+<li><p>跳过使用暂存区域的提交更新：</p>
+<p>  git commit -a -m “add new file”</p>
+</li>
+<li><p>移除文件：</p>
+<p>  git rm abc.txt</p>
+</li>
+<li><p>强制移除文件：</p>
+<p>  git rm -f abc.txt</p>
+</li>
+<li><p>文件保存在当前目录中但从跟踪清单中移除：</p>
+<p>  git rm –cached abc.txt</p>
+</li>
+<li><p>移动文件：</p>
+<p>  git mv file_from file_to</p>
+</li>
+</ul>
+<h2 id="2-3__u67E5_u770B_u63D0_u4EA4_u5386_u53F2"><a href="#2-3__u67E5_u770B_u63D0_u4EA4_u5386_u53F2" class="headerlink" title="2.3 查看提交历史"></a>2.3 查看提交历史</h2><ul>
+<li><p>查看提交历史：</p>
+<p>  git log</p>
+</li>
+<li><p>查看提交历史中每次提交的内容差异：</p>
+<p>  git log -p</p>
+</li>
+<li><p>查看提交历史但仅显示简要的增改行数统计：</p>
+<p>  git log –stat</p>
+</li>
+<li><p>查看提交历史并限制输出长度：</p>
+<p>  git log -2<br>  或<br>  git log –since=2.weeks</p>
+</li>
+</ul>
+<h2 id="2-4__u64A4_u6D88_u64CD_u4F5C"><a href="#2-4__u64A4_u6D88_u64CD_u4F5C" class="headerlink" title="2.4 撤消操作"></a>2.4 撤消操作</h2><ul>
+<li><p>修改最后一次提交：</p>
+<p>  git commit –amend</p>
+</li>
+<li><p>取消已经暂存的文件：</p>
+<p>  git reset HEAD abc.txt</p>
+</li>
+<li><p>取消对文件的修改：</p>
+<p>  git checkout – abc.txt (ps:该命令对已经add的文件无效)</p>
+</li>
+</ul>
+<h2 id="2-5__u8FDC_u7A0B_u4ED3_u5E93_u7684_u4F7F_u7528"><a href="#2-5__u8FDC_u7A0B_u4ED3_u5E93_u7684_u4F7F_u7528" class="headerlink" title="2.5 远程仓库的使用"></a>2.5 远程仓库的使用</h2><ul>
+<li><p>查看当前的远程库：</p>
+<p>  git remote</p>
+</li>
+<li><p>查看当前远程库对应的克隆地址：</p>
+<p>  git remote -v</p>
+</li>
+<li><p>添加远程仓库：</p>
+<p>  git remote add [short-name] [url]</p>
+</li>
+<li><p>从远程仓库抓取数据：</p>
+<p>  git fetch [remote-name] (fetch 命令只是将远端的数据拉到本地仓库，并不自动合并到当前工作分支，只有当你确实准备好了，才能手工合并。)</p>
+</li>
+<li><p>从远程仓库抓取数据，自动合并到本地仓库中：</p>
+<p>  git pull [remote-name]</p>
+</li>
+<li><p>推送数据到远程仓库中：</p>
+<p>  git push [remote-name] [branch-name]</p>
+</li>
+<li><p>查看远程仓库信息:</p>
+<p>  git remote show [remote-name]</p>
+</li>
+<li><p>远程仓库的重命名:</p>
+<p>  git remote rename [old-name] [new-name]</p>
+</li>
+<li><p>远程仓库的删除:</p>
+<p>  git remote rm [remote-name]</p>
+</li>
+</ul>
+<h2 id="2-6__u6253_u6807_u7B7E"><a href="#2-6__u6253_u6807_u7B7E" class="headerlink" title="2.6 打标签"></a>2.6 打标签</h2><ul>
+<li><p>列出现有的标签：</p>
+<p>  git tag</p>
+</li>
+<li><p>新建标签：</p>
+<p>  git tag -a v1.0 -m “qirong yu’s blog”</p>
+</li>
+<li><p>查看相应标签的版本信息：</p>
+<p>  git show v1.0</p>
+</li>
+<li><p>签署标签：</p>
+<p>  git tag -s v1.0 -m “qirong yu’s blog”</p>
+</li>
+<li><p>轻量级标签：</p>
+<p>  git tag v1.0</p>
+</li>
+<li><p>验证标签：</p>
+<p>  git tag -v [tag-name]</p>
+</li>
+<li><p>分享标签:</p>
+<p>  git push origin v1.0</p>
+</li>
+<li><p>推送所有的标签：</p>
+<p>  git push origin –tags</p>
+</li>
+</ul>
+<h2 id="2-7__u6280_u5DE7_u548C_u7A8D_u95E8"><a href="#2-7__u6280_u5DE7_u548C_u7A8D_u95E8" class="headerlink" title="2.7 技巧和窍门"></a>2.7 技巧和窍门</h2><ul>
+<li><p>设置 Git 命令别名：</p>
+<p>  git config –global alias.co checkout</p>
+</li>
+</ul>
+<h1 id="u7B2C_u4E09_u7AE0__u8D77_u6B65"><a href="#u7B2C_u4E09_u7AE0__u8D77_u6B65" class="headerlink" title="第三章 起步"></a>第三章 起步</h1><h2 id="3-1__u4F55_u8C13_u5206_u652F"><a href="#3-1__u4F55_u8C13_u5206_u652F" class="headerlink" title="3.1 何谓分支"></a>3.1 何谓分支</h2><ul>
+<li><p>创建一个新的分支：</p>
+<p>  git branch [branch-name]</p>
+</li>
+<li><p>克隆一个远程服务器上的分支：</p>
+<p>  git clone -b [branch-name] [remote-url]</p>
+</li>
+<li><p>切换分支：</p>
+<p>  git checkout [branch-name]</p>
+</li>
+</ul>
+<h2 id="3-2__u57FA_u672C_u7684_u5206_u652F_u4E0E_u5408_u5E76"><a href="#3-2__u57FA_u672C_u7684_u5206_u652F_u4E0E_u5408_u5E76" class="headerlink" title="3.2 基本的分支与合并"></a>3.2 基本的分支与合并</h2><ul>
+<li><p>新建一个分支并切换到该分支上：</p>
+<p>  git checkout -b [branch-name]</p>
+</li>
+<li><p>合并分支：</p>
+<p>  git merge [branch-name]</p>
+</li>
+<li><p>删除分支：</p>
+<p>  git branch -d [branch-name]</p>
+</li>
+<li><p>调用可视化的合并工具来解决冲突：</p>
+<p>  git mergetool</p>
+</li>
+</ul>
+<h2 id="3-3__u5206_u652F_u7BA1_u7406"><a href="#3-3__u5206_u652F_u7BA1_u7406" class="headerlink" title="3.3 分支管理"></a>3.3 分支管理</h2><ul>
+<li><p>列出所有分支：</p>
+<p>  git branch</p>
+</li>
+<li><p>查看分支最后一次 commit 信息：</p>
+<p>  git branch -v</p>
+</li>
+<li><p>查看哪些分支已经被并入：</p>
+<p>  git branch –merged</p>
+</li>
+<li><p>查看哪些分支没有被并入：</p>
+<p>  git branch –no-merged</p>
+</li>
+</ul>
+<h2 id="3-5__u8FDC_u7A0B_u5206_u652F"><a href="#3-5__u8FDC_u7A0B_u5206_u652F" class="headerlink" title="3.5 远程分支"></a>3.5 远程分支</h2><ul>
+<li><p>跟踪分支</p>
+<p>  git checkout -b [local-branch-name] [remote-name]/[remote-branch-name]</p>
+</li>
+<li><p>删除远程分支：</p>
+<p>  git push [remote-name] :[remote-branch-name]</p>
+</li>
+</ul>
+<h2 id="3-6__u884D_u5408"><a href="#3-6__u884D_u5408" class="headerlink" title="3.6 衍合"></a>3.6 衍合</h2><ul>
+<li><p>衍合分支：</p>
+<p>  git rebase [branch-name]</p>
+</li>
+</ul>
+<h1 id="u7B2C4_u7AE0__u670D_u52A1_u5668_u4E0A_u7684_Git"><a href="#u7B2C4_u7AE0__u670D_u52A1_u5668_u4E0A_u7684_Git" class="headerlink" title="第4章 服务器上的 Git"></a>第4章 服务器上的 Git </h1>]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u7B2C_u4E00_u7AE0__u8D77_u6B65"><a href="#u7B2C_u4E00_u7AE0__u8D77_u6B65" class="headerlink" title="第一章 起步"></a>第一章 起步</h1><h2 id="1]]>
+    </summary>
+    
+      <category term="Git" scheme="http://yuqirong.me/tags/Git/"/>
+    
+      <category term="Book Note" scheme="http://yuqirong.me/categories/Book-Note/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[关于Android 6.0的运行时权限处理]]></title>
@@ -2505,40 +2719,6 @@ private static int[] countingSort(int[] A, int n) {
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
     
       <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
-    
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[自定义ViewGroup打造流式布局]]></title>
-    <link href="http://yuqirong.me/2016/01/22/%E8%87%AA%E5%AE%9A%E4%B9%89ViewGroup%E6%89%93%E9%80%A0%E6%B5%81%E5%BC%8F%E5%B8%83%E5%B1%80/"/>
-    <id>http://yuqirong.me/2016/01/22/自定义ViewGroup打造流式布局/</id>
-    <published>2016-01-22T12:31:37.000Z</published>
-    <updated>2016-04-30T09:17:21.533Z</updated>
-    <content type="html"><![CDATA[<p>前几天看了<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的<a href="http://blog.csdn.net/lmj623565791/article/details/38352503" target="_blank" rel="external">《Android 自定义ViewGroup 实战篇 -&gt; 实现FlowLayout》</a>，觉得文中的FlowLayout很多地方都可以用到。于是自己按照思路实现了一遍，这就是本片博文诞生的原因了。</p>
-<p>首先流式布局相信大家都见到过，比如说下图中的京东热搜就是流式布局的应用。还有更多应用的地方在这里就不一一举例了。</p>
-<p><img src="/uploads/20160122/20160122205447.png" alt="这里写图片描述"></p>
-<p>下面我们就来看看是如何实现的。首先新建一个class，继承自ViewGroup。在<code>generateLayoutParams(AttributeSet attrs)</code>里直接返回MarginLayoutParams就行了。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> LayoutParams <span class="title">generateLayoutParams</span><span class="params">(AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> MarginLayoutParams(getContext(), attrs);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后就是<code>onLayout(boolean changed, int l, int t, int r, int b)</code>了，大部分的代码都添加了注释，相信大家都能看懂。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onLayout</span><span class="params">(<span class="keyword">boolean</span> changed, <span class="keyword">int</span> l, <span class="keyword">int</span> t, <span class="keyword">int</span> r, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> count = getChildCount();</span><br><span class="line">    <span class="keyword">int</span> cWidth;</span><br><span class="line">    <span class="keyword">int</span> cHeight;</span><br><span class="line">    MarginLayoutParams params;</span><br><span class="line">	<span class="comment">// 用来统计总宽度，初始值设为paddingLeft</span></span><br><span class="line">    <span class="keyword">int</span> lastWidth = getPaddingLeft();</span><br><span class="line">    <span class="keyword">int</span> lastHeight = getPaddingTop();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line">		<span class="comment">// 得到当前View</span></span><br><span class="line">        View childView = getChildAt(i);</span><br><span class="line">		<span class="comment">// 测量得到当前View的宽度</span></span><br><span class="line">        cWidth = childView.getMeasuredWidth();</span><br><span class="line">		<span class="comment">// 测量得到当前View的高度</span></span><br><span class="line">        cHeight = childView.getMeasuredHeight();</span><br><span class="line">        params = (MarginLayoutParams) childView.getLayoutParams();</span><br><span class="line">		<span class="comment">// 宽度加上margin</span></span><br><span class="line">        <span class="keyword">int</span> width = cWidth + params.leftMargin + params.rightMargin;</span><br><span class="line">		<span class="comment">// 高度加上margin</span></span><br><span class="line">        <span class="keyword">int</span> height = cHeight + params.topMargin + params.bottomMargin;</span><br><span class="line">		<span class="comment">// 判断流式布局里的item总长度是否超过FlowLayout的宽度，如果是则需要换行  </span></span><br><span class="line">        <span class="keyword">if</span> (width + lastWidth &gt; r - getPaddingRight()) &#123;</span><br><span class="line">			<span class="comment">// 如果超过，重置lastWidth</span></span><br><span class="line">            lastWidth = getPaddingLeft();</span><br><span class="line">			<span class="comment">// lastHeight加上一个item的高度</span></span><br><span class="line">            lastHeight += height;</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">// 给View布局</span></span><br><span class="line">        childView.layout(lastWidth, lastHeight, lastWidth + cWidth, lastHeight + cHeight);</span><br><span class="line">		<span class="comment">//累加总宽度</span></span><br><span class="line">        lastWidth += width;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>之后就是<code>onMeasure(int widthMeasureSpec, int heightMeasureSpec)</code>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> widthSize = MeasureSpec.getSize(widthMeasureSpec);</span><br><span class="line">    <span class="keyword">int</span> widthMode = MeasureSpec.getMode(widthMeasureSpec);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> heightSize = MeasureSpec.getSize(heightMeasureSpec);</span><br><span class="line">    <span class="keyword">int</span> heightMode = MeasureSpec.getMode(heightMeasureSpec);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> totalWidth = getPaddingLeft() + getPaddingRight();</span><br><span class="line">    <span class="keyword">int</span> maxWidth = getPaddingLeft() + getPaddingRight();</span><br><span class="line">    <span class="keyword">int</span> maxHeight = getPaddingBottom() + getPaddingTop();</span><br><span class="line">    <span class="keyword">int</span> count = getChildCount();</span><br><span class="line">	<span class="comment">// 测量子view</span></span><br><span class="line">    measureChildren(widthMeasureSpec, heightMeasureSpec);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> cWidth;</span><br><span class="line">    <span class="keyword">int</span> cHeight;</span><br><span class="line">    MarginLayoutParams params;</span><br><span class="line">    <span class="keyword">int</span> width;</span><br><span class="line">    <span class="keyword">int</span> height;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line">        View childView = getChildAt(i);</span><br><span class="line">        cWidth = childView.getMeasuredWidth();</span><br><span class="line">        cHeight = childView.getMeasuredHeight();</span><br><span class="line">        params = (MarginLayoutParams) childView.getLayoutParams();</span><br><span class="line"></span><br><span class="line">        width = cWidth + params.leftMargin + params.rightMargin;</span><br><span class="line">        height = cHeight + params.topMargin + params.bottomMargin;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (i == <span class="number">0</span>) &#123;</span><br><span class="line">			<span class="comment">// 第一行时最大高度设为height</span></span><br><span class="line">            maxHeight += height;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 如果需要换行</span></span><br><span class="line">        <span class="keyword">if</span> (width + totalWidth &gt; widthSize) &#123;</span><br><span class="line">			<span class="comment">// 得到最大的值作为setMeasuredDimension()的宽度</span></span><br><span class="line">            maxWidth = Math.max(maxWidth, totalWidth);</span><br><span class="line">            totalWidth = getPaddingLeft() + getPaddingRight();</span><br><span class="line">            totalWidth += width;</span><br><span class="line">			<span class="comment">// 高度就是累加到最后</span></span><br><span class="line">            maxHeight += height;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="comment">// 不换行就总长度累加</span></span><br><span class="line">            totalWidth += width;</span><br><span class="line">        &#125;</span><br><span class="line">        Log.i(TAG, <span class="string">"i = "</span> + i + <span class="string">", width = "</span> + width + <span class="string">", totalWidth = "</span> + totalWidth + <span class="string">", widthSize = "</span> + widthSize + ((TextView) childView).getText());</span><br><span class="line">        Log.i(TAG, <span class="string">"height = "</span> + height);</span><br><span class="line">        Log.i(TAG, <span class="string">"i = "</span> + i + <span class="string">", maxHeight = "</span> + maxHeight);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// 设置宽高度</span></span><br><span class="line">    setMeasuredDimension(widthMode == MeasureSpec.EXACTLY ? widthSize : maxWidth,</span><br><span class="line">            heightMode == MeasureSpec.EXACTLY ? heightSize : maxHeight);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在<code>onMeasure(int widthMeasureSpec, int heightMeasureSpec)</code>中，如果测量模式是MeasureSpec.EXACTLY，则直接设置测量出来的宽和高；否则需要测量每个子View，根据item的行数来得到宽和高。</p>
-<p>这样，FlowLayout就写好了，那就让我们来看看效果吧。当<code>android:layout_width=&quot;wrap_content&quot;</code>时<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">com.yuqirong.viewgroup.view.FlowLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"#ddd"</span></span><br><span class="line">    <span class="attribute">android:padding</span>=<span class="value">"20dp"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"杭州"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"宁波"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"上海"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"北京"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"重庆"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"南昌"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"苏州"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">com.yuqirong.viewgroup.view.FlowLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>运行的效果图：</p>
-<p><img src="/uploads/20160122/20160122220305.png" alt="这里写图片描述"></p>
-<p>当<code>android:layout_width=&quot;300dp&quot;</code>时：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">com.yuqirong.viewgroup.view.FlowLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"300dp"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"#ddd"</span></span><br><span class="line">    <span class="attribute">android:padding</span>=<span class="value">"20dp"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"杭州"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"哈尔滨"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"宁波"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"呼和浩特"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"上海"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"北京"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"重庆"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"南昌"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/text_flag_01"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"苏州"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">com.yuqirong.viewgroup.view.FlowLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>运行的效果图：</p>
-<p><img src="/uploads/20160122/20160122220718.png" alt="这里写图片描述"></p>
-<p>最后，提供源码下载：</p>
-<p><a href="/uploads/20160122/FlowLayout.rar">FlowLayout.rar</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>前几天看了<a href="http://my.csdn.net/lmj623565791" target="_blank" rel="external">鸿洋_</a>的<a href="http://blog.csdn.net/lmj623565791/article/]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
