@@ -1,0 +1,927 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,源码解析," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qirong Yu's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言目前在公司中仍处于认知状态，因此没有什么时间写博客了，趁今天是周末就来更新一发。
+关于今天为什么讲 CursorAdapter 的原因，是因为之前在工作的时候有遇到 CursorAdapter 中 filter 的相关问题，于是就想把 CursorAdapter 中的 filter 机制流程好好梳理一下。出于这样的目的，本篇博文就诞生了。
+在阅读本文之前，最好已经有写过 CursorAdapt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="详解CursorAdapter中的filter机制">
+<meta property="og:url" content="http://yuqirong.me/2016/07/03/详解CursorAdapter中的filter机制/index.html">
+<meta property="og:site_name" content="Qirong Yu's Blog">
+<meta property="og:description" content="前言目前在公司中仍处于认知状态，因此没有什么时间写博客了，趁今天是周末就来更新一发。
+关于今天为什么讲 CursorAdapter 的原因，是因为之前在工作的时候有遇到 CursorAdapter 中 filter 的相关问题，于是就想把 CursorAdapter 中的 filter 机制流程好好梳理一下。出于这样的目的，本篇博文就诞生了。
+在阅读本文之前，最好已经有写过 CursorAdapt">
+<meta property="og:updated_time" content="2016-07-04T15:47:02.723Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="详解CursorAdapter中的filter机制">
+<meta name="twitter:description" content="前言目前在公司中仍处于认知状态，因此没有什么时间写博客了，趁今天是周末就来更新一发。
+关于今天为什么讲 CursorAdapter 的原因，是因为之前在工作的时候有遇到 CursorAdapter 中 filter 的相关问题，于是就想把 CursorAdapter 中的 filter 机制流程好好梳理一下。出于这样的目的，本篇博文就诞生了。
+在阅读本文之前，最好已经有写过 CursorAdapt">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 详解CursorAdapter中的filter机制 | Qirong Yu's Blog </title>
+  <meta name="baidu-site-verification" content="MBYnGIEEPN" />
+  <meta name="baidu-site-verification" content="1Hx0jVHsgl" />
+  <meta name="baidu-site-verification" content="L0MgAErI0s" />
+  <meta name="google-site-verification" content="_hYRHLLoBRM6L31myWhOPTxzGtawe9z1zmCqcJ-aHA0" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Qirong Yu's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-comment fa-fw"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '8ZRfk21kUz89L8Xi6hZm','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                详解CursorAdapter中的filter机制
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-03T20:35:51+08:00" content="2016-07-03">
+              2016-07-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/03/详解CursorAdapter中的filter机制/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/03/详解CursorAdapter中的filter机制/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>目前在公司中仍处于认知状态，因此没有什么时间写博客了，趁今天是周末就来更新一发。</p>
+<p>关于今天为什么讲 CursorAdapter 的原因，是因为之前在工作的时候有遇到 CursorAdapter 中 filter 的相关问题，于是就想把 CursorAdapter 中的 filter 机制流程好好梳理一下。出于这样的目的，本篇博文就诞生了。</p>
+<p>在阅读本文之前，最好已经有写过 CursorAdapter 中 filter 相关代码的经历，这样可以帮助你更好地理解其中的原理。如果你准备好了，那么接下来就一起来看看吧。</p>
+<h1 id="CursorAdapter__u7C7B"><a href="#CursorAdapter__u7C7B" class="headerlink" title="CursorAdapter 类"></a>CursorAdapter 类</h1><p>首先我们来看一下 CursorAdapter 的继承以及实现关系：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">CursorAdapter</span> <span class="keyword">extends</span> <span class="title">BaseAdapter</span> <span class="keyword">implements</span> <span class="title">Filterable</span>, <span class="title">CursorFilter</span>.<span class="title">CursorFilterClient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>CursorAdapter 继承自 BaseAdapter ，相信大家都可以理解。之后又实现了 Filterable 和 CursorFilter.CursorFilterClient 接口。</p>
+<p>Filterable 的接口很简单，只有一个 <code>getFilter()</code> 方法，用来返回 filter 。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Filterable</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * &lt;p&gt;Returns a filter that can be used to constrain data with a filtering</span><br><span class="line">     * pattern.&lt;/p&gt;</span><br><span class="line">     *</span><br><span class="line">     * &lt;p&gt;This method is usually implemented by &#123;<span class="doctag">@link</span> android.widget.Adapter&#125;</span><br><span class="line">     * classes.&lt;/p&gt;</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@return</span> a filter used to constrain data</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function">Filter <span class="title">getFilter</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而 CursorFilter.CursorFilterClient 的接口是定义在 CursorFilter 类里面的。而 CursorFilter 类是默认修饰符，也就是说我们在外部无法访问到它。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">CursorFilterClient</span> </span>&#123;</span><br><span class="line">    <span class="function">CharSequence <span class="title">convertToString</span><span class="params">(Cursor cursor)</span></span>;</span><br><span class="line">    <span class="function">Cursor <span class="title">runQueryOnBackgroundThread</span><span class="params">(CharSequence constraint)</span></span>;</span><br><span class="line">    <span class="function">Cursor <span class="title">getCursor</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">changeCursor</span><span class="params">(Cursor cursor)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们来看看 CursorFilterClient 接口中的抽象方法。根据方法名我们大概都能猜出该方法需要做的事情。 <code>convertToString(Cursor cursor)</code> 方法主要的功能就是根据传入的 cursor 参数返回某个字段；<code>runQueryOnBackgroundThread(CharSequence constraint)</code> 方法的意思就是根据传入的 constraint 字符序列去搜索得到 cursor；而 <code>getCursor()</code>就是返回 cursor；<code>changeCursor(Cursor cursor)</code> 就是根据传入的新的 cursor 去替换旧的 cursor 。</p>
+<h1 id="filter__u7684_u7528_u6CD5"><a href="#filter__u7684_u7528_u6CD5" class="headerlink" title="filter 的用法"></a>filter 的用法</h1><p>好了，我们来想想平时我们是怎么样使用 CursorAdapter 中的 filter ？</p>
+<p>第一步，我们会使用自定义的 adapter 继承自 CursorAdapter ，并且实现 FilterQueryProvider 和 FilterListener 接口。最后别忘了调用 <code>setFilterQueryProvider(FilterQueryProvider filterQueryProvider)</code> 方法。</p>
+<p>然后，第二步我们会使用CursorAdapter的 <code>getFilter()</code> 方法来得到 filter 。对，没错，就是实现 Filterable 接口的那个 <code>getFilter</code> 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Filter <span class="title">getFilter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mCursorFilter == <span class="keyword">null</span>) &#123;</span><br><span class="line">        mCursorFilter = <span class="keyword">new</span> CursorFilter(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> mCursorFilter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 CursorAdapter 的源码中，判断了 mCursorFilter 是否为空。若为空，则创建一个新的 CursorFilter 对象。否则直接返回 mCursorFilter 。在这里要说明一下 CursorFilter 是 Filter 的子类。</p>
+<p>而在 CursorFilter 的构造器中，主要是设置了 client (CursorAdapter 实现了 CursorFilterClient 接口)。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CursorFilter(CursorFilterClient client) &#123;</span><br><span class="line">    mClient = client;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在第二步得到了 filter 之后，第三步就可以使用 <code>filter.filter(CharSequence constraint)</code> 或者 <code>filter.filter(CharSequence constraint, FilterListener listener)</code> 方法了。constraint 参数就是要过滤的关键词；而 FilterListener 是一个 Filter 类的内部接口，会在过滤完成之后回调其中的 <code>onFilterComplete(int count)</code> 方法。</p>
+<h1 id="filter__u7684_u539F_u7406"><a href="#filter__u7684_u539F_u7406" class="headerlink" title="filter 的原理"></a>filter 的原理</h1><p>大致使用 filter 的步骤就是像上面这样的了。下面我们就来揭开这其中神秘的面纱吧！</p>
+<p>我们的入手点就是 Filter 的 filter 方法了。其中的 <code>filter.filter(CharSequence constraint)</code> 方法内部会调用 <code>filter.filter(CharSequence constraint, FilterListener listener)</code> 方法。所以我们只需要看下<code>filter.filter(CharSequence constraint, FilterListener listener)</code> 的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * &lt;p&gt;Starts an asynchronous filtering operation. Calling this method</span><br><span class="line"> * cancels all previous non-executed filtering requests and posts a new</span><br><span class="line"> * filtering request that will be executed later.&lt;/p&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;Upon completion, the listener is notified.&lt;/p&gt;</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> constraint the constraint used to filter the data</span><br><span class="line"> * <span class="doctag">@param</span> listener a listener notified upon completion of the operation</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@see</span> #filter(CharSequence)</span><br><span class="line"> * <span class="doctag">@see</span> #performFiltering(CharSequence)</span><br><span class="line"> * <span class="doctag">@see</span> #publishResults(CharSequence, android.widget.Filter.FilterResults)</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">filter</span><span class="params">(CharSequence constraint, FilterListener listener)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mThreadHandler == <span class="keyword">null</span>) &#123;</span><br><span class="line">            HandlerThread thread = <span class="keyword">new</span> HandlerThread(</span><br><span class="line">                    THREAD_NAME, android.os.Process.THREAD_PRIORITY_BACKGROUND);</span><br><span class="line">            thread.start();</span><br><span class="line">            mThreadHandler = <span class="keyword">new</span> RequestHandler(thread.getLooper());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">long</span> delay = (mDelayer == <span class="keyword">null</span>) ? <span class="number">0</span> : mDelayer.getPostingDelay(constraint);</span><br><span class="line">        </span><br><span class="line">        Message message = mThreadHandler.obtainMessage(FILTER_TOKEN);</span><br><span class="line"></span><br><span class="line">        RequestArguments args = <span class="keyword">new</span> RequestArguments();</span><br><span class="line">        <span class="comment">// make sure we use an immutable copy of the constraint, so that</span></span><br><span class="line">        <span class="comment">// it doesn't change while the filter operation is in progress</span></span><br><span class="line">        args.constraint = constraint != <span class="keyword">null</span> ? constraint.toString() : <span class="keyword">null</span>;</span><br><span class="line">        args.listener = listener;</span><br><span class="line">        message.obj = args;</span><br><span class="line"></span><br><span class="line">        mThreadHandler.removeMessages(FILTER_TOKEN);</span><br><span class="line">        mThreadHandler.removeMessages(FINISH_TOKEN);</span><br><span class="line">        mThreadHandler.sendMessageDelayed(message, delay);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从源码中我们可以看到，主要做的就是在一开始创建一个 HandlerThread 线程，并且创建了一个 RequestHandler 的对象 mThreadHandler 。之后创建了一个 RequestArguments 的对象 args，然后把 constraint 和 listener 传到 args 中去，而 RequestArguments 类还有一个成员变量就是 results ，主要用于存储 filter 过滤之后的结果，这会在下面的代码中用到。然后用 mThreadHandler 将该消息发送出去。</p>
+<p>那么我们接下来就要来看看 RequestHandler 的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * &lt;p&gt;Worker thread handler. When a new filtering request is posted from</span><br><span class="line"> * &#123;<span class="doctag">@link</span> android.widget.Filter#filter(CharSequence, android.widget.Filter.FilterListener)&#125;,</span><br><span class="line"> * it is sent to this handler.&lt;/p&gt;</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">RequestHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RequestHandler</span><span class="params">(Looper looper)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(looper);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * &lt;p&gt;Handles filtering requests by calling</span><br><span class="line">     * &#123;<span class="doctag">@link</span> Filter#performFiltering&#125; and then sending a message</span><br><span class="line">     * with the results to the results handler.&lt;/p&gt;</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> msg the filtering request</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> what = msg.what;</span><br><span class="line">        Message message;</span><br><span class="line">        <span class="keyword">switch</span> (what) &#123;</span><br><span class="line">            <span class="keyword">case</span> FILTER_TOKEN:</span><br><span class="line">                RequestArguments args = (RequestArguments) msg.obj;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    args.results = performFiltering(args.constraint);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    args.results = <span class="keyword">new</span> FilterResults();</span><br><span class="line">                    Log.w(LOG_TAG, <span class="string">"An exception occured during performFiltering()!"</span>, e);</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    message = mResultHandler.obtainMessage(what);</span><br><span class="line">                    message.obj = args;</span><br><span class="line">                    message.sendToTarget();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (mThreadHandler != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        Message finishMessage = mThreadHandler.obtainMessage(FINISH_TOKEN);</span><br><span class="line">                        mThreadHandler.sendMessageDelayed(finishMessage, <span class="number">3000</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> FINISH_TOKEN:</span><br><span class="line">                <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (mThreadHandler != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        mThreadHandler.getLooper().quit();</span><br><span class="line">                        mThreadHandler = <span class="keyword">null</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 case FILTER_TOKEN 中我们可以看到，会先去调用 <code>performFiltering(CharSequence constraint)</code> 方法。而该方法在 Filter 类中是抽象方法，需要在子类中去实现。那么我们就来看看 CursorFilter 的 <code>performFiltering(CharSequence constraint)</code> 方法吧：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> FilterResults <span class="title">performFiltering</span><span class="params">(CharSequence constraint)</span> </span>&#123;</span><br><span class="line">    Cursor cursor = mClient.runQueryOnBackgroundThread(constraint);</span><br><span class="line"></span><br><span class="line">    FilterResults results = <span class="keyword">new</span> FilterResults();</span><br><span class="line">    <span class="keyword">if</span> (cursor != <span class="keyword">null</span>) &#123;</span><br><span class="line">        results.count = cursor.getCount();</span><br><span class="line">        results.values = cursor;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        results.count = <span class="number">0</span>;</span><br><span class="line">        results.values = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> results;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>performFiltering(CharSequence constraint)</code> 方法中又会去调用  mClient 的 <code>runQueryOnBackgroundThread(CharSequence constraint)</code> 方法，而 mClient 就是之前的 CursorAdapter ，所以我们又要跳到 CursorAdapter 类去看相关的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Runs a query with the specified constraint. This query is requested</span><br><span class="line"> * by the filter attached to this adapter.</span><br><span class="line"> *</span><br><span class="line"> * The query is provided by a</span><br><span class="line"> * &#123;<span class="doctag">@link</span> android.widget.FilterQueryProvider&#125;.</span><br><span class="line"> * If no provider is specified, the current cursor is not filtered and returned.</span><br><span class="line"> *</span><br><span class="line"> * After this method returns the resulting cursor is passed to &#123;<span class="doctag">@link</span> #changeCursor(Cursor)&#125;</span><br><span class="line"> * and the previous cursor is closed.</span><br><span class="line"> *</span><br><span class="line"> * This method is always executed on a background thread, not on the</span><br><span class="line"> * application's main thread (or UI thread.)</span><br><span class="line"> * </span><br><span class="line"> * Contract: when constraint is null or empty, the original results,</span><br><span class="line"> * prior to any filtering, must be returned.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> constraint the constraint with which the query must be filtered</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@return</span> a Cursor representing the results of the new query</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@see</span> #getFilter()</span><br><span class="line"> * <span class="doctag">@see</span> #getFilterQueryProvider()</span><br><span class="line"> * <span class="doctag">@see</span> #setFilterQueryProvider(android.widget.FilterQueryProvider)</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Cursor <span class="title">runQueryOnBackgroundThread</span><span class="params">(CharSequence constraint)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mFilterQueryProvider != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> mFilterQueryProvider.runQuery(constraint);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> mCursor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以看到会去调用 mFilterQueryProvider 的 <code>runQuery(CharSequence constraint)</code> 方法。 FilterQueryProvider 其实就是一个接口而已，当我们需要使用 filter 时就要实现该接口。在上面的 filter 用法中已经提到过了。其中的 <code>runQuery(CharSequence constraint)</code> 方法就是需要我们自己去实现的。当然，这里还有另外一种方法，就是不用实现 FilterQueryProvider 接口。而是在子类中去重写 <code>runQueryOnBackgroundThread(CharSequence constraint)</code> 方法，也是达到了一样的效果。</p>
+<p>假定我们已经在 <code>runQuery(CharSequence constraint)</code> 实现了相关的操作，并且返回了查询出来的 cursor 。那样我们又要跳回到 RequestHandler 的源码中了(这里只截取部分代码，完整代码请查看上面)：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    args.results = performFiltering(args.constraint);</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    args.results = <span class="keyword">new</span> FilterResults();</span><br><span class="line">    Log.w(LOG_TAG, <span class="string">"An exception occured during performFiltering()!"</span>, e);</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    message = mResultHandler.obtainMessage(what);</span><br><span class="line">    message.obj = args;</span><br><span class="line">    message.sendToTarget();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，这里把返回的 cursor 传给了 args.results 。并且又使用了 mResultHandler 发送了消息。这样我们又要来看一下 ResultHandler 的源码了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * &lt;p&gt;Handles the results of a filtering operation. The results are</span><br><span class="line"> * handled in the UI thread.&lt;/p&gt;</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ResultsHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * &lt;p&gt;Messages received from the request handler are processed in the</span><br><span class="line">     * UI thread. The processing involves calling</span><br><span class="line">     * &#123;<span class="doctag">@link</span> Filter#publishResults(CharSequence,</span><br><span class="line">     * android.widget.Filter.FilterResults)&#125;</span><br><span class="line">     * to post the results back in the UI and then notifying the listener,</span><br><span class="line">     * if any.&lt;/p&gt; </span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> msg the filtering results</span><br><span class="line">     */</span></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">        RequestArguments args = (RequestArguments) msg.obj;</span><br><span class="line"></span><br><span class="line">        publishResults(args.constraint, args.results);</span><br><span class="line">        <span class="keyword">if</span> (args.listener != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> count = args.results != <span class="keyword">null</span> ? args.results.count : -<span class="number">1</span>;</span><br><span class="line">            args.listener.onFilterComplete(count);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>handleMessage(Message msg)</code> 中，调用了 <code>publishResults(CharSequence constraint, FilterResults results)</code> 方法。在 Filter 类中 <code>publishResults(CharSequence constraint, FilterResults results)</code> 又是抽象的，所以还得去 CursorFilter 类中查看相关的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">publishResults</span><span class="params">(CharSequence constraint, FilterResults results)</span> </span>&#123;</span><br><span class="line">    Cursor oldCursor = mClient.getCursor();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (results.values != <span class="keyword">null</span> &amp;&amp; results.values != oldCursor) &#123;</span><br><span class="line">        mClient.changeCursor((Cursor) results.values);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>源码里表示了会去调用 CursorAdapter 的 <code>changeCursor(Cursor cursor)</code> :</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Change the underlying cursor to a new cursor. If there is an existing cursor it will be</span><br><span class="line"> * closed.</span><br><span class="line"> * </span><br><span class="line"> * <span class="doctag">@param</span> cursor The new cursor to be used</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">changeCursor</span><span class="params">(Cursor cursor)</span> </span>&#123;</span><br><span class="line">    Cursor old = swapCursor(cursor);</span><br><span class="line">    <span class="keyword">if</span> (old != <span class="keyword">null</span>) &#123;</span><br><span class="line">        old.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>changeCursor(Cursor cursor)</code> 中，又调用了 <code>swapCursor(Cursor newCursor)</code> :</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Swap in a new Cursor, returning the old Cursor.  Unlike</span><br><span class="line"> * &#123;<span class="doctag">@link</span> #changeCursor(Cursor)&#125;, the returned old Cursor is &lt;em&gt;not&lt;/em&gt;</span><br><span class="line"> * closed.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> newCursor The new cursor to be used.</span><br><span class="line"> * <span class="doctag">@return</span> Returns the previously set Cursor, or null if there wasa not one.</span><br><span class="line"> * If the given new Cursor is the same instance is the previously set</span><br><span class="line"> * Cursor, null is also returned.</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Cursor <span class="title">swapCursor</span><span class="params">(Cursor newCursor)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (newCursor == mCursor) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    Cursor oldCursor = mCursor;</span><br><span class="line">    <span class="keyword">if</span> (oldCursor != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mChangeObserver != <span class="keyword">null</span>) oldCursor.unregisterContentObserver(mChangeObserver);</span><br><span class="line">        <span class="keyword">if</span> (mDataSetObserver != <span class="keyword">null</span>) oldCursor.unregisterDataSetObserver(mDataSetObserver);</span><br><span class="line">    &#125;</span><br><span class="line">    mCursor = newCursor;</span><br><span class="line">    <span class="keyword">if</span> (newCursor != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mChangeObserver != <span class="keyword">null</span>) newCursor.registerContentObserver(mChangeObserver);</span><br><span class="line">        <span class="keyword">if</span> (mDataSetObserver != <span class="keyword">null</span>) newCursor.registerDataSetObserver(mDataSetObserver);</span><br><span class="line">        mRowIDColumn = newCursor.getColumnIndexOrThrow(<span class="string">"_id"</span>);</span><br><span class="line">        mDataValid = <span class="keyword">true</span>;</span><br><span class="line">        <span class="comment">// notify the observers about the new cursor</span></span><br><span class="line">        notifyDataSetChanged();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mRowIDColumn = -<span class="number">1</span>;</span><br><span class="line">        mDataValid = <span class="keyword">false</span>;</span><br><span class="line">        <span class="comment">// notify the observers about the lack of a data set</span></span><br><span class="line">        notifyDataSetInvalidated();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> oldCursor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>swapCursor(Cursor newCursor)</code> 中主要的工作就是把 oldCursor 替换成 newCursor ，并且调用了 <code>notifyDataSetChanged();</code> 来更新 ListView 。从上面的源码中还可以看到， <code>swapCursor(Cursor newCursor)</code> 方法中返回的 oldCursor 是没有关闭的。</p>
+<p>完成了替换 Cursor 的工作后，我们还要回过头来看看 ResultsHandler 剩余部分的代码(只截取了部分代码)：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (args.listener != <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="keyword">int</span> count = args.results != <span class="keyword">null</span> ? args.results.count : -<span class="number">1</span>;</span><br><span class="line">    args.listener.onFilterComplete(count);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，在最后回调了 FilterListener 的 <code>onFilterComplete(int count)</code> 方法。其中的 count 参数是查询出来结果的总数。</p>
+<p>至此，一个完整的 filter 流程终于走完了。这其中虽然看似很绕，其实原理还是比较简单的。</p>
+<h1 id="u5C3E_u8BED"><a href="#u5C3E_u8BED" class="headerlink" title="尾语"></a>尾语</h1><p>看完上面分析，相信大家对 CursorAdapter 的 filter 机制已经有了一个大致的了解了吧。主要原理基本上还是 Handler 异步消息机制以及各个接口回调等。从中可以发现其实源码并不难，只要有耐心慢慢分析，一定会有所突破的。如果对这整个流程有问题的童鞋可以在下面留言。</p>
+<p>那么，今天就到这了。Goodbye！</p>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/源码解析/" rel="tag">#源码解析</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/18/《Pro Git》笔记/" rel="next" title="《Pro Git》笔记">
+                <i class="fa fa-chevron-left"></i> 《Pro Git》笔记
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/07/03/详解CursorAdapter中的filter机制/"
+     data-title="详解CursorAdapter中的filter机制"
+     data-content=""
+     data-url="http://yuqirong.me/2016/07/03/详解CursorAdapter中的filter机制/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/03/详解CursorAdapter中的filter机制/"
+           data-title="详解CursorAdapter中的filter机制" data-url="http://yuqirong.me/2016/07/03/详解CursorAdapter中的filter机制/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar/27073358153.jpg"
+               alt="俞其荣" />
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+          <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank">
+                  
+                    <i class="fa fa-google-plus"></i>
+                  
+                  Google+
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yqr271228943@gmail.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+        
+        <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">友情链接</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://guolin.tech/" target="_blank">郭霖的专栏</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lmj623565791/" target="_blank">Hongyang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/singwhatiwanna/" target="_blank">任玉刚</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://liaohuqiu.net/" target="_blank">Srain</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hukai.me/" target="_blank">胡凯</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://stormzhang.com/" target="_blank">stormzhang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://drakeet.me/" target="_blank">Drakeet的个人博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/xuyisheng/" target="_blank">eclipse_xu</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.kymjs.com/" target="_blank">张涛-开源实验室</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.devtf.cn/" target="_blank">开发技术前线</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lzyzsd/" target="_blank">大头鬼Bruce</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.mcxiaoke.com/" target="_blank">Xiaoke's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.baoyz.com/" target="_blank">Baoyz's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://itangqi.me/" target="_blank">Qi Tang's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/zhaokaiqiang1992/" target="_blank">赵凯强</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u524D_u8A00"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CursorAdapter__u7C7B"><span class="nav-number">2.</span> <span class="nav-text">CursorAdapter 类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#filter__u7684_u7528_u6CD5"><span class="nav-number">3.</span> <span class="nav-text">filter 的用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#filter__u7684_u539F_u7406"><span class="nav-number">4.</span> <span class="nav-text">filter 的原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u5C3E_u8BED"><span class="nav-number">5.</span> <span class="nav-text">尾语</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣
+  
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/sitemap.xml">Google网站地图</a></span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/baidusitemap.xml">百度网站地图</a></span>
+  
+  </span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"yuqirong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '/js/src/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
