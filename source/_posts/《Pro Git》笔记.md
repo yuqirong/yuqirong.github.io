@@ -101,7 +101,7 @@ tags: Git
 
 * 查看提交历史中每次提交的内容差异：
 
-	git log -p
+	git log -patch
 
 * 查看提交历史但仅显示简要的增改行数统计：
 
@@ -282,6 +282,9 @@ tags: Git
 	git rebase [branch-name]
 
 第4章 服务器上的 Git 
+========
+
+第5章 分布式 Git
 ========
 
 
