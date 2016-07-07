@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-07-04T15:47:02.723Z</updated>
+  <updated>2016-07-07T13:46:40.568Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -15,11 +15,119 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[简单实现炫酷的滑动返回效果]]></title>
+    <link href="http://yuqirong.me/2016/07/07/%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E7%82%AB%E9%85%B7%E7%9A%84%E6%BB%91%E5%8A%A8%E8%BF%94%E5%9B%9E%E6%95%88%E6%9E%9C/"/>
+    <id>http://yuqirong.me/2016/07/07/简单实现炫酷的滑动返回效果/</id>
+    <published>2016-07-06T16:25:04.000Z</published>
+    <updated>2016-07-07T13:46:40.568Z</updated>
+    <content type="html"><![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>在如今 app 泛滥的年代里，越来越多的开发者注重用户体验这个方面了。其中，有很多的 app 都有一种功能，那就是滑动返回。比如知乎、百度贴吧等，用户在使用这一类的 app 都可以滑动返回上一个页面。不得不说这个设计很赞，是不是心动了呢？那就继续往下看吧！</p>
+<p>在GitHub上有实现该效果的开源库 <a href="https://github.com/ikew0ng/SwipeBackLayout" target="_blank" rel="external">SwipeBackLayout</a> ，可以看到该库发展得已经非常成熟了。仔细看源码你会惊奇地发现其中的奥秘，没错，正是借助了 ViewDragHelper 来实现滑动返回的效果。ViewDragHelper 我想不必多说了，在我的博客中有很多的效果都是通过它来实现的。那么，下面我们就使用 ViewDragHelper 来实现这个效果吧。</p>
+<h1 id="u81EA_u5B9A_u4E49_u5C5E_u6027"><a href="#u81EA_u5B9A_u4E49_u5C5E_u6027" class="headerlink" title="自定义属性"></a>自定义属性</h1><p>首先，我们应该先定义几个自定义属性，比如说支持用户从左边或者右边滑动返回，丰富用户的选择性。所以现在 attrs.xml 中定义如下属性：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">declare-styleable</span> <span class="attribute">name</span>=<span class="value">"SwipeBackLayout"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"swipe_mode"</span> <span class="attribute">format</span>=<span class="value">"enum"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">enum</span> <span class="attribute">name</span>=<span class="value">"left"</span> <span class="attribute">value</span>=<span class="value">"0"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">enum</span> <span class="attribute">name</span>=<span class="value">"right"</span> <span class="attribute">value</span>=<span class="value">"1"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">declare-styleable</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>从上面的 xml 中可知，定义了一个枚举属性，左边为0，右边为1。</p>
+<p>然后主角 SwipeBackLayout 就要登场了。</p>
+<pre><code>public class SwipeBackLayout extends FrameLayout {
+
+    private ViewDragHelper mViewDragHelper;
+    // 主界面
+    private View mainView;
+    // 主界面的宽度
+    private int mainViewWidth;
+    // 模式，默认是左滑
+    private int mode = MODE_LEFT;
+    // 监听器
+    private SwipeBackListener listener;
+    // 是否支持边缘滑动返回, 默认是支持
+    private boolean isEdge = true;
+
+    private int mEdge;
+    // 阴影Drawable
+    private Drawable shadowDrawable;
+    // 阴影Drawable固有宽度
+    private int shadowDrawbleWidth;
+    // 已经滑动的百分比
+    private float movePercent;
+    // 滑动的总长度
+    private int totalWidth;
+    // 默认的遮罩透明度
+    private static final int DEFAULT_SCRIM_COLOR = 0x99000000;
+    // 遮罩颜色
+    private int scrimColor = DEFAULT_SCRIM_COLOR;
+    // 透明度
+    private static final int ALPHA = 255;
+
+    private Paint mPaint;
+    /**
+     * 滑动的模式，左滑
+     */
+    public static final int MODE_LEFT = 0;
+    /**
+     * 滑动的模式，右滑
+     */
+    public static final int MODE_RIGHT = 1;
+    // 最小滑动速度
+    private static final int MINIMUM_FLING_VELOCITY = 400;
+
+    private static final String TAG = &quot;SwipeBackLayout&quot;;
+
+    public SwipeBackLayout(Context context) {
+        this(context, null);
+    }
+
+    public SwipeBackLayout(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public SwipeBackLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SwipeBackLayout);
+        // 得到滑动模式，默认左滑
+        mode = a.getInt(R.styleable.SwipeBackLayout_swipe_mode, MODE_LEFT);
+        a.recycle();
+        initView();
+    }
+
+    ...
+
+}
+</code></pre><h1 id="initView"><a href="#initView" class="headerlink" title="initView"></a>initView</h1><p>在构造器主要做的就是得到滑动模式，默认是左边滑动。之后调用 <code>initView()</code> 。那么我们来看看 <code>initView()</code> 的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 初始化阴影Drawable</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initShadowView</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= <span class="number">21</span>) &#123;</span><br><span class="line">        shadowDrawable = getResources().getDrawable(mode == MODE_LEFT ? R.drawable.shadow_left : R.drawable.shadow_right, getContext().getTheme());</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        shadowDrawable = getResources().getDrawable(mode == MODE_LEFT ? R.drawable.shadow_left : R.drawable.shadow_right);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (shadowDrawable != <span class="keyword">null</span>) &#123;</span><br><span class="line">        shadowDrawbleWidth = shadowDrawable.getIntrinsicWidth();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initView</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">float</span> density = getResources().getDisplayMetrics().density;</span><br><span class="line">	<span class="comment">// 最小滑动速度</span></span><br><span class="line">    <span class="keyword">float</span> minVel = density * MINIMUM_FLING_VELOCITY;</span><br><span class="line">    initShadowView();</span><br><span class="line">    mViewDragHelper = ViewDragHelper.create(<span class="keyword">this</span>, <span class="keyword">new</span> ViewDragHelper.Callback() &#123;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">tryCaptureView</span><span class="params">(View child, <span class="keyword">int</span> pointerId)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> mainView == child; <span class="comment">// 只有是主界面时才可以被滑动</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">clampViewPositionHorizontal</span><span class="params">(View child, <span class="keyword">int</span> left, <span class="keyword">int</span> dx)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 根据模式区分</span></span><br><span class="line">            <span class="keyword">switch</span> (mode) &#123;</span><br><span class="line">                <span class="keyword">case</span> MODE_LEFT:  <span class="comment">// 左边</span></span><br><span class="line">                    <span class="keyword">if</span> (left &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Math.abs(left) &gt; totalWidth) &#123;</span><br><span class="line">                        <span class="keyword">return</span> totalWidth;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> left;</span><br><span class="line">                    &#125;</span><br><span class="line">                <span class="keyword">case</span> MODE_RIGHT:  <span class="comment">// 右边</span></span><br><span class="line">                    <span class="keyword">if</span> (left &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Math.abs(left) &gt; totalWidth) &#123;</span><br><span class="line">                        <span class="keyword">return</span> -totalWidth;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> left;</span><br><span class="line">                    &#125;</span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    <span class="keyword">return</span> left;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onViewPositionChanged</span><span class="params">(View changedView, <span class="keyword">int</span> left, <span class="keyword">int</span> top, <span class="keyword">int</span> dx, <span class="keyword">int</span> dy)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">switch</span> (mode) &#123;</span><br><span class="line">                <span class="keyword">case</span> MODE_LEFT:</span><br><span class="line">                    movePercent = left * <span class="number">1f</span> / totalWidth;  <span class="comment">// 滑动的进度</span></span><br><span class="line">                    Log.i(TAG, <span class="string">"movePercent = "</span> + movePercent);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> MODE_RIGHT:</span><br><span class="line">                    movePercent = Math.abs(left) * <span class="number">1f</span> / totalWidth;</span><br><span class="line">                    Log.i(TAG, <span class="string">"movePercent = "</span> + movePercent);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getViewHorizontalDragRange</span><span class="params">(View child)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (mode == MODE_LEFT) &#123;</span><br><span class="line">                <span class="keyword">return</span> Math.abs(totalWidth);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> -totalWidth;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onViewReleased</span><span class="params">(View releasedChild, <span class="keyword">float</span> xvel, <span class="keyword">float</span> yvel)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">switch</span> (mode) &#123;</span><br><span class="line">                <span class="keyword">case</span> MODE_LEFT:</span><br><span class="line">                    <span class="keyword">if</span> (xvel &gt; -mViewDragHelper.getMinVelocity() &amp;&amp; Math.abs(releasedChild.getLeft()) &gt; mainViewWidth / <span class="number">2.0f</span>) &#123;  <span class="comment">// 如果当前已经滑动超过子View宽度的一半，并且速度符合预期设置</span></span><br><span class="line">                        swipeBackToFinish(totalWidth, <span class="number">0</span>);  <span class="comment">// 把当前界面finish</span></span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (xvel &gt; mViewDragHelper.getMinVelocity()) &#123;</span><br><span class="line">                        swipeBackToFinish(totalWidth, <span class="number">0</span>);</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        swipeBackToRestore();  <span class="comment">// 当前界面回到原位</span></span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> MODE_RIGHT:</span><br><span class="line">                    <span class="keyword">if</span> (xvel &lt; mViewDragHelper.getMinVelocity() &amp;&amp; Math.abs(releasedChild.getLeft()) &gt; mainViewWidth / <span class="number">2.0f</span>) &#123;</span><br><span class="line">                        swipeBackToFinish(-totalWidth, <span class="number">0</span>);</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (xvel &lt; -mViewDragHelper.getMinVelocity()) &#123;</span><br><span class="line">                        swipeBackToFinish(-totalWidth, <span class="number">0</span>);</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        swipeBackToRestore();</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">// 设置最小滑动速度</span></span><br><span class="line">    mViewDragHelper.setMinVelocity(minVel);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onFinishInflate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onFinishInflate();</span><br><span class="line">    <span class="keyword">int</span> count = getChildCount();</span><br><span class="line">    <span class="keyword">if</span> (count == <span class="number">1</span>) &#123; <span class="comment">// 子View只能有一个</span></span><br><span class="line">        <span class="comment">// 获取子view</span></span><br><span class="line">        mainView = getChildAt(<span class="number">0</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"the child of swipebacklayout can not be empty and must be the one"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onSizeChanged</span><span class="params">(<span class="keyword">int</span> w, <span class="keyword">int</span> h, <span class="keyword">int</span> oldw, <span class="keyword">int</span> oldh)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onSizeChanged(w, h, oldw, oldh);</span><br><span class="line">    <span class="comment">// 得到主界面的宽度</span></span><br><span class="line">    mainViewWidth = w;</span><br><span class="line">    <span class="comment">//总长度，包含了mainView的宽度以及阴影图片的宽度</span></span><br><span class="line">    totalWidth = mainViewWidth + shadowDrawbleWidth;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>initView()</code> 中，设置了 mViewDragHelper 的最小滑动速度，并且设置了 mViewDragHelper 回调的接口。回调接口中的方法都有注释，相信大家应该都能看懂。另外在 <code>initView()</code> 中初始化了阴影图片，以备下面中使用。</p>
+<h1 id="drawChild"><a href="#drawChild" class="headerlink" title="drawChild"></a>drawChild</h1><p>想要阴影在滑动中绘制出来，我们必须重写 <code>drawChild(Canvas canvas, View child, long drawingTime)</code> 方法，并且在 <code>onTouchEvent(MotionEvent event)</code> 里 <code>invalidate()</code> ,保证用户滑动过程中调用 <code>drawChild(Canvas canvas, View child, long drawingTime)</code> 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">drawChild</span><span class="params">(Canvas canvas, View child, <span class="keyword">long</span> drawingTime)</span> </span>&#123;</span><br><span class="line">    Log.i(TAG, <span class="string">""</span> + (mViewDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE));</span><br><span class="line">    <span class="keyword">if</span> (child == mainView &amp;&amp; mViewDragHelper.getViewDragState() != ViewDragHelper.STATE_IDLE) &#123;</span><br><span class="line">        <span class="comment">// 绘制阴影</span></span><br><span class="line">        drawShadowDrawable(canvas, child);</span><br><span class="line">        <span class="comment">// 绘制遮罩层</span></span><br><span class="line">        drawScrimColor(canvas, child);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.drawChild(canvas, child, drawingTime);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">    mViewDragHelper.processTouchEvent(event);</span><br><span class="line">    <span class="comment">// 重绘，保证在滑动的时候可以绘制阴影</span></span><br><span class="line">    invalidate();</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>drawChild(Canvas canvas, View child, long drawingTime)</code> 中调用 <code>drawShadowDrawable(Canvas canvas, View child)</code> 来绘制阴影以及 <code>drawScrimColor(Canvas canvas, View child)</code> 来绘制遮罩层。下面分别是两个方法的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 绘制阴影</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">drawShadowDrawable</span><span class="params">(Canvas canvas, View child)</span> </span>&#123;</span><br><span class="line">    Rect drawableRect = <span class="keyword">new</span> Rect();</span><br><span class="line">    <span class="comment">// 得到mainView的矩形</span></span><br><span class="line">    child.getHitRect(drawableRect);</span><br><span class="line">    <span class="comment">// 设置shadowDrawable绘制的矩形</span></span><br><span class="line">    <span class="keyword">if</span> (mode == MODE_LEFT) &#123; <span class="comment">// 左滑</span></span><br><span class="line">        shadowDrawable.setBounds(drawableRect.left - shadowDrawbleWidth, drawableRect.top, drawableRect.left, drawableRect.bottom);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// 右滑</span></span><br><span class="line">        shadowDrawable.setBounds(drawableRect.right, drawableRect.top, drawableRect.right + shadowDrawbleWidth, drawableRect.bottom);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 设置shadowDrawable的透明度,最低为0.3</span></span><br><span class="line">    shadowDrawable.setAlpha((<span class="keyword">int</span>) ((<span class="number">1</span> - movePercent &gt; <span class="number">0.3</span> ? <span class="number">1</span> - movePercent : <span class="number">0.3</span>) * ALPHA));</span><br><span class="line">    <span class="comment">// 将shadowDrawable绘制在canvas上</span></span><br><span class="line">    shadowDrawable.draw(canvas);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 绘制遮罩层</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">drawScrimColor</span><span class="params">(Canvas canvas, View child)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 根据滑动进度动态设置透明度</span></span><br><span class="line">    <span class="keyword">int</span> baseAlpha = (scrimColor &amp; <span class="number">0xFF000000</span>) &gt;&gt;&gt; <span class="number">24</span>;</span><br><span class="line">    <span class="keyword">int</span> alpha = (<span class="keyword">int</span>) (baseAlpha * (<span class="number">1</span> - movePercent));</span><br><span class="line">    <span class="keyword">int</span> color = alpha &lt;&lt; <span class="number">24</span> | (scrimColor &amp; <span class="number">0xffffff</span>);</span><br><span class="line">    <span class="comment">// 设置绘制矩形区域</span></span><br><span class="line">    Rect rect;</span><br><span class="line">    <span class="keyword">if</span> (mode == MODE_LEFT) &#123; <span class="comment">// 左滑</span></span><br><span class="line">        rect = <span class="keyword">new</span> Rect(<span class="number">0</span>, <span class="number">0</span>, child.getLeft(), getHeight());</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// 右滑</span></span><br><span class="line">        rect = <span class="keyword">new</span> Rect(child.getRight(), <span class="number">0</span>, getWidth(), getHeight());</span><br><span class="line">    &#125;</span><br><span class="line">    mPaint = <span class="keyword">new</span> Paint(Paint.ANTI_ALIAS_FLAG);</span><br><span class="line">    mPaint.setColor(color);</span><br><span class="line">    canvas.drawRect(rect, mPaint);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>mainView 、阴影、遮罩层的关系示意图如下：</p>
+<p><img src="/uploads/20160707/20160707211516.png" alt="relatives_pic"></p>
+<h1 id="onViewReleased"><a href="#onViewReleased" class="headerlink" title="onViewReleased"></a>onViewReleased</h1><p>看完了上面的两个方法的代码，最后就是当用户手指抬起时判断逻辑的代码了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 滑动返回，结束该View</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">swipeBackToFinish</span><span class="params">(<span class="keyword">int</span> finalLeft, <span class="keyword">int</span> finalTop)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mViewDragHelper.smoothSlideViewTo(mainView, finalLeft, finalTop)) &#123;</span><br><span class="line">        ViewCompat.postInvalidateOnAnimation(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (listener != <span class="keyword">null</span>) &#123;</span><br><span class="line">        listener.onSwipeBackFinish();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 滑动回归到原位</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">swipeBackToRestore</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mViewDragHelper.smoothSlideViewTo(mainView, <span class="number">0</span>, <span class="number">0</span>)) &#123;</span><br><span class="line">        ViewCompat.postInvalidateOnAnimation(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">computeScroll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.computeScroll();</span><br><span class="line">    <span class="keyword">if</span> (mViewDragHelper.continueSettling(<span class="keyword">true</span>)) &#123;</span><br><span class="line">        ViewCompat.postInvalidateOnAnimation(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">SwipeBackListener</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 该方法会在滑动返回完成的时候回调</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onSwipeBackFinish</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 设置滑动返回监听器</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> listener</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSwipeBackListener</span><span class="params">(SwipeBackListener listener)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.listener = listener;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>相应的代码还是比较简单的，主要使用了 <code>smoothSlideViewTo(View view, int left, int top)</code> 的方法来滑动到指定位置。若是结束当前界面的话，回调监听器的接口。</p>
+<p>啰嗦了这么多，我们来看看运行时的效果图吧：</p>
+<p><img src="/uploads/20160707/20160707212521.gif" alt="SwipeBackDemo Screenshot"></p>
+<h1 id="u5C3E_u8BED"><a href="#u5C3E_u8BED" class="headerlink" title="尾语"></a>尾语</h1><p>好了，SwipeBackLayout 大致的逻辑就是上面这样子的。整体来说还是比较通俗易懂的，而且对 ViewDragHelper 熟悉的人会发现，使用 ViewDragHelper 自定义一些 ViewGroup 的套路都是大同小异的。以后想要自定义一些 ViewGroup 都是得心应手了。</p>
+<p>如果对此有疑问的话可以在下面留言。</p>
+<p>最后，国际惯例，附上 SwipeBackLayout Demo 的源码：</p>
+<p><a href="/uploads/20160707/SwipeBackDemo.rar">SwipeBackDemo.rar</a></p>
+<p>Goodbye!</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>在如今 app 泛滥的年代里，越来越多的开发者注重用户体验这个方面了。其中，有很多的 app 都有一种功]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
+    
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[详解CursorAdapter中的filter机制]]></title>
     <link href="http://yuqirong.me/2016/07/03/%E8%AF%A6%E8%A7%A3CursorAdapter%E4%B8%AD%E7%9A%84filter%E6%9C%BA%E5%88%B6/"/>
     <id>http://yuqirong.me/2016/07/03/详解CursorAdapter中的filter机制/</id>
     <published>2016-07-03T12:35:51.000Z</published>
-    <updated>2016-07-04T15:47:02.723Z</updated>
+    <updated>2016-07-05T15:31:38.539Z</updated>
     <content type="html"><![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>目前在公司中仍处于认知状态，因此没有什么时间写博客了，趁今天是周末就来更新一发。</p>
 <p>关于今天为什么讲 CursorAdapter 的原因，是因为之前在工作的时候有遇到 CursorAdapter 中 filter 的相关问题，于是就想把 CursorAdapter 中的 filter 机制流程好好梳理一下。出于这样的目的，本篇博文就诞生了。</p>
 <p>在阅读本文之前，最好已经有写过 CursorAdapter 中 filter 相关代码的经历，这样可以帮助你更好地理解其中的原理。如果你准备好了，那么接下来就一起来看看吧。</p>
@@ -86,7 +194,7 @@
     <link href="http://yuqirong.me/2016/06/18/%E3%80%8APro%20Git%E3%80%8B%E7%AC%94%E8%AE%B0/"/>
     <id>http://yuqirong.me/2016/06/18/《Pro Git》笔记/</id>
     <published>2016-06-17T16:29:14.000Z</published>
-    <updated>2016-06-19T15:39:08.200Z</updated>
+    <updated>2016-07-05T15:31:38.415Z</updated>
     <content type="html"><![CDATA[<h1 id="u7B2C_u4E00_u7AE0__u8D77_u6B65"><a href="#u7B2C_u4E00_u7AE0__u8D77_u6B65" class="headerlink" title="第一章 起步"></a>第一章 起步</h1><h2 id="1-5__u521D_u6B21_u8FD0_u884C_Git__u524D_u7684_u914D_u7F6E"><a href="#1-5__u521D_u6B21_u8FD0_u884C_Git__u524D_u7684_u914D_u7F6E" class="headerlink" title="1.5 初次运行 Git 前的配置"></a>1.5 初次运行 Git 前的配置</h2><ul>
 <li><p>Git 配置用户名：</p>
 <p>  git config –global user.name “yuqirong”</p>
@@ -300,7 +408,7 @@
     <link href="http://yuqirong.me/2016/06/08/%E5%85%B3%E4%BA%8EAndroid%20M%E7%9A%84%E8%BF%90%E8%A1%8C%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86/"/>
     <id>http://yuqirong.me/2016/06/08/关于Android M的运行权限处理/</id>
     <published>2016-06-08T14:12:20.000Z</published>
-    <updated>2016-06-09T14:57:56.630Z</updated>
+    <updated>2016-07-05T15:31:38.430Z</updated>
     <content type="html"><![CDATA[<p>之前有人在 Android 6.0 的机型上运行了 <a href="https://github.com/yuqirong/DragGridView" target="_blank" rel="external">DragGridView</a> 结果出异常奔溃了。想必问题的原因大家都知道，是 Android 6.0 新引入了在运行时权限申请(Runtime Permissions)的功能。那么这所谓的运行时申请权限究竟是怎么一回事呢，一起来看看吧！</p>
 <p>在 Android 6.0 中，app 如果想要获得某些权限，会在应用中弹出一个对话框，让用户确认是否授予该权限。具体的截图如下：</p>
 <p><img src="/uploads/20160608/20160608161439.png" alt="Runtime Permissions screenshot"></p>
@@ -332,7 +440,7 @@
     <link href="http://yuqirong.me/2016/04/27/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0ViewPager%E6%8C%87%E7%A4%BA%E5%99%A8/"/>
     <id>http://yuqirong.me/2016/04/27/自定义实现ViewPager指示器/</id>
     <published>2016-04-27T12:09:19.000Z</published>
-    <updated>2016-04-30T10:26:07.703Z</updated>
+    <updated>2016-07-05T15:31:38.524Z</updated>
     <content type="html"><![CDATA[<p>今天来更新一发“自定义实现 ViewPager 指示器”。 ViewPager 指示器相信大家都用过吧，从一开始 JW 大神的 <a href="https://github.com/JakeWharton/ViewPagerIndicator" target="_blank" rel="external">ViewPagerIndicator</a> ，到现在 Material Design 中的 TabLayout 。GitHub 上还有其他形形色色的指示器。那么肯定有人会问：既然有了这么多的指示器可以用，那为什么还要自己自定义呢？其实，我们学习了自定义指示器之后，可以知道 ViewPager 指示器的原理，还可以提高我们代码的水平哦！那还等什么，一起来学习吧。</p>
 <p>首先放上一张效果图，亮亮眼：</p>
 <p><img src="/uploads/20160427/20160427152924.gif" alt="这里写图片描述"></p>
@@ -379,7 +487,7 @@
     <link href="http://yuqirong.me/2016/04/19/%E5%BF%AB%E9%80%9F%E6%89%93%E9%80%A0%E5%B8%A6%E6%9C%89%E8%A7%86%E5%B7%AE%E6%95%88%E6%9E%9C%E7%9A%84ListView/"/>
     <id>http://yuqirong.me/2016/04/19/快速打造带有视差效果的ListView/</id>
     <published>2016-04-19T05:35:32.000Z</published>
-    <updated>2016-04-30T09:05:21.235Z</updated>
+    <updated>2016-07-05T15:31:38.493Z</updated>
     <content type="html"><![CDATA[<p>在上一篇博文中，我们实现了仿美团的下拉刷新。而今天的主题还是与 ListView 有关，这次是来实现具有视差效果的 ListView 。</p>
 <p>那么到底什么是视差效果呢？一起来看效果图就知道了：</p>
 <p><img src="/uploads/20160419/20160419141952.gif" alt="这里写图片描述"></p>
@@ -420,7 +528,7 @@
     <link href="http://yuqirong.me/2016/04/18/%E5%B8%A6%E4%BD%A0%E5%AE%9E%E7%8E%B0%E4%BB%BF%E7%BE%8E%E5%9B%A2%E7%9A%84%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0/"/>
     <id>http://yuqirong.me/2016/04/18/带你实现仿美团的下拉刷新/</id>
     <published>2016-04-18T07:34:03.000Z</published>
-    <updated>2016-04-30T08:24:47.051Z</updated>
+    <updated>2016-07-05T15:31:38.477Z</updated>
     <content type="html"><![CDATA[<p>有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：</p>
 <p><img src="/uploads/20160418/20160418160532.gif" alt="这里写图片描述"></p>
 <p>我们可以大致地分析一下：首先根据下拉改变的 paddingTop 来动态地缩放“绿色椭圆物”,然后当 headerView 的 paddingTop 大于0时，播放美团小人出现的帧动画，最后就是手指松开时播放刷新中的帧动画了。</p>
@@ -470,7 +578,7 @@
     <link href="http://yuqirong.me/2016/04/10/FloatingActionButton%E5%9C%A8%E6%BB%9A%E5%8A%A8%E6%97%B6%E6%98%BE%E7%A4%BA%E6%88%96%E9%9A%90%E8%97%8F/"/>
     <id>http://yuqirong.me/2016/04/10/FloatingActionButton在滚动时显示或隐藏/</id>
     <published>2016-04-10T11:51:22.000Z</published>
-    <updated>2016-04-30T08:17:50.993Z</updated>
+    <updated>2016-07-05T15:31:38.336Z</updated>
     <content type="html"><![CDATA[<p>在Material Design中，FloatingActionButton(即FAB)是一个很重要的元素。而通常在列表向下滚动的时候，FAB应该会隐藏；而在向上滚动时，FAB应该会显示出来。本篇就记录其中一种实现FAB显示或隐藏的方案，主要应用了属性动画。</p>
 <p>其实关于FAB的显示和隐藏，Google官方就提供了其中一种方案：<code>fab.hidden()</code>和<code>fab.show()</code>。但是自带的是FAB缩放的效果。并不是上下移动的效果。</p>
 <p>那么我们就来看看如何实现FAB上下移动的效果吧！</p>
@@ -503,7 +611,7 @@
     <link href="http://yuqirong.me/2016/04/05/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90Scroller%E6%BB%9A%E5%8A%A8%E5%8E%9F%E7%90%86/"/>
     <id>http://yuqirong.me/2016/04/05/深入解析Scroller滚动原理/</id>
     <published>2016-04-05T12:21:10.000Z</published>
-    <updated>2016-04-30T09:09:40.979Z</updated>
+    <updated>2016-07-05T15:31:38.524Z</updated>
     <content type="html"><![CDATA[<p>最近在看《Android开发艺术探索》这本书，不得不赞一句主席写得真好，受益匪浅。在书中的相关章节有介绍用Scroller来实现平滑滚动的效果。而我们今天就来探究一下为什么Scroller能够实现平滑滚动。</p>
 <p>首先我们先来看一下Scroller的用法，基本可概括为“三部曲”：</p>
 <ol>
@@ -555,7 +663,7 @@
     <link href="http://yuqirong.me/2016/04/03/Android%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6%E4%B9%8B%E5%8F%8D%E7%BC%96%E8%AF%91/"/>
     <id>http://yuqirong.me/2016/04/03/Android安全机制之反编译/</id>
     <published>2016-04-02T16:59:11.000Z</published>
-    <updated>2016-04-03T05:30:16.355Z</updated>
+    <updated>2016-07-05T15:31:38.336Z</updated>
     <content type="html"><![CDATA[<p>今天我们就来探讨一下反编译，其实反编译在我一开始学习Android的时候就听说过，但是一直没有去尝试。初次接触应该就是那次“蜻蜓FM v5.0.1 apk”事件了( 此处应有掌声(¯ □ ¯) )。那时根据网上的教程第一次反编译了“蜻蜓FM”的apk，看到了传说中的“普罗米修斯方法”以及“宙斯类”(不得不感慨开发小哥的智商)。之后就是在阅读《Android群英传》时也有相关反编译的内容，觉得有必要记录一下。所以这就是本片写博文的起源了。</p>
 <p>首先关于反编译，我们先要准备几个工具：</p>
 <ul>
@@ -622,7 +730,7 @@
     <link href="http://yuqirong.me/2016/03/31/%E3%80%8AAndroid%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8A)/"/>
     <id>http://yuqirong.me/2016/03/31/《Android开发艺术探索》笔记(上)/</id>
     <published>2016-03-31T11:49:28.000Z</published>
-    <updated>2016-04-30T08:00:55.206Z</updated>
+    <updated>2016-07-05T15:31:38.399Z</updated>
     <content type="html"><![CDATA[<h1 id="u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F"><a href="#u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F" class="headerlink" title="第一章：Activity的生命周期和启动模式"></a>第一章：Activity的生命周期和启动模式</h1><h2 id="1-1_Activity_u7684_u751F_u547D_u5468_u671F_u5168_u9762_u5206_u6790"><a href="#1-1_Activity_u7684_u751F_u547D_u5468_u671F_u5168_u9762_u5206_u6790" class="headerlink" title="1.1 Activity的生命周期全面分析"></a>1.1 Activity的生命周期全面分析</h2><p><strong>典型情况下的生命周期分析</strong></p>
 <p>onStart()和onStop()是从Activity是否可见这个角度来回调的，而onResume()和onPause()是从Activity是否位于前台这个角度来回调的。</p>
 <p>Activity A打开Activity B时，为了不影响B的显示，最好不要在Activity A的onPause()里执行一些耗时操作，可以考虑将这些操作放到onStop()里，这时B已经可见了。</p>
@@ -873,7 +981,7 @@ root.setView(view, wparams, panelParentView);
     <link href="http://yuqirong.me/2016/03/23/%E5%88%9D%E6%8E%A2MD%E5%BC%8F%E8%BD%AC%E5%9C%BA%E5%8A%A8%E7%94%BB/"/>
     <id>http://yuqirong.me/2016/03/23/初探MD式转场动画/</id>
     <published>2016-03-23T08:44:22.000Z</published>
-    <updated>2016-04-30T08:22:09.788Z</updated>
+    <updated>2016-07-05T15:31:38.446Z</updated>
     <content type="html"><![CDATA[<p>最近在做MD设计风格的APP，所以在转场动画上当然也得符合MD了。下面就是效果图：</p>
 <p><img src="/uploads/20160323/20160323165423.gif" alt="这里写图片描述"></p>
 <p>一开始并未了解过这种转场动画，原来是Google在SDK中已经给我们提供了。<code>ActivityOptions</code>是 Android 5.0 及以上使用的，但是也提供了<code>ActivityOptionsCompat</code>向下兼容。</p>
@@ -911,7 +1019,7 @@ root.setView(view, wparams, panelParentView);
     <link href="http://yuqirong.me/2016/03/22/%E5%BF%AB%E9%80%9F%E6%89%93%E9%80%A0%E4%BB%BFAndroid%E8%81%94%E7%B3%BB%E4%BA%BA%E7%95%8C%E9%9D%A2/"/>
     <id>http://yuqirong.me/2016/03/22/快速打造仿Android联系人界面/</id>
     <published>2016-03-22T07:53:24.000Z</published>
-    <updated>2016-04-30T09:11:28.413Z</updated>
+    <updated>2016-07-05T15:31:38.477Z</updated>
     <content type="html"><![CDATA[<p>有段时间没写博客了，趁今天有空就写了一篇。今天的主题就是仿联系人界面。相信大家在平时都见过，就是可以实现快速索引的侧边栏。比如在美团中选择城市的界面：</p>
 <p><img src="/uploads/20160322/20160322200035.png" alt="这里写图片描述"></p>
 <p>我们可以看到在右侧有一个支持快速索引的栏。接下来，我们就要实现这种索引栏。</p>
@@ -954,7 +1062,7 @@ root.setView(view, wparams, panelParentView);
     <link href="http://yuqirong.me/2016/03/17/%E5%A4%9C%E5%8D%8A%E4%B8%80%E5%BF%86/"/>
     <id>http://yuqirong.me/2016/03/17/夜半一忆/</id>
     <published>2016-03-17T15:13:58.000Z</published>
-    <updated>2016-07-03T12:49:36.073Z</updated>
+    <updated>2016-07-05T15:31:38.446Z</updated>
     <content type="html"><![CDATA[<blockquote class="blockquote-center"><p>素时锦年，稍纵即逝<br>半载青春，流转指间</p>
 </blockquote>
 <p>冬去春来，又一载。</p>
@@ -986,7 +1094,7 @@ root.setView(view, wparams, panelParentView);
     <link href="http://yuqirong.me/2016/03/08/%E3%80%8AAndroid%E7%BE%A4%E8%8B%B1%E4%BC%A0%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8B)/"/>
     <id>http://yuqirong.me/2016/03/08/《Android群英传》笔记(下)/</id>
     <published>2016-03-08T12:22:27.000Z</published>
-    <updated>2016-04-01T14:26:56.726Z</updated>
+    <updated>2016-07-05T15:31:38.415Z</updated>
     <content type="html"><![CDATA[<h1 id="u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><a href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7" class="headerlink" title="第六章：Android绘图机制与处理技巧"></a>第六章：Android绘图机制与处理技巧</h1><h2 id="6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F"><a href="#6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F" class="headerlink" title="6.1 屏幕的尺寸信息"></a>6.1 屏幕的尺寸信息</h2><p>系统屏幕密度如下</p>
 <ul>
 <li>ldpi—120—240X320分辨率</li>
@@ -1773,7 +1881,7 @@ int heapSize = manager.getLargeMemoryClass();
     <link href="http://yuqirong.me/2016/03/07/%E5%AE%9E%E7%8E%B0WebView%E4%B8%ADJS%E5%92%8CApp%E4%B9%8B%E9%97%B4%E7%9A%84%E4%BA%A4%E4%BA%92/"/>
     <id>http://yuqirong.me/2016/03/07/实现WebView中JS和App之间的交互/</id>
     <published>2016-03-07T11:53:12.000Z</published>
-    <updated>2016-04-30T08:48:22.056Z</updated>
+    <updated>2016-07-05T15:31:38.446Z</updated>
     <content type="html"><![CDATA[<p>今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。</p>
 <p><img src="/uploads/20160307/20160307200816.png" alt="这里写图片的描述"></p>
 <p>之后在脑海中回想到 WebView 中的JS可以和app产生交互，于是搜索了一下，果然网上有类似的实现效果。看了一下，在这里就做一个简单的笔记了以便之后查看。</p>
@@ -1813,7 +1921,7 @@ int heapSize = manager.getLargeMemoryClass();
     <link href="http://yuqirong.me/2016/02/28/%E3%80%8AAndroid%E7%BE%A4%E8%8B%B1%E4%BC%A0%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8A)/"/>
     <id>http://yuqirong.me/2016/02/28/《Android群英传》笔记(上)/</id>
     <published>2016-02-28T12:20:04.000Z</published>
-    <updated>2016-03-31T06:28:41.641Z</updated>
+    <updated>2016-07-05T15:31:38.399Z</updated>
     <content type="html"><![CDATA[<h1 id="u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3"><a href="#u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3" class="headerlink" title="第三章：Android控件架构与自定义控件详解"></a>第三章：Android控件架构与自定义控件详解</h1><h2 id="3-1_Android_u63A7_u4EF6_u67B6_u6784"><a href="#3-1_Android_u63A7_u4EF6_u67B6_u6784" class="headerlink" title="3.1 Android控件架构"></a>3.1 Android控件架构</h2><p>控件分为两类：View和ViewGroup，通过ViewGroup整个界面形成一个树形结构，并且ViewGroup负责对子View的测量与绘制以及传递交互事件。通常在Activity中使用的findViewById()方法，就是在控件树中以树的深度优先遍历来查找对应元素。在每颗控件树的顶部，都有一个ViewParent对象，这就是整棵树的控制核心，所有的交互管理事件都由它来统一调度和分配。</p>
 <p><img src="/uploads/20160228/20160228230641.png" alt="这里写图片描述"></p>
 <p>如上图所示，每个Activity都包含一个Window对象，在Android中Window对象通常由PhoneWindow来实现。PhoneWindow对象又将一个DecorView设置为整个应用的根View。DecorView作为了窗口界面的顶层视图，封装了一些窗口操作的通用方法。可以说，DecorView将要显示的具体内容呈现在了PhoneWindow上，这里所有View的监听事件，都通过WindowManagerService来接收，并通过Activity对象来回调onClickListener。DecorView在显示上分为TitleView和ContentView两部分。ContentView是一个ID为content的FrameLayout，activity_main.xml就是设置在这样一个FrameLayout里。可以通过如下代码获得ContentView：</p>
@@ -2267,7 +2375,7 @@ public void computeScroll() {
     <link href="http://yuqirong.me/2016/02/26/%E4%BD%BF%E7%94%A8RecyclerView%E5%AE%9E%E7%8E%B0%E4%BB%BF%E5%96%B5%E8%A1%97%E6%95%88%E6%9E%9C/"/>
     <id>http://yuqirong.me/2016/02/26/使用RecyclerView实现仿喵街效果/</id>
     <published>2016-02-26T11:50:18.000Z</published>
-    <updated>2016-04-30T08:54:43.791Z</updated>
+    <updated>2016-07-05T15:31:38.430Z</updated>
     <content type="html"><![CDATA[<p>又到更新博客的时间了，本次给大家带来的是在RecyclerView的基础上实现喵街的效果。那么喵街是什么效果呢？下面就贴出效果图：</p>
 <p><img src="/uploads/20160226/20160226205314.gif" alt="这里写图片描述"></p>
 <p>值得一提的是，这是旧版本的特效，新版本的喵街已经去掉了这种效果。</p>
@@ -2306,7 +2414,7 @@ public void computeScroll() {
     <link href="http://yuqirong.me/2016/02/18/%E4%B9%9D%E5%A4%A7%E5%9F%BA%E6%9C%AC%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/"/>
     <id>http://yuqirong.me/2016/02/18/九大基本排序算法/</id>
     <published>2016-02-18T13:56:06.000Z</published>
-    <updated>2016-03-23T08:13:50.130Z</updated>
+    <updated>2016-07-05T15:31:38.430Z</updated>
     <content type="html"><![CDATA[<h1 id="u5192_u6CE1_u6392_u5E8F"><a href="#u5192_u6CE1_u6392_u5E8F" class="headerlink" title="冒泡排序"></a>冒泡排序</h1><p>冒泡排序的平均复杂度是O(N^2),最好的情况O(N),最坏的情况O(N^2);空间复杂度O(1)；稳定算法</p>
 <pre><code>/**
  * A为数组，n为数组的长度
@@ -2667,7 +2775,7 @@ private static int[] countingSort(int[] A, int n) {
     <link href="http://yuqirong.me/2016/02/15/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AD%A5%E6%AD%A5%E5%AE%9E%E7%8E%B0%E5%8F%AF%E6%8B%96%E6%8B%BD%E7%9A%84GridView%E6%8E%A7%E4%BB%B6/"/>
     <id>http://yuqirong.me/2016/02/15/带你一步步实现可拖拽的GridView控件/</id>
     <published>2016-02-15T12:46:17.000Z</published>
-    <updated>2016-04-30T08:28:05.117Z</updated>
+    <updated>2016-07-05T15:31:38.477Z</updated>
     <content type="html"><![CDATA[<p>经常使用网易新闻的童鞋都知道在网易新闻中有一个新闻栏目管理，其中GridView的item是可以拖拽的，效果十分炫酷。具体效果如下图：</p>
 <p><img src="/uploads/20160215/20160215203853.gif" alt="这里写图片描述"></p>
 <p>是不是也想自己也想实现出相同的效果呢？那就一起来往下看吧。</p>
@@ -2719,33 +2827,6 @@ private static int[] countingSort(int[] A, int n) {
       <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[在AlertDialog中EditText无法弹出键盘的解决方案]]></title>
-    <link href="http://yuqirong.me/2016/02/06/%E5%9C%A8AlertDialog%E4%B8%ADEditText%E6%97%A0%E6%B3%95%E5%BC%B9%E5%87%BA%E9%94%AE%E7%9B%98%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
-    <id>http://yuqirong.me/2016/02/06/在AlertDialog中EditText无法弹出键盘的解决方案/</id>
-    <published>2016-02-06T06:54:11.000Z</published>
-    <updated>2016-04-30T08:55:55.248Z</updated>
-    <content type="html"><![CDATA[<p>之前在做项目的过程中，有一个需求就是在AlertDialog中有EditText，可以在EditText中输入内容。但是在实际开发的过程中却发现，点击EditText却始终无法弹出键盘。因为之前在使用AlertDialog的时候，布局中并没有EditText，因此没有发现这个问题。这次算是填了一个隐藏的坑。</p>
-<p>例如下面给出了一个例子，首先贴上AlertDialog的<code>layout.xml</code>：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"300dp"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"200dp"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">    <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"Hello friend!"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">EditText</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:hint</span>=<span class="value">"input content"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">Button</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"submit"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>AlertDialog的效果图是这样的：</p>
-<p><img src="/uploads/20160206/20160206160310.png" alt="这里填写图片的描述"></p>
-<p>我们会发现无论怎么点击EditText也无法弹出键盘，其实我们只要加上<code>alertDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);</code>这一句，就可以让键盘弹出了。</p>
-<p><img src="/uploads/20160206/20160206161311.png" alt="这里填写图片的描述"></p>
-<p>源码下载：</p>
-<p><a href="/uploads/20160206/AlertDialogDemo.rar">AlertDialogDemo.rar</a></p>
-<p>StackOverFlow：</p>
-<p><a href="http://stackoverflow.com/questions/9102074/android-edittext-in-dialog-doesnt-pull-up-soft-keyboard" target="_blank" rel="external">Android: EditText in Dialog doesn’t pull up soft keyboard</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>之前在做项目的过程中，有一个需求就是在AlertDialog中有EditText，可以在EditText中输入内容。但是在实际开发的过程中却发现，点击EditText却始终无法弹出键盘。因为之前在使用AlertDialog的时候，布局中并没有EditText，因此没有发现这]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="Android Tips" scheme="http://yuqirong.me/categories/Android-Tips/"/>
     
   </entry>
   
