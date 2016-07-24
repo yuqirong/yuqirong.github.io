@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-07-07T13:46:40.568Z</updated>
+  <updated>2016-07-12T16:17:00.352Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -13,6 +13,70 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Linux常用命令]]></title>
+    <link href="http://yuqirong.me/2016/07/11/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    <id>http://yuqirong.me/2016/07/11/Linux常用命令/</id>
+    <published>2016-07-11T15:29:35.000Z</published>
+    <updated>2016-07-12T16:17:00.352Z</updated>
+    <content type="html"><![CDATA[<h1 id="u57FA_u7840_u4ECB_u7ECD"><a href="#u57FA_u7840_u4ECB_u7ECD" class="headerlink" title="基础介绍"></a>基础介绍</h1><ul>
+<li><p>立即进行关机</p>
+<p>  shotdown -h now</p>
+</li>
+<li><p>现在重新启动计算机</p>
+<p>  shotdown -r now</p>
+</li>
+<li><p>现在重新启动计算机</p>
+<p>  reboot</p>
+</li>
+<li><p>切换系统管理员账号</p>
+<p>  su -</p>
+</li>
+<li><p>用户注销</p>
+<p>  logout</p>
+</li>
+<li><p>打印当前目录的清单</p>
+<p>  ls</p>
+</li>
+<li><p>打印当前目录的详细清单</p>
+<p>  ls -l</p>
+</li>
+<li><p>vi编辑器编写 Java 语言程序的过程</p>
+<ol>
+<li>vi Hello.java</li>
+<li>按 i 键进入插入模式</li>
+<li>编写代码</li>
+<li>按 esc 键进入命令模式</li>
+<li>按 wq 保存并退出，q! 退出但是不保存</li>
+<li>编译 javac Hello.java</li>
+<li>运行 java Hello</li>
+</ol>
+</li>
+</ul>
+<p>Linux目录结构：</p>
+<p>root：存放root用户的相关文件<br>home：存放普通用户的相关文件<br>bin：存放常用命令的目录<br>sbin：要具有一定权限才可以使用的命令<br>mnt：默认挂载光驱和软驱的目录<br>boot：存放引导相关的文件<br>etc：存放配置相关的文件<br>var：存放一些经常变化的文件<br>usr：软件默认安装的目录</p>
+<ul>
+<li>显示当前的路径： pwd</li>
+<li>添加用户：useradd [用户名]</li>
+<li>设置用户密码：passwd [用户名]</li>
+<li>删除用户：userdel [用户名]</li>
+<li>删除用户以及用户主目录：userdel -r [用户名]</li>
+</ul>
+<p>命令：init<br>运行级别：<br>0 关机<br>1 单用户<br>2 多用户状态没有网络服务<br>3 多用户状态有网络服务<br>4 系统没有使用，留给用户<br>5 图形界面<br>6 重启<br>常用运行级别为3和5，要修改默认的运行级别可改文件/etc/inittab的id:5:initdefault:这一行中的数字</p>
+<p>ls -a 显示隐藏文件<br>ls -al 显示隐藏文件并显示场列表形式<br>mkdir 建立目录<br>rmdir 删除空目录<br>touch 建立空文件<br>cp 复制命令<br>cp -r dir1 dir2 递归复制命令(复制子目录信息)<br>mv 移动文件和改文件名<br>rm 删除文件和目录<br>rm -rf * 删除所有内容<br>查找内容： grep -n [查找的内容] 查找的文件<br>find 查找文件或目录</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u57FA_u7840_u4ECB_u7ECD"><a href="#u57FA_u7840_u4ECB_u7ECD" class="headerlink" title="基础介绍"></a>基础介绍</h1><ul>
+<li><p>立即进行关机</p>
+<p> ]]>
+    </summary>
+    
+      <category term="Linux" scheme="http://yuqirong.me/tags/Linux/"/>
+    
+      <category term="Linux" scheme="http://yuqirong.me/categories/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[简单实现炫酷的滑动返回效果]]></title>
@@ -430,6 +494,64 @@
     </summary>
     
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[简易实现Android九宫格解锁]]></title>
+    <link href="http://yuqirong.me/2016/05/10/%E7%AE%80%E6%98%93%E5%AE%9E%E7%8E%B0Android%E4%B9%9D%E5%AE%AB%E6%A0%BC%E8%A7%A3%E9%94%81/"/>
+    <id>http://yuqirong.me/2016/05/10/简易实现Android九宫格解锁/</id>
+    <published>2016-05-10T12:09:19.000Z</published>
+    <updated>2016-07-24T07:23:35.957Z</updated>
+    <content type="html"><![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>在平常使用手机的过程中，九宫格解锁是我们经常接触到的。常见的比如有锁屏中的九宫格，还有支付宝中的九宫格等。因为九宫格可以保护用户的隐私，所以它的应用面很广泛。那么今天我们就来自定义一个属于自己的九宫格吧！</p>
+<p>首先我们来分析一下实现九宫格解锁的思路：当用户的手指触摸到某一个点时，先判断该点是否在九宫格的某一格范围之内，若在范围内，则该格变成选中的状态；之后用户手指滑动的时候，以该格的圆心为中心，用户手指为终点，两点连线。最后当用户手指抬起时，判断划过的九宫格密码是否和原先的密码匹配。</p>
+<p>大致的思路流程就是上面这样的了，下面我们可以来实践一下。</p>
+<h1 id="Point__u7C7B"><a href="#Point__u7C7B" class="headerlink" title="Point 类"></a>Point 类</h1><p>我们先来创建一个 <code>Point</code> 类，用来表示九宫格锁的九个格子。除了坐标 <code>x</code> ，<code>y</code> 之外，还有三种模式：正常模式、按下模式和错误模式。根据模式不同该格子的颜色会有所不同，这会在下面中说明。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Point</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> x;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> y;</span><br><span class="line">    <span class="comment">// 正常模式</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> NORMAL_MODE = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 按下模式</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRESSED_MODE = <span class="number">2</span>;</span><br><span class="line">    <span class="comment">// 错误模式</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> ERROR_MODE = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> state = NORMAL_MODE;</span><br><span class="line">    <span class="comment">// 表示该格的密码，比如“1”、“2”等</span></span><br><span class="line">    <span class="keyword">private</span> String mark;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getMark</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mark;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMark</span><span class="params">(String mark)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mark = mark;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Point</span><span class="params">(<span class="keyword">float</span> x, <span class="keyword">float</span> y, String mark)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.x = x;</span><br><span class="line">        <span class="keyword">this</span>.y = y;</span><br><span class="line">        <span class="keyword">this</span>.mark = mark;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(<span class="keyword">int</span> state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getX</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setX</span><span class="params">(<span class="keyword">float</span> x)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.x = x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getY</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setY</span><span class="params">(<span class="keyword">float</span> y)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.y = y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="RotateDegrees_u7C7B"><a href="#RotateDegrees_u7C7B" class="headerlink" title="RotateDegrees类"></a>RotateDegrees类</h1><p>有了上面的 <code>Point</code> 类之后，我们还要创建一个 <code>RotateDegrees</code> 类，主要作用是计算两个 <code>Point</code> 坐标之间的角度：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> RotateDegrees &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 根据传入的point计算出它们之间的角度</span><br><span class="line">     * @param a</span><br><span class="line">     * @param b</span><br><span class="line">     * @return</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">float</span> <span class="title">getDegrees</span><span class="params">(Point a, Point b)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">float</span> degrees = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">float</span> aX = a.getX();</span><br><span class="line">        <span class="keyword">float</span> aY = a.getY();</span><br><span class="line">        <span class="keyword">float</span> bX = b.getX();</span><br><span class="line">        <span class="keyword">float</span> bY = b.getY();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (aX == bX) &#123;</span><br><span class="line">            <span class="keyword">if</span> (aY &lt; bY) &#123;</span><br><span class="line">                degrees = <span class="number">90</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                degrees = <span class="number">270</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (bY == aY) &#123;</span><br><span class="line">            <span class="keyword">if</span> (aX &lt; bX) &#123;</span><br><span class="line">                degrees = <span class="number">0</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                degrees = <span class="number">180</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (aX &gt; bX) &#123;</span><br><span class="line">                <span class="keyword">if</span> (aY &gt; bY) &#123; <span class="comment">// 第三象限</span></span><br><span class="line">                    degrees = <span class="number">180</span> + (<span class="keyword">float</span>) (Math.<span class="built_in">atan2</span>(aY - bY, aX - bX) * <span class="number">180</span> / Math.PI);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123; <span class="comment">// 第二象限</span></span><br><span class="line">                    degrees = <span class="number">180</span> - (<span class="keyword">float</span>) (Math.<span class="built_in">atan2</span>(bY - aY, aX - bX) * <span class="number">180</span> / Math.PI);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (aY &gt; bY) &#123; <span class="comment">// 第四象限</span></span><br><span class="line">                    degrees = <span class="number">360</span> - (<span class="keyword">float</span>) (Math.<span class="built_in">atan2</span>(aY - bY, bX - aX) * <span class="number">180</span> / Math.PI);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123; <span class="comment">// 第一象限</span></span><br><span class="line">                    degrees = (<span class="keyword">float</span>) (Math.<span class="built_in">atan2</span>(bY - aY, bX - aX) * <span class="number">180</span> / Math.PI);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> degrees;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 根据point和(x,y)计算出它们之间的角度</span><br><span class="line">     * @param a</span><br><span class="line">     * @param bX</span><br><span class="line">     * @param bY</span><br><span class="line">     * @return</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">float</span> <span class="title">getDegrees</span><span class="params">(Point a, <span class="keyword">float</span> bX, <span class="keyword">float</span> bY)</span> </span>&#123;</span><br><span class="line">        Point b = <span class="keyword">new</span> Point(bX, bY, null);</span><br><span class="line">        <span class="keyword">return</span> getDegrees(a, b);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="ScreenLockView__u7C7B"><a href="#ScreenLockView__u7C7B" class="headerlink" title="ScreenLockView 类"></a>ScreenLockView 类</h1><p>然后我们要先准备好关于九宫格的几张图片，比如在九宫格的格子中，<code>NORMAL_MODE</code> 模式下是蓝色的，被手指按住时九宫格的格子是绿色的，也就是对应着上面 Point 类的中 <code>PRESSED_MODE</code> 模式，还有 <code>ERROR_MODE</code> 模式下是红色的。另外还有圆点之间的连线，也是根据模式不同颜色也会不同。在这里我就不把图片贴出来了，想要的童鞋可以下载源码从中获取。</p>
+<p>有了图片资源之后，我们要做的就是先在构造器中加载图片：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScreenLockView</span> <span class="keyword">extends</span> <span class="title">View</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"ScreenLockView"</span>;</span><br><span class="line">    <span class="comment">// 错误格子的图片</span></span><br><span class="line">    <span class="keyword">private</span> Bitmap errorBitmap;</span><br><span class="line">    <span class="comment">// 正常格子的图片</span></span><br><span class="line">    <span class="keyword">private</span> Bitmap normalBitmap;</span><br><span class="line">    <span class="comment">// 手指按下时格子的图片</span></span><br><span class="line">    <span class="keyword">private</span> Bitmap pressedBitmap;</span><br><span class="line">    <span class="comment">// 错误时连线的图片</span></span><br><span class="line">    <span class="keyword">private</span> Bitmap lineErrorBitmap;</span><br><span class="line">    <span class="comment">// 手指按住时连线的图片</span></span><br><span class="line">    <span class="keyword">private</span> Bitmap linePressedBitmap;</span><br><span class="line">    <span class="comment">// 偏移量，使九宫格在屏幕中央</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> offset;</span><br><span class="line">    <span class="comment">// 九宫格的九个格子是否已经初始化</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> init;</span><br><span class="line">    <span class="comment">// 格子的半径</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> radius;</span><br><span class="line">    <span class="comment">// 密码</span></span><br><span class="line">    <span class="keyword">private</span> String password = <span class="string">"123456"</span>;</span><br><span class="line">    <span class="comment">// 九个格子</span></span><br><span class="line">    <span class="keyword">private</span> Point[][] points = <span class="keyword">new</span> Point[<span class="number">3</span>][<span class="number">3</span>];</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> width;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> height;</span><br><span class="line">    <span class="keyword">private</span> Matrix matrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> moveX = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> moveY = -<span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 是否手指在移动</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> isMove;</span><br><span class="line">    <span class="comment">// 是否可以触摸，当用户抬起手指，划出九宫格的密码不正确时为不可触摸</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> isTouch = <span class="keyword">true</span>;</span><br><span class="line">    <span class="comment">// 用来存储记录被按下的点</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;Point&gt; pressedPoint = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="comment">// 屏幕解锁监听器</span></span><br><span class="line">    <span class="keyword">private</span> OnScreenLockListener listener;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ScreenLockView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ScreenLockView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ScreenLockView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        errorBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bitmap_error);</span><br><span class="line">        normalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bitmap_normal);</span><br><span class="line">        pressedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bitmap_pressed);</span><br><span class="line">        lineErrorBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.line_error);</span><br><span class="line">        linePressedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.line_pressed);</span><br><span class="line">        radius = normalBitmap.getWidth() / <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在构造器中我们主要就是把图片加载完成，并且得到了格子的半径，即图片宽度的一半。</p>
+<p>之后我们来看看 <code>onMeasure(int widthMeasureSpec, int heightMeasureSpec)</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> widthSize = MeasureSpec.getSize(widthMeasureSpec);</span><br><span class="line">    <span class="keyword">int</span> widthMode = MeasureSpec.getMode(widthMeasureSpec);</span><br><span class="line">    <span class="keyword">int</span> heightSize = MeasureSpec.getSize(heightMeasureSpec);</span><br><span class="line">    <span class="keyword">int</span> heightMode = MeasureSpec.getMode(heightMeasureSpec);</span><br><span class="line">    <span class="keyword">if</span> (widthSize &gt; heightSize) &#123;</span><br><span class="line">        offset = (widthSize - heightSize) / <span class="number">2</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        offset = (heightSize - widthSize) / <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    setMeasuredDimension(widthSize, heightSize);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>onMeasure(int widthMeasureSpec, int heightMeasureSpec)</code> 方法中，主要得到对应的偏移量，以便在下面的 <code>onDraw(Canvas canvas)</code> 把九宫格绘制在屏幕中央。</p>
+<p>下面就是 <code>onDraw(Canvas canvas)</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!init) &#123;</span><br><span class="line">        width = getWidth();</span><br><span class="line">        height = getHeight();</span><br><span class="line">        initPoint();</span><br><span class="line">        init = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 画九宫格的格子</span></span><br><span class="line">    drawPoint(canvas);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (moveX != -<span class="number">1</span> &amp;&amp; moveY != -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// 画直线</span></span><br><span class="line">        drawLine(canvas);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先判断了是否为第一次调用 <code>onDraw(Canvas canvas)</code> 方法，若为第一次则对 points 进行初始化：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 初始化点</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initPoint</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    points[<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">new</span> Point(width / <span class="number">4</span>, offset + width / <span class="number">4</span>, <span class="string">"0"</span>);</span><br><span class="line">    points[<span class="number">0</span>][<span class="number">1</span>] = <span class="keyword">new</span> Point(width / <span class="number">2</span>, offset + width / <span class="number">4</span>, <span class="string">"1"</span>);</span><br><span class="line">    points[<span class="number">0</span>][<span class="number">2</span>] = <span class="keyword">new</span> Point(width * <span class="number">3</span> / <span class="number">4</span>, offset + width / <span class="number">4</span>, <span class="string">"2"</span>);</span><br><span class="line"></span><br><span class="line">    points[<span class="number">1</span>][<span class="number">0</span>] = <span class="keyword">new</span> Point(width / <span class="number">4</span>, offset + width / <span class="number">2</span>, <span class="string">"3"</span>);</span><br><span class="line">    points[<span class="number">1</span>][<span class="number">1</span>] = <span class="keyword">new</span> Point(width / <span class="number">2</span>, offset + width / <span class="number">2</span>, <span class="string">"4"</span>);</span><br><span class="line">    points[<span class="number">1</span>][<span class="number">2</span>] = <span class="keyword">new</span> Point(width * <span class="number">3</span> / <span class="number">4</span>, offset + width / <span class="number">2</span>, <span class="string">"5"</span>);</span><br><span class="line"></span><br><span class="line">    points[<span class="number">2</span>][<span class="number">0</span>] = <span class="keyword">new</span> Point(width / <span class="number">4</span>, offset + width * <span class="number">3</span> / <span class="number">4</span>, <span class="string">"6"</span>);</span><br><span class="line">    points[<span class="number">2</span>][<span class="number">1</span>] = <span class="keyword">new</span> Point(width / <span class="number">2</span>, offset + width * <span class="number">3</span> / <span class="number">4</span>, <span class="string">"7"</span>);</span><br><span class="line">    points[<span class="number">2</span>][<span class="number">2</span>] = <span class="keyword">new</span> Point(width * <span class="number">3</span> / <span class="number">4</span>, offset + width * <span class="number">3</span> / <span class="number">4</span>, <span class="string">"8"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>initPoint()</code> 方法中主要创建了九个格子，并设置了相应的位置和密码。初始化完成之后把 init 置为 false ,下次不会再调用。</p>
+<p>回过头再看看 <code>onDraw(Canvas canvas)</code> 中其他的逻辑，接下来调用了 <code>drawPoint(canvas)</code> 来绘制格子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 画九宫格的格子</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">drawPoint</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; points.length; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; points[i].length; j++) &#123;</span><br><span class="line">            <span class="keyword">int</span> state = points[i][j].getState();</span><br><span class="line">            <span class="keyword">if</span> (state == Point.NORMAL_MODE) &#123;</span><br><span class="line">                canvas.drawBitmap(normalBitmap, points[i][j].getX() - radius, points[i][j].getY() - radius, <span class="keyword">null</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == Point.PRESSED_MODE) &#123;</span><br><span class="line">                canvas.drawBitmap(pressedBitmap, points[i][j].getX() - radius, points[i][j].getY() - radius, <span class="keyword">null</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                canvas.drawBitmap(errorBitmap, points[i][j].getX() - radius, points[i][j].getY() - radius, <span class="keyword">null</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在绘制格子还是很简单的，主要分为了三种：普通模式下的格子、按下模式下的格子以及错误模式下的格子。</p>
+<h1 id="onTouchEvent"><a href="#onTouchEvent" class="headerlink" title="onTouchEvent"></a>onTouchEvent</h1><p>在绘制好了格子之后，我们先不看最后的 <code>drawLine(canvas)</code> 方法，因为绘制直线是和用户手指的触摸事件息息相关的，所以我们先把目光转向 <code>onTouchEvent(MotionEvent event)</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isTouch) &#123;</span><br><span class="line">        <span class="keyword">float</span> x = event.getX();</span><br><span class="line">        <span class="keyword">float</span> y = event.getY();</span><br><span class="line">        Point point;</span><br><span class="line">        <span class="keyword">switch</span> (event.getAction()) &#123;</span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">            <span class="comment">// 判断用户触摸的点是否在九宫格的任意一个格子之内</span></span><br><span class="line">                point = isPoint(x, y);</span><br><span class="line">                <span class="keyword">if</span> (point != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    point.setState(Point.PRESSED_MODE);  <span class="comment">// 切换为按下模式</span></span><br><span class="line">                    pressedPoint.add(point);  </span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">                <span class="keyword">if</span> (pressedPoint.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    point = isPoint(x, y);</span><br><span class="line">                    <span class="keyword">if</span> (point != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">if</span> (!crossPoint(point)) &#123;</span><br><span class="line">                            point.setState(Point.PRESSED_MODE);</span><br><span class="line">                            pressedPoint.add(point);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    moveX = x;</span><br><span class="line">                    moveY = y;</span><br><span class="line">                    isMove = <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">                isMove = <span class="keyword">false</span>;</span><br><span class="line">                String tempPwd = <span class="string">""</span>;</span><br><span class="line">                <span class="keyword">for</span> (Point p : pressedPoint) &#123;</span><br><span class="line">                    tempPwd += p.getMark();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (listener != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    listener.getStringPassword(tempPwd);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (tempPwd.equals(password)) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (listener != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        listener.isPassword(<span class="keyword">true</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">for</span> (Point p : pressedPoint) &#123;</span><br><span class="line">                        p.setState(Point.ERROR_MODE);</span><br><span class="line">                    &#125;</span><br><span class="line">                    isTouch = <span class="keyword">false</span>;</span><br><span class="line">                    <span class="keyword">this</span>.postDelayed(runnable, <span class="number">1000</span>);</span><br><span class="line">                    <span class="keyword">if</span> (listener != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        listener.isPassword(<span class="keyword">false</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        invalidate();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OnScreenLockListener</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getStringPassword</span><span class="params">(String password)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">isPassword</span><span class="params">(<span class="keyword">boolean</span> flag)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setOnScreenLockListener</span><span class="params">(OnScreenLockListener listener)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.listener = listener;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>MotionEvent.ACTION_DOWN</code> 中，先在 <code>isPoint(float x, float y)</code> 方法内判断了用户触摸事件的坐标点是否在九宫格的任意一格之内。如果是，则需要把该九宫格的格子添加到 <code>pressedPoint</code> 中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 该触摸点是否为格子</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> Point <span class="title">isPoint</span><span class="params">(<span class="keyword">float</span> x, <span class="keyword">float</span> y)</span> </span>&#123;</span><br><span class="line">    Point point;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; points.length; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; points[i].length; j++) &#123;</span><br><span class="line">            point = points[i][j];</span><br><span class="line">            <span class="keyword">if</span> (isContain(point, x, y)) &#123;</span><br><span class="line">                <span class="keyword">return</span> point;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 该点(x，y)是否被包含</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isContain</span><span class="params">(Point point, <span class="keyword">float</span> x, <span class="keyword">float</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 该点的(x,y)与格子圆心的距离若小于半径就是被包含了</span></span><br><span class="line">    <span class="keyword">return</span> Math.sqrt(Math.pow(x - point.getX(), <span class="number">2f</span>) + Math.pow(y - point.getY(), <span class="number">2f</span>)) &lt;= radius;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来就是要看 <code>MotionEvent.ACTION_MOVE</code> 的逻辑了。一开始判断了用户触摸的点是否为九宫格的某个格子。但是比 <code>MotionEvent.ACTION_DOWN</code> 还多了一个步骤：若用户触摸了某个格子，还要判断该格子是否已经被包含在 <code>pressedPoint</code> 里面了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 是否该格子已经被包含在pressedPoint里面了</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">crossPoint</span><span class="params">(Point point)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pressedPoint.contains(point)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后来看看 <code>MotionEvent.ACTION_UP</code> ，把 <code>pressedPoint</code> 里保存的格子遍历后得到用户划出的密码，再和预先设置的密码比较，若相同则回调 <code>OnScreenLockListener</code> 监听器；不相同则把 <code>pressedPoint</code> 中的所有格子的模式设置为错误模式，并在 <code>runnable</code> 中调用 <code>reset()</code> 清空 <code>pressedPoint</code> ，重绘视图，再回调监听器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Runnable runnable = <span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        isTouch = <span class="keyword">true</span>;</span><br><span class="line">        reset();</span><br><span class="line">        invalidate();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重置格子</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">reset</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; points.length; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; points[i].length; j++) &#123;</span><br><span class="line">            points[i][j].setState(Point.NORMAL_MODE);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    pressedPoint.clear();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在我们回过头来看看之前在 <code>onDraw(Canvas canvas)</code> 里面的 <code>drawLine(Canvas canvas)</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 画直线</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">drawLine</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将pressedPoint中的所有格子依次遍历，互相连线</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pressedPoint.size() - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        <span class="comment">// 得到当前格子</span></span><br><span class="line">        Point point = pressedPoint.get(i);</span><br><span class="line">        <span class="comment">// 得到下一个格子</span></span><br><span class="line">        Point nextPoint = pressedPoint.get(i + <span class="number">1</span>);</span><br><span class="line">        <span class="comment">// 旋转画布</span></span><br><span class="line">        canvas.rotate(RotateDegrees.getDegrees(point, nextPoint), point.getX(), point.getY());</span><br><span class="line"></span><br><span class="line">        matrix.reset();</span><br><span class="line">        <span class="comment">// 根据距离设置拉伸的长度</span></span><br><span class="line">        matrix.setScale(getDistance(point, nextPoint) / linePressedBitmap.getWidth(), <span class="number">1f</span>);</span><br><span class="line">        <span class="comment">// 进行平移</span></span><br><span class="line">        matrix.postTranslate(point.getX(), point.getY() - linePressedBitmap.getWidth() / <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (point.getState() == Point.PRESSED_MODE) &#123;</span><br><span class="line">            canvas.drawBitmap(linePressedBitmap, matrix, <span class="keyword">null</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            canvas.drawBitmap(lineErrorBitmap, matrix, <span class="keyword">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 把画布旋转回来</span></span><br><span class="line">        canvas.rotate(-RotateDegrees.getDegrees(point, nextPoint), point.getX(), point.getY());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果是手指在移动的情况</span></span><br><span class="line">    <span class="keyword">if</span> (isMove) &#123;</span><br><span class="line">        Point lastPoint = pressedPoint.get(pressedPoint.size() - <span class="number">1</span>);</span><br><span class="line">        canvas.rotate(RotateDegrees.getDegrees(lastPoint, moveX, moveY), lastPoint.getX(), lastPoint.getY());</span><br><span class="line"></span><br><span class="line">        matrix.reset();</span><br><span class="line">        Log.i(TAG, <span class="string">"the distance : "</span> + getDistance(lastPoint, moveX, moveY) / linePressedBitmap.getWidth());</span><br><span class="line">        matrix.setScale(getDistance(lastPoint, moveX, moveY) / linePressedBitmap.getWidth(), <span class="number">1f</span>);</span><br><span class="line">        matrix.postTranslate(lastPoint.getX(), lastPoint.getY() - linePressedBitmap.getWidth() / <span class="number">2</span>);</span><br><span class="line">        canvas.drawBitmap(linePressedBitmap, matrix, <span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">        canvas.rotate(-RotateDegrees.getDegrees(lastPoint, moveX, moveY), lastPoint.getX(), lastPoint.getY());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 根据point和坐标点计算出之间的距离</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">float</span> <span class="title">getDistance</span><span class="params">(Point point, <span class="keyword">float</span> moveX, <span class="keyword">float</span> moveY)</span> </span>&#123;</span><br><span class="line">    Point b = <span class="keyword">new</span> Point(moveX,moveY,<span class="keyword">null</span>);</span><br><span class="line">    <span class="keyword">return</span> getDistance(point,b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 根据两个point计算出之间的距离</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">float</span> <span class="title">getDistance</span><span class="params">(Point point, Point nextPoint)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">float</span>) Math.sqrt(Math.pow(nextPoint.getX() - point.getX(), <span class="number">2f</span>) + Math.pow(nextPoint.getY() - point.getY(), <span class="number">2f</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>drawLine(Canvas canvas)</code> 整体的逻辑并不复杂，首先将 <code>pressedPoint</code> 中的所有格子依次遍历，将它们连线。之后若是用户的手指还有滑动的话，把最后一个格子和用户手指触摸的点连线。</p>
+<h1 id="u6587_u672B"><a href="#u6587_u672B" class="headerlink" title="文末"></a>文末</h1><p><code>ScreenLockView</code> 中的代码差不多就是这些了，既然讲解完了那就一起来看看效果吧：</p>
+<p><img src="/uploads/20160510/20160510151253.gif" alt="ScreenShot"></p>
+<p>效果还算不错吧，当然你也可以自己设置喜欢的九宫格图片，只要替换一下就可以了。如果对本篇文章有问题，可以留言。</p>
+<p>老规矩，附上源码下载链接：</p>
+<p><a href="/uploads/20160510/ScreenLockView.rar">ScreenLockView.rar</a></p>
+<p>Goodbye ~~</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>在平常使用手机的过程中，九宫格解锁是我们经常接触到的。常见的比如有锁屏中的九宫格，还有支付宝中的九宫格等]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
@@ -2399,427 +2521,6 @@ public void computeScroll() {
     <summary type="html">
     <![CDATA[<p>又到更新博客的时间了，本次给大家带来的是在RecyclerView的基础上实现喵街的效果。那么喵街是什么效果呢？下面就贴出效果图：</p>
 <p><img src="/uploads/20160226/20160226205314.gif" alt="这里写图片描述"></]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
-    
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[九大基本排序算法]]></title>
-    <link href="http://yuqirong.me/2016/02/18/%E4%B9%9D%E5%A4%A7%E5%9F%BA%E6%9C%AC%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/"/>
-    <id>http://yuqirong.me/2016/02/18/九大基本排序算法/</id>
-    <published>2016-02-18T13:56:06.000Z</published>
-    <updated>2016-07-05T15:31:38.430Z</updated>
-    <content type="html"><![CDATA[<h1 id="u5192_u6CE1_u6392_u5E8F"><a href="#u5192_u6CE1_u6392_u5E8F" class="headerlink" title="冒泡排序"></a>冒泡排序</h1><p>冒泡排序的平均复杂度是O(N^2),最好的情况O(N),最坏的情况O(N^2);空间复杂度O(1)；稳定算法</p>
-<pre><code>/**
- * A为数组，n为数组的长度
- */
-private static int[] bubbleSort(int[] A, int n) {
-    int temp;
-    for (int i = 0; i &lt; n - 1; i++) {
-        for (int j = 0; j &lt; n - i - 1; j++) {
-            if (A[j] &gt; A[j + 1]) {
-                temp = A[j + 1];
-                A[j + 1] = A[j];
-                A[j] = temp;
-            }
-        }
-    }
-    return A;
-}
-</code></pre><h1 id="u9009_u62E9_u6392_u5E8F"><a href="#u9009_u62E9_u6392_u5E8F" class="headerlink" title="选择排序"></a>选择排序</h1><p>选择排序时间复杂度 O(N^2)，最坏的情况O(N^2);空间复杂度O(1)；不稳定算法</p>
-<pre><code>/**
- * A为数组，n为数组的长度
- */
-private static int[] selectionSort(int[] A, int n) {
-    int minPos = 0;
-    int temp;
-    for (int i = 0; i &lt; n - 1; i++) {
-        for (int j = i + 1; j &lt; n; j++) {
-            if (A[j] &lt; A[minPos]) {
-                minPos = j;
-            }
-        }
-        temp = A[minPos];
-        A[minPos] = A[i];
-        A[i] = temp;
-        minPos = i + 1;
-    }
-    return A;
-}
-</code></pre><h1 id="u63D2_u5165_u6392_u5E8F"><a href="#u63D2_u5165_u6392_u5E8F" class="headerlink" title="插入排序"></a>插入排序</h1><p>插入排序的平均复杂度是O(N^2)，最好的情况O(N)，最坏的情况O(N^2);空间复杂度O(1)；稳定算法</p>
-<pre><code>/**
- * A为数组，n为数组的长度
- */
-private static int[] insertionSort(int[] A, int n) {
-    int temp;
-    for (int i = 2; i &lt; n; i++) {
-        for (int j = 0; j &lt; i; j++) {
-            if (A[i] &lt; A[j]) {
-                temp = A[j];
-                A[j] = A[i];
-                A[i] = temp;
-            }
-        }
-    }
-    return A;
-}
-</code></pre><h1 id="u5F52_u5E76_u6392_u5E8F"><a href="#u5F52_u5E76_u6392_u5E8F" class="headerlink" title="归并排序"></a>归并排序</h1><p>归并排序时间复杂度O(N*logN),最好的情况O(N*logN)，最坏的情况O(N*logN)；空间复杂度O(N)；稳定算法</p>
-<pre><code>/**
- * A为数组，n为数组的长度
- */
-private static int[] mergeSort(int[] A, int n) {
-    if (n &gt; 1) {
-        int k = n / 2;
-        int[] temp1 = new int[k];
-        int[] temp2 = new int[n - k];
-
-        for (int i = 0; i &lt; k; i++) {
-            temp1[i] = A[i];
-        }
-        for (int i = k; i &lt; n; i++) {
-            temp2[i - k] = A[i];
-        }
-        temp1 = mergeSort(temp1, k);
-        temp2 = mergeSort(temp2, n - k);
-
-        int i = 0;
-        int j = 0;
-        int x = 0;
-        int[] temp = new int[n];
-
-        while (i &lt; k &amp;&amp; j &lt; n - k) {
-            if (temp1[i] &lt;= temp2[j]) {
-                temp[x] = temp1[i];
-                x++;
-                i++;
-            } else {
-                temp[x] = temp2[j];
-                x++;
-                j++;
-            }
-        }
-
-        while (i &lt; k) {
-            temp[x] = temp1[i];
-            x++;
-            i++;
-        }
-
-        while (j &lt; n - k) {
-            temp[x] = temp2[j];
-            x++;
-            j++;
-        }
-        return temp;
-    }
-    return A;
-}
-</code></pre><h1 id="u5FEB_u901F_u6392_u5E8F"><a href="#u5FEB_u901F_u6392_u5E8F" class="headerlink" title="快速排序"></a>快速排序</h1><p>快速排序的平均复杂度是O(N*logN)，最好的情况O(N*logN)，最坏的情况O(N^2);空间复杂度O(logN)；不稳定算法</p>
-<pre><code>/**
- * A为数组，n为数组的长度
- */
-private static int[] quickSort(int[] A, int n) {
-    qSort(A, 0, n - 1);
-    return A;
-}
-
-/**
- * 
- * @param A
- *            数组
- * @param start
- *            数组起始位
- * @param end
- *            数组终止位
- */
-public static void qSort(int[] A, int start, int end) {
-    if (start &lt; end) {
-        Random random = new Random();
-        // 产生一个随机数
-        int nextInt = random.nextInt(end - start + 1) + start;
-        // 把随机位和数组最后一位交换
-        int temp = A[end];
-        A[end] = A[nextInt];
-        A[nextInt] = temp;
-        // 比A[nextInt]小的数的个数
-        int lt = 0;
-
-        for (int i = start; i &lt; end; i++) {
-            if (A[i] &lt;= A[end]) {
-                int temp1 = A[lt + start];
-                A[lt + start] = A[i];
-                A[i] = temp1;
-                lt++;
-            }
-        }
-        // 把数组最后一位和A[start + lt]交换
-        int temp2 = A[start + lt];
-        A[lt + start] = A[end];
-        A[end] = temp2;
-        // 递归
-        qSort(A, start, lt + start - 1);
-        qSort(A, lt + start + 1, end);
-    }
-}
-</code></pre><h1 id="u5806_u6392_u5E8F"><a href="#u5806_u6392_u5E8F" class="headerlink" title="堆排序"></a>堆排序</h1><p>时间复杂度 O(N*logN),最坏O(N*logN);不稳定算法</p>
-<pre><code>/**
- * 从堆顶中取值，再重新建堆
- * 
- * @param A
- *            数组
- * @param n
- *            数组长度
- * @return
- */
-private static int[] heapSort(int[] A, int n) {
-    while (n &gt; 0) {
-        sift(A, n);
-        int temp = A[n - 1];
-        A[n - 1] = A[0];
-        A[0] = temp;
-        n--;
-        sift(A, n);
-    }
-    return A;
-}
-
-/**
- * 建堆
- * 
- * @param A
- * @param n
- */
-public static void sift(int[] A, int n) {
-    // 最后一个非终端节点
-    int temp = n / 2;
-
-    while (temp &gt; 0) {
-        int tt = 2 * temp - 1;
-        if (2 * temp &lt;= n - 1) {
-            if (A[2 * temp] &lt; A[2 * temp - 1]) {
-                tt = 2 * temp - 1;
-            } else {
-                tt = 2 * temp;
-            }
-        }
-        // 如果子节点大于父节点
-        if (A[temp - 1] &lt; A[tt]) {
-            int t = A[temp - 1];
-            A[temp - 1] = A[tt];
-            A[tt] = t;
-        }
-
-        // 保证下面的堆为大顶堆
-        for (int i = (tt + 1); i &lt;= n; i = 2 * i) {
-            int k = 2 * i - 1;
-            if (k &lt; n) {
-                if (i * 2 + 1 &lt;= n) {
-                    if (A[2 * i] &gt; A[2 * i - 1]) {
-                        k = 2 * i;
-                    }
-                }
-                if (A[i - 1] &lt; A[k]) {
-                    int t = A[i - 1];
-                    A[i - 1] = A[k];
-                    A[k] = t;
-                }
-            }
-        }
-        // 节点自减
-        temp--;
-    }
-}
-</code></pre><h1 id="u5E0C_u5C14_u6392_u5E8F"><a href="#u5E0C_u5C14_u6392_u5E8F" class="headerlink" title="希尔排序"></a>希尔排序</h1><p>希尔排序的平均复杂度是O(N*logN)~O(N^2)，最好的情况O(N^1.3)，最坏的情况O(N^2)；空间复杂度O(1);不稳定算法</p>
-<pre><code>/**
- * A为数组，n为数组的长度
- */
-private static int[] shellSort(int[] A, int n) {
-    Random random = new Random();
-    // 步长
-    int step = random.nextInt(n);
-    sSort(A,step);
-    return A;
-}
-
-/**
- * 
- * @param A
- * @param start
- *            数组起始位
- * @param end
- *            数组终止位
- */
-public static void sSort(int[] A, int step) {
-    // 当步长大于0时循环
-    while (step &gt; 0) {
-        for (int i = step; i &lt; A.length; i++) {
-            int k = i;
-            int temp = k - step;
-            while (temp &gt;= 0) {
-                if (A[k] &lt; A[temp]) {
-                    int temp2 = A[k];
-                    A[k] = A[temp];
-                    A[temp] = temp2;
-                    k = temp;
-                }
-                temp -= step;
-            }
-        }
-        // 步长自减
-        step--;
-    }
-}
-</code></pre><h1 id="u8BA1_u6570_u6392_u5E8F"><a href="#u8BA1_u6570_u6392_u5E8F" class="headerlink" title="计数排序"></a>计数排序</h1><p>时间复杂度 O(N)；</p>
-<pre><code>/**
- * 
- * @param A
- *            数组
- * @param n
- *            数组长度
- * @return
- */
-private static int[] countingSort(int[] A, int n) {
-    int temp = A[0];
-    for (int i = 1;i&lt;n ;i++) {
-        if(A[i]&gt;temp){
-            temp = A[i];
-        }
-    }
-
-    int[] count = new int[temp+1];
-
-    for (int i = 0; i &lt; n; i++) {
-        count[A[i]]++;
-    }
-    int[] result = new int[n];
-    int length = 0;
-    for (int i = 0; i &lt; count.length; i++) {
-        while(count[i]&gt;0){
-            result[length] = i;
-            count[i]--;
-            length++;
-        }
-    }
-    return result;
-}
-</code></pre><h1 id="u57FA_u6570_u6392_u5E8F"><a href="#u57FA_u6570_u6392_u5E8F" class="headerlink" title="基数排序"></a>基数排序</h1><p>时间复杂度 O (nlog(r)m)，其中r为所采取的基数，而m为堆数;空间复杂度O(N)；稳定算法</p>
-<pre><code>public static int[] radixSort(int[] A, int n) {
-
-    int index = 0;
-    for (int i = 1; i &lt; n; i++) {
-        if (A[i] &gt; A[index]) {
-            index = i;
-        }
-    }
-
-    int temp = A[index];
-    int count = 0;
-    while (temp / 10 &gt; 0) {
-        count++;
-        temp /= 10;
-    }
-    count++;
-
-    int[][] bucket = new int[10][n + 1];
-
-    int temp1 = count;
-    while (count &gt; 0) {
-
-        for (int i = 0; i &lt; bucket.length; i++) {
-            bucket[i][0] = 0;
-        }
-
-        for (int i = 0; i &lt; n; i++) {
-            int num;
-            if (temp1 - count == 0) {
-                num = A[i] % 10;
-            } else {
-                int tt = (int) Math.pow(10, temp1 - count);
-                num = (int) A[i] / tt % 10;
-            }
-            int length = bucket[num][0];
-            bucket[num][length + 1] = A[i];
-            length++;
-            bucket[num][0] = length;
-        }
-        int length = 0;
-        for (int i = 0; i &lt; 10; i++) {
-            for (int j = 0; j &lt; bucket[i][0]; j++) {
-                A[length] = bucket[i][j + 1];
-                length++;
-            }
-        }
-        count--;
-    }
-    return A;
-}
-</code></pre>]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="u5192_u6CE1_u6392_u5E8F"><a href="#u5192_u6CE1_u6392_u5E8F" class="headerlink" title="冒泡排序"></a>冒泡排序</h1><p>冒泡排序的平均复杂度是O(N^2),最好的情况O]]>
-    </summary>
-    
-      <category term="算法" scheme="http://yuqirong.me/tags/%E7%AE%97%E6%B3%95/"/>
-    
-      <category term="算法" scheme="http://yuqirong.me/categories/%E7%AE%97%E6%B3%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[带你一步步实现可拖拽的GridView控件]]></title>
-    <link href="http://yuqirong.me/2016/02/15/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AD%A5%E6%AD%A5%E5%AE%9E%E7%8E%B0%E5%8F%AF%E6%8B%96%E6%8B%BD%E7%9A%84GridView%E6%8E%A7%E4%BB%B6/"/>
-    <id>http://yuqirong.me/2016/02/15/带你一步步实现可拖拽的GridView控件/</id>
-    <published>2016-02-15T12:46:17.000Z</published>
-    <updated>2016-07-05T15:31:38.477Z</updated>
-    <content type="html"><![CDATA[<p>经常使用网易新闻的童鞋都知道在网易新闻中有一个新闻栏目管理，其中GridView的item是可以拖拽的，效果十分炫酷。具体效果如下图：</p>
-<p><img src="/uploads/20160215/20160215203853.gif" alt="这里写图片描述"></p>
-<p>是不是也想自己也想实现出相同的效果呢？那就一起来往下看吧。</p>
-<p>首先我们来梳理一下思路：</p>
-<ol>
-<li>当用户长按选择一个item时，将该item隐藏，然后用WindowManager添加一个新的window，该window与所选择item一模一样，并且跟随用户手指滑动而不断改变位置。</li>
-<li>当window的位置坐标在GridView里面时，使用<code>pointToPosition (int x, int y)</code>方法来判断对应的应该是哪个item，在adapter中作出数据集相应的变化，然后做出平移的动画。</li>
-<li>当用户手指抬起时，把window移除，使用<code>notifyDataSetChanged()</code>做出GridView更新。</li>
-</ol>
-<p>讲完了思路后，我们就来实践一下吧，把这个控件取名为DragGridView。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">DragGridView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">DragGridView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">DragGridView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">    mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);</span><br><span class="line">    setOnItemLongClickListener(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="u624B_u6307_u5728Item_u4E0A_u957F_u6309_u65F6"><a href="#u624B_u6307_u5728Item_u4E0A_u957F_u6309_u65F6" class="headerlink" title="手指在Item上长按时"></a>手指在Item上长按时</h1><p>首先在构造器中得到WindowManager对象以及设置长按监听器，所以只有长按item才能拖拽。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onInterceptTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (ev.getAction()) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">            mWindowX = ev.getRawX();</span><br><span class="line">            mWindowY = ev.getRawY();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.onInterceptTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后在<code>onInterceptTouchEvent(MotionEvent ev)</code>中得到手指下落时的<code>ev.getRawX()</code>和<code>ev.getRawY()</code>，以备后面的计算使用。至于<code>getRawX()</code>和<code>getX()</code>的区别这里就不再讲述了，如果有不懂的可以自行百度。</p>
-<p>下面就是<code>onItemLongClick(AdapterView&lt;?&gt; parent, View view, int position, long id)</code>方法了，我们在DragGridView中定义了两种模式：<code>MODE_DRAG</code>和<code>MODE_NORMAL</code>，分别对应着item拖拽和item不拖拽：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onItemLongClick</span><span class="params">(AdapterView&lt;?&gt; parent, View view, <span class="keyword">int</span> position, <span class="keyword">long</span> id)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mode == MODE_DRAG) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.view = view;</span><br><span class="line">    <span class="keyword">this</span>.position = position;</span><br><span class="line">    <span class="keyword">this</span>.tempPosition = position;</span><br><span class="line">    mX = mWindowX - view.getLeft() - <span class="keyword">this</span>.getLeft();</span><br><span class="line">    mY = mWindowY - view.getTop() - <span class="keyword">this</span>.getTop();</span><br><span class="line">    initWindow();</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在onItemLongClick()中先判断了一下模式，只有在<code>MODE_NORMAL</code>的情况下才会添加window。然后计算出mX和mY。可能有些童鞋在mX和mY的计算上看不懂，我给出了一个图示：</p>
-<p><img src="/uploads/20160215/20160215210800.png" alt="这里写图片描述"></p>
-<p>其中红点是手指按下的坐标，也就是(mWindowX,mWindowY)这个点；绿边框为DragGridView，因为DragGridView有可能会有margin值；所以this.getLeft()就是绿边框到屏幕的距离，而view.getLeft()就是长按的Item的左边到绿边框的距离。这几个值相减就得到了mX。同理，mY也是这样得到的。</p>
-<p>然后来看看<code>initWindow();</code>这个方法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 初始化window</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (dragView == <span class="keyword">null</span>) &#123;</span><br><span class="line">        dragView = View.inflate(getContext(), R.layout.drag_item, <span class="keyword">null</span>);</span><br><span class="line">        TextView tv_text = (TextView) dragView.findViewById(R.id.tv_text);</span><br><span class="line">        tv_text.setText(((TextView) view.findViewById(R.id.tv_text)).getText());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (layoutParams == <span class="keyword">null</span>) &#123;</span><br><span class="line">        layoutParams = <span class="keyword">new</span> WindowManager.LayoutParams();</span><br><span class="line">        layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;</span><br><span class="line">        layoutParams.format = PixelFormat.RGBA_8888;</span><br><span class="line">        layoutParams.gravity = Gravity.TOP | Gravity.LEFT;</span><br><span class="line">        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL</span><br><span class="line">                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;  <span class="comment">//悬浮窗的行为，比如说不可聚焦，非模态对话框等等</span></span><br><span class="line">        layoutParams.width = view.getWidth();</span><br><span class="line">        layoutParams.height = view.getHeight();</span><br><span class="line">        layoutParams.x = view.getLeft() + <span class="keyword">this</span>.getLeft();  <span class="comment">//悬浮窗X的位置</span></span><br><span class="line">        layoutParams.y = view.getTop() + <span class="keyword">this</span>.getTop();  <span class="comment">//悬浮窗Y的位置</span></span><br><span class="line">        view.setVisibility(INVISIBLE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mWindowManager.addView(dragView, layoutParams);</span><br><span class="line">    mode = MODE_DRAG;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在<code>initWindow()</code>中，我们先创建了一个dragView，而dragView里面的内容与长按的Item的内容完全一致。然后创建<code>WindowManager.LayoutParams</code>的对象，把dragView添加到window上去。同时，也要把长按的Item隐藏了。在这里别忘了需要申请显示悬浮窗的权限：</p>
-<pre><code>&lt;uses-permission android:name=&quot;android.permission.SYSTEM_ALERT_WINDOW&quot;/&gt;
-</code></pre><h1 id="u624B_u6307_u6ED1_u52A8_u65F6"><a href="#u624B_u6307_u6ED1_u52A8_u65F6" class="headerlink" title="手指滑动时"></a>手指滑动时</h1><p>在<code>initWindow()</code>之后，我们就要考虑当手指滑动时window也要跟着动了，我们重写<code>onTouchEvent(MotionEvent ev)</code>来监听滑动事件，可以看到下面的<code>updateWindow(ev)</code>方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (ev.getAction()) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">            <span class="keyword">if</span> (mode == MODE_DRAG) &#123;</span><br><span class="line">                updateWindow(ev);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">            <span class="keyword">if</span> (mode == MODE_DRAG) &#123;</span><br><span class="line">                closeWindow(ev.getX(), ev.getY());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里贴出<code>updateWindow(ev)</code>方法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 触摸移动时，window更新</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> ev</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">updateWindow</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mode == MODE_DRAG) &#123;</span><br><span class="line">        <span class="keyword">float</span> x = ev.getRawX() - mX;</span><br><span class="line">        <span class="keyword">float</span> y = ev.getRawY() - mY;</span><br><span class="line">        <span class="keyword">if</span> (layoutParams != <span class="keyword">null</span>) &#123;</span><br><span class="line">            layoutParams.x = (<span class="keyword">int</span>) x;</span><br><span class="line">            layoutParams.y = (<span class="keyword">int</span>) y;</span><br><span class="line">            mWindowManager.updateViewLayout(dragView, layoutParams);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">float</span> mx = ev.getX();</span><br><span class="line">        <span class="keyword">float</span> my = ev.getY();</span><br><span class="line">        <span class="keyword">int</span> dropPosition = pointToPosition((<span class="keyword">int</span>) mx, (<span class="keyword">int</span>) my);</span><br><span class="line">        Log.i(TAG, <span class="string">"dropPosition : "</span> + dropPosition + <span class="string">" , tempPosition : "</span> + tempPosition);</span><br><span class="line">        <span class="keyword">if</span> (dropPosition == tempPosition || dropPosition == GridView.INVALID_POSITION) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        itemMove(dropPosition);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在这里，mX和mY就派上用场了。根据<code>ev.getRawX()</code>和<code>ev.getRawY()</code>分别减去<code>mX</code>和<code>mY</code>就得到了移动中layoutParams.x和layoutParams.y。再调用<code>updateViewLayout (View view, ViewGroup.LayoutParams params)</code>就出现了window跟随手指滑动而滑动的效果。最后根据 <code>pointToPosition(int x, int y)</code>返回的值来执行<code>itemMove(dropPosition);</code>。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 判断item移动，作出移动动画</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> dropPosition</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">itemMove</span><span class="params">(<span class="keyword">int</span> dropPosition)</span> </span>&#123;</span><br><span class="line">    TranslateAnimation translateAnimation;</span><br><span class="line">	<span class="comment">// 移动的位置在原位置前面时</span></span><br><span class="line">    <span class="keyword">if</span> (dropPosition &lt; tempPosition) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = dropPosition; i &lt; tempPosition; i++) &#123;</span><br><span class="line">            View view = getChildAt(i);</span><br><span class="line">            View nextView = getChildAt(i + <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">float</span> xValue = (nextView.getLeft() - view.getLeft()) * <span class="number">1f</span> / view.getWidth();</span><br><span class="line">            <span class="keyword">float</span> yValue = (nextView.getTop() - view.getTop()) * <span class="number">1f</span> / view.getHeight();</span><br><span class="line">            translateAnimation =</span><br><span class="line">                    <span class="keyword">new</span> TranslateAnimation(Animation.RELATIVE_TO_SELF, <span class="number">0f</span>, Animation.RELATIVE_TO_SELF, xValue, Animation.RELATIVE_TO_SELF, <span class="number">0f</span>, Animation.RELATIVE_TO_SELF, yValue);</span><br><span class="line">            translateAnimation.setInterpolator(<span class="keyword">new</span> LinearInterpolator());</span><br><span class="line">            translateAnimation.setFillAfter(<span class="keyword">true</span>);</span><br><span class="line">            translateAnimation.setDuration(<span class="number">300</span>);</span><br><span class="line">            <span class="keyword">if</span> (i == tempPosition - <span class="number">1</span>) &#123;</span><br><span class="line">                translateAnimation.setAnimationListener(animationListener);</span><br><span class="line">            &#125;</span><br><span class="line">            view.startAnimation(translateAnimation);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="comment">// 移动的位置在原位置后面时</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = tempPosition + <span class="number">1</span>; i &lt;= dropPosition; i++) &#123;</span><br><span class="line">            View view = getChildAt(i);</span><br><span class="line">            View prevView = getChildAt(i - <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">float</span> xValue = (prevView.getLeft() - view.getLeft()) * <span class="number">1f</span> / view.getWidth();</span><br><span class="line">            <span class="keyword">float</span> yValue = (prevView.getTop() - view.getTop()) * <span class="number">1f</span> / view.getHeight();</span><br><span class="line">            translateAnimation =</span><br><span class="line">                    <span class="keyword">new</span> TranslateAnimation(Animation.RELATIVE_TO_SELF, <span class="number">0f</span>, Animation.RELATIVE_TO_SELF, xValue, Animation.RELATIVE_TO_SELF, <span class="number">0f</span>, Animation.RELATIVE_TO_SELF, yValue);</span><br><span class="line">            translateAnimation.setInterpolator(<span class="keyword">new</span> LinearInterpolator());</span><br><span class="line">            translateAnimation.setFillAfter(<span class="keyword">true</span>);</span><br><span class="line">            translateAnimation.setDuration(<span class="number">300</span>);</span><br><span class="line">            <span class="keyword">if</span> (i == dropPosition) &#123;</span><br><span class="line">                translateAnimation.setAnimationListener(animationListener);</span><br><span class="line">            &#125;</span><br><span class="line">            view.startAnimation(translateAnimation);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    tempPosition = dropPosition;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 动画监听器</span><br><span class="line"> */</span></span><br><span class="line">Animation.AnimationListener animationListener = <span class="keyword">new</span> Animation.AnimationListener() &#123;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationStart</span><span class="params">(Animation animation)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationEnd</span><span class="params">(Animation animation)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 在动画完成时将adapter里的数据交换位置</span></span><br><span class="line">        ListAdapter adapter = getAdapter();</span><br><span class="line">        <span class="keyword">if</span> (adapter != <span class="keyword">null</span> &amp;&amp; adapter <span class="keyword">instanceof</span> DragGridAdapter) &#123;</span><br><span class="line">            ((DragGridAdapter) adapter).exchangePosition(position, tempPosition, <span class="keyword">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        position = tempPosition;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationRepeat</span><span class="params">(Animation animation)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>上面的代码主要是根据dropPosition使要改变位置的Item来做出平移动画，当最后一个要改变位置的Item平移动画完成之后，在adapter中完成数据集的交换。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 给item交换位置</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> originalPosition item原先位置</span><br><span class="line"> * <span class="doctag">@param</span> nowPosition      item现在位置</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exchangePosition</span><span class="params">(<span class="keyword">int</span> originalPosition, <span class="keyword">int</span> nowPosition, <span class="keyword">boolean</span> isMove)</span> </span>&#123;</span><br><span class="line">    T t = list.get(originalPosition);</span><br><span class="line">    list.remove(originalPosition);</span><br><span class="line">    list.add(nowPosition, t);</span><br><span class="line">    movePosition = nowPosition;</span><br><span class="line">    <span class="keyword">this</span>.isMove = isMove;</span><br><span class="line">    notifyDataSetChanged();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(<span class="keyword">int</span> position, View convertView, ViewGroup parent)</span> </span>&#123;</span><br><span class="line">    Log.i(TAG, <span class="string">"-------------------------------"</span>);</span><br><span class="line">    <span class="keyword">for</span> (T t : list)&#123;</span><br><span class="line">        Log.i(TAG, t.toString());</span><br><span class="line">    &#125;</span><br><span class="line">    View view = getItemView(position, convertView, parent);</span><br><span class="line">    <span class="keyword">if</span> (position == movePosition &amp;&amp; isMove) &#123;</span><br><span class="line">        view.setVisibility(View.INVISIBLE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> view;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="u624B_u6307_u62AC_u8D77_u65F6"><a href="#u624B_u6307_u62AC_u8D77_u65F6" class="headerlink" title="手指抬起时"></a>手指抬起时</h1><p>在上面<code>onTouchEvent(MotionEvent ev)</code>方法中，可以看到手指抬起时调用了<code>closeWindow(ev.getX(), ev.getY());</code>，那就一起来看看：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 关闭window</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> x</span><br><span class="line"> * <span class="doctag">@param</span> y</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">closeWindow</span><span class="params">(<span class="keyword">float</span> x, <span class="keyword">float</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (dragView != <span class="keyword">null</span>) &#123;</span><br><span class="line">        mWindowManager.removeView(dragView);</span><br><span class="line">        dragView = <span class="keyword">null</span>;</span><br><span class="line">        layoutParams = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    itemDrop();</span><br><span class="line">    mode = MODE_NORMAL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 手指抬起时，item下落</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">itemDrop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tempPosition == position || tempPosition == GridView.INVALID_POSITION) &#123;</span><br><span class="line">        getChildAt(position).setVisibility(VISIBLE);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ListAdapter adapter = getAdapter();</span><br><span class="line">        <span class="keyword">if</span> (adapter != <span class="keyword">null</span> &amp;&amp; adapter <span class="keyword">instanceof</span> DragGridAdapter) &#123;</span><br><span class="line">            ((DragGridAdapter) adapter).exchangePosition(position, tempPosition, <span class="keyword">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可以看出主要做的事情就是移除了window，并且也是调用了<code>exchangePosition(int originalPosition, int nowPosition, boolean isMove)</code>，不同的是第三个参数isMove传入了false，这样所有的Item都显示出来了。</p>
-<p>讲了这么多，来看看最后的效果吧：</p>
-<p><img src="/uploads/20160215/20160215212234.gif" alt="这里写图片描述"></p>
-<p>和网易新闻的效果不相上下吧，完整的源码太长就不贴出了，下面提供源码下载：</p>
-<p><a href="/uploads/20160215/DragGridView-master.rar">DragGridView.rar</a></p>
-<p>GitHub：</p>
-<p><a href="https://github.com/yuqirong/DragGridView" target="_blank" rel="external">DragGridView</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>经常使用网易新闻的童鞋都知道在网易新闻中有一个新闻栏目管理，其中GridView的item是可以拖拽的，效果十分炫酷。具体效果如下图：</p>
-<p><img src="/uploads/20160215/20160215203853.gif" alt="这里写图片描述">]]>
     </summary>
     
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
