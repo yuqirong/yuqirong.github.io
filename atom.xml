@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-07-12T16:17:00.352Z</updated>
+  <updated>2016-07-07T13:46:40.568Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -13,70 +13,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title><![CDATA[Linux常用命令]]></title>
-    <link href="http://yuqirong.me/2016/07/11/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
-    <id>http://yuqirong.me/2016/07/11/Linux常用命令/</id>
-    <published>2016-07-11T15:29:35.000Z</published>
-    <updated>2016-07-12T16:17:00.352Z</updated>
-    <content type="html"><![CDATA[<h1 id="u57FA_u7840_u4ECB_u7ECD"><a href="#u57FA_u7840_u4ECB_u7ECD" class="headerlink" title="基础介绍"></a>基础介绍</h1><ul>
-<li><p>立即进行关机</p>
-<p>  shotdown -h now</p>
-</li>
-<li><p>现在重新启动计算机</p>
-<p>  shotdown -r now</p>
-</li>
-<li><p>现在重新启动计算机</p>
-<p>  reboot</p>
-</li>
-<li><p>切换系统管理员账号</p>
-<p>  su -</p>
-</li>
-<li><p>用户注销</p>
-<p>  logout</p>
-</li>
-<li><p>打印当前目录的清单</p>
-<p>  ls</p>
-</li>
-<li><p>打印当前目录的详细清单</p>
-<p>  ls -l</p>
-</li>
-<li><p>vi编辑器编写 Java 语言程序的过程</p>
-<ol>
-<li>vi Hello.java</li>
-<li>按 i 键进入插入模式</li>
-<li>编写代码</li>
-<li>按 esc 键进入命令模式</li>
-<li>按 wq 保存并退出，q! 退出但是不保存</li>
-<li>编译 javac Hello.java</li>
-<li>运行 java Hello</li>
-</ol>
-</li>
-</ul>
-<p>Linux目录结构：</p>
-<p>root：存放root用户的相关文件<br>home：存放普通用户的相关文件<br>bin：存放常用命令的目录<br>sbin：要具有一定权限才可以使用的命令<br>mnt：默认挂载光驱和软驱的目录<br>boot：存放引导相关的文件<br>etc：存放配置相关的文件<br>var：存放一些经常变化的文件<br>usr：软件默认安装的目录</p>
-<ul>
-<li>显示当前的路径： pwd</li>
-<li>添加用户：useradd [用户名]</li>
-<li>设置用户密码：passwd [用户名]</li>
-<li>删除用户：userdel [用户名]</li>
-<li>删除用户以及用户主目录：userdel -r [用户名]</li>
-</ul>
-<p>命令：init<br>运行级别：<br>0 关机<br>1 单用户<br>2 多用户状态没有网络服务<br>3 多用户状态有网络服务<br>4 系统没有使用，留给用户<br>5 图形界面<br>6 重启<br>常用运行级别为3和5，要修改默认的运行级别可改文件/etc/inittab的id:5:initdefault:这一行中的数字</p>
-<p>ls -a 显示隐藏文件<br>ls -al 显示隐藏文件并显示场列表形式<br>mkdir 建立目录<br>rmdir 删除空目录<br>touch 建立空文件<br>cp 复制命令<br>cp -r dir1 dir2 递归复制命令(复制子目录信息)<br>mv 移动文件和改文件名<br>rm 删除文件和目录<br>rm -rf * 删除所有内容<br>查找内容： grep -n [查找的内容] 查找的文件<br>find 查找文件或目录</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="u57FA_u7840_u4ECB_u7ECD"><a href="#u57FA_u7840_u4ECB_u7ECD" class="headerlink" title="基础介绍"></a>基础介绍</h1><ul>
-<li><p>立即进行关机</p>
-<p> ]]>
-    </summary>
-    
-      <category term="Linux" scheme="http://yuqirong.me/tags/Linux/"/>
-    
-      <category term="Linux" scheme="http://yuqirong.me/categories/Linux/"/>
-    
-  </entry>
   
   <entry>
     <title><![CDATA[简单实现炫酷的滑动返回效果]]></title>
@@ -2528,6 +2464,367 @@ public void computeScroll() {
       <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[九大基本排序算法]]></title>
+    <link href="http://yuqirong.me/2016/02/18/%E4%B9%9D%E5%A4%A7%E5%9F%BA%E6%9C%AC%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/"/>
+    <id>http://yuqirong.me/2016/02/18/九大基本排序算法/</id>
+    <published>2016-02-18T13:56:06.000Z</published>
+    <updated>2016-07-05T15:31:38.430Z</updated>
+    <content type="html"><![CDATA[<h1 id="u5192_u6CE1_u6392_u5E8F"><a href="#u5192_u6CE1_u6392_u5E8F" class="headerlink" title="冒泡排序"></a>冒泡排序</h1><p>冒泡排序的平均复杂度是O(N^2),最好的情况O(N),最坏的情况O(N^2);空间复杂度O(1)；稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] bubbleSort(int[] A, int n) {
+    int temp;
+    for (int i = 0; i &lt; n - 1; i++) {
+        for (int j = 0; j &lt; n - i - 1; j++) {
+            if (A[j] &gt; A[j + 1]) {
+                temp = A[j + 1];
+                A[j + 1] = A[j];
+                A[j] = temp;
+            }
+        }
+    }
+    return A;
+}
+</code></pre><h1 id="u9009_u62E9_u6392_u5E8F"><a href="#u9009_u62E9_u6392_u5E8F" class="headerlink" title="选择排序"></a>选择排序</h1><p>选择排序时间复杂度 O(N^2)，最坏的情况O(N^2);空间复杂度O(1)；不稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] selectionSort(int[] A, int n) {
+    int minPos = 0;
+    int temp;
+    for (int i = 0; i &lt; n - 1; i++) {
+        for (int j = i + 1; j &lt; n; j++) {
+            if (A[j] &lt; A[minPos]) {
+                minPos = j;
+            }
+        }
+        temp = A[minPos];
+        A[minPos] = A[i];
+        A[i] = temp;
+        minPos = i + 1;
+    }
+    return A;
+}
+</code></pre><h1 id="u63D2_u5165_u6392_u5E8F"><a href="#u63D2_u5165_u6392_u5E8F" class="headerlink" title="插入排序"></a>插入排序</h1><p>插入排序的平均复杂度是O(N^2)，最好的情况O(N)，最坏的情况O(N^2);空间复杂度O(1)；稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] insertionSort(int[] A, int n) {
+    int temp;
+    for (int i = 2; i &lt; n; i++) {
+        for (int j = 0; j &lt; i; j++) {
+            if (A[i] &lt; A[j]) {
+                temp = A[j];
+                A[j] = A[i];
+                A[i] = temp;
+            }
+        }
+    }
+    return A;
+}
+</code></pre><h1 id="u5F52_u5E76_u6392_u5E8F"><a href="#u5F52_u5E76_u6392_u5E8F" class="headerlink" title="归并排序"></a>归并排序</h1><p>归并排序时间复杂度O(N*logN),最好的情况O(N*logN)，最坏的情况O(N*logN)；空间复杂度O(N)；稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] mergeSort(int[] A, int n) {
+    if (n &gt; 1) {
+        int k = n / 2;
+        int[] temp1 = new int[k];
+        int[] temp2 = new int[n - k];
+
+        for (int i = 0; i &lt; k; i++) {
+            temp1[i] = A[i];
+        }
+        for (int i = k; i &lt; n; i++) {
+            temp2[i - k] = A[i];
+        }
+        temp1 = mergeSort(temp1, k);
+        temp2 = mergeSort(temp2, n - k);
+
+        int i = 0;
+        int j = 0;
+        int x = 0;
+        int[] temp = new int[n];
+
+        while (i &lt; k &amp;&amp; j &lt; n - k) {
+            if (temp1[i] &lt;= temp2[j]) {
+                temp[x] = temp1[i];
+                x++;
+                i++;
+            } else {
+                temp[x] = temp2[j];
+                x++;
+                j++;
+            }
+        }
+
+        while (i &lt; k) {
+            temp[x] = temp1[i];
+            x++;
+            i++;
+        }
+
+        while (j &lt; n - k) {
+            temp[x] = temp2[j];
+            x++;
+            j++;
+        }
+        return temp;
+    }
+    return A;
+}
+</code></pre><h1 id="u5FEB_u901F_u6392_u5E8F"><a href="#u5FEB_u901F_u6392_u5E8F" class="headerlink" title="快速排序"></a>快速排序</h1><p>快速排序的平均复杂度是O(N*logN)，最好的情况O(N*logN)，最坏的情况O(N^2);空间复杂度O(logN)；不稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] quickSort(int[] A, int n) {
+    qSort(A, 0, n - 1);
+    return A;
+}
+
+/**
+ * 
+ * @param A
+ *            数组
+ * @param start
+ *            数组起始位
+ * @param end
+ *            数组终止位
+ */
+public static void qSort(int[] A, int start, int end) {
+    if (start &lt; end) {
+        Random random = new Random();
+        // 产生一个随机数
+        int nextInt = random.nextInt(end - start + 1) + start;
+        // 把随机位和数组最后一位交换
+        int temp = A[end];
+        A[end] = A[nextInt];
+        A[nextInt] = temp;
+        // 比A[nextInt]小的数的个数
+        int lt = 0;
+
+        for (int i = start; i &lt; end; i++) {
+            if (A[i] &lt;= A[end]) {
+                int temp1 = A[lt + start];
+                A[lt + start] = A[i];
+                A[i] = temp1;
+                lt++;
+            }
+        }
+        // 把数组最后一位和A[start + lt]交换
+        int temp2 = A[start + lt];
+        A[lt + start] = A[end];
+        A[end] = temp2;
+        // 递归
+        qSort(A, start, lt + start - 1);
+        qSort(A, lt + start + 1, end);
+    }
+}
+</code></pre><h1 id="u5806_u6392_u5E8F"><a href="#u5806_u6392_u5E8F" class="headerlink" title="堆排序"></a>堆排序</h1><p>时间复杂度 O(N*logN),最坏O(N*logN);不稳定算法</p>
+<pre><code>/**
+ * 从堆顶中取值，再重新建堆
+ * 
+ * @param A
+ *            数组
+ * @param n
+ *            数组长度
+ * @return
+ */
+private static int[] heapSort(int[] A, int n) {
+    while (n &gt; 0) {
+        sift(A, n);
+        int temp = A[n - 1];
+        A[n - 1] = A[0];
+        A[0] = temp;
+        n--;
+        sift(A, n);
+    }
+    return A;
+}
+
+/**
+ * 建堆
+ * 
+ * @param A
+ * @param n
+ */
+public static void sift(int[] A, int n) {
+    // 最后一个非终端节点
+    int temp = n / 2;
+
+    while (temp &gt; 0) {
+        int tt = 2 * temp - 1;
+        if (2 * temp &lt;= n - 1) {
+            if (A[2 * temp] &lt; A[2 * temp - 1]) {
+                tt = 2 * temp - 1;
+            } else {
+                tt = 2 * temp;
+            }
+        }
+        // 如果子节点大于父节点
+        if (A[temp - 1] &lt; A[tt]) {
+            int t = A[temp - 1];
+            A[temp - 1] = A[tt];
+            A[tt] = t;
+        }
+
+        // 保证下面的堆为大顶堆
+        for (int i = (tt + 1); i &lt;= n; i = 2 * i) {
+            int k = 2 * i - 1;
+            if (k &lt; n) {
+                if (i * 2 + 1 &lt;= n) {
+                    if (A[2 * i] &gt; A[2 * i - 1]) {
+                        k = 2 * i;
+                    }
+                }
+                if (A[i - 1] &lt; A[k]) {
+                    int t = A[i - 1];
+                    A[i - 1] = A[k];
+                    A[k] = t;
+                }
+            }
+        }
+        // 节点自减
+        temp--;
+    }
+}
+</code></pre><h1 id="u5E0C_u5C14_u6392_u5E8F"><a href="#u5E0C_u5C14_u6392_u5E8F" class="headerlink" title="希尔排序"></a>希尔排序</h1><p>希尔排序的平均复杂度是O(N*logN)~O(N^2)，最好的情况O(N^1.3)，最坏的情况O(N^2)；空间复杂度O(1);不稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] shellSort(int[] A, int n) {
+    Random random = new Random();
+    // 步长
+    int step = random.nextInt(n);
+    sSort(A,step);
+    return A;
+}
+
+/**
+ * 
+ * @param A
+ * @param start
+ *            数组起始位
+ * @param end
+ *            数组终止位
+ */
+public static void sSort(int[] A, int step) {
+    // 当步长大于0时循环
+    while (step &gt; 0) {
+        for (int i = step; i &lt; A.length; i++) {
+            int k = i;
+            int temp = k - step;
+            while (temp &gt;= 0) {
+                if (A[k] &lt; A[temp]) {
+                    int temp2 = A[k];
+                    A[k] = A[temp];
+                    A[temp] = temp2;
+                    k = temp;
+                }
+                temp -= step;
+            }
+        }
+        // 步长自减
+        step--;
+    }
+}
+</code></pre><h1 id="u8BA1_u6570_u6392_u5E8F"><a href="#u8BA1_u6570_u6392_u5E8F" class="headerlink" title="计数排序"></a>计数排序</h1><p>时间复杂度 O(N)；</p>
+<pre><code>/**
+ * 
+ * @param A
+ *            数组
+ * @param n
+ *            数组长度
+ * @return
+ */
+private static int[] countingSort(int[] A, int n) {
+    int temp = A[0];
+    for (int i = 1;i&lt;n ;i++) {
+        if(A[i]&gt;temp){
+            temp = A[i];
+        }
+    }
+
+    int[] count = new int[temp+1];
+
+    for (int i = 0; i &lt; n; i++) {
+        count[A[i]]++;
+    }
+    int[] result = new int[n];
+    int length = 0;
+    for (int i = 0; i &lt; count.length; i++) {
+        while(count[i]&gt;0){
+            result[length] = i;
+            count[i]--;
+            length++;
+        }
+    }
+    return result;
+}
+</code></pre><h1 id="u57FA_u6570_u6392_u5E8F"><a href="#u57FA_u6570_u6392_u5E8F" class="headerlink" title="基数排序"></a>基数排序</h1><p>时间复杂度 O (nlog(r)m)，其中r为所采取的基数，而m为堆数;空间复杂度O(N)；稳定算法</p>
+<pre><code>public static int[] radixSort(int[] A, int n) {
+
+    int index = 0;
+    for (int i = 1; i &lt; n; i++) {
+        if (A[i] &gt; A[index]) {
+            index = i;
+        }
+    }
+
+    int temp = A[index];
+    int count = 0;
+    while (temp / 10 &gt; 0) {
+        count++;
+        temp /= 10;
+    }
+    count++;
+
+    int[][] bucket = new int[10][n + 1];
+
+    int temp1 = count;
+    while (count &gt; 0) {
+
+        for (int i = 0; i &lt; bucket.length; i++) {
+            bucket[i][0] = 0;
+        }
+
+        for (int i = 0; i &lt; n; i++) {
+            int num;
+            if (temp1 - count == 0) {
+                num = A[i] % 10;
+            } else {
+                int tt = (int) Math.pow(10, temp1 - count);
+                num = (int) A[i] / tt % 10;
+            }
+            int length = bucket[num][0];
+            bucket[num][length + 1] = A[i];
+            length++;
+            bucket[num][0] = length;
+        }
+        int length = 0;
+        for (int i = 0; i &lt; 10; i++) {
+            for (int j = 0; j &lt; bucket[i][0]; j++) {
+                A[length] = bucket[i][j + 1];
+                length++;
+            }
+        }
+        count--;
+    }
+    return A;
+}
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u5192_u6CE1_u6392_u5E8F"><a href="#u5192_u6CE1_u6392_u5E8F" class="headerlink" title="冒泡排序"></a>冒泡排序</h1><p>冒泡排序的平均复杂度是O(N^2),最好的情况O]]>
+    </summary>
+    
+      <category term="算法" scheme="http://yuqirong.me/tags/%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="算法" scheme="http://yuqirong.me/categories/%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
