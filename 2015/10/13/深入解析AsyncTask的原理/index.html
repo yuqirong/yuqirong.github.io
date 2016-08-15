@@ -88,7 +88,7 @@
 <meta property="og:url" content="http://yuqirong.me/2015/10/13/深入解析AsyncTask的原理/index.html">
 <meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="前言在初学 Android 的时候，AsyncTask 应该是大家都比较熟悉的。我们都知道 AsyncTask 可以在后台开启一个异步的任务，当任务完成后可以更新在 UI 上。而在 AsyncTask 中，比较常用的方法有： onPreExecute 、 doInBackground 、 onPostExecute 和 onProgressUpdate 等。而上述的方法中除了 doInBackgr">
-<meta property="og:updated_time" content="2016-07-05T15:31:38.493Z">
+<meta property="og:updated_time" content="2016-08-15T16:32:47.407Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入解析AsyncTask的原理">
 <meta name="twitter:description" content="前言在初学 Android 的时候，AsyncTask 应该是大家都比较熟悉的。我们都知道 AsyncTask 可以在后台开启一个异步的任务，当任务完成后可以更新在 UI 上。而在 AsyncTask 中，比较常用的方法有： onPreExecute 、 doInBackground 、 onPostExecute 和 onProgressUpdate 等。而上述的方法中除了 doInBackgr">
@@ -394,9 +394,10 @@
 </li>
 <li><p>在 execute 方法中，会先去调用 onPreExecute 方法，之后再在线程池中执行 mFuture 。这时会调用 doInBackground 方法开始进行任务操作。 mWorker 和 mFuture 都是在构造器中初始化完成的。</p>
 </li>
-<li><p>AsyncTask 支持多线程进行任务操作，默认为但线程进行任务操作。</p>
+<li><p>AsyncTask 支持多线程进行任务操作，默认为单线程进行任务操作。</p>
 </li>
 </ul>
+<p>今天就到这里了，下次再见！</p>
 <p>Goodbye ~~</p>
 
       
