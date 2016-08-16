@@ -185,7 +185,7 @@ Canvas类主要的绘画功能：
 
 * Canvas.restore():合并图层操作。它的作用就是将我们在save()之后绘制的所有图像与save()之前的图像进行合并。
 
-* Canvas.translate():画布平移，可理解为坐标系的平移。如在之前绘制的坐标系原点在(0,0)。在translate(x,y)之后，坐标原点在(x,y)。
+* Canvas.translate():画布平移，可理解为坐标系的平移。如在之前绘制的坐标系原点在(0,0)。在translate(x,y)之后，坐标原点在(x,y)。要注意的是，并不是移动至(x,y)点，而是在原先的基础上加上x和y。比如原先canvas位于(100,200)，translate(x,y)后，canvas位于(100+x,200+y)
 
 * Canvas.rotate():画布翻转，可理解为坐标系的翻转。canvas.rotate(30);为按照坐标系的原点顺时针旋转30度。canvas.rotate(30,x,y);为按照坐标系的(x,y)点顺时针旋转30度。
 

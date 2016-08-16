@@ -268,6 +268,8 @@ protected void onPreExecute() {
 
 * 在 execute 方法中，会先去调用 onPreExecute 方法，之后再在线程池中执行 mFuture 。这时会调用 doInBackground 方法开始进行任务操作。 mWorker 和 mFuture 都是在构造器中初始化完成的。
 
-* AsyncTask 支持多线程进行任务操作，默认为但线程进行任务操作。
+* AsyncTask 支持多线程进行任务操作，默认为单线程进行任务操作。
+
+今天就到这里了，下次再见！
 
 Goodbye ~~

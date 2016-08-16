@@ -110,7 +110,7 @@ Android会为每一个应用分配一个独立的虚拟机，或者说为每个�
 
 **Serializable接口**
 
-通过Serializable来实现对象的序列化和反序列化(User类实现了Serializable接口)：
+Serializable接口是Java中为对象提供标准的序列化和反序列化操作的接口，通过Serializable来实现对象的序列化和反序列化(User类实现了Serializable接口)：
 
 ``` java
 	// 序列化过程
@@ -129,6 +129,8 @@ Android会为每一个应用分配一个独立的虚拟机，或者说为每个�
 
 原则上序列化后的数据中的serialVerionUID只有和当前类的serialVersionUID相同才能够正常地被反序列化。
 
+serialVersionUID的详细工作机制：序列化的时候系统会把当前类的serialVersionUID写入序列化的文件中，当反序列化的时候系统会去检测文件中的serialVersionUID，看它是否和当前类的serialVersionUID一致，如果一致就说明序列化的类的版本和当前类的版本是相同的，这个时候可以成功反序列化；否则说明版本不一致无法正常反序列化。一般来说，我们应该手动指定serialVersionUID的值。
+
 有两个需要注意一下：
 
 * 静态成员变量属于类不属于对像，所以不会参与序列化过程；
@@ -136,9 +138,144 @@ Android会为每一个应用分配一个独立的虚拟机，或者说为每个�
 
 **Parcelable接口**
 
-Serializable是Java中的序列化接口，其使用起来简单但是开销很大，序列化和反序列化过程需要大量I/O操作。而Parcelable是Android中的序列化方式，因此更适合在Android平台上，它的缺点就是使用起来稍微麻烦点，但是它的效率很高，因此推荐使用Parcelable。
+Serializable是Java中的序列化接口，其使用起来简单但是开销很大，序列化和反序列化过程需要大量I/O操作。而Parcelable是Android中的序列化方式，因此更适合在Android平台上，它的缺点就是使用起来稍微麻烦点，但是它的效率很高，因此推荐使用Parcelable。Parcelable接口可以在Binder中自由传输，Parcelable主要用在内存序列化上，可以直接序列化的有Intent、Bundle、Bitmap以及List和Map等等，下面是一个实现了Parcelable接口的示例：
+
+``` java
+public class Book implements Parcelable {
+    public int bookId;
+    public String bookName;
+    public Book() {
+    }
+
+    public Book(int bookId, String bookName) {
+        this.bookId = bookId;
+        this.bookName = bookName;
+    }
+
+    //“内容描述”，如果含有文件描述符返回1，否则返回0，几乎所有情况下都是返回0
+    public int describeContents() {
+        return 0;
+    }
+
+    //实现序列化操作，flags标识只有0和1，1表示标识当前对象需要作为返回值返回，不能立即释放资源，几乎所有情况都为0
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(bookId);
+        out.writeString(bookName);
+    }
+
+    //实现反序列化操作
+    public static final Parcelable.Creator<Book> CREATOR = new Parcelable.Creator<Book>() {
+        //从序列化后的对象中创建原始对象
+        public Book createFromParcel(Parcel in) {
+            return new Book(in);
+        }
+        public Book[] newArray(int size) {//创建指定长度的原始对象数组
+            return new Book[size];
+        }
+    };
+
+    private Book(Parcel in) {
+        bookId = in.readInt();
+        bookName = in.readString();
+    }
+
+}
+```
 
 **Binder**
+
+Binder是Android的一个类，它继承了IBinder接口。从IPC的角度来说，Binder是Android中的一种跨进程通信方式，Binder还可以理解为一种虚拟的物理设备，它的设备驱动是/dev/binder，该通信方式在Linux中没有；从Android Framework角度来说，Binder是ServiceManager连接各种Manager(ActivityManager、WindowManager等等)和相应ManagerService的桥梁；从Android应用层来说，Binder是客户端和服务端进行通信的媒介，当bindService的时候，服务端会返回一个包含了服务端业务调用的Binder对象，通过这个Binder对象，客户端就可以获取服务端提供的服务或者数据，这里的服务包含普通服务和基于AIDL的服务。
+
+在Android开发中，Binder主要用在Service中，包括AIDL和Messenger，其中普通Service中的Binder不涉及进程间通信，较为简单；而Messenger的底层其实是AIDL，正是Binder的核心工作机制。
+
+AIDL工具根据AIDL文件自动生成的Java接口的解析：首先，它声明了几个接口方法，同时还声明了几个整型的id用于标识这些方法，id用于标识在transact过程中客户端所请求的到底是哪个方法；接着，它声明了一个内部类Stub，这个Stub就是一个Binder类，当客户端和服务端都位于同一个进程时，方法调用不会走跨进程的transact过程，而当两者位于不同进程时，方法调用需要走transact过程，这个逻辑由Stub内部的代理类Proxy来完成。
+
+AIDL接口的核心就是它的内部类Stub和Stub内部的代理类Proxy。 下面分析其中的方法：
+
+* `DESCRIPTOR`:Binder的唯一标识，一般用当前Binder的类名表示，比如“com.example.android.MyAIDLInterface”。
+* `asInterface(android.os.IBinder obj)`：用于将服务端的Binder对象转换成客户端所需的AIDL接口类型的对象，这种转换过程是区分进程的，如果客户端和服务端是在同一个进程中，那么这个方法返回的是服务端的Stub对象本身，否则返回的是系统封装的Stub.Proxy对象。
+* `asBinder()`：返回当前Binder对象。
+* `onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags)`：这个方法运行在服务端中的Binder线程池中，当客户端发起跨进程请求时，远程请求会通过系统底层封装后交由此方法来处理。这个方法的原型是`public Boolean onTransact(int code, Parcelable data, Parcelable reply, int flags)`服务端通过code可以知道客户端请求的目标方法，接着从data中取出所需的参数，然后执行目标方法，执行完毕之后，将结果写入到reply中。如果此方法返回false，说明客户端的请求失败，利用这个特性可以做权限验证(即验证是否有权限调用该服务)。
+* `Proxy#[Method]`：代理类中的接口方法，这些方法运行在客户端，当客户端远程调用此方法时，它的内部实现是：首先创建该方法所需要的参数，然后把方法的参数信息写入到_data中，接着调用transact方法来发起RPC请求，同时当前线程挂起；然后服务端的onTransact方法会被调用，直到RPC过程返回后，当前线程继续执行，并从_reply中取出RPC过程的返回结果，最后返回_reply中的数据。
+
+Binder的工作机制原理图：
+
+![Binder的工作机制原理图](/uploads/20160809/20160814201234.png)
+
+Binder的两个重要方法linkToDeath和unlinkToDeath：
+Binder运行在服务端，如果由于某种原因服务端异常终止了的话会导致客户端的远程调用失败，所以Binder提供了两个配对的方法linkToDeath和unlinkToDeath，通过linkToDeath方法可以给Binder设置一个死亡代理，当Binder死亡的时候客户端就会收到通知，然后就可以重新发起连接请求从而恢复连接了。
+如何给Binder设置死亡代理呢？
+
+(一). 声明一个DeathRecipient对象，DeathRecipient是一个接口，其内部只有一个方法bindeDied，实现这个方法就可以在Binder死亡的时候收到通知了。
+
+``` java
+private IBinder.DeathRecipient mDeathRecipient = new IBinder.DeathRecipient() {
+    @Override
+    public void binderDied() {
+        if (mRemoteBookManager == null) return;
+        mRemoteBookManager.asBinder().unlinkToDeath(mDeathRecipient, 0);
+        mRemoteBookManager = null;
+        // TODO:这里重新绑定远程Service
+    }
+};
+```
+
+(二). 在客户端绑定远程服务成功之后，给binder设置死亡代理：
+
+``` java
+mRemoteBookManager.asBinder().linkToDeath(mDeathRecipient, 0);
+```
+
+2.4 IPC方式
+----------
+
+1. 使用Bundle：Bundle实现了Parcelable接口，Activity、Service和Receiver都支持在Intent中传递Bundle数据。
+
+2. 使用文件共享：这种方式简单，适合在对数据同步要求不高的进程之间进行通信，并且要妥善处理并发读写的问题。
+	
+	SharedPreferences是一个特例，虽然它也是文件的一种，但是由于系统对它的读写有一定的缓存策略，即在内存中会有一份SharedPreferences文件的缓存，因此在多进程模式下，系统对它的读写就变得不可靠，当面对高并发读写访问的时候，有很大几率会丢失数据，因此，不建议在进程间通信中使用SharedPreferences。
+
+3. 使用Messenger：Messenger是一种轻量级的IPC方案，它的底层实现就是AIDL。Messenger是以串行的方式处理请求的，即服务端只能一个个处理，不存在并发执行的情形。
+
+	Messenger的工作原理：
+
+	![Messenger的工作原理图](/uploads/20160809/20160809234757.png)
+
+4. 使用AIDL:首先建一个Service和一个AIDL接口，接着创建一个类继承自AIDL接口中的Stub类并实现Stub类中的抽象方法，在Service的onBind方法中返回这个类的对象，然后客户端就可以绑定服务端Service，建立连接后就可以访问远程服务端的方法了。
+
+	AIDL使用的注意点：
+
+	(1). AIDL支持的数据类型：基本数据类型、String和CharSequence、ArrayList、HashMap、Parcelable以及AIDL；
+	(2). 某些类即使和AIDL文件在同一个包中也要显式import进来；
+	(3). AIDL中除了基本数据类，其他类型的参数都要标上方向：in、out或者inout；
+	(4). AIDL接口中支持方法，不支持声明静态变量；
+	(5). 为了方便AIDL的开发，建议把所有和AIDL相关的类和文件全部放入同一个包中，这样做的好处是，当客户端是另一个应用的时候，可以直接把整个包复制到客户端工程中。
+	(6). AIDL方法是在服务端的Binder线程池中执行的，因此当多个客户端同时连接的时候，会存在多个线程同时访问的情形，所以要在AIDL方法中处理线程同步。
+	(7). RemoteCallbackList是系统专门提供的用于删除跨进程Listener的接口。RemoteCallbackList是一个泛型，支持管理任意的AIDL接口，因为所有的AIDL接口都继承自IInterface接口。
+	(8). 客户端调用远程服务方法时，因为远程方法运行在服务端的binder线程池中，同时客户端线程会被挂起，所以如果该方法过于耗时，而客户端又是UI线程，会导致ANR，所以当确认该远程方法是耗时操作时，应避免客户端在UI线程中调用该方法。同理，当服务器调用客户端的listener方法时，该方法也运行在客户端的binder线程池中，所以如果该方法也是耗时操作，请确认运行在服务端的非UI线程中。另外，因为客户端的回调listener运行在binder线程池中，所以更新UI需要用到handler。
+	(9). 客户端通过IBinder.DeathRecipient来监听Binder死亡，也可以在onServiceDisconnected中监听并重连服务端。区别在于前者是在binder线程池中，访问UI需要用Handler，后者则是UI线程。
+	(10). AIDL可通过自定义权限在onBind或者onTransact中进行权限验证。
+
+5. 使用ContentProvider
+1.ContentProvider主要以表格的形式来组织数据，并且可以包含多个表；
+2.ContentProvider还支持文件数据，比如图片、视频等，系统提供的MediaStore就是文件类型的ContentProvider；
+3.ContentProvider对底层的数据存储方式没有任何要求，可以是SQLite、文件，甚至是内存中的一个对象都行；
+4.要观察ContentProvider中的数据变化情况，可以通过ContentResolver的registerContentObserver方法来注册观察者；
+
+6. 使用Socket
+Socket是网络通信中“套接字”的概念，分为流式套接字和用户数据包套接字两种，分别对应网络的传输控制层的TCP和UDP协议。
+
+2.5 Binder连接池
+--------
+(1). 当项目规模很大的时候，创建很多个Service是不对的做法，因为service是系统资源，太多的service会使得应用看起来很重，所以最好是将所有的AIDL放在同一个Service中去管理。整个工作机制是：每个业务模块创建自己的AIDL接口并实现此接口，这个时候不同业务模块之间是不能有耦合的，所有实现细节我们要单独开来，然后向服务端提供自己的唯一标识和其对应的Binder对象；对于服务端来说，只需要一个Service，服务端提供一个queryBinder接口，这个接口能够根据业务模块的特征来返回相应的Binder对象给它们，不同的业务模块拿到所需的Binder对象后就可以进行远程方法调用了。
+Binder连接池的主要作用就是将每个业务模块的Binder请求统一转发到远程Service去执行，从而避免了重复创建Service的过程。
+
+(2). 作者实现的Binder连接池BinderPool的[实现源码](https://github.com/singwhatiwanna/android-art-res/blob/master/Chapter_2/src/com/ryg/chapter_2/binderpool/BinderPool.java)，建议在AIDL开发工作中引入BinderPool机制。
+
+2.6 选用合适的IPC方式
+---------
+
+![选用合适的IPC方式](/uploads/20160809/20160814191325.png)
 
 // TODO
 
@@ -345,3 +482,57 @@ ViewRoot对应于ViewRootImpl类，它是连接WindowManager和DecorView的纽�
 
 
 
+
+第七章：Android动画深入分析
+=======
+7.1 View动画
+-----------------
+(1)Android动画可分为三大类：view动画、帧动画和属性动画，属性动画是API 11(Android 3.0)的新特性，帧动画一般也认为是view动画。
+(2)AnimationSet的属性android:shareInterpolator表示集合中的动画是否共享同一个插值器，如果集合不指定插值器，那么子动画需要单独指定所需的插值器或者使用默认值。
+(3)自定义动画需要继承Animation抽象类，并重新它的initialize和applyTransformation方法，在initialize方法中做一些初始化工作，在applyTransformation方法中进行相应的矩阵变换，很多时候需要采用Camera类来简化矩阵变换的过程。
+(4)帧动画使用比较简单，但是容易引起OOM，所以在使用的时候应尽量避免使用过多尺寸较大的图片。
+
+7.2 View动画的特殊使用场景
+--------
+
+**Activity的切换效果**
+
+`overridePendingTransition(int enterAnim, int exitAnim)`这个方法必须在`startActivity(Intent)`或者`finish()`之后被调用才能生效。
+
+Fragment也可以添加切换动画，可以通过FragmentTransaction中的setCustomAnimations()方法来添加切换动画，这个切换动画需要是View动画。
+
+7.3 属性动画
+--------
+**使用属性动画**
+
+动画默认时间间隔为300ms，默认帧率为10ms/帧。
+
+nineoldandroids对属性动画做了兼容，在API 11以前的版本其内部是通过代理View动画来实现的，因此在Android低版本上，他的本质还是View动画，尽管使用方法看起来是属性动画。
+
+**对任意属性做动画**
+
+属性动画的原理：属性动画要求动画作用的对象提供该属性的get和set方法，属性动画根据外界传递的该属性的初始值和最终值，以动画的效果多次去调用set方法，每次传递给set方法的值都不一样，确切来说是随着时间的推移，所传递的值越来越接近最终值。总结一下，我们对object的属性abc做动画，如果想让动画生效，要同时满足两个条件：
+
+(1). object必须提供setAbc方法，如果动画的时候没有传递初始值，那么还要提供getAbc方法，因为系统要去取abc属性的初始值(如果这条不满足，程序直接Crash)
+
+(2). object的setAbc对属性abc所做的改变必须能够通过某种方法反映出来，比如会带来UI的改变之类(如果这条不满足，动画无效果但不会Crash)
+
+如果有时动画不生效的原因只满足条件1而未满足条件2，官方文档上告诉我们有3种解决方法：
+
+* 给你的对象加上get和set方法，如果你有权限的话；
+* 用一个类来包装原始对象，间接为其提供get和set方法；
+* 采用ValueAnimator，监听动画过程，自己实现属性的改变。
+
+**属性动画的工作原理**
+
+
+
+7.4 使用动画的注意事项
+--------
+* OOM：尽量避免使用帧动画，使用的话应尽量避免使用过多尺寸较大的图片；
+* 内存泄露：属性动画中的无限循环动画需要在Activity退出的时候及时停止，否则将导致Activity无法释放而造成内存泄露。view动画不存在这个问题；
+* 兼容性问题：某些动画在3.0以下系统上有兼容性问题；
+* view动画的问题：view动画是对view的影像做动画，并不是真正的改变view的状态，因此有时候动画完成之后view无法隐藏，即setVisibility(View.GONE)失效了，此时需要调用view.clearAnimation()清除view动画才行。
+* 不要使用px；
+* 动画元素的交互：在android3.0以前的系统上，view动画和属性动画，新位置均无法触发点击事件，同时，老位置仍然可以触发单击事件。从3.0开始，属性动画的单击事件触发位置为移动后的位置，view动画仍然在原位置；
+* 硬件加速：使用动画的过程中，建议开启硬件加速，这样会提高动画的流畅性。
