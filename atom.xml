@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-08-15T16:09:48.521Z</updated>
+  <updated>2016-08-18T15:09:34.082Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -15,91 +15,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[一步步深入解析AIDL]]></title>
-    <link href="http://yuqirong.me/2016/07/28/%E4%B8%80%E6%AD%A5%E6%AD%A5%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90AIDL/"/>
-    <id>http://yuqirong.me/2016/07/28/一步步深入解析AIDL/</id>
-    <published>2016-07-28T14:55:37.000Z</published>
-    <updated>2016-08-15T16:09:48.521Z</updated>
-    <content type="html"><![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>在 Android 系统中，进程间通信 (IPC) 是一种很重要的机制。IPC 产生的原因是某些情况下需要在两个进程之间进行一些数据的交换。而在深入学习 Android 的过程中难免会遇到 IPC 的相关问题，比如常见的有在自己的应用程序中读取手机联系人的信息，这就涉及到 IPC 了。因为自己的应用程序是一个进程，通讯录也是一个进程，只不过获取通讯录的数据信息是通过 Content Provider 的方式来实现的。</p>
-<p>对于初学者来说，在一开始接触 IPC 时可能会摸不着头脑，因为网上很多博客在讲 Android IPC 时通常都是长篇大论，没有从例子着手。基于以上种种原因以及希望对 AIDL 有一个更深入的理解，本篇博文就诞生了。在 Android 系统中，IPC 的方式有很多种，比如有 Messenger 、AIDL 和 ContentProvider 等。我们今天就来讲讲其中的 AIDL ，AIDL 也是比较常见和经常使用的一种 IPC 方式。希望读者在看完本篇之后对于 AIDL 有一个比较深入的理解。</p>
-<h1 id="u4EC0_u4E48_u662F_AIDL"><a href="#u4EC0_u4E48_u662F_AIDL" class="headerlink" title="什么是 AIDL"></a>什么是 AIDL</h1><p>首先我们对于新的事物都会有一个疑问，那就是什么是 AIDL？</p>
-<p>AIDL 的全称是 Android Interface Definition Language(即 Android 接口定义语言)。通常对于 AIDL 的使用有三步流程：</p>
-<ol>
-<li>定义 AIDL 接口；</li>
-<li>在 Service 中创建对应的 Stub 对象；</li>
-<li>将该服务暴露给其他进程调用；</li>
-</ol>
-<p>讲完了流程，我们就又有一个疑问了，Android系统中实现 IPC 有这么多方式，到底应该在什么情况下使用 AIDL 呢？</p>
-<p>Android 官方文档给出的答案是：</p>
-<p>Note: Using AIDL is necessary only if you allow clients from different applications to access your service for IPC and want to handle multithreading in your service. If you do not need to perform concurrent IPC across different applications, you should create your interface by implementing a Binder or, if you want to perform IPC, but do not need to handle multithreading, implement your interface using a Messenger. Regardless, be sure that you understand Bound Services before implementing an AIDL.</p>
-<p>使用AIDL只有在你允许来自不同应用的客户端跨进程通信访问你的Service，并且想要在你的Service种处理多线程的时候才是必要的。 简单地来说，就是多个客户端，多个线程并发的情况下要使用 AIDL 。官方文档还指出，如果你的 IPC 不需要适用于多个客户端的，那就使用 Binder ；如果你的想要 IPC ，但是不需要多线程，那就选择 Messenger 。</p>
-<p>相信大家到这里对于 AIDL 有一个初步的概念了，那么下面我们就来举个例子讲解一下 AIDL 。</p>
-<h1 id="AIDL_u7684_u4F7F_u7528_u65B9_u6CD5"><a href="#AIDL_u7684_u4F7F_u7528_u65B9_u6CD5" class="headerlink" title="AIDL的使用方法"></a>AIDL的使用方法</h1><p>我们来模拟一下需要进行 IPC 的情况，现在有客户端和服务端，客户端通过 AIDL 来和服务端进行 IPC 。我们假定现在客户端需要传一个 Person 类的对象给服务端，之后服务端回传给客户端一个 Person 类的集合。</p>
-<p>先来看看服务端的相关代码，以下 Person.aidl 文件：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Person.aidl</span></span><br><span class="line"><span class="keyword">package</span> com.yuqirong.aidldemo;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Declare any non-default types here with import statements</span></span><br><span class="line"></span><br><span class="line">parcelable Person;</span><br></pre></td></tr></table></figure>
-<p>注意在 IPC 机制中传递的自定义对象需要序列化，所以要实现 Parcelable 接口。在 AIDL 文件中使用 <code>parcelable</code> 关键字声明。有了 Person.aidl 之后，我们就要创建 AIDL 接口了。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// IMyAidlInterface.aidl</span></span><br><span class="line"><span class="keyword">package</span> com.yuqirong.aidldemo;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Declare any non-default types here with import statements</span></span><br><span class="line"><span class="keyword">import</span> com.yuqirong.aidldemo.Person;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IMyAidlInterface</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Demonstrates some basic types that you can use as parameters</span><br><span class="line">     * and return values in AIDL.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function">List&lt;Person&gt; <span class="title">addPerson</span><span class="params">(in Person person)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在 IMyAidlInterface.aidl 里，主要声明一个用于添加 Person 对象的抽象方法。另外，需要注意以下几点：</p>
-<ol>
-<li>Person 类需要手动去 import ，在 AIDL 文件中不能自动导包；</li>
-<li>在 <code>addPerson</code> 方法里需要声明参数是 in 的，用来表示该参数是传入的。除了 in 之外，还有 out 和 inout ；</li>
-</ol>
-<p>下面我们要创建一个 Service 用于和客户端进行 IPC 。这里还要把该 Service 运行在一个新的进程里。我们只要在 AndroidManifest.xml 中声明 <code>android:process=&quot;:remote&quot;</code> 就行了。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span> <span class="keyword">extends</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"MyService"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> List&lt;Person&gt; persons = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Nullable</span></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        Log.i(TAG,<span class="string">"bind success"</span>);</span><br><span class="line">        <span class="keyword">return</span> mBinder;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> IBinder mBinder = <span class="keyword">new</span> IMyAidlInterface.Stub() &#123;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> List&lt;Person&gt; <span class="title">addPerson</span><span class="params">(Person person)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">            <span class="comment">// 需要同步</span></span><br><span class="line">            <span class="keyword">synchronized</span> (persons)&#123;</span><br><span class="line">                persons.add(person);</span><br><span class="line">                <span class="keyword">return</span> persons;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在上面的代码中我们可以看到在 <code>onBind(Intent intent)</code> 方法中返回了 mBinder ，而客户端正是通过这个 mBinder 来和服务端进行 IPC 的。mBinder 是 IMyAidlInterface.Stub 匿名类的对象，IMyAidlInterface.Stub 其实是一个抽象类，继承自 Binder ，实现 <code>addPerson</code> 方法。这里要注意以下，在 <code>addPerson</code> 的方法中需要将 persons 同步，这是因为在服务端 AIDL 是运行在 Binder 线程池中的，有可能会有多个客户端同时连接，这时候就需要同步以防止数据出错。</p>
-<p>服务端的代码差不多就这些，下面我们来看看客户端的，客户端也是需要 AIDL 文件的，可以从服务端中复制过来。需要注意的是包名和 AIDL 文件都要和服务端保持一致，否则在客户端反序列化的时候会出错。以下只截取了客户端部分关键代码。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 客户端用来和服务端IPC的接口</span></span><br><span class="line"><span class="keyword">private</span> IMyAidlInterface aidlInterface;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 启动服务端的服务，并进行绑定</span></span><br><span class="line">Intent intent = <span class="keyword">new</span> Intent();</span><br><span class="line">intent.setComponent(<span class="keyword">new</span> ComponentName(<span class="string">"com.yuqirong.aidldemo"</span>, <span class="string">"com.yuqirong.aidldemo.MyService"</span>));</span><br><span class="line">bindService(intent, conn, Context.BIND_AUTO_CREATE);</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> ServiceConnection conn = <span class="keyword">new</span> ServiceConnection() &#123;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName name, IBinder service)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 在这里得到了和服务端进行通信的接口</span></span><br><span class="line">        aidlInterface = IMyAidlInterface.Stub.asInterface(service);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName name)</span> </span>&#123;</span><br><span class="line">        aidlInterface = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>客户端通过 Intent 启动并绑定服务端的 Service ，在 <code>onServiceConnected</code> 中通过 binder 对象得到了 aidlInterface 。之后客户端就可以使用 aidlInterface 了：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            List&lt;Person&gt; list = aidlInterface.addPerson(<span class="keyword">new</span> Person(<span class="string">"yuqirong"</span>, <span class="number">21</span>, <span class="string">"13567891023"</span>));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).start();</span><br></pre></td></tr></table></figure>
-<p>我们注意到，在客户端调用 AIDL 接口方法时是新创建了一个子线程去执行的，这是因为在服务端在处理 AIDL 时有可能是很耗时的。如果在主线程中去执行，那么就有可能出现 ANR 的问题。所以为了避免 ANR ，在客户端调用 AIDL 的代码最好在子线程去执行。</p>
-<p>整套 AIDL 的流程基本上就是这样的。通过这个简单的例子，相信对于 AIDL 有了一个初步的了解。下面我们就要去揭开 AIDL 是如何实现 IPC 的神秘面纱。</p>
-<h1 id="u89E3_u6790AIDL"><a href="#u89E3_u6790AIDL" class="headerlink" title="解析AIDL"></a>解析AIDL</h1><p>现在我们终于要来看看 AIDL 是如何工作的？我们可以在工程中的 gen 目录下找到对应 AIDL 编译后的文件：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.yuqirong.aidldemo;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IMyAidlInterface</span> <span class="keyword">extends</span> <span class="title">android</span>.<span class="title">os</span>.<span class="title">IInterface</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/** Local-side IPC implementation stub class. */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Stub</span> <span class="keyword">extends</span> <span class="title">android</span>.<span class="title">os</span>.<span class="title">Binder</span> <span class="keyword">implements</span> <span class="title">com</span>.<span class="title">yuqirong</span>.<span class="title">aidldemo</span>.<span class="title">IMyAidlInterface</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> java.lang.String DESCRIPTOR = <span class="string">"com.yuqirong.aidldemo.IMyAidlInterface"</span>;</span><br><span class="line">        <span class="comment">/** Construct the stub at attach it to the interface. */</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Stub</span><span class="params">()</span></span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.attachInterface(<span class="keyword">this</span>, DESCRIPTOR);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/**</span><br><span class="line">         * Cast an IBinder object into an com.yuqirong.aidldemo.IMyAidlInterface interface,</span><br><span class="line">         * generating a proxy if needed.</span><br><span class="line">         */</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> com.yuqirong.aidldemo.<span class="function">IMyAidlInterface <span class="title">asInterface</span><span class="params">(android.os.IBinder obj)</span></span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> ((obj==<span class="keyword">null</span>)) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);</span><br><span class="line">            <span class="keyword">if</span> (((iin!=<span class="keyword">null</span>)&amp;&amp;(iin <span class="keyword">instanceof</span> com.yuqirong.aidldemo.IMyAidlInterface))) &#123;</span><br><span class="line">                <span class="keyword">return</span> ((com.yuqirong.aidldemo.IMyAidlInterface)iin);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> com.yuqirong.aidldemo.IMyAidlInterface.Stub.Proxy(obj);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="annotation">@Override</span> <span class="keyword">public</span> android.os.<span class="function">IBinder <span class="title">asBinder</span><span class="params">()</span></span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="annotation">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTransact</span><span class="params">(<span class="keyword">int</span> code, android.os.Parcel data, android.os.Parcel reply, <span class="keyword">int</span> flags)</span> <span class="keyword">throws</span> android.os.RemoteException</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">switch</span> (code)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">case</span> INTERFACE_TRANSACTION:</span><br><span class="line">                &#123;</span><br><span class="line">                    reply.writeString(DESCRIPTOR);</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">case</span> TRANSACTION_addPerson:</span><br><span class="line">                &#123;</span><br><span class="line">                    data.enforceInterface(DESCRIPTOR);</span><br><span class="line">                    com.yuqirong.aidldemo.Person _arg0;</span><br><span class="line">                    <span class="keyword">if</span> ((<span class="number">0</span>!=data.readInt())) &#123;</span><br><span class="line">                        _arg0 = com.yuqirong.aidldemo.Person.CREATOR.createFromParcel(data);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">else</span> &#123;</span><br><span class="line">                        _arg0 = <span class="keyword">null</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    java.util.List&lt;com.yuqirong.aidldemo.Person&gt; _result = <span class="keyword">this</span>.addPerson(_arg0);</span><br><span class="line">                    reply.writeNoException();</span><br><span class="line">                    reply.writeTypedList(_result);</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">super</span>.onTransact(code, data, reply, flags);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Proxy</span> <span class="keyword">implements</span> <span class="title">com</span>.<span class="title">yuqirong</span>.<span class="title">aidldemo</span>.<span class="title">IMyAidlInterface</span></span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">private</span> android.os.IBinder mRemote;</span><br><span class="line">            Proxy(android.os.IBinder remote)</span><br><span class="line">            &#123;</span><br><span class="line">                mRemote = remote;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="annotation">@Override</span> <span class="keyword">public</span> android.os.<span class="function">IBinder <span class="title">asBinder</span><span class="params">()</span></span><br><span class="line">            </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> mRemote;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">public</span> java.lang.<span class="function">String <span class="title">getInterfaceDescriptor</span><span class="params">()</span></span><br><span class="line">            </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> DESCRIPTOR;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">/**</span><br><span class="line">             * Demonstrates some basic types that you can use as parameters</span><br><span class="line">             * and return values in AIDL.</span><br><span class="line">             */</span></span><br><span class="line">            <span class="annotation">@Override</span> <span class="keyword">public</span> java.util.List&lt;com.yuqirong.aidldemo.Person&gt; addPerson(com.yuqirong.aidldemo.Person person) <span class="keyword">throws</span> android.os.RemoteException</span><br><span class="line">            &#123;</span><br><span class="line">                android.os.Parcel _data = android.os.Parcel.obtain();</span><br><span class="line">                android.os.Parcel _reply = android.os.Parcel.obtain();</span><br><span class="line">                java.util.List&lt;com.yuqirong.aidldemo.Person&gt; _result;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">                    <span class="keyword">if</span> ((person!=<span class="keyword">null</span>)) &#123;</span><br><span class="line">                        _data.writeInt(<span class="number">1</span>);</span><br><span class="line">                        person.writeToParcel(_data, <span class="number">0</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">else</span> &#123;</span><br><span class="line">                        _data.writeInt(<span class="number">0</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    mRemote.transact(Stub.TRANSACTION_addPerson, _data, _reply, <span class="number">0</span>);</span><br><span class="line">                    _reply.readException();</span><br><span class="line">                    _result = _reply.createTypedArrayList(com.yuqirong.aidldemo.Person.CREATOR);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">finally</span> &#123;</span><br><span class="line">                    _reply.recycle();</span><br><span class="line">                    _data.recycle();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> _result;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TRANSACTION_addPerson = (android.os.IBinder.FIRST_CALL_TRANSACTION + <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Demonstrates some basic types that you can use as parameters</span><br><span class="line">     * and return values in AIDL.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> java.util.List&lt;com.yuqirong.aidldemo.Person&gt; addPerson(com.yuqirong.aidldemo.Person person) <span class="keyword">throws</span> android.os.RemoteException;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可以看到编译后的 IMyAidlInterface.aidl 变成了一个接口，继承自 IInterface 。在 IMyAidlInterface 接口中我们发现主要分成两部分结构：抽象类 Stub 和原来 aidl 中声明的 <code>addPerson</code> 方法。</p>
-<p>重点在于 Stub 类，下面我们来分析一下。从 Stub 类中我们可以看到是继承自 Binder 并且实现了 IMyAidlInterface 接口。 Stub 类的基本结构如下：</p>
-<ul>
-<li><code>asInterface(android.os.IBinder obj)</code> 方法；</li>
-<li><code>asBinder()</code> 方法；</li>
-<li><code>onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags)</code> 方法；</li>
-<li>静态类 <code>Proxy</code>，主要方法是 <code>addPerson(com.yuqirong.aidldemo.Person person)</code> ；</li>
-<li>静态常量 <code>TRANSACTION_addPerson</code> ；</li>
-</ul>
-<p><strong>asInterface(android.os.IBinder obj)</strong></p>
-<p>我们先从 <code>asInterface(android.os.IBinder obj)</code> 方法入手，在上面的代码中可以看到，主要的作用就是根据传入的Binder对象转换成客户端需要的 IMyAidlInterface 接口。如果服务端和客户端处于同一个进程，那么该方法得到的就是服务端 Stub 对象本身，也就是上面 AIDL 例子 MyService 中的 mBinder 对象；否则返回的是系统封装后的 Stub.Proxy ，也就是一个代理类，在这个代理中实现跨进程通信。</p>
-<p><strong>asBinder()</strong></p>
-<p>该方法就是返回当前的 Binder 对象。</p>
-<p><strong>onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags)</strong></p>
-<p>在 <code>onTransact</code> 方法中，根据传入的 code 值会去执行服务端相对应的方法。其中静态变量 <code>TRANSACTION_addPerson</code> 就是其中的 code 值之一(在 AIDL 文件中声明的方法有多少个就有多少个对应的 code )。其中 data 就是服务端方法中所需要的参数，执行完后，最后把方法的返回结果放入 reply 中传递给客户端。若该方法返回 false ，那么客户端请求失败。</p>
-<p><strong>Proxy中的addPerson(com.yuqirong.aidldemo.Person person)</strong></p>
-<p>Proxy 类是实现了 IMyAidlInterface 接口，把其中的 <code>addPerson</code> 方法进行了重写。在方法中一开始创建了两个 Parcel 对象，其中一个用来把方法的参数装入，然后调用 <code>transact</code> 方法执行服务端的代码，执行完后把返回的结果装入另外一个 Parcel 对象中返回。</p>
-<p>看完上面方法的介绍，我们回过头来看看 AIDL 例子中实现的流程。在客户端中通过 Intent 去绑定一个服务端的 Service 。在 <code>onServiceConnected(ComponentName name, IBinder service)</code> 方法中通过返回的 service 可以得到对应的 AIDL 接口的实例。这是调用了 <code>asInterface(android.os.IBinder obj)</code> 方法来完成的。</p>
-<p>客户端在 <code>onServiceConnected(ComponentName name, IBinder service)</code> 中得到的 service 正是服务端中的 mBinder 。当客户端调用 AIDL 接口时，AIDL 通过 Proxy 类中的 <code>addPerson</code> 来调用 <code>transact</code> 方法，<code>transact</code> 方法又会去调用服务端的 <code>onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags)</code> 方法。 <code>onTransact</code> 方法是运行在服务端的 Binder 线程池中的。在 <code>onTransact</code> 中根据 code 执行相关 AIDL 接口的方法，方法的参数从 data 中获取。执行完毕之后把结果装入 reply 中返回给客户端。 AIDL 的流程基本上就是这样子了。</p>
-<p>到了这里，大家就会发现 AIDL 底层的实现就是依靠 Binder 来完成的。为了方便大家的理解，这里给出一张 AIDL 机制的原理图( PS :该图来自于《Android开发艺术探索》，感谢任主席)：</p>
-<p><img src="/uploads/20160728/20160728201234.png" alt="AIDL机制原理图"></p>
-<h1 id="u7ED3_u5C3E"><a href="#u7ED3_u5C3E" class="headerlink" title="结尾"></a>结尾</h1><p>写到这里本篇博文就临近末尾了。 AIDL 在 Android IPC 机制中算得上是很重要的一部分，AIDL 主要是通过 Binder 来实现进程通信的。其实另一种 IPC 的方式 Messenger 底层也是通过 AIDL 来实现的。所以 AIDL 的重要性就不言而喻了。如果有兴趣的同学可以在理解 AIDL 的基础上去看看 Messenger 的源码。当然在上面的 AIDL 例子中的代码是很简单的，没有涉及到死亡代理、权限验证等功能，童鞋们可以自己去把这些相关的去学习下。</p>
-<p>好了，最后附上 AIDL 例子的源码：</p>
-<p><a href="/uploads/20160728/AIDLDemo.rar">AIDLDemo.rar</a></p>
-<p>Goodbye !</p>
-<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><p><a href="/2016/03/31/《Android开发艺术探索》笔记(上)/">《Android开发艺术探索》笔记(上) —— 第二章：IPC机制</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>在 Android 系统中，进程间通信 (IPC) 是一种很重要的机制。IPC 产生的原因是某些情况下需]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="IPC" scheme="http://yuqirong.me/tags/IPC/"/>
-    
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[简单实现炫酷的滑动返回效果]]></title>
     <link href="http://yuqirong.me/2016/07/07/%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E7%82%AB%E9%85%B7%E7%9A%84%E6%BB%91%E5%8A%A8%E8%BF%94%E5%9B%9E%E6%95%88%E6%9E%9C/"/>
     <id>http://yuqirong.me/2016/07/07/简单实现炫酷的滑动返回效果/</id>
     <published>2016-07-06T16:25:04.000Z</published>
-    <updated>2016-07-07T13:46:40.568Z</updated>
+    <updated>2016-08-18T15:09:34.082Z</updated>
     <content type="html"><![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>在如今 app 泛滥的年代里，越来越多的开发者注重用户体验这个方面了。其中，有很多的 app 都有一种功能，那就是滑动返回。比如知乎、百度贴吧等，用户在使用这一类的 app 都可以滑动返回上一个页面。不得不说这个设计很赞，是不是心动了呢？那就继续往下看吧！</p>
 <p>在GitHub上有实现该效果的开源库 <a href="https://github.com/ikew0ng/SwipeBackLayout" target="_blank" rel="external">SwipeBackLayout</a> ，可以看到该库发展得已经非常成熟了。仔细看源码你会惊奇地发现其中的奥秘，没错，正是借助了 ViewDragHelper 来实现滑动返回的效果。ViewDragHelper 我想不必多说了，在我的博客中有很多的效果都是通过它来实现的。那么，下面我们就使用 ViewDragHelper 来实现这个效果吧。</p>
 <h1 id="u81EA_u5B9A_u4E49_u5C5E_u6027"><a href="#u81EA_u5B9A_u4E49_u5C5E_u6027" class="headerlink" title="自定义属性"></a>自定义属性</h1><p>首先，我们应该先定义几个自定义属性，比如说支持用户从左边或者右边滑动返回，丰富用户的选择性。所以现在 attrs.xml 中定义如下属性：</p>
@@ -207,7 +127,7 @@
     <link href="http://yuqirong.me/2016/07/03/%E8%AF%A6%E8%A7%A3CursorAdapter%E4%B8%AD%E7%9A%84filter%E6%9C%BA%E5%88%B6/"/>
     <id>http://yuqirong.me/2016/07/03/详解CursorAdapter中的filter机制/</id>
     <published>2016-07-03T12:35:51.000Z</published>
-    <updated>2016-07-05T15:31:38.539Z</updated>
+    <updated>2016-08-18T15:09:34.098Z</updated>
     <content type="html"><![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>目前在公司中仍处于认知状态，因此没有什么时间写博客了，趁今天是周末就来更新一发。</p>
 <p>关于今天为什么讲 CursorAdapter 的原因，是因为之前在工作的时候有遇到 CursorAdapter 中 filter 的相关问题，于是就想把 CursorAdapter 中的 filter 机制流程好好梳理一下。出于这样的目的，本篇博文就诞生了。</p>
 <p>在阅读本文之前，最好已经有写过 CursorAdapter 中 filter 相关代码的经历，这样可以帮助你更好地理解其中的原理。如果你准备好了，那么接下来就一起来看看吧。</p>
@@ -274,7 +194,7 @@
     <link href="http://yuqirong.me/2016/06/18/%E3%80%8APro%20Git%E3%80%8B%E7%AC%94%E8%AE%B0/"/>
     <id>http://yuqirong.me/2016/06/18/《Pro Git》笔记/</id>
     <published>2016-06-17T16:29:14.000Z</published>
-    <updated>2016-07-05T15:31:38.415Z</updated>
+    <updated>2016-08-18T15:09:33.879Z</updated>
     <content type="html"><![CDATA[<h1 id="u7B2C_u4E00_u7AE0__u8D77_u6B65"><a href="#u7B2C_u4E00_u7AE0__u8D77_u6B65" class="headerlink" title="第一章 起步"></a>第一章 起步</h1><h2 id="1-5__u521D_u6B21_u8FD0_u884C_Git__u524D_u7684_u914D_u7F6E"><a href="#1-5__u521D_u6B21_u8FD0_u884C_Git__u524D_u7684_u914D_u7F6E" class="headerlink" title="1.5 初次运行 Git 前的配置"></a>1.5 初次运行 Git 前的配置</h2><ul>
 <li><p>Git 配置用户名：</p>
 <p>  git config –global user.name “yuqirong”</p>
@@ -488,7 +408,7 @@
     <link href="http://yuqirong.me/2016/06/08/%E5%85%B3%E4%BA%8EAndroid%20M%E7%9A%84%E8%BF%90%E8%A1%8C%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86/"/>
     <id>http://yuqirong.me/2016/06/08/关于Android M的运行权限处理/</id>
     <published>2016-06-08T14:12:20.000Z</published>
-    <updated>2016-07-05T15:31:38.430Z</updated>
+    <updated>2016-08-18T15:09:33.911Z</updated>
     <content type="html"><![CDATA[<p>之前有人在 Android 6.0 的机型上运行了 <a href="https://github.com/yuqirong/DragGridView" target="_blank" rel="external">DragGridView</a> 结果出异常奔溃了。想必问题的原因大家都知道，是 Android 6.0 新引入了在运行时权限申请(Runtime Permissions)的功能。那么这所谓的运行时申请权限究竟是怎么一回事呢，一起来看看吧！</p>
 <p>在 Android 6.0 中，app 如果想要获得某些权限，会在应用中弹出一个对话框，让用户确认是否授予该权限。具体的截图如下：</p>
 <p><img src="/uploads/20160608/20160608161439.png" alt="Runtime Permissions screenshot"></p>
@@ -520,7 +440,7 @@
     <link href="http://yuqirong.me/2016/05/10/%E7%AE%80%E6%98%93%E5%AE%9E%E7%8E%B0Android%E4%B9%9D%E5%AE%AB%E6%A0%BC%E8%A7%A3%E9%94%81/"/>
     <id>http://yuqirong.me/2016/05/10/简易实现Android九宫格解锁/</id>
     <published>2016-05-10T12:09:19.000Z</published>
-    <updated>2016-07-24T07:23:35.957Z</updated>
+    <updated>2016-08-18T15:09:34.082Z</updated>
     <content type="html"><![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>在平常使用手机的过程中，九宫格解锁是我们经常接触到的。常见的比如有锁屏中的九宫格，还有支付宝中的九宫格等。因为九宫格可以保护用户的隐私，所以它的应用面很广泛。那么今天我们就来自定义一个属于自己的九宫格吧！</p>
 <p>首先我们来分析一下实现九宫格解锁的思路：当用户的手指触摸到某一个点时，先判断该点是否在九宫格的某一格范围之内，若在范围内，则该格变成选中的状态；之后用户手指滑动的时候，以该格的圆心为中心，用户手指为终点，两点连线。最后当用户手指抬起时，判断划过的九宫格密码是否和原先的密码匹配。</p>
 <p>大致的思路流程就是上面这样的了，下面我们可以来实践一下。</p>
@@ -578,7 +498,7 @@
     <link href="http://yuqirong.me/2016/04/27/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0ViewPager%E6%8C%87%E7%A4%BA%E5%99%A8/"/>
     <id>http://yuqirong.me/2016/04/27/自定义实现ViewPager指示器/</id>
     <published>2016-04-27T12:09:19.000Z</published>
-    <updated>2016-07-05T15:31:38.524Z</updated>
+    <updated>2016-08-18T15:09:34.098Z</updated>
     <content type="html"><![CDATA[<p>今天来更新一发“自定义实现 ViewPager 指示器”。 ViewPager 指示器相信大家都用过吧，从一开始 JW 大神的 <a href="https://github.com/JakeWharton/ViewPagerIndicator" target="_blank" rel="external">ViewPagerIndicator</a> ，到现在 Material Design 中的 TabLayout 。GitHub 上还有其他形形色色的指示器。那么肯定有人会问：既然有了这么多的指示器可以用，那为什么还要自己自定义呢？其实，我们学习了自定义指示器之后，可以知道 ViewPager 指示器的原理，还可以提高我们代码的水平哦！那还等什么，一起来学习吧。</p>
 <p>首先放上一张效果图，亮亮眼：</p>
 <p><img src="/uploads/20160427/20160427152924.gif" alt="这里写图片描述"></p>
@@ -625,7 +545,7 @@
     <link href="http://yuqirong.me/2016/04/19/%E5%BF%AB%E9%80%9F%E6%89%93%E9%80%A0%E5%B8%A6%E6%9C%89%E8%A7%86%E5%B7%AE%E6%95%88%E6%9E%9C%E7%9A%84ListView/"/>
     <id>http://yuqirong.me/2016/04/19/快速打造带有视差效果的ListView/</id>
     <published>2016-04-19T05:35:32.000Z</published>
-    <updated>2016-07-05T15:31:38.493Z</updated>
+    <updated>2016-08-18T15:09:33.989Z</updated>
     <content type="html"><![CDATA[<p>在上一篇博文中，我们实现了仿美团的下拉刷新。而今天的主题还是与 ListView 有关，这次是来实现具有视差效果的 ListView 。</p>
 <p>那么到底什么是视差效果呢？一起来看效果图就知道了：</p>
 <p><img src="/uploads/20160419/20160419141952.gif" alt="这里写图片描述"></p>
@@ -666,7 +586,7 @@
     <link href="http://yuqirong.me/2016/04/18/%E5%B8%A6%E4%BD%A0%E5%AE%9E%E7%8E%B0%E4%BB%BF%E7%BE%8E%E5%9B%A2%E7%9A%84%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0/"/>
     <id>http://yuqirong.me/2016/04/18/带你实现仿美团的下拉刷新/</id>
     <published>2016-04-18T07:34:03.000Z</published>
-    <updated>2016-07-05T15:31:38.477Z</updated>
+    <updated>2016-08-18T15:09:33.973Z</updated>
     <content type="html"><![CDATA[<p>有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：</p>
 <p><img src="/uploads/20160418/20160418160532.gif" alt="这里写图片描述"></p>
 <p>我们可以大致地分析一下：首先根据下拉改变的 paddingTop 来动态地缩放“绿色椭圆物”,然后当 headerView 的 paddingTop 大于0时，播放美团小人出现的帧动画，最后就是手指松开时播放刷新中的帧动画了。</p>
@@ -716,7 +636,7 @@
     <link href="http://yuqirong.me/2016/04/10/FloatingActionButton%E5%9C%A8%E6%BB%9A%E5%8A%A8%E6%97%B6%E6%98%BE%E7%A4%BA%E6%88%96%E9%9A%90%E8%97%8F/"/>
     <id>http://yuqirong.me/2016/04/10/FloatingActionButton在滚动时显示或隐藏/</id>
     <published>2016-04-10T11:51:22.000Z</published>
-    <updated>2016-07-05T15:31:38.336Z</updated>
+    <updated>2016-08-18T15:09:33.801Z</updated>
     <content type="html"><![CDATA[<p>在Material Design中，FloatingActionButton(即FAB)是一个很重要的元素。而通常在列表向下滚动的时候，FAB应该会隐藏；而在向上滚动时，FAB应该会显示出来。本篇就记录其中一种实现FAB显示或隐藏的方案，主要应用了属性动画。</p>
 <p>其实关于FAB的显示和隐藏，Google官方就提供了其中一种方案：<code>fab.hidden()</code>和<code>fab.show()</code>。但是自带的是FAB缩放的效果。并不是上下移动的效果。</p>
 <p>那么我们就来看看如何实现FAB上下移动的效果吧！</p>
@@ -749,7 +669,7 @@
     <link href="http://yuqirong.me/2016/04/05/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90Scroller%E6%BB%9A%E5%8A%A8%E5%8E%9F%E7%90%86/"/>
     <id>http://yuqirong.me/2016/04/05/深入解析Scroller滚动原理/</id>
     <published>2016-04-05T12:21:10.000Z</published>
-    <updated>2016-07-05T15:31:38.524Z</updated>
+    <updated>2016-08-18T15:09:34.051Z</updated>
     <content type="html"><![CDATA[<p>最近在看《Android开发艺术探索》这本书，不得不赞一句主席写得真好，受益匪浅。在书中的相关章节有介绍用Scroller来实现平滑滚动的效果。而我们今天就来探究一下为什么Scroller能够实现平滑滚动。</p>
 <p>首先我们先来看一下Scroller的用法，基本可概括为“三部曲”：</p>
 <ol>
@@ -801,7 +721,7 @@
     <link href="http://yuqirong.me/2016/04/03/Android%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6%E4%B9%8B%E5%8F%8D%E7%BC%96%E8%AF%91/"/>
     <id>http://yuqirong.me/2016/04/03/Android安全机制之反编译/</id>
     <published>2016-04-02T16:59:11.000Z</published>
-    <updated>2016-07-05T15:31:38.336Z</updated>
+    <updated>2016-08-18T15:09:33.801Z</updated>
     <content type="html"><![CDATA[<p>今天我们就来探讨一下反编译，其实反编译在我一开始学习Android的时候就听说过，但是一直没有去尝试。初次接触应该就是那次“蜻蜓FM v5.0.1 apk”事件了( 此处应有掌声(¯ □ ¯) )。那时根据网上的教程第一次反编译了“蜻蜓FM”的apk，看到了传说中的“普罗米修斯方法”以及“宙斯类”(不得不感慨开发小哥的智商)。之后就是在阅读《Android群英传》时也有相关反编译的内容，觉得有必要记录一下。所以这就是本片写博文的起源了。</p>
 <p>首先关于反编译，我们先要准备几个工具：</p>
 <ul>
@@ -868,7 +788,7 @@
     <link href="http://yuqirong.me/2016/03/31/%E3%80%8AAndroid%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8A)/"/>
     <id>http://yuqirong.me/2016/03/31/《Android开发艺术探索》笔记(上)/</id>
     <published>2016-03-31T11:49:28.000Z</published>
-    <updated>2016-08-14T12:13:53.319Z</updated>
+    <updated>2016-08-18T15:09:33.832Z</updated>
     <content type="html"><![CDATA[<h1 id="u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F"><a href="#u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F" class="headerlink" title="第一章：Activity的生命周期和启动模式"></a>第一章：Activity的生命周期和启动模式</h1><h2 id="1-1_Activity_u7684_u751F_u547D_u5468_u671F_u5168_u9762_u5206_u6790"><a href="#1-1_Activity_u7684_u751F_u547D_u5468_u671F_u5168_u9762_u5206_u6790" class="headerlink" title="1.1 Activity的生命周期全面分析"></a>1.1 Activity的生命周期全面分析</h2><p><strong>典型情况下的生命周期分析</strong></p>
 <p>onStart()和onStop()是从Activity是否可见这个角度来回调的，而onResume()和onPause()是从Activity是否位于前台这个角度来回调的。</p>
 <p>Activity A打开Activity B时，为了不影响B的显示，最好不要在Activity A的onPause()里执行一些耗时操作，可以考虑将这些操作放到onStop()里，这时B已经可见了。</p>
@@ -1188,7 +1108,7 @@ root.setView(view, wparams, panelParentView);
     <link href="http://yuqirong.me/2016/03/23/%E5%88%9D%E6%8E%A2MD%E5%BC%8F%E8%BD%AC%E5%9C%BA%E5%8A%A8%E7%94%BB/"/>
     <id>http://yuqirong.me/2016/03/23/初探MD式转场动画/</id>
     <published>2016-03-23T08:44:22.000Z</published>
-    <updated>2016-07-05T15:31:38.446Z</updated>
+    <updated>2016-08-18T15:09:33.926Z</updated>
     <content type="html"><![CDATA[<p>最近在做MD设计风格的APP，所以在转场动画上当然也得符合MD了。下面就是效果图：</p>
 <p><img src="/uploads/20160323/20160323165423.gif" alt="这里写图片描述"></p>
 <p>一开始并未了解过这种转场动画，原来是Google在SDK中已经给我们提供了。<code>ActivityOptions</code>是 Android 5.0 及以上使用的，但是也提供了<code>ActivityOptionsCompat</code>向下兼容。</p>
@@ -1226,7 +1146,7 @@ root.setView(view, wparams, panelParentView);
     <link href="http://yuqirong.me/2016/03/22/%E5%BF%AB%E9%80%9F%E6%89%93%E9%80%A0%E4%BB%BFAndroid%E8%81%94%E7%B3%BB%E4%BA%BA%E7%95%8C%E9%9D%A2/"/>
     <id>http://yuqirong.me/2016/03/22/快速打造仿Android联系人界面/</id>
     <published>2016-03-22T07:53:24.000Z</published>
-    <updated>2016-07-05T15:31:38.477Z</updated>
+    <updated>2016-08-18T15:09:33.973Z</updated>
     <content type="html"><![CDATA[<p>有段时间没写博客了，趁今天有空就写了一篇。今天的主题就是仿联系人界面。相信大家在平时都见过，就是可以实现快速索引的侧边栏。比如在美团中选择城市的界面：</p>
 <p><img src="/uploads/20160322/20160322200035.png" alt="这里写图片描述"></p>
 <p>我们可以看到在右侧有一个支持快速索引的栏。接下来，我们就要实现这种索引栏。</p>
@@ -1269,7 +1189,7 @@ root.setView(view, wparams, panelParentView);
     <link href="http://yuqirong.me/2016/03/17/%E5%A4%9C%E5%8D%8A%E4%B8%80%E5%BF%86/"/>
     <id>http://yuqirong.me/2016/03/17/夜半一忆/</id>
     <published>2016-03-17T15:13:58.000Z</published>
-    <updated>2016-07-05T15:31:38.446Z</updated>
+    <updated>2016-08-18T15:09:33.942Z</updated>
     <content type="html"><![CDATA[<blockquote class="blockquote-center"><p>素时锦年，稍纵即逝<br>半载青春，流转指间</p>
 </blockquote>
 <p>冬去春来，又一载。</p>
@@ -1301,7 +1221,7 @@ root.setView(view, wparams, panelParentView);
     <link href="http://yuqirong.me/2016/03/08/%E3%80%8AAndroid%E7%BE%A4%E8%8B%B1%E4%BC%A0%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8B)/"/>
     <id>http://yuqirong.me/2016/03/08/《Android群英传》笔记(下)/</id>
     <published>2016-03-08T12:22:27.000Z</published>
-    <updated>2016-08-14T10:08:37.637Z</updated>
+    <updated>2016-08-18T15:09:33.864Z</updated>
     <content type="html"><![CDATA[<h1 id="u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><a href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7" class="headerlink" title="第六章：Android绘图机制与处理技巧"></a>第六章：Android绘图机制与处理技巧</h1><h2 id="6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F"><a href="#6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F" class="headerlink" title="6.1 屏幕的尺寸信息"></a>6.1 屏幕的尺寸信息</h2><p>系统屏幕密度如下</p>
 <ul>
 <li>ldpi—120—240X320分辨率</li>
@@ -2088,7 +2008,7 @@ int heapSize = manager.getLargeMemoryClass();
     <link href="http://yuqirong.me/2016/03/07/%E5%AE%9E%E7%8E%B0WebView%E4%B8%ADJS%E5%92%8CApp%E4%B9%8B%E9%97%B4%E7%9A%84%E4%BA%A4%E4%BA%92/"/>
     <id>http://yuqirong.me/2016/03/07/实现WebView中JS和App之间的交互/</id>
     <published>2016-03-07T11:53:12.000Z</published>
-    <updated>2016-07-05T15:31:38.446Z</updated>
+    <updated>2016-08-18T15:09:33.942Z</updated>
     <content type="html"><![CDATA[<p>今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。</p>
 <p><img src="/uploads/20160307/20160307200816.png" alt="这里写图片的描述"></p>
 <p>之后在脑海中回想到 WebView 中的JS可以和app产生交互，于是搜索了一下，果然网上有类似的实现效果。看了一下，在这里就做一个简单的笔记了以便之后查看。</p>
@@ -2128,7 +2048,7 @@ int heapSize = manager.getLargeMemoryClass();
     <link href="http://yuqirong.me/2016/02/28/%E3%80%8AAndroid%E7%BE%A4%E8%8B%B1%E4%BC%A0%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8A)/"/>
     <id>http://yuqirong.me/2016/02/28/《Android群英传》笔记(上)/</id>
     <published>2016-02-28T12:20:04.000Z</published>
-    <updated>2016-07-05T15:31:38.399Z</updated>
+    <updated>2016-08-18T15:09:33.864Z</updated>
     <content type="html"><![CDATA[<h1 id="u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3"><a href="#u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3" class="headerlink" title="第三章：Android控件架构与自定义控件详解"></a>第三章：Android控件架构与自定义控件详解</h1><h2 id="3-1_Android_u63A7_u4EF6_u67B6_u6784"><a href="#3-1_Android_u63A7_u4EF6_u67B6_u6784" class="headerlink" title="3.1 Android控件架构"></a>3.1 Android控件架构</h2><p>控件分为两类：View和ViewGroup，通过ViewGroup整个界面形成一个树形结构，并且ViewGroup负责对子View的测量与绘制以及传递交互事件。通常在Activity中使用的findViewById()方法，就是在控件树中以树的深度优先遍历来查找对应元素。在每颗控件树的顶部，都有一个ViewParent对象，这就是整棵树的控制核心，所有的交互管理事件都由它来统一调度和分配。</p>
 <p><img src="/uploads/20160228/20160228230641.png" alt="这里写图片描述"></p>
 <p>如上图所示，每个Activity都包含一个Window对象，在Android中Window对象通常由PhoneWindow来实现。PhoneWindow对象又将一个DecorView设置为整个应用的根View。DecorView作为了窗口界面的顶层视图，封装了一些窗口操作的通用方法。可以说，DecorView将要显示的具体内容呈现在了PhoneWindow上，这里所有View的监听事件，都通过WindowManagerService来接收，并通过Activity对象来回调onClickListener。DecorView在显示上分为TitleView和ContentView两部分。ContentView是一个ID为content的FrameLayout，activity_main.xml就是设置在这样一个FrameLayout里。可以通过如下代码获得ContentView：</p>
@@ -2582,7 +2502,7 @@ public void computeScroll() {
     <link href="http://yuqirong.me/2016/02/26/%E4%BD%BF%E7%94%A8RecyclerView%E5%AE%9E%E7%8E%B0%E4%BB%BF%E5%96%B5%E8%A1%97%E6%95%88%E6%9E%9C/"/>
     <id>http://yuqirong.me/2016/02/26/使用RecyclerView实现仿喵街效果/</id>
     <published>2016-02-26T11:50:18.000Z</published>
-    <updated>2016-07-05T15:31:38.430Z</updated>
+    <updated>2016-08-18T15:09:33.911Z</updated>
     <content type="html"><![CDATA[<p>又到更新博客的时间了，本次给大家带来的是在RecyclerView的基础上实现喵街的效果。那么喵街是什么效果呢？下面就贴出效果图：</p>
 <p><img src="/uploads/20160226/20160226205314.gif" alt="这里写图片描述"></p>
 <p>值得一提的是，这是旧版本的特效，新版本的喵街已经去掉了这种效果。</p>
@@ -2613,6 +2533,367 @@ public void computeScroll() {
       <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[九大基本排序算法]]></title>
+    <link href="http://yuqirong.me/2016/02/18/%E4%B9%9D%E5%A4%A7%E5%9F%BA%E6%9C%AC%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/"/>
+    <id>http://yuqirong.me/2016/02/18/九大基本排序算法/</id>
+    <published>2016-02-18T13:56:06.000Z</published>
+    <updated>2016-08-18T15:09:33.911Z</updated>
+    <content type="html"><![CDATA[<h1 id="u5192_u6CE1_u6392_u5E8F"><a href="#u5192_u6CE1_u6392_u5E8F" class="headerlink" title="冒泡排序"></a>冒泡排序</h1><p>冒泡排序的平均复杂度是O(N^2),最好的情况O(N),最坏的情况O(N^2);空间复杂度O(1)；稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] bubbleSort(int[] A, int n) {
+    int temp;
+    for (int i = 0; i &lt; n - 1; i++) {
+        for (int j = 0; j &lt; n - i - 1; j++) {
+            if (A[j] &gt; A[j + 1]) {
+                temp = A[j + 1];
+                A[j + 1] = A[j];
+                A[j] = temp;
+            }
+        }
+    }
+    return A;
+}
+</code></pre><h1 id="u9009_u62E9_u6392_u5E8F"><a href="#u9009_u62E9_u6392_u5E8F" class="headerlink" title="选择排序"></a>选择排序</h1><p>选择排序时间复杂度 O(N^2)，最坏的情况O(N^2);空间复杂度O(1)；不稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] selectionSort(int[] A, int n) {
+    int minPos = 0;
+    int temp;
+    for (int i = 0; i &lt; n - 1; i++) {
+        for (int j = i + 1; j &lt; n; j++) {
+            if (A[j] &lt; A[minPos]) {
+                minPos = j;
+            }
+        }
+        temp = A[minPos];
+        A[minPos] = A[i];
+        A[i] = temp;
+        minPos = i + 1;
+    }
+    return A;
+}
+</code></pre><h1 id="u63D2_u5165_u6392_u5E8F"><a href="#u63D2_u5165_u6392_u5E8F" class="headerlink" title="插入排序"></a>插入排序</h1><p>插入排序的平均复杂度是O(N^2)，最好的情况O(N)，最坏的情况O(N^2);空间复杂度O(1)；稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] insertionSort(int[] A, int n) {
+    int temp;
+    for (int i = 2; i &lt; n; i++) {
+        for (int j = 0; j &lt; i; j++) {
+            if (A[i] &lt; A[j]) {
+                temp = A[j];
+                A[j] = A[i];
+                A[i] = temp;
+            }
+        }
+    }
+    return A;
+}
+</code></pre><h1 id="u5F52_u5E76_u6392_u5E8F"><a href="#u5F52_u5E76_u6392_u5E8F" class="headerlink" title="归并排序"></a>归并排序</h1><p>归并排序时间复杂度O(N*logN),最好的情况O(N*logN)，最坏的情况O(N*logN)；空间复杂度O(N)；稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] mergeSort(int[] A, int n) {
+    if (n &gt; 1) {
+        int k = n / 2;
+        int[] temp1 = new int[k];
+        int[] temp2 = new int[n - k];
+
+        for (int i = 0; i &lt; k; i++) {
+            temp1[i] = A[i];
+        }
+        for (int i = k; i &lt; n; i++) {
+            temp2[i - k] = A[i];
+        }
+        temp1 = mergeSort(temp1, k);
+        temp2 = mergeSort(temp2, n - k);
+
+        int i = 0;
+        int j = 0;
+        int x = 0;
+        int[] temp = new int[n];
+
+        while (i &lt; k &amp;&amp; j &lt; n - k) {
+            if (temp1[i] &lt;= temp2[j]) {
+                temp[x] = temp1[i];
+                x++;
+                i++;
+            } else {
+                temp[x] = temp2[j];
+                x++;
+                j++;
+            }
+        }
+
+        while (i &lt; k) {
+            temp[x] = temp1[i];
+            x++;
+            i++;
+        }
+
+        while (j &lt; n - k) {
+            temp[x] = temp2[j];
+            x++;
+            j++;
+        }
+        return temp;
+    }
+    return A;
+}
+</code></pre><h1 id="u5FEB_u901F_u6392_u5E8F"><a href="#u5FEB_u901F_u6392_u5E8F" class="headerlink" title="快速排序"></a>快速排序</h1><p>快速排序的平均复杂度是O(N*logN)，最好的情况O(N*logN)，最坏的情况O(N^2);空间复杂度O(logN)；不稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] quickSort(int[] A, int n) {
+    qSort(A, 0, n - 1);
+    return A;
+}
+
+/**
+ * 
+ * @param A
+ *            数组
+ * @param start
+ *            数组起始位
+ * @param end
+ *            数组终止位
+ */
+public static void qSort(int[] A, int start, int end) {
+    if (start &lt; end) {
+        Random random = new Random();
+        // 产生一个随机数
+        int nextInt = random.nextInt(end - start + 1) + start;
+        // 把随机位和数组最后一位交换
+        int temp = A[end];
+        A[end] = A[nextInt];
+        A[nextInt] = temp;
+        // 比A[nextInt]小的数的个数
+        int lt = 0;
+
+        for (int i = start; i &lt; end; i++) {
+            if (A[i] &lt;= A[end]) {
+                int temp1 = A[lt + start];
+                A[lt + start] = A[i];
+                A[i] = temp1;
+                lt++;
+            }
+        }
+        // 把数组最后一位和A[start + lt]交换
+        int temp2 = A[start + lt];
+        A[lt + start] = A[end];
+        A[end] = temp2;
+        // 递归
+        qSort(A, start, lt + start - 1);
+        qSort(A, lt + start + 1, end);
+    }
+}
+</code></pre><h1 id="u5806_u6392_u5E8F"><a href="#u5806_u6392_u5E8F" class="headerlink" title="堆排序"></a>堆排序</h1><p>时间复杂度 O(N*logN),最坏O(N*logN);不稳定算法</p>
+<pre><code>/**
+ * 从堆顶中取值，再重新建堆
+ * 
+ * @param A
+ *            数组
+ * @param n
+ *            数组长度
+ * @return
+ */
+private static int[] heapSort(int[] A, int n) {
+    while (n &gt; 0) {
+        sift(A, n);
+        int temp = A[n - 1];
+        A[n - 1] = A[0];
+        A[0] = temp;
+        n--;
+        sift(A, n);
+    }
+    return A;
+}
+
+/**
+ * 建堆
+ * 
+ * @param A
+ * @param n
+ */
+public static void sift(int[] A, int n) {
+    // 最后一个非终端节点
+    int temp = n / 2;
+
+    while (temp &gt; 0) {
+        int tt = 2 * temp - 1;
+        if (2 * temp &lt;= n - 1) {
+            if (A[2 * temp] &lt; A[2 * temp - 1]) {
+                tt = 2 * temp - 1;
+            } else {
+                tt = 2 * temp;
+            }
+        }
+        // 如果子节点大于父节点
+        if (A[temp - 1] &lt; A[tt]) {
+            int t = A[temp - 1];
+            A[temp - 1] = A[tt];
+            A[tt] = t;
+        }
+
+        // 保证下面的堆为大顶堆
+        for (int i = (tt + 1); i &lt;= n; i = 2 * i) {
+            int k = 2 * i - 1;
+            if (k &lt; n) {
+                if (i * 2 + 1 &lt;= n) {
+                    if (A[2 * i] &gt; A[2 * i - 1]) {
+                        k = 2 * i;
+                    }
+                }
+                if (A[i - 1] &lt; A[k]) {
+                    int t = A[i - 1];
+                    A[i - 1] = A[k];
+                    A[k] = t;
+                }
+            }
+        }
+        // 节点自减
+        temp--;
+    }
+}
+</code></pre><h1 id="u5E0C_u5C14_u6392_u5E8F"><a href="#u5E0C_u5C14_u6392_u5E8F" class="headerlink" title="希尔排序"></a>希尔排序</h1><p>希尔排序的平均复杂度是O(N*logN)~O(N^2)，最好的情况O(N^1.3)，最坏的情况O(N^2)；空间复杂度O(1);不稳定算法</p>
+<pre><code>/**
+ * A为数组，n为数组的长度
+ */
+private static int[] shellSort(int[] A, int n) {
+    Random random = new Random();
+    // 步长
+    int step = random.nextInt(n);
+    sSort(A,step);
+    return A;
+}
+
+/**
+ * 
+ * @param A
+ * @param start
+ *            数组起始位
+ * @param end
+ *            数组终止位
+ */
+public static void sSort(int[] A, int step) {
+    // 当步长大于0时循环
+    while (step &gt; 0) {
+        for (int i = step; i &lt; A.length; i++) {
+            int k = i;
+            int temp = k - step;
+            while (temp &gt;= 0) {
+                if (A[k] &lt; A[temp]) {
+                    int temp2 = A[k];
+                    A[k] = A[temp];
+                    A[temp] = temp2;
+                    k = temp;
+                }
+                temp -= step;
+            }
+        }
+        // 步长自减
+        step--;
+    }
+}
+</code></pre><h1 id="u8BA1_u6570_u6392_u5E8F"><a href="#u8BA1_u6570_u6392_u5E8F" class="headerlink" title="计数排序"></a>计数排序</h1><p>时间复杂度 O(N)；</p>
+<pre><code>/**
+ * 
+ * @param A
+ *            数组
+ * @param n
+ *            数组长度
+ * @return
+ */
+private static int[] countingSort(int[] A, int n) {
+    int temp = A[0];
+    for (int i = 1;i&lt;n ;i++) {
+        if(A[i]&gt;temp){
+            temp = A[i];
+        }
+    }
+
+    int[] count = new int[temp+1];
+
+    for (int i = 0; i &lt; n; i++) {
+        count[A[i]]++;
+    }
+    int[] result = new int[n];
+    int length = 0;
+    for (int i = 0; i &lt; count.length; i++) {
+        while(count[i]&gt;0){
+            result[length] = i;
+            count[i]--;
+            length++;
+        }
+    }
+    return result;
+}
+</code></pre><h1 id="u57FA_u6570_u6392_u5E8F"><a href="#u57FA_u6570_u6392_u5E8F" class="headerlink" title="基数排序"></a>基数排序</h1><p>时间复杂度 O (nlog(r)m)，其中r为所采取的基数，而m为堆数;空间复杂度O(N)；稳定算法</p>
+<pre><code>public static int[] radixSort(int[] A, int n) {
+
+    int index = 0;
+    for (int i = 1; i &lt; n; i++) {
+        if (A[i] &gt; A[index]) {
+            index = i;
+        }
+    }
+
+    int temp = A[index];
+    int count = 0;
+    while (temp / 10 &gt; 0) {
+        count++;
+        temp /= 10;
+    }
+    count++;
+
+    int[][] bucket = new int[10][n + 1];
+
+    int temp1 = count;
+    while (count &gt; 0) {
+
+        for (int i = 0; i &lt; bucket.length; i++) {
+            bucket[i][0] = 0;
+        }
+
+        for (int i = 0; i &lt; n; i++) {
+            int num;
+            if (temp1 - count == 0) {
+                num = A[i] % 10;
+            } else {
+                int tt = (int) Math.pow(10, temp1 - count);
+                num = (int) A[i] / tt % 10;
+            }
+            int length = bucket[num][0];
+            bucket[num][length + 1] = A[i];
+            length++;
+            bucket[num][0] = length;
+        }
+        int length = 0;
+        for (int i = 0; i &lt; 10; i++) {
+            for (int j = 0; j &lt; bucket[i][0]; j++) {
+                A[length] = bucket[i][j + 1];
+                length++;
+            }
+        }
+        count--;
+    }
+    return A;
+}
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u5192_u6CE1_u6392_u5E8F"><a href="#u5192_u6CE1_u6392_u5E8F" class="headerlink" title="冒泡排序"></a>冒泡排序</h1><p>冒泡排序的平均复杂度是O(N^2),最好的情况O]]>
+    </summary>
+    
+      <category term="算法" scheme="http://yuqirong.me/tags/%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="算法" scheme="http://yuqirong.me/categories/%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
