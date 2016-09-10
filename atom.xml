@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-08-18T15:09:33.911Z</updated>
+  <updated>2016-09-10T04:23:11.372Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -13,6 +13,521 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[对于Android日夜间模式实现的探讨]]></title>
+    <link href="http://yuqirong.me/2016/09/08/%E5%AF%B9%E4%BA%8EAndroid%E6%97%A5%E5%A4%9C%E9%97%B4%E6%A8%A1%E5%BC%8F%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%8E%A2%E8%AE%A8/"/>
+    <id>http://yuqirong.me/2016/09/08/对于Android日夜间模式实现的探讨/</id>
+    <published>2016-09-08T10:32:11.000Z</published>
+    <updated>2016-09-10T04:23:11.372Z</updated>
+    <content type="html"><![CDATA[<h1 id="0x0001"><a href="#0x0001" class="headerlink" title="0x0001"></a>0x0001</h1><p>关于 Android 的日间/夜间模式切换相信大家在平时使用 APP 的过程中都遇到过，比如知乎、简书中就有相关的模式切换。实现日间/夜间模式切换的方案也有许多种，趁着今天有空来讲一下日间/夜间模式切换的几种实现方案，也可以做一个横向的对比来看看哪种方案最好。</p>
+<p>在本篇文章中给出了三种实现日间/夜间模式切换的方案：</p>
+<ol>
+<li>使用 setTheme 的方法让 Activity 重新设置主题；</li>
+<li>设置 Android Support Library 中的 UiMode 来支持日间/夜间模式的切换；</li>
+<li>通过资源 id 映射，回调自定义 ThemeChangeListener 接口来处理日间/夜间模式的切换。</li>
+</ol>
+<p>三种方案综合起来可能导致文章的篇幅过长，请耐心阅读。</p>
+<h1 id="0x0002"><a href="#0x0002" class="headerlink" title="0x0002"></a>0x0002</h1><h2 id="u4F7F_u7528_setTheme__u65B9_u6CD5"><a href="#u4F7F_u7528_setTheme__u65B9_u6CD5" class="headerlink" title="使用 setTheme 方法"></a>使用 setTheme 方法</h2><p>我们先来看看使用 setTheme 方法来实现日间/夜间模式切换的方案。这种方案的思路很简单，就是在用户选择夜间模式时，Activity 设置成夜间模式的主题，之后再让 Activity 调用 recreate() 方法重新创建一遍就行了。</p>
+<p>那就动手吧，在 colors.xml 中定义两组颜色，分别表示日间和夜间的主题色：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimary"</span>&gt;</span>#3F51B5<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimaryDark"</span>&gt;</span>#303F9F<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorAccent"</span>&gt;</span>#FF4081<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"nightColorPrimary"</span>&gt;</span>#3b3b3b<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"nightColorPrimaryDark"</span>&gt;</span>#383838<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"nightColorAccent"</span>&gt;</span>#a72b55<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>之后在 styles.xml 中定义两组主题，也就是日间主题和夜间主题：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Base application theme. --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme"</span> <span class="attribute">parent</span>=<span class="value">"Theme.AppCompat.Light.DarkActionBar"</span>&gt;</span><span class="css"></span><br><span class="line">        &lt;!<span class="tag">--</span> <span class="tag">Customize</span> <span class="tag">your</span> <span class="tag">theme</span> <span class="tag">here</span>. <span class="tag">--</span>&gt;</span><br><span class="line">        &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">colorPrimary</span>"&gt;<span class="at_rule">@<span class="keyword">color/colorPrimary&lt;/item&gt;</span></span><br><span class="line">        &lt;item name=<span class="string">"colorPrimaryDark"</span>&gt;@color/colorPrimaryDark&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"colorAccent"</span>&gt;@color/colorAccent&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"android:textColor"</span>&gt;@android:color/black&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"mainBackground"</span>&gt;@android:color/white&lt;/item&gt;</span><br><span class="line">    </span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"NightAppTheme"</span> <span class="attribute">parent</span>=<span class="value">"Theme.AppCompat.Light.DarkActionBar"</span>&gt;</span><span class="css"><span class="at_rule"></span><br><span class="line">        &lt;!-- Customize your theme here. --&gt;</span><br><span class="line">        &lt;item name=<span class="string">"colorPrimary"</span>&gt;@color/nightColorPrimary&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"colorPrimaryDark"</span>&gt;@color/nightColorPrimaryDark&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"colorAccent"</span>&gt;@color/nightColorAccent&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"android:textColor"</span>&gt;@android:color/white&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"mainBackground"</span>&gt;@color/nightColorPrimaryDark&lt;/item&gt;</span><br><span class="line">    </span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在主题中的 <code>mainBackground</code> 属性是我们自定义的属性，用来表示背景色：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"mainBackground"</span> <span class="attribute">format</span>=<span class="value">"color|reference"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>接下来就是看一下布局 activity_main.xml：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"?attr/mainBackground"</span></span><br><span class="line">    <span class="attribute">android:paddingBottom</span>=<span class="value">"@dimen/activity_vertical_margin"</span></span><br><span class="line">    <span class="attribute">android:paddingLeft</span>=<span class="value">"@dimen/activity_horizontal_margin"</span></span><br><span class="line">    <span class="attribute">android:paddingRight</span>=<span class="value">"@dimen/activity_horizontal_margin"</span></span><br><span class="line">    <span class="attribute">android:paddingTop</span>=<span class="value">"@dimen/activity_vertical_margin"</span></span><br><span class="line">    <span class="attribute">tools:context</span>=<span class="value">"com.yuqirong.themedemo.MainActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">Button</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/btn_theme"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"切换日/夜间模式"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/tv"</span></span><br><span class="line">        <span class="attribute">android:layout_below</span>=<span class="value">"@id/btn_theme"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center_horizontal"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"通过setTheme()的方法"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>&lt;RelativeLayout&gt;</code> 的 <code>android:background</code> 属性中，我们使用 <code>&quot;?attr/mainBackground&quot;</code> 来表示，这样就代表着 <code>RelativeLayout</code> 的背景色会去引用在主题中事先定义好的 <code>mainBackground</code> 属性的值。这样就实现了日间/夜间模式切换的换色了。</p>
+<p>最后就是 MainActivity 的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 默认是日间模式</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> theme = R.style.AppTheme;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">		<span class="comment">// 判断是否有主题存储</span></span><br><span class="line">        <span class="keyword">if</span>(savedInstanceState != <span class="keyword">null</span>)&#123;</span><br><span class="line">            theme = savedInstanceState.getInt(<span class="string">"theme"</span>);</span><br><span class="line">            setTheme(theme);</span><br><span class="line">        &#125;</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        Button btn_theme = (Button) findViewById(R.id.btn_theme);</span><br><span class="line">        btn_theme.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                theme = (theme == R.style.AppTheme) ? R.style.NightAppTheme : R.style.AppTheme;</span><br><span class="line">                MainActivity.<span class="keyword">this</span>.recreate();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onSaveInstanceState</span><span class="params">(Bundle outState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onSaveInstanceState(outState);</span><br><span class="line">        outState.putInt(<span class="string">"theme"</span>, theme);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onRestoreInstanceState</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onRestoreInstanceState(savedInstanceState);</span><br><span class="line">        theme = savedInstanceState.getInt(<span class="string">"theme"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 MainActivity 中有几点要注意一下：</p>
+<ol>
+<li><p>调用 <code>recreate()</code> 方法后 Activity 的生命周期会调用 <code>onSaveInstanceState(Bundle outState)</code> 来备份相关的数据，之后也会调用 <code>onRestoreInstanceState(Bundle savedInstanceState)</code> 来还原相关的数据，因此我们把 <code>theme</code> 的值保存进去，以便 Activity 重新创建后使用。</p>
+</li>
+<li><p>我们在 <code>onCreate(Bundle savedInstanceState)</code> 方法中还原得到了 <code>theme</code> 值后，<code>setTheme()</code> 方法一定要在 <code>setContentView()</code> 方法之前调用，否则的话就看不到效果了。</p>
+</li>
+<li><p><code>recreate()</code> 方法是在 API 11 中添加进来的，所以在 Android 2.X 中使用会抛异常。</p>
+</li>
+</ol>
+<p>贴完上面的代码之后，我们来看一下该方案实现的效果图：</p>
+<p><img src="/uploads/20160908/20160909103512.gif" alt="setTheme()效果图gif"></p>
+<h2 id="u4F7F_u7528_Android_Support_Library__u4E2D_u7684_UiMode__u65B9_u6CD5"><a href="#u4F7F_u7528_Android_Support_Library__u4E2D_u7684_UiMode__u65B9_u6CD5" class="headerlink" title="使用 Android Support Library 中的 UiMode 方法"></a>使用 Android Support Library 中的 UiMode 方法</h2><p>使用 UiMode 的方法也很简单，我们需要把 colors.xml 定义为日间/夜间两种。之后根据不同的模式会去选择不同的 colors.xml 。在 Activity 调用 recreate() 之后，就实现了切换日/夜间模式的功能。</p>
+<p>说了这么多，直接上代码。下面是 values/colors.xml ：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimary"</span>&gt;</span>#3F51B5<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimaryDark"</span>&gt;</span>#303F9F<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorAccent"</span>&gt;</span>#FF4081<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"textColor"</span>&gt;</span>#FF000000<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"backgroundColor"</span>&gt;</span>#FFFFFF<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>除了 values/colors.xml 之外，我们还要创建一个 values-night/colors.xml 文件，用来设置夜间模式的颜色，其中 <code>&lt;color&gt;</code> 的 name 必须要和 values/colors.xml 中的相对应：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimary"</span>&gt;</span>#3b3b3b<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimaryDark"</span>&gt;</span>#383838<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorAccent"</span>&gt;</span>#a72b55<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"textColor"</span>&gt;</span>#FFFFFF<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"backgroundColor"</span>&gt;</span>#3b3b3b<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在 styles.xml 中去引用我们在 colors.xml 中定义好的颜色：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Base application theme. --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme"</span> <span class="attribute">parent</span>=<span class="value">"Theme.AppCompat.Light.DarkActionBar"</span>&gt;</span><span class="css"></span><br><span class="line">        &lt;!<span class="tag">--</span> <span class="tag">Customize</span> <span class="tag">your</span> <span class="tag">theme</span> <span class="tag">here</span>. <span class="tag">--</span>&gt;</span><br><span class="line">        &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">colorPrimary</span>"&gt;<span class="at_rule">@<span class="keyword">color/colorPrimary&lt;/item&gt;</span></span><br><span class="line">        &lt;item name=<span class="string">"colorPrimaryDark"</span>&gt;@color/colorPrimaryDark&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"colorAccent"</span>&gt;@color/colorAccent&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"android:textColor"</span>&gt;@color/textColor&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"mainBackground"</span>&gt;@color/backgroundColor&lt;/item&gt;</span><br><span class="line">    </span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>activity_main.xml 布局的内容和上面 setTheme() 方法中的相差无几，这里就不贴出来了。之后的事情就变得很简单了，在 MyApplication 中先选择一个默认的 Mode ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyApplication</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate();</span><br><span class="line">        <span class="comment">// 默认设置为日间模式</span></span><br><span class="line">        AppCompatDelegate.setDefaultNightMode(</span><br><span class="line">                AppCompatDelegate.MODE_NIGHT_NO);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>要注意的是，这里的 Mode 有四种类型可以选择：</p>
+<ul>
+<li>MODE_NIGHT_NO： 使用亮色(light)主题，不使用夜间模式；</li>
+<li>MODE_NIGHT_YES：使用暗色(dark)主题，使用夜间模式；</li>
+<li>MODE_NIGHT_AUTO：根据当前时间自动切换 亮色(light)/暗色(dark)主题；</li>
+<li>MODE_NIGHT_FOLLOW_SYSTEM(默认选项)：设置为跟随系统，通常为 MODE_NIGHT_NO</li>
+</ul>
+<p>当用户点击按钮切换日/夜间时，重新去设置相应的 Mode ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        Button btn_theme = (Button) findViewById(R.id.btn_theme);</span><br><span class="line">        btn_theme.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">int</span> currentNightMode = getResources().getConfiguration().uiMode &amp; Configuration.UI_MODE_NIGHT_MASK;</span><br><span class="line">                getDelegate().setLocalNightMode(currentNightMode == Configuration.UI_MODE_NIGHT_NO</span><br><span class="line">                        ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);</span><br><span class="line">                <span class="comment">// 同样需要调用recreate方法使之生效</span></span><br><span class="line">                recreate();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们来看一下 UiMode 方案实现的效果图：</p>
+<p><img src="/uploads/20160908/20160910011353.gif" alt="UiMode的效果图gif"></p>
+<p>就前两种方法而言，配置比较简单，最后的实现效果也都基本上是一样的。但是缺点就是需要调用 <code>recreate()</code> 使之生效。而让 Activity 重新创建就必须涉及到一些状态的保存。这就增加了一些难度。所以，我们一起来看看第三种解决方法。</p>
+<h2 id="u901A_u8FC7_u8D44_u6E90_id__u6620_u5C04_uFF0C_u56DE_u8C03_u63A5_u53E3"><a href="#u901A_u8FC7_u8D44_u6E90_id__u6620_u5C04_uFF0C_u56DE_u8C03_u63A5_u53E3" class="headerlink" title="通过资源 id 映射，回调接口"></a>通过资源 id 映射，回调接口</h2><p>第三种方法的思路就是根据设置的主题去动态地获取资源 id 的映射，然后使用回调接口的方式让 UI 去设置相关的属性值。我们在这里先规定一下：夜间模式的资源在命名上都要加上后缀 “_night” ，比如日间模式的背景色命名为 color_background ，那么相对应的夜间模式的背景资源就要命名为 color_background_night 。好了，下面就是我们的 Demo 所需要用到的 colors.xml ：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimary"</span>&gt;</span>#3F51B5<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimary_night"</span>&gt;</span>#3b3b3b<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimaryDark"</span>&gt;</span>#303F9F<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimaryDark_night"</span>&gt;</span>#383838<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorAccent"</span>&gt;</span>#FF4081<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorAccent_night"</span>&gt;</span>#a72b55<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"textColor"</span>&gt;</span>#FF000000<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"textColor_night"</span>&gt;</span>#FFFFFF<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"backgroundColor"</span>&gt;</span>#FFFFFF<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"backgroundColor_night"</span>&gt;</span>#3b3b3b<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>可以看到每一项 color 都会有对应的 “_night” 与之匹配。</p>
+<p>看到这里，肯定有人会问，为什么要设置对应的 “_night” ？到底是通过什么方式来设置日/夜间模式的呢？下面就由 ThemeManager 来为你解答：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThemeManager</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 默认是日间模式</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ThemeMode mThemeMode = ThemeMode.DAY;</span><br><span class="line">    <span class="comment">// 主题模式监听器</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> List&lt;OnThemeChangeListener&gt; mThemeChangeListenerList = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    <span class="comment">// 夜间资源的缓存，key : 资源类型, 值&lt;key:资源名称, value:int值&gt;</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> HashMap&lt;String, HashMap&lt;String, Integer&gt;&gt; sCachedNightResrouces = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="comment">// 夜间模式资源的后缀，比如日件模式资源名为：R.color.activity_bg, 那么夜间模式就为 ：R.color.activity_bg_night</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String RESOURCE_SUFFIX = <span class="string">"_night"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 主题模式，分为日间模式和夜间模式</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">enum</span> ThemeMode &#123;</span><br><span class="line">        DAY, NIGHT</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 设置主题模式</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> themeMode</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setThemeMode</span><span class="params">(ThemeMode themeMode)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mThemeMode != themeMode) &#123;</span><br><span class="line">            mThemeMode = themeMode;</span><br><span class="line">            <span class="keyword">if</span> (mThemeChangeListenerList.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">for</span> (OnThemeChangeListener listener : mThemeChangeListenerList) &#123;</span><br><span class="line">                    listener.onThemeChanged();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 根据传入的日间模式的resId得到相应主题的resId，注意：必须是日间模式的resId</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> dayResId 日间模式的resId</span><br><span class="line">     * <span class="doctag">@return</span> 相应主题的resId，若为日间模式，则得到dayResId；反之夜间模式得到nightResId</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getCurrentThemeRes</span><span class="params">(Context context, <span class="keyword">int</span> dayResId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (getThemeMode() == ThemeMode.DAY) &#123;</span><br><span class="line">            <span class="keyword">return</span> dayResId;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 资源名</span></span><br><span class="line">        String entryName = context.getResources().getResourceEntryName(dayResId);</span><br><span class="line">        <span class="comment">// 资源类型</span></span><br><span class="line">        String typeName = context.getResources().getResourceTypeName(dayResId);</span><br><span class="line">        HashMap&lt;String, Integer&gt; cachedRes = sCachedNightResrouces.get(typeName);</span><br><span class="line">        <span class="comment">// 先从缓存中去取，如果有直接返回该id</span></span><br><span class="line">        <span class="keyword">if</span> (cachedRes == <span class="keyword">null</span>) &#123;</span><br><span class="line">            cachedRes = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        &#125;</span><br><span class="line">        Integer resId = cachedRes.get(entryName + RESOURCE_SUFFIX);</span><br><span class="line">        <span class="keyword">if</span> (resId != <span class="keyword">null</span> &amp;&amp; resId != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> resId;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//如果缓存中没有再根据资源id去动态获取</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 通过资源名，资源类型，包名得到资源int值</span></span><br><span class="line">                <span class="keyword">int</span> nightResId = context.getResources().getIdentifier(entryName + RESOURCE_SUFFIX, typeName, context.getPackageName());</span><br><span class="line">                <span class="comment">// 放入缓存中</span></span><br><span class="line">                cachedRes.put(entryName + RESOURCE_SUFFIX, nightResId);</span><br><span class="line">                sCachedNightResrouces.put(typeName, cachedRes);</span><br><span class="line">                <span class="keyword">return</span> nightResId;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Resources.NotFoundException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 注册ThemeChangeListener</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> listener</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">registerThemeChangeListener</span><span class="params">(OnThemeChangeListener listener)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!mThemeChangeListenerList.contains(listener)) &#123;</span><br><span class="line">            mThemeChangeListenerList.add(listener);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 反注册ThemeChangeListener</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> listener</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">unregisterThemeChangeListener</span><span class="params">(OnThemeChangeListener listener)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mThemeChangeListenerList.contains(listener)) &#123;</span><br><span class="line">            mThemeChangeListenerList.remove(listener);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 得到主题模式</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@return</span></span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ThemeMode <span class="title">getThemeMode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mThemeMode;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 主题模式切换监听器</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OnThemeChangeListener</span> </span>&#123;</span><br><span class="line">        <span class="comment">/**</span><br><span class="line">         * 主题切换时回调</span><br><span class="line">         */</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">onThemeChanged</span><span class="params">()</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面 ThemeManager 的代码基本上都有注释，想要看懂并不困难。其中最核心的就是 <code>getCurrentThemeRes</code> 方法了。在这里解释一下 <code>getCurrentThemeRes</code> 的逻辑。参数中的 dayResId 是日间模式的资源id，如果当前主题是日间模式的话，就直接返回 dayResId 。反之当前主题为夜间模式的话，先根据 dayResId 得到资源名称和资源类型。比如现在有一个资源为 R.color.colorPrimary ，那么资源名称就是 colorPrimary ，资源类型就是 color 。然后根据资源类型和资源名称去获取缓存。如果没有缓存，那么就要动态获取资源了。这里使用方法的是</p>
+<pre><code>context.getResources().getIdentifier(String name, String defType, String defPackage)
+</code></pre><ul>
+<li><code>name</code> 参数就是资源名称，不过要注意的是这里的资源名称还要加上后缀 “_night” ，也就是上面在 colors.xml 中定义的名称；</li>
+<li><code>defType</code> 参数就是资源的类型了。比如 color，drawable等；</li>
+<li><code>defPackage</code> 就是资源文件的包名，也就是当前 APP 的包名。</li>
+</ul>
+<p>有了上面的这个方法，就可以通过 R.color.colorPrimary 资源找到对应的 R.color.colorPrimary_night 资源了。最后还要把找到的夜间模式资源加入到缓存中。这样的话以后就直接去缓存中读取，而不用再次去动态查找资源 id 了。</p>
+<p>ThemeManager 中剩下的代码应该都是比较简单的，相信大家都可以看得懂了。</p>
+<p>现在我们来看看 MainActivity 的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> <span class="keyword">implements</span> <span class="title">ThemeManager</span>.<span class="title">OnThemeChangeListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TextView tv;</span><br><span class="line">    <span class="keyword">private</span> Button btn_theme;</span><br><span class="line">    <span class="keyword">private</span> RelativeLayout relativeLayout;</span><br><span class="line">    <span class="keyword">private</span> ActionBar supportActionBar;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        ThemeManager.registerThemeChangeListener(<span class="keyword">this</span>);</span><br><span class="line">        supportActionBar = getSupportActionBar();</span><br><span class="line">        btn_theme = (Button) findViewById(R.id.btn_theme);</span><br><span class="line">        relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);</span><br><span class="line">        tv = (TextView) findViewById(R.id.tv);</span><br><span class="line">        btn_theme.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY</span><br><span class="line">                        ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initTheme</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        tv.setTextColor(getResources().getColor(ThemeManager.getCurrentThemeRes(MainActivity.<span class="keyword">this</span>, R.color.textColor)));</span><br><span class="line">        btn_theme.setTextColor(getResources().getColor(ThemeManager.getCurrentThemeRes(MainActivity.<span class="keyword">this</span>, R.color.textColor)));</span><br><span class="line">        relativeLayout.setBackgroundColor(getResources().getColor(ThemeManager.getCurrentThemeRes(MainActivity.<span class="keyword">this</span>, R.color.backgroundColor)));</span><br><span class="line">        <span class="comment">// 设置标题栏颜色</span></span><br><span class="line">        <span class="keyword">if</span>(supportActionBar != <span class="keyword">null</span>)&#123;</span><br><span class="line">            supportActionBar.setBackgroundDrawable(<span class="keyword">new</span> ColorDrawable(getResources().getColor(ThemeManager.getCurrentThemeRes(MainActivity.<span class="keyword">this</span>, R.color.colorPrimary))));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 设置状态栏颜色</span></span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.LOLLIPOP) &#123;</span><br><span class="line">            Window window = getWindow();</span><br><span class="line">            window.setStatusBarColor(getResources().getColor(ThemeManager.getCurrentThemeRes(MainActivity.<span class="keyword">this</span>, R.color.colorPrimary)));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onThemeChanged</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        initTheme();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        ThemeManager.unregisterThemeChangeListener(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 MainActivity 中实现了 OnThemeChangeListener 接口，这样就可以在主题改变的时候执行回调方法。然后在 <code>initTheme()</code> 中去重新设置 UI 的相关颜色属性值。还有别忘了要在 <code>onDestroy()</code> 中移除 ThemeChangeListener 。</p>
+<p>最后就来看看第三种方法的效果吧：</p>
+<p><img src="/uploads/20160908/20160910114556.gif" alt="动态获取资源id的效果图gif"></p>
+<p>也许有人会说和前两种方法的效果没什么差异啊，但是仔细看就会发现前面两种方法在切换模式的瞬间会有短暂黑屏现象存在，而第三种方法没有。这是因为前两种方法都要调用 <code>recreate()</code> 。而第三种方法不需要 Activity 重新创建，使用回调的方法来实现。</p>
+<h1 id="0x0003"><a href="#0x0003" class="headerlink" title="0x0003"></a>0x0003</h1><p>到了这里，按照套路应该是要总结的时候了。那么就根据上面给的三种方法来一个简单的对比吧：</p>
+<ol>
+<li><p>setTheme 方法：可以配置多套主题，比较容易上手。除了日/夜间模式之外，还可以有其他五颜六色的主题。但是需要调用 recreate() ，切换瞬间会有黑屏闪现的现象；</p>
+</li>
+<li><p>UiMode 方法：优点就是 Android Support Library 中已经支持，简单规范。但是也需要调用 recreate() ，存在黑屏闪现的现象；</p>
+</li>
+<li><p>动态获取资源 id ，回调接口：该方法使用起来比前两个方法复杂，另外在回调的方法中需要设置每一项 UI 相关的属性值。但是不需要调用 recreate() ，没有黑屏闪现的现象。</p>
+</li>
+</ol>
+<p>三种方法整体的对比就如上所示了。当然除了上面的三种方法实现日/夜间模式切换之外，还有比如动态换肤等也都可以实现。方法有很多种，重要的是要根据自身情况选择合适的方法去实现。在下面我会给出其他几种实现日/夜间模式切换方法的链接，可以参考一下。</p>
+<p>好了，到了说再见的时候了。</p>
+<p>Goodbye !</p>
+<p><a href="/uploads/20160908/ThemeDemo_setTheme.rar">setTheme方法的Demo下载</a></p>
+<p><a href="/uploads/20160908/ThemeDemo_UiMode.rar">UiMode方法的Demo下载</a></p>
+<p><a href="/uploads/20160908/ThemeDemo_thememanager.rar">动态获取资源id方法的Demo下载</a></p>
+<h1 id="0x0004"><a href="#0x0004" class="headerlink" title="0x0004"></a>0x0004</h1><p><a href="https://segmentfault.com/a/1190000005736047?f=tt&amp;hmsr=toutiao.io&amp;utm_medium=toutiao.io&amp;utm_source=toutiao.io" target="_blank" rel="external">android 实现【夜晚模式】的另外一种思路</a></p>
+<p><a href="http://www.diycode.cc/topics/269" target="_blank" rel="external">知乎和简书的夜间模式实现套路</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="0x0001"><a href="#0x0001" class="headerlink" title="0x0001"></a>0x0001</h1><p>关于 Android 的日间/夜间模式切换相信大家在平时使用 APP 的过程中都遇到过，比如知乎、简书中就有]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[《Android开发艺术探索》笔记(下)]]></title>
+    <link href="http://yuqirong.me/2016/08/06/%E3%80%8AAndroid%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8B)/"/>
+    <id>http://yuqirong.me/2016/08/06/《Android开发艺术探索》笔记(下)/</id>
+    <published>2016-08-05T16:12:02.000Z</published>
+    <updated>2016-09-06T10:27:25.523Z</updated>
+    <content type="html"><![CDATA[<h1 id="u7B2C_u516B_u7AE0_uFF1A_u7406_u89E3Window_u548CWindowManager"><a href="#u7B2C_u516B_u7AE0_uFF1A_u7406_u89E3Window_u548CWindowManager" class="headerlink" title="第八章：理解Window和WindowManager"></a>第八章：理解Window和WindowManager</h1><h2 id="8-1_Window_u548CWindowManager"><a href="#8-1_Window_u548CWindowManager" class="headerlink" title="8.1 Window和WindowManager"></a>8.1 Window和WindowManager</h2><p>Window是抽象类，具体实现是PhoneWindow，通过WindowManager就可以创建Window。WindowManager是外界访问Window的入口，但是Window的具体实现是在WindowManagerService中，WindowManager和WindowManagerService的交互是一个IPC过程。所有的视图例如Activity、Dialog、Toast都是附加在Window上的。因此，Window是实际上View的直接管理者。</p>
+<p>WindowManager.LayoutParams中的flags参数解析：</p>
+<ul>
+<li>FLAG_NOT_FOCUSABLE：表示window不需要获取焦点，也不需要接收各种输入事件。此标记会同时启用FLAG_NOT_TOUCH_MODAL，最终事件会直接传递给下层的具有焦点的window；</li>
+<li>FLAG_NOT_TOUCH_MODAL：在此模式下，系统会将window区域外的单击事件传递给底层的window，当前window区域内的单击事件则自己处理，一般都需要开启这个标记；</li>
+<li>FLAG_SHOW_WHEN_LOCKED：开启此模式可以让Window显示在锁屏的界面上。</li>
+</ul>
+<p>type参数表示window的类型，window共有三种类型：应用window，子window和系统window。应用window对应着一个Activity，子window不能独立存在，需要附属在特定的父window之上，比如Dialog就是子window。系统window是需要声明权限才能创建的window，比如Toast和系统状态栏这些都是系统window，需要声明的权限是<code>&lt;uses-permission android:name=&quot;android.permission.SYSTEM_ALERT_WINDOW&quot; /&gt;</code>。</p>
+<p>window是分层的，每个window都对应着z-ordered，层级大的会覆盖在层级小的上面，应用window的层级范围是1~99，子window的层级范围是1000~1999，系统window的层级范围是2000~2999。</p>
+<p>WindowManager继承自ViewManager，常用的只有三个方法：addView、updateView和removeView。</p>
+<h2 id="8-2_Window_u7684_u5185_u90E8_u673A_u5236"><a href="#8-2_Window_u7684_u5185_u90E8_u673A_u5236" class="headerlink" title="8.2 Window的内部机制"></a>8.2 Window的内部机制</h2><p>Window是一个抽象的概念，不是实际存在的，它也是以View的形式存在。在实际使用中无法直接访问Window，只能通过WindowManager才能访问Window。每个Window都对应着一个View和一个ViewRootImpl，Window和View通过ViewRootImpl来建立联系。</p>
+<p>Window的添加、删除和更新过程都是IPC过程。WindowManager的实现类(即：WindowManagerImpl)对于addView、updateView和removeView方法都是委托给WindowManagerGlobal类，该类保存了很多数据列表，例如所有window对应的view集合mViews、所有window对应的ViewRootImpl的集合mRoots，其他的还有mParams和mDyingViews等。</p>
+<p><strong>Window的添加过程</strong>：</p>
+<ol>
+<li>WindowManagerGlobal中的addView；</li>
+<li>检查参数是否合法，如果子Window还需要调节布局参数；</li>
+<li>创建ViewRootImpl并将View添加到列表中；</li>
+<li>通过ViewRootImpl的setView来更新界面并完成Window的添加过程。在setView内部会调用requestLayout来完成异步刷新请求。在requestLayout中的scheduleTraversals是View绘制的入口，最终通过WindowSession来完成Window的添加过程，注意其实这里是个IPC过程，最终会通过WindowManagerService的addWindow方法来实现Window的添加。 </li>
+</ol>
+<p><strong>Window的删除过程</strong>：</p>
+<ol>
+<li>WinodwManagerGlobal中的removeView；</li>
+<li>findViewLocked来查找待删除待View的索引，再调用removeViewLocked来做进一步删除；</li>
+<li>removeViewLocked通过ViewRootImpl的die方法来完成删除操作，包括同步和异步两种方式，同步方式可能会导致意外的错误，不推荐，一般使用异步的方式，其实就是通过handler发送了一个删除请求，将View添加到mDyingViews中；</li>
+<li>die方法本质调用了doDie方法，真正删除View的逻辑在该方法的dispatchDetachedFromWindow方法中，主要做了四件事：垃圾回收，通过Session的remove方法删除Window，调用View的dispatchDetachedFromWindow方法同时会回调View的onDetachedFromWindow以及onDetachedFromWindowInternal，调用WindowManagerGlobal的doRemoveView刷新数据。 </li>
+</ol>
+<p><strong>Window的更新过程</strong>：</p>
+<ol>
+<li>WindowManagerGlobal的updateViewLayout；</li>
+<li>更新View的LayoutParams；</li>
+<li>更新ViewImple的LayoutParams，实现对View的重新测量，布局，重绘；</li>
+<li>通过WindowSession更新Window的视图，WindowManagerService.relayoutWindow()。</li>
+</ol>
+<h2 id="8-3_Window_u7684_u521B_u5EFA_u8FC7_u7A0B"><a href="#8-3_Window_u7684_u521B_u5EFA_u8FC7_u7A0B" class="headerlink" title="8.3 Window的创建过程"></a>8.3 Window的创建过程</h2><p><strong>Activity的window创建过程</strong>：</p>
+<ol>
+<li>Activity的启动过程很复杂，最终会由ActivityThread中的performLaunchActivity来完成整个启动过程，在这个方法内部会通过类加载器创建Activity的实例对象，并调用它的attach方法为其关联运行过程中所依赖的一系列上下文环境变量；</li>
+<li>Activity实现了Window的Callback接口，当window接收到外界的状态变化时就会回调Activity的方法，例如onAttachedToWindow、onDetachedFromWindow、dispatchTouchEvent等；</li>
+<li>Activity的Window是由PolicyManager来创建的，它的真正实现是Policy类，它会新建一个PhoneWindow对象，Activity的setContentView的实现是由PhoneWindow来实现的；</li>
+<li>Activity的顶级View是DecorView，它本质上是一个FrameLayout。如果没有DecorView，那么PhoneWindow会先创建一个DecorView，然后加载具体的布局文件并将view添加到DecorView的mContentParent中，最后就是回调Activity的onContentChanged通知Activity视图已经发生了变化；</li>
+<li>还有一个步骤是让WindowManager能够识别DecorView，在ActivityThread调用handleResumeActivity方法时，首先会调用Activity的onResume方法，然后会调用makeVisible方法，这个方法中DecorView真正地完成了添加和显示过程。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ViewManager vm = getWindowManager();</span><br><span class="line">vm.addView(mDecor, getWindow().getAttributes());</span><br><span class="line">mWindowAdded = <span class="keyword">true</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>Dialog的Window创建过程</strong>：</p>
+<p>过程与Activity的Window创建过程类似，普通的Dialog的有一个特别之处，即它必须采用Activity的Context，如果采用Application的Context会报错。原因是Application没有应用token，应用token一般是Activity拥有的。解决的方案就是通过<code>dialog.getWindow.setType</code>方法设置成系统级别的type，记得在manifest中设置权限。</p>
+<p><strong>Toast的Window创建过程</strong>：</p>
+<ol>
+<li>Toast内部有两类IPC：Toast访问NotificationManagerService；NotificationManagerService（下文简称NMS）访问Toast的TN接口；</li>
+<li>Toast属于系统Window，内部视图mNextView一种为系统默认样式，另一种通过setView方法来指定一个自定义View。</li>
+<li>TN是一个Binder类，NMS处理Toast的显示隐藏请求时会跨进程回调TN中的方法，所以TN运行在Binder线程池中，所以需要handler切换到当前发送Toast请求的线程中，也就是说没有Looper的线程是无法弹出Toast的。</li>
+<li>Toast的show方法调用了NMS的enqueueToast方法，该方法先将Toast请求封装成ToastRecord并丢入mToastQueue队列中（非系统应用最多塞50个）。</li>
+<li>NMS通过showNextToastLocked方法来显示当前View，Toast显示由ToastRecord的callback方法中的show方法完成，callback其实就是TN对象的远程Binder，所以最终调用的是TN中的方法，并运行在发起Toast请求应用的Binder线程池中。</li>
+<li>显示以后，NMS通过scheduleTimeoutLocked方法发送延时消息，延时后NMS通过cancelToastLocked方法来隐藏Toast并从队列中移除，隐藏依然通过ToastRecord的callback中的hide方法实现。</li>
+<li>callback回调TN的show和hide方法后，会通过handler发送两个Runnable，里面的handleShow和handleHide方法是真正完成显示和隐藏Toast的地方。handleShow方法中将Toast的视图添加到Window中，handleHide方法将Toast视图从Window中移除。</li>
+</ol>
+<h1 id="u7B2C10_u7AE0_Android_u7684_u6D88_u606F_u673A_u5236"><a href="#u7B2C10_u7AE0_Android_u7684_u6D88_u606F_u673A_u5236" class="headerlink" title="第10章 Android的消息机制"></a>第10章 Android的消息机制</h1><h2 id="10-1_Android_u6D88_u606F_u673A_u5236_u6982_u8FF0"><a href="#10-1_Android_u6D88_u606F_u673A_u5236_u6982_u8FF0" class="headerlink" title="10.1 Android消息机制概述"></a>10.1 Android消息机制概述</h2><p>Android的消息机制主要是指Handler的运行机制，其底层需要MessageQueue和Looper的支撑。MessageQueue是以单链表的数据结构存储消息列表但是以队列的形式对外提供插入和删除消息操作的消息队列。MessageQueue只是消息的存储单元，而Looper则是以无限循环的形式去查找是否有新消息，如果有的话就去处理消息，否则就一直等待着。</p>
+<p>Handler的主要作用是将一个任务切换到某个指定的线程中去执行。</p>
+<ul>
+<li>为什么要提供这个功能呢？</li>
+</ul>
+<p>Android规定UI操作只能在主线程中进行，ViewRootImpl的checkThread方法会验证当前线程是否可以进行UI操作。</p>
+<ul>
+<li>为什么不允许子线程访问UI呢？</li>
+</ul>
+<p>这是因为UI组件不是线程安全的，如果在多线程中并发访问可能会导致UI组件处于不可预期的状态。另外，如果对UI组件的访问进行加锁机制的话又会降低UI访问的效率，所以还是采用单线程模型来处理UI事件。</p>
+<p>Handler的创建会采用当前线程的Looper来构建内部的消息循环系统，如果当前线程中不存在Looper的话就会报错。Handler可以用post方法将一个Runnable投递到消息队列中，也可以用send方法发送一个消息投递到消息队列中，其实post最终还是调用了send方法。</p>
+<h2 id="10-2_Android_u7684_u6D88_u606F_u673A_u5236_u5206_u6790"><a href="#10-2_Android_u7684_u6D88_u606F_u673A_u5236_u5206_u6790" class="headerlink" title="10.2 Android的消息机制分析"></a>10.2 Android的消息机制分析</h2><p>(1).ThreadLocal的工作原理</p>
+<ol>
+<li>ThreadLocal是一个线程内部的数据存储类，通过它可以在指定的线程中存储数据，数据存储以后，只有在指定线程中可以获取到存储的数据，对于其他线程来说则无法获取到数据。一般来说，当某些数据是以线程为作用域并且不同线程具有不同的数据副本的时候，可以考虑使用ThreadLocal。 对于Handler来说，它需要获取当前线程的Looper，而Looper的作用域就是线程并且不同线程具有不同的Looper，这个时候通过ThreadLocal就可以实现Looper在线程中的存取了。</li>
+<li>ThreadLocal的原理：不同线程访问同一个ThreadLocal的get方法时，ThreadLocal内部会从各自的线程中取出一个数组，然后再从数组中根据当前ThreadLocal的索引去查找出对应的value值，不同线程中的数组是不同的，这就是为什么通过ThreadLocal可以在不同线程中维护一套数据的副本并且彼此互不干扰。</li>
+<li><p>ThreadLocal是一个泛型类public class ThreadLocal<t>，下面是它的set方法</t></p>
+<pre><code>public void set(T value) {
+    Thread currentThread = Thread.currentThread();
+    Values values = values(currentThread);
+    if (values == null) {
+        values = initializeValues(currentThread);
+    }
+    values.put(this, value);
+}
+</code></pre><p> Values是Thread类内部专门用来存储线程的ThreadLocal数据的，它内部有一个数组private Object[] table，ThreadLocal的值就存在这个table数组中。如果values的值为null，那么就需要对其进行初始化然后再将ThreadLocal的值进行存储。<br> ThreadLocal数据的存储规则：ThreadLocal的值在table数组中的存储位置总是ThreadLocal的索引+1的位置。</p>
+</li>
+</ol>
+<p>(2).MessageQueue的工作原理</p>
+<ol>
+<li>MessageQueue其实是通过单链表来维护消息列表的，它包含两个主要操作enqueueMessage和next，前者是插入消息，后者是取出一条消息并移除。</li>
+<li>next方法是一个无限循环的方法，如果消息队列中没有消息，那么next方法会一直阻塞在这里。当有新消息到来时，next方法会返回这条消息并将它从链表中移除。</li>
+</ol>
+<p>(3).Looper的工作原理</p>
+<ol>
+<li><p>为一个线程创建Looper的方法，代码如下所示</p>
+<pre><code>new Thread(&quot;test&quot;){
+    @Override
+    public void run() {
+        Looper.prepare();//创建looper
+        Handler handler = new Handler();//可以创建handler了
+        Looper.loop();//开始looper循环
+    }
+}.start();
+</code></pre></li>
+<li><p>Looper的prepareMainLooper方法主要是给主线程也就是ActivityThread创建Looper使用的，本质也是调用了prepare方法。</p>
+</li>
+<li>Looper的quit和quitSafely方法的区别是：前者会直接退出Looper，后者只是设定一个退出标记，然后把消息队列中的已有消息处理完毕后才安全地退出。Looper退出之后，通过Handler发送的消息就会失败，这个时候Handler的send方法会返回false。<br>在子线程中，如果手动为其创建了Looper，那么在所有的事情完成以后应该调用quit方法来终止消息循环，否则这个子线程就会一直处于等待的状态，而如果退出Looper以后，这个线程就会立刻终止，因此建议不需要的时候终止Looper。</li>
+<li>当Looper的quit方法被调用时，Looper就会调用MessageQueue的quit或者quitSafely方法来通知消息队列退出，当消息队列被标记为退出状态时，它的next方法就会返回null。也就是说，Looper必须退出，否则loop方法就会无限循环下去。Looper的loop方法会调用MessageQueue的next方法来获取新消息，而next是一个阻塞操作，当没有消息时，next方法会一直阻塞着在那里，这也导致了loop方法一直阻塞在那里。如果MessageQueue的next方法返回了新消息，Looper就会处理这条消息：msg.target.dispatchMessage(msg)，其中的msg.target就是发送这条消息的Handler对象。</li>
+</ol>
+<p>(4).Handler的工作原理</p>
+<ol>
+<li>Handler就是处理消息的发送和接收之后的处理；</li>
+<li><p>Handler处理消息的过程</p>
+<pre><code>public void dispatchMessage(Message msg) {
+    if (msg.callback != null) {
+        handleCallback(msg);//当message是runnable的情况，也就是Handler的post方法传递的参数，这种情况下直接执行runnable的run方法
+    } else {
+        if (mCallback != null) {//如果创建Handler的时候是给Handler设置了Callback接口的实现，那么此时调用该实现的handleMessage方法
+            if (mCallback.handleMessage(msg)) {
+                return;
+            }
+        }
+        handleMessage(msg);//如果是派生Handler的子类，就要重写handleMessage方法，那么此时就是调用子类实现的handleMessage方法
+    }
+}
+
+private static void handleCallback(Message message) {
+        message.callback.run();
+}
+
+/**
+ * Subclasses must implement this to receive messages.
+ */
+public void handleMessage(Message msg) {
+}
+</code></pre></li>
+<li><p>Handler还有一个特殊的构造方法，它可以通过特定的Looper来创建Handler。</p>
+<pre><code>public Handler(Looper looper){
+  this(looper, null, false);
+}
+</code></pre></li>
+</ol>
+<h2 id="10-3__u4E3B_u7EBF_u7A0B_u7684_u6D88_u606F_u5FAA_u73AF"><a href="#10-3__u4E3B_u7EBF_u7A0B_u7684_u6D88_u606F_u5FAA_u73AF" class="headerlink" title="10.3 主线程的消息循环"></a>10.3 主线程的消息循环</h2><p>Android的主线程就是ActivityThread，主线程的入口方法就是main，其中调用了Looper.prepareMainLooper()来创建主线程的Looper以及MessageQueue，并通过Looper.loop()方法来开启主线程的消息循环。主线程内有一个Handler，即ActivityThread.H，它定义了一组消息类型，主要包含了四大组件的启动和停止等过程，例如LAUNCH_ACTIVITY等。</p>
+<p>ActivityThread通过ApplicationThread和AMS进行进程间通信，AMS以进程间通信的方法完成ActivityThread的请求后会回调ApplicationThread中的Binder方法，然后ApplicationThread会向H发送消息，H收到消息后会将ApplicationThread中的逻辑切换到ActivityThread中去执行，即切换到主线程中去执行，这个过程就是主线程的消息循环模型。</p>
+<h1 id="u7B2C11_u7AE0_Android_u7684_u7EBF_u7A0B_u548C_u7EBF_u7A0B_u6C60"><a href="#u7B2C11_u7AE0_Android_u7684_u7EBF_u7A0B_u548C_u7EBF_u7A0B_u6C60" class="headerlink" title="第11章 Android的线程和线程池"></a>第11章 Android的线程和线程池</h1><h2 id="11-1__u4E3B_u7EBF_u7A0B_u548C_u5B50_u7EBF_u7A0B"><a href="#11-1__u4E3B_u7EBF_u7A0B_u548C_u5B50_u7EBF_u7A0B" class="headerlink" title="11.1 主线程和子线程"></a>11.1 主线程和子线程</h2><ol>
+<li>在Java中默认情况下一个进程只有一个线程，也就是主线程，其他线程都是子线程，也叫工作线程。Android中的主线程主要处理和界面相关的事情，而子线程则往往用于执行耗时操作。线程的创建和销毁的开销较大，所以如果一个进程要频繁地创建和销毁线程的话，都会采用线程池的方式。</li>
+<li>在Android中除了Thread，还有HandlerThread、AsyncTask以及IntentService等也都扮演着线程的角色，只是它们具有不同的特性和使用场景。AsyncTask封装了线程池和Handler，它主要是为了方便开发者在子线程中更新UI。HandlerThread是一种具有消息循环的线程，在它的内部可以使用Handler。IntentService是一个服务，它内部采用HandlerThread来执行任务，当任务执行完毕后就会自动退出。因为它是服务的缘故，所以和后台线程相比，它比较不容易被系统杀死。</li>
+<li>从Android 3.0开始，系统要求网络访问必须在子线程中进行，否则网络访问将会失败并抛出NetworkOnMainThreadException这个异常，这样做是为了避免主线程由于被耗时操作所阻塞从而出现ANR现象。</li>
+<li>AsyncTask是一个抽象泛型类，它提供了Params、Progress、Result三个泛型参数，如果task确实不需要传递具体的参数，那么都可以设置为Void。下面是它的四个核心方法，其中doInBackground不是在主线程执行的。<br>onPreExecute、doInBackground、onProgressUpdate、onPostResult</li>
+</ol>
+<h2 id="11-2_Android_u4E2D_u7684_u7EBF_u7A0B_u5F62_u6001"><a href="#11-2_Android_u4E2D_u7684_u7EBF_u7A0B_u5F62_u6001" class="headerlink" title="11.2 Android中的线程形态"></a>11.2 Android中的线程形态</h2><ol>
+<li><p>AsyncTask的使用过程中的条件限制：</p>
+<p> (1).AsyncTask的类必须在主线程中加载，这个过程在Android 4.1及以上版本中已经被系统自动完成。</p>
+<p> (2).AsyncTask对象必须在主线程中创建，execute方法必须在UI线程中调用。</p>
+<p> (3).一个AsyncTask对象只能执行一次，即只能调用一次execute方法，否则会报运行时异常。</p>
+<p> (4).在Android 1.6之前，AsyncTask是串行执行任务的，Android 1.6的时候AsyncTask开始采用线程池并行处理任务，但是从Android 3.0开始，为了避免AsyncTask带来的并发错误，AsyncTask又采用一个线程来串行执行任务。尽管如此，在Android 3.0以及后续版本中，我们可以使用AsyncTask的executeOnExecutor方法来并行执行任务。但是这个方法是Android 3.0新添加的方法，并不能在低版本上使用。</p>
+</li>
+<li><p>AsyncTask的原理：</p>
+<p> (1).AsyncTask中有两个线程池：SerialExecutor和THREAD_POOL_EXECUTOR。前者是用于任务的排队，默认是串行的线程池；后者用于真正执行任务。AsyncTask中还有一个Handler，即InternalHandler，用于将执行环境从线程池切换到主线程。AsyncTask内部就是通过InternalHandler来发送任务执行的进度以及执行结束等消息。</p>
+<p> (2).AsyncTask排队执行过程：系统先把参数Params封装为FutureTask对象，它相当于Runnable；接着将FutureTask交给SerialExecutor的execute方法，它先把FutureTask插入到任务队列tasks中，如果这个时候没有正在活动的AsyncTask任务，那么就会执行下一个AsyncTask任务，同时当一个AsyncTask任务执行完毕之后，AsyncTask会继续执行其他任务直到所有任务都被执行为止。</p>
+</li>
+<li><p>HandlerThread就是一种可以使用Handler的Thread，它的实现就是在run方法中通过Looper.prepare()来创建消息队列，并通过Looper.loop()来开启消息循环，这样在实际的使用中就允许在HandlerThread中创建Handler了，外界可以通过Handler的消息方式通知HandlerThread执行一个具体的任务。HandlerThread的run方法是一个无限循环，因此当明确不需要再使用HandlerThread的时候，可以通过它的quit或者quitSafely方法来终止线程的执行。HandlerThread的最主要的应用场景就是用在IntentService中。</p>
+</li>
+<li><p>IntentService是一个继承自Service的抽象类，要使用它就要创建它的子类。IntentService适合执行一些高优先级的后台任务，这样不容易被系统杀死。IntentService的onCreate方法中会创建HandlerThread，并使用HandlerThread的Looper来构造一个Handler对象ServiceHandler，这样通过ServiceHandler对象发送的消息最终都会在HandlerThread中执行。IntentService会将Intent封装到Message中，通过ServiceHandler发送出去，在ServiceHandler的handleMessage方法中会调用IntentService的抽象方法onHandleIntent，所以IntentService的子类都要是实现这个方法。</p>
+</li>
+</ol>
+<h2 id="11-3_Android_u4E2D_u7684_u7EBF_u7A0B_u6C60"><a href="#11-3_Android_u4E2D_u7684_u7EBF_u7A0B_u6C60" class="headerlink" title="11.3 Android中的线程池"></a>11.3 Android中的线程池</h2><p><strong>使用线程池的好处</strong>：</p>
+<ol>
+<li>重用线程，避免线程的创建和销毁带来的性能开销；</li>
+<li>能有效控制线程池的最大并发数，避免大量的线程之间因互相抢占系统资源而导致的阻塞现象；</li>
+<li>能够对线程进行简单的管理，并提供定时执行以及指定间隔循环执行等功能。</li>
+</ol>
+<p>Executor只是一个接口，真正的线程池是ThreadPoolExecutor。ThreadPoolExecutor提供了一系列参数来配置线程池，通过不同的参数可以创建不同的线程池，Android的线程池都是通过Executors提供的工厂方法得到的。</p>
+<p><strong>ThreadPoolExecutor的构造参数</strong>：</p>
+<ol>
+<li>corePoolSize：核心线程数，默认情况下，核心线程会在线程中一直存活；</li>
+<li>maximumPoolSize：最大线程数，当活动线程数达到这个数值后，后续的任务将会被阻塞；</li>
+<li>keepAliveTime：非核心线程闲置时的超时时长，超过这个时长，闲置的非核心线程就会被回收；</li>
+<li>unit：用于指定keepAliveTime参数的时间单位，有TimeUnit.MILLISECONDS、TimeUnit.SECONDS、TimeUnit.MINUTES等；</li>
+<li>workQueue：任务队列，通过线程池的execute方法提交的Runnable对象会存储在这个参数中；</li>
+<li>threadFactory：线程工厂，为线程池提供创建新线程的功能。它是一个接口，它只有一个方法Thread newThread(Runnable r)；</li>
+<li>RejectedExecutionHandler：当线程池无法执行新任务时，可能是由于任务队列已满或者是无法成功执行任务，这个时候就会调用这个Handler的rejectedExecution方法来通知调用者，默认情况下，rejectedExecution会直接抛出一个rejectedExecutionException。</li>
+</ol>
+<p><strong>ThreadPoolExecutor执行任务的规则</strong>：</p>
+<ol>
+<li>如果线程池中的线程数未达到核心线程的数量，那么会直接启动一个核心线程来执行任务；</li>
+<li>如果线程池中的线程数量已经达到或者超过核心线程的数量，那么任务会被插入到任务队列中排队等待执行；</li>
+<li>如果在步骤2中无法将任务插入到的任务队列中，可能是任务队列已满，这个时候如果线程数量没有达到规定的最大值，那么会立刻启动非核心线程来执行这个任务；</li>
+<li>如果步骤3中线程数量已经达到线程池规定的最大值，那么就拒绝执行此任务，ThreadPoolExecutor会调用RejectedExecutionHandler的rejectedExecution方法来通知调用者。</li>
+</ol>
+<p><strong>AsyncTask的THREAD_POOL_EXECUTOR线程池的配置</strong>：</p>
+<ol>
+<li>corePoolSize=CPU核心数+1；</li>
+<li>maximumPoolSize=2倍的CPU核心数+1；</li>
+<li>核心线程无超时机制，非核心线程在闲置时间的超时时间为1s；</li>
+<li>任务队列的容量为128。</li>
+</ol>
+<p><strong>Android中常见的4类具有不同功能特性的线程池</strong>：</p>
+<ol>
+<li>FixedThreadPool：线程数量固定的线程池，它只有核心线程；</li>
+<li>CachedThreadPool：线程数量不固定的线程池，它只有非核心线程；</li>
+<li>ScheduledThreadPool：核心线程数量固定，非核心线程数量没有限制的线程池，主要用于执行定时任务和具有固定周期的任务；</li>
+<li>SingleThreadPool：只有一个核心线程的线程池，确保了所有的任务都在同一个线程中按顺序执行。</li>
+</ol>
+<h1 id="u7B2C12_u7AE0_Bitmap_u7684_u52A0_u8F7D_u548CCache"><a href="#u7B2C12_u7AE0_Bitmap_u7684_u52A0_u8F7D_u548CCache" class="headerlink" title="第12章 Bitmap的加载和Cache"></a>第12章 Bitmap的加载和Cache</h1><h2 id="12-1_Bitmap_u7684_u9AD8_u901F_u52A0_u8F7D"><a href="#12-1_Bitmap_u7684_u9AD8_u901F_u52A0_u8F7D" class="headerlink" title="12.1 Bitmap的高速加载"></a>12.1 Bitmap的高速加载</h2><ol>
+<li><p>Bitmap是如何加载的？</p>
+<p> BitmapFactory类提供了四类方法：decodeFile、decodeResource、decodeStream和decodeByteArray从不同来源加载出一个Bitmap对象，最终的实现是在底层实现的。</p>
+</li>
+<li><p>如何高效加载Bitmap？</p>
+<p> 采用BitmapFactory.Options按照一定的采样率来加载所需尺寸的图片，因为imageview所需的图片大小往往小于图片的原始尺寸。</p>
+</li>
+<li><p>BitmapFactory.Options的inSampleSize参数，即采样率<br>官方文档指出采样率的取值应该是2的指数，例如k，那么采样后的图片宽高均为原图片大小的 1/k。<br>如何获取采样率？</p>
+<p> 下面是常用的获取采样率的代码片段：</p>
+<pre><code>public Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
+    // First decode with inJustDecodeBounds=true to check dimensions
+    final BitmapFactory.Options options = new BitmapFactory.Options();
+    options.inJustDecodeBounds = true;
+    BitmapFactory.decodeResource(res, resId, options);
+
+    // Calculate inSampleSize
+    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+    // Decode bitmap with inSampleSize set
+    options.inJustDecodeBounds = false;
+    return BitmapFactory.decodeResource(res, resId, options);
+}
+
+public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    if (reqWidth == 0 || reqHeight == 0) {
+        return 1;
+    }
+
+    // Raw height and width of image
+    final int height = options.outHeight;
+    final int width = options.outWidth;
+    Log.d(TAG, &quot;origin, w= &quot; + width + &quot; h=&quot; + height);
+    int inSampleSize = 1;
+
+    if (height &gt; reqHeight || width &gt; reqWidth) {
+        final int halfHeight = height / 2;
+        final int halfWidth = width / 2;
+
+        // Calculate the largest inSampleSize value that is a power of 2 and
+        // keeps both height and width larger than the requested height and width.
+        while ((halfHeight / inSampleSize) &gt;= reqHeight &amp;&amp; (halfWidth / inSampleSize) &gt;= reqWidth) {
+            inSampleSize *= 2;
+        }
+    }
+
+    Log.d(TAG, &quot;sampleSize:&quot; + inSampleSize);
+    return inSampleSize;
+}
+</code></pre><p> 将inJustDecodeBounds设置为true的时候，BitmapFactory只会解析图片的原始宽高信息，并不会真正的加载图片，所以这个操作是轻量级的。需要注意的是，这个时候BitmapFactory获取的图片宽高信息和图片的位置以及程序运行的设备有关，这都会导致BitmapFactory获取到不同的结果。</p>
+</li>
+</ol>
+<h2 id="12-2_Android_u4E2D_u7684_u7F13_u5B58_u7B56_u7565"><a href="#12-2_Android_u4E2D_u7684_u7F13_u5B58_u7B56_u7565" class="headerlink" title="12.2 Android中的缓存策略"></a>12.2 Android中的缓存策略</h2><ol>
+<li>最常用的缓存算法是LRU，核心是当缓存满时，会优先淘汰那些近期最少使用的缓存对象，系统中采用LRU算法的缓存有两种：LruCache(内存缓存)和DiskLruCache(磁盘缓存)。</li>
+<li>LruCache是Android 3.1才有的，通过support-v4兼容包可以兼容到早期的Android版本。LruCache类是一个线程安全的泛型类，它内部采用一个LinkedHashMap以强引用的方式存储外界的缓存对象，其提供了get和put方法来完成缓存的获取和添加操作，当缓存满时，LruCache会移除较早使用的缓存对象，然后再添加新的缓存对象。</li>
+<li>DiskLruCache磁盘缓存，它不属于Android sdk的一部分，<a href="/uploads/20160826/DiskLruCache.java">它的源码可以在这里下载</a><br>DiskLruCache的创建、缓存查找和缓存添加操作</li>
+<li>ImageLoader的实现 具体内容看源码，<a href="/uploads/20160826/ImageLoader.java">点击下载</a><br>功能：图片的同步/异步加载，图片压缩，内存缓存，磁盘缓存，网络拉取</li>
+</ol>
+<h2 id="12-3_ImageLoader_u7684_u4F7F_u7528"><a href="#12-3_ImageLoader_u7684_u4F7F_u7528" class="headerlink" title="12.3 ImageLoader的使用"></a>12.3 ImageLoader的使用</h2><p>避免发生列表item错位的解决方法：给显示图片的imageview添加tag属性，值为要加载的图片的目标url，显示的时候判断一下url是否匹配。<br>优化列表的卡顿现象</p>
+<ol>
+<li>不要在getView中执行耗时操作，不要在getView中直接加载图片，否则肯定会导致卡顿；</li>
+<li>控制异步任务的执行频率：在列表滑动的时候停止加载图片，等列表停下来以后再加载图片；</li>
+<li>使用硬件加速来解决莫名的卡顿问题，给Activity添加配置<code>android:hardwareAccelerated=&quot;true&quot;</code>。</li>
+</ol>
+<h1 id="u7B2C_u5341_u4E09_u7AE0_uFF1A_u7EFC_u5408_u6280_u672F"><a href="#u7B2C_u5341_u4E09_u7AE0_uFF1A_u7EFC_u5408_u6280_u672F" class="headerlink" title="第十三章：综合技术"></a>第十三章：综合技术</h1><h2 id="13-1__u4F7F_u7528CrashHandler_u6765_u83B7_u53D6_u5E94_u7528_u7684Crash_u4FE1_u606F"><a href="#13-1__u4F7F_u7528CrashHandler_u6765_u83B7_u53D6_u5E94_u7528_u7684Crash_u4FE1_u606F" class="headerlink" title="13.1 使用CrashHandler来获取应用的Crash信息"></a>13.1 使用CrashHandler来获取应用的Crash信息</h2><p>应用发生Crash在所难免，但是如何采集crash信息以供后续开发处理这类问题呢？利用Thread类的setDefaultUncaughtExceptionHandler方法！defaultUncaughtHandler是Thread类的静态成员变量，所以如果我们将自定义的UncaughtExceptionHandler设置给Thread的话，那么当前进程内的所有线程都能使用这个UncaughtExceptionHandler来处理异常了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setDefaultUncaughtExceptionHandler</span><span class="params">(UncaughtExceptionHandler handler)</span> </span>&#123;</span><br><span class="line">    Thread.defaultUncaughtHandler = handler;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里实现了一个简易版本的UncaughtExceptionHandler类的子类<a href="/uploads/20160826/CrashHandler.java">CrashHandler，点击下载</a>。</p>
+<p>CrashHandler的使用方式就是在Application的onCreate方法中设置一下即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在这里为应用设置异常处理程序，然后我们的程序才能捕获未处理的异常</span></span><br><span class="line">CrashHandler crashHandler = CrashHandler.getInstance();</span><br><span class="line">crashHandler.init(<span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="13-2__u4F7F_u7528multidex_u6765_u89E3_u51B3_u65B9_u6CD5_u6570_u8D8A_u754C"><a href="#13-2__u4F7F_u7528multidex_u6765_u89E3_u51B3_u65B9_u6CD5_u6570_u8D8A_u754C" class="headerlink" title="13.2 使用multidex来解决方法数越界"></a>13.2 使用multidex来解决方法数越界</h2><p>在Android中单个dex文件所能够包含的最大方法数是65536，这包含Android Framework、依赖的jar以及应用本身的代码中的所有方法。如果方法数超过了最大值，那么编译会报错<code>DexIndexOverflowException: method ID not in [0, 0xffff]:65536</code>。</p>
+<p>有时方法数没有超过最大值，但是安装在低版本手机上时应用异常终止了，报错：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">E/<span class="string">dalvikvm :</span> Optimization failed</span><br><span class="line">E<span class="regexp">/installed : dexopt failed on '/</span>data<span class="regexp">/dalvik-cache/</span>data<span class="annotation">@app</span><span class="annotation">@com</span>.ryg.multidextest-<span class="number">2.</span>apk<span class="annotation">@classes</span>.dex<span class="string">' res=65280</span></span><br></pre></td></tr></table></figure>
+<p>这是因为应用在安装的时候，系统会通过dexopt程序来优化dex文件，在优化的过程中dexopt采用一个固定大小的缓冲区来存储应用中所有方法的信息，这个缓冲区就是LinearAlloc。LinearAlloc缓冲区在新版本的Android系统中大小是8MB或者16MB，但是在Android 2.2和2.3中却只有5MB，当待安装的应用的方法数比较多的时候，尽管它还没有达到最大方法数，但是它的存储空间仍然有可能超过5MB，这种情况下dexopt就会报错导致安装失败。</p>
+<p>如何解决方法数越界的问题呢？ Google在2014年提出了简单方便的multidex的解决方案。<br>在Android 5.0之前使用multidex需要引入android-support-multidex.jar包，从Android 5.0开始，系统默认支持了multidex，它可以从apk中加载多个dex。这里Multidex方案主要针对AndroidStudio和Gradle编译环境。</p>
+<p>使用Multidex的步骤：</p>
+<ol>
+<li><p>在build.gradle文件中添加multiDexEnabled true</p>
+<pre><code>android {
+    ...
+
+    defaultConfig {
+        ...
+
+        multiDexEnabled true // [添加的配置] enable multidex support
+    }
+    ...
+}
+</code></pre></li>
+<li><p>添加对multidex的依赖</p>
+<pre><code>compile &apos;com.android.support:multidex:1.0.0&apos;
+</code></pre></li>
+<li><p>在代码中添加对multidex的支持，这里有三种方案：</p>
+<p> ① 在AndroidManifest文件中指定Application为MultiDexApplication；</p>
+<pre><code>&lt;application android:name=&quot;android.support.multidex.MultiDexApplication&quot;
+...
+&lt;/application&gt;
+</code></pre><p> ② 让应用的Application继承自MultiDexApplication；</p>
+<p> ③ 重写Application的attachBaseContext方法，这个方法要先于onCreate方法执行；</p>
+<pre><code>public class TestApplication extends Application {
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+}
+</code></pre></li>
+</ol>
+<p>采用上面的配置之后，如果应用的方法数没有越界，那么Gradle并不会生成多个dex文件；如果方法数越界后，Gradle就会在apk中打包2个或者多个dex文件，具体会打包多少个dex文件要看当前项目的代码规模。在有些情况下，可能需要指定主dex文件中所要包含的类，这个可以通过–main-dex-list选项来实现这个功能。</p>
+<p>build.gradle：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">afterEvaluate &#123;</span><br><span class="line">    <span class="keyword">println</span> <span class="string">"afterEvaluate"</span></span><br><span class="line">    tasks.matching &#123;</span><br><span class="line">        it.name.startsWith(<span class="string">'dex'</span>)</span><br><span class="line">    &#125;.<span class="keyword">each</span> &#123; dx -&gt;</span><br><span class="line">        <span class="keyword">def</span> listFile = <span class="keyword">project</span>.rootDir.absolutePath + <span class="string">'/app/maindexlist.txt'</span></span><br><span class="line">        <span class="keyword">println</span> <span class="string">"root dir:"</span> + <span class="keyword">project</span>.rootDir.absolutePath</span><br><span class="line">        <span class="keyword">println</span> <span class="string">"dex task found: "</span> + dx.name</span><br><span class="line">        <span class="keyword">if</span> (dx.additionalParameters == <span class="keyword">null</span>) &#123;</span><br><span class="line">            dx.additionalParameters = []</span><br><span class="line">        &#125;</span><br><span class="line">        dx.additionalParameters += <span class="string">'--multi-dex'</span></span><br><span class="line">        dx.additionalParameters += <span class="string">'--main-dex-list='</span> + listFile</span><br><span class="line">        dx.additionalParameters += <span class="string">'--minimal-main-dex'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>maindexlist.txt：</p>
+<pre><code>com/ryg/multidextest/TestApplication.class
+com/ryg/multidextest/MainActivity.class
+
+// multidex
+android/support/multidex/MultiDex.class
+android/support/multidex/MultiDexApplication.class
+android/support/multidex/MultiDexExtractor.class
+android/support/multidex/MultiDexExtractor$1.class
+android/support/multidex/MultiDex$V4.class
+android/support/multidex/MultiDex$V14.class
+android/support/multidex/MultiDex$V19.class
+android/support/multidex/ZipUtil.class
+android/support/multidex/ZipUtil$CentralDirectory.class
+</code></pre><p>–multi-dex表明当方法数越界时生成多个dex文件，–main-dex-list指定了要在主dex中打包的类的列表，–minimal-main-dex表明只有–main-dex-list所指定的类才能打包到主dex中。multidex的jar包中的9个类必须要打包到主dex中，其次不能在Application中成员以及代码块中访问其他dex中的类，否个程序会因为无法加载对应的类而中止执行。</p>
+<p>Multidex方案可能带来的问题：</p>
+<ol>
+<li>应用启动速度会降低，因为应用启动的时候会加载额外的dex文件，甚至可能出现ANR现象。所以要避免生成较大的dex文件；</li>
+<li>需要做大量的兼容性测试，因为Dalvik LinearAlloc的bug，可能导致使用multidex的应用无法在Android 4.0以前的手机上运行。同时由于Dalvik linearAlloc的bug，有可能会出现应用在运行中由于采用了multidex方案从而产生大量的内存消耗的情况，这会导致奔溃。</li>
+</ol>
+<p>在实际项目中，1.中的现象是客观存在的，但是2.中的现象目前极少遇到。</p>
+<h2 id="13-3_Android_u7684_u52A8_u6001_u52A0_u8F7D_u6280_u672F"><a href="#13-3_Android_u7684_u52A8_u6001_u52A0_u8F7D_u6280_u672F" class="headerlink" title="13.3 Android的动态加载技术"></a>13.3 Android的动态加载技术</h2><p>动态加载技术又称插件化技术，将应用插件化可以减轻应用的内存和CPU占用，还可以在不发布新版本的情况下更新某些模块。不同的插件化方案各有特色，但是都需要解决三个基础性问题：资源访问，Activity生命周期管理和插件ClassLoader的管理。</p>
+<p>宿主和插件：宿主是指普通的apk，插件是经过处理的dex或者apk。在主流的插件化框架中多采用特殊处理的apk作为插件，处理方式往往和编译以及打包环节有关，另外很多插件化框架都需要用到代理Activity的概念，插件Activity的启动大多数是借助一个代理Activity来实现的。</p>
+<p>三个基础性问题的解决方案：</p>
+<ol>
+<li>资源访问：宿主程序调起未安装的插件apk，插件中凡是R开头的资源都不能访问了，因为宿主程序中并没有插件的资源，通过R来访问插件的资源是行不通的。<br>Activity的资源访问是通过ContextImpl来完成的，它有两个方法getAssets()和getResources()方法是用来加载资源的。<br>具体实现方式是通过反射，调用AssetManager的addAssetPath方法添加插件的路径，然后将插件apk中的资源加载到Resources对象中即可。</li>
+<li>Activity生命周期管理：有两种常见的方式，反射方式和接口方式。反射方式就是通过反射去获取Activity的各个生命周期方法，然后在代理Activity中去调用插件Activity对应的生命周期方法即可。<br>反射方式代码繁琐，性能开销大。接口方式将Activity的生命周期方法提取出来作为一个接口，然后通过代理Activity去调用插件Activity的生命周期方法，这样就完成了插件Activity的生命周期管理。</li>
+<li>插件ClassLoader的管理：为了更好地对多插件进行支持，需要合理地去管理各个插件的DexClassLoader，这样同一个插件就可以采用同一个ClassLoader去加载类，从而避免了多个ClassLoader加载同一个类时所引起的类型转换错误。</li>
+</ol>
+<p>其他详细信息看作者插件化框架 <a href="https://github.com/singwhatiwanna/dynamic-load-apk" target="_blank" rel="external">singwhatiwanna/dynamic-load-apk</a></p>
+<h2 id="13-4__u53CD_u7F16_u8BD1_u521D_u6B65"><a href="#13-4__u53CD_u7F16_u8BD1_u521D_u6B65" class="headerlink" title="13.4 反编译初步"></a>13.4 反编译初步</h2><p>反编译可查看<a href="/2016/04/03/Android%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6%E4%B9%8B%E5%8F%8D%E7%BC%96%E8%AF%91/">Android安全机制之反编译</a></p>
+<p>二次打包：</p>
+<pre><code>apktool.bat b [解包后文件所在的位置] [二次打包之后的文件名]
+</code></pre><p>签名：</p>
+<pre><code>java -jar signapk.jar testkey.x509.pem testkey.pk8 [未签名apk] [已签名apk]
+</code></pre><h1 id="u7B2C15_u7AE0_Android_u6027_u80FD_u4F18_u5316"><a href="#u7B2C15_u7AE0_Android_u6027_u80FD_u4F18_u5316" class="headerlink" title="第15章 Android性能优化"></a>第15章 Android性能优化</h1><p>2015年Google关于Android性能优化典范的专题视频：</p>
+<p><a href="https://www.youtube.com/playlist?list=PLWz5rJ2EKKc9CBxr3BVjPTPoDPLdPIFCE" target="_blank" rel="external">Youtube视频地址</a></p>
+<h2 id="15-1_Android_u7684_u6027_u80FD_u4F18_u5316_u65B9_u6CD5"><a href="#15-1_Android_u7684_u6027_u80FD_u4F18_u5316_u65B9_u6CD5" class="headerlink" title="15.1 Android的性能优化方法"></a>15.1 Android的性能优化方法</h2><ol>
+<li><p>布局优化</p>
+<p> (1).删除布局中无用的组件和层级，有选择地使用性能较低的ViewGroup；</p>
+<p> (2).使用<include>、<merge>、<viewstub>等标签：<include>标签主要用于布局重用，<merge>标签一般和<include>配合使用，它可以减少布局中的层级；<viewstub>标签则提供了按需加载的功能，当需要的时候才会将ViewStub中的布局加载到内存，提供了程序的初始化效率。</viewstub></include></merge></include></viewstub></merge></include></p>
+<p> (3).<include>标签只支持android:layout_开头的属性，android:id属性例外。</include></p>
+<p> (4).ViewStub继承自View，它非常轻量级且宽高都为0，它本身不参与任何的布局和绘制过程。实际开发中，很多布局文件在正常情况下不会显示，例如网络异常时的界面，这个时候就没有必要在整个界面初始化的时候加载进行，通过ViewStub可以做到在需要的时候再加载。<br> 如下面示例，android:id是ViewStub的id，而android:inflatedId是布局的根元素的id。</p>
+<pre><code>&lt;ViewStub android:id=&quot;@+id/xxx&quot;
+  android:inflatedId=&quot;@+id/yyy&quot;
+  android:layout=&quot;@layout/zzz&quot;
+  ...
+&lt;/ViewStub&gt;
+</code></pre></li>
+<li><p>绘制优化</p>
+<p> (1).在onDraw中不要创建新的布局对象，因为onDraw会被频繁调用；<br> (2).onDraw方法中不要指定耗时任务，也不能执行成千上万次的循环操作。</p>
+</li>
+<li><p>内存泄露优化</p>
+<p> 可能导致内存泄露的场景很多，例如静态变量、单例模式、属性动画、AsyncTask、Handler等等</p>
+</li>
+<li><p>响应速度优化和ANR日志分析</p>
+<p> (1).ANR出现的情况：Activity如果5s内没有响应屏幕触摸事件或者键盘输入事件就会ANR，而BroadcastReceiver如果10s内没有执行完操作也会出现ANR。</p>
+<p> (2).当一个进程发生了ANR之后，系统会在/data/anr目录下创建一个文件traces.txt，通过分析这个文件就能定位ANR的原因。</p>
+</li>
+<li><p>ListView和Bitmap优化</p>
+<p> (1).ListView优化：采用ViewHolder并避免在getView方法中执行耗时操作；根据列表的滑动状态来绘制任务的执行频率；可以尝试开启硬件加速来使ListView的滑动更加流畅。</p>
+<p> (2).Bitmap优化：根据需要对图片进行采样，详情请看第12章 Bitmap的加载和Cache。</p>
+</li>
+<li><p>线程优化</p>
+<p> 采用线程池，详情请看第11章 Android的线程和线程池。</p>
+</li>
+<li><p>一些性能优化建议</p>
+<p> (1).不要过多使用枚举，枚举占用的内存空间要比整型大；</p>
+<p> (2).常量请使用static final来修饰；</p>
+<p> (3).使用一些Android特有的数据结构，比如SparseArray和Pair等，他们都具有更好的性能；</p>
+<p> (4).适当使用软引用和弱引用；</p>
+<p> (5).采用内存缓存和磁盘缓存；</p>
+<p> (6).尽量采用静态内部类，这样可以避免潜在的由于内部类而导致的内存泄露。</p>
+</li>
+</ol>
+<h2 id="15-2__u5185_u5B58_u6CC4_u9732_u5206_u6790_u4E4BMAT_u5DE5_u5177"><a href="#15-2__u5185_u5B58_u6CC4_u9732_u5206_u6790_u4E4BMAT_u5DE5_u5177" class="headerlink" title="15.2 内存泄露分析之MAT工具"></a>15.2 内存泄露分析之MAT工具</h2><p>MAT是功能强大的内存分析工具，主要有Histograms和Dominator Tree等功能。</p>
+<p>详细的可以查看 <a href="http://gold.xitu.io/entry/563b341e60b20bd506b55592" target="_blank" rel="external">内存泄露从入门到精通三部曲</a>。</p>
+<h2 id="15-3__u63D0_u9AD8_u7A0B_u5E8F_u7684_u53EF_u7EF4_u62A4_u6027"><a href="#15-3__u63D0_u9AD8_u7A0B_u5E8F_u7684_u53EF_u7EF4_u62A4_u6027" class="headerlink" title="15.3 提高程序的可维护性"></a>15.3 提高程序的可维护性</h2><ol>
+<li>命名规范。比如私有成员变量以m开头，静态成员变量以s开头，常量全部以大写字母表示；</li>
+<li>代码的排版上需要留出合理的空白来区分不同的代码块；</li>
+<li>仅为非常关键的代码添加注释，其他地方不用注释。</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u7B2C_u516B_u7AE0_uFF1A_u7406_u89E3Window_u548CWindowManager"><a href="#u7B2C_u516B_u7AE0_uFF1A_u7406_u89E3Window_u548CWindowManager]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="《Android艺术开发探索》" scheme="http://yuqirong.me/tags/%E3%80%8AAndroid%E8%89%BA%E6%9C%AF%E5%BC%80%E5%8F%91%E6%8E%A2%E7%B4%A2%E3%80%8B/"/>
+    
+      <category term="Book Note" scheme="http://yuqirong.me/categories/Book-Note/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[一步步深入解析AIDL]]></title>
@@ -868,7 +1383,7 @@
     <link href="http://yuqirong.me/2016/03/31/%E3%80%8AAndroid%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8A)/"/>
     <id>http://yuqirong.me/2016/03/31/《Android开发艺术探索》笔记(上)/</id>
     <published>2016-03-31T11:49:28.000Z</published>
-    <updated>2016-08-18T15:09:33.832Z</updated>
+    <updated>2016-08-29T03:06:25.188Z</updated>
     <content type="html"><![CDATA[<h1 id="u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F"><a href="#u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F" class="headerlink" title="第一章：Activity的生命周期和启动模式"></a>第一章：Activity的生命周期和启动模式</h1><h2 id="1-1_Activity_u7684_u751F_u547D_u5468_u671F_u5168_u9762_u5206_u6790"><a href="#1-1_Activity_u7684_u751F_u547D_u5468_u671F_u5168_u9762_u5206_u6790" class="headerlink" title="1.1 Activity的生命周期全面分析"></a>1.1 Activity的生命周期全面分析</h2><p><strong>典型情况下的生命周期分析</strong></p>
 <p>onStart()和onStop()是从Activity是否可见这个角度来回调的，而onResume()和onPause()是从Activity是否位于前台这个角度来回调的。</p>
 <p>Activity A打开Activity B时，为了不影响B的显示，最好不要在Activity A的onPause()里执行一些耗时操作，可以考虑将这些操作放到onStop()里，这时B已经可见了。</p>
@@ -1143,7 +1658,154 @@ public boolean onInterceptTouchEvent(MotionEvent event) {
 </code></pre><h1 id="u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406"><a href="#u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406" class="headerlink" title="第四章：View的工作原理"></a>第四章：View的工作原理</h1><h2 id="4-1__u521D_u8BC6ViewRoot_u548CDecorView"><a href="#4-1__u521D_u8BC6ViewRoot_u548CDecorView" class="headerlink" title="4.1 初识ViewRoot和DecorView"></a>4.1 初识ViewRoot和DecorView</h2><p>ViewRoot对应于ViewRootImpl类，它是连接WindowManager和DecorView的纽带，View的三大流程均是通过ViewRoot来完成。在ActivityThread中，当Activity对象被创建完毕后，会将DecorView添加到Window中，同时会创建ViewRootImpl对象，并将ViewRootImpl对象和DecorView建立关联，这个过程可参看如下源码：</p>
 <pre><code>root = new ViewRootImpl(view.getContext(), display);
 root.setView(view, wparams, panelParentView);
-</code></pre><h1 id="u7B2C_u4E03_u7AE0_uFF1AAndroid_u52A8_u753B_u6DF1_u5165_u5206_u6790"><a href="#u7B2C_u4E03_u7AE0_uFF1AAndroid_u52A8_u753B_u6DF1_u5165_u5206_u6790" class="headerlink" title="第七章：Android动画深入分析"></a>第七章：Android动画深入分析</h1><h2 id="7-1_View_u52A8_u753B"><a href="#7-1_View_u52A8_u753B" class="headerlink" title="7.1 View动画"></a>7.1 View动画</h2><p>(1)Android动画可分为三大类：view动画、帧动画和属性动画，属性动画是API 11(Android 3.0)的新特性，帧动画一般也认为是view动画。<br>(2)AnimationSet的属性android:shareInterpolator表示集合中的动画是否共享同一个插值器，如果集合不指定插值器，那么子动画需要单独指定所需的插值器或者使用默认值。<br>(3)自定义动画需要继承Animation抽象类，并重新它的initialize和applyTransformation方法，在initialize方法中做一些初始化工作，在applyTransformation方法中进行相应的矩阵变换，很多时候需要采用Camera类来简化矩阵变换的过程。<br>(4)帧动画使用比较简单，但是容易引起OOM，所以在使用的时候应尽量避免使用过多尺寸较大的图片。</p>
+</code></pre><p>View的绘制流程从ViewRoot的performTraversals方法开始，经过measure、layout和draw三大流程。</p>
+<p>performMeasure方法中会调用measure方法，在measure方法中又会调用onMeasure方法，在onMeasure方法中会对所有的子元素进行measure过程，这个时候measure流程就从父容器传递到子元素了，这样就完成了一次measure过程，layout和draw的过程类似。 (书中175页画出详细的图示)</p>
+<p>measure过程决定了view的宽高，在几乎所有的情况下这个宽高都等同于view最终的宽高。layout过程决定了view的四个顶点的坐标和view实际的宽高，通过getWidth和getHeight方法可以得到最终的宽高。draw过程决定了view的显示。</p>
+<p>DecorView其实是一个FrameLayout，其中包含了一个竖直方向的LinearLayout，上面是标题栏，下面是内容栏(id为android.R.id.content)。内容栏也是一个FrameLayout。</p>
+<h2 id="4-2__u7406_u89E3MeasureSpec"><a href="#4-2__u7406_u89E3MeasureSpec" class="headerlink" title="4.2 理解MeasureSpec"></a>4.2 理解MeasureSpec</h2><ol>
+<li><p><strong>MeasureSpec和LayoutParams的对应关系</strong></p>
+<p> 在view测量的时候，系统会将LayoutParams在父容器的约束下转换成对应的MeasureSpec，然后再根据这个MeasureSpec来确定View测量后的宽高。<br> MeasureSpec不是唯一由LayoutParams决定的，LayoutParams需要和父容器一起才能决定view的MeasureSpec，从而进一步确定view的宽高。对于DecorView，它的MeasureSpec由窗口的尺寸和其自身的LayoutParams来决定；对于普通view，它的MeasureSpec由父容器的MeasureSpec和自身的LayoutParams来共同决定。</p>
+</li>
+<li><p><strong>普通view的MeasureSpec的创建规则</strong></p>
+<p> 当view采用固定宽高时，不管父容器的MeasureSpec是什么，view的MeasureSpec都是精确模式，并且大小是LayoutParams中的大小。<br> 当view的宽高是match_parent时，如果父容器的模式是精确模式，那么view也是精确模式，并且大小是父容器的剩余空间；如果父容器是最大模式，那么view也是最大模式，并且大小是不会超过父容器的剩余空间。<br> 当view的宽高是wrap_content时，不管父容器的模式是精确模式还是最大模式，view的模式总是最大模式，并且大小不超过父容器的剩余空间。</p>
+</li>
+</ol>
+<h2 id="4-3_view_u7684_u5DE5_u4F5C_u6D41_u7A0B"><a href="#4-3_view_u7684_u5DE5_u4F5C_u6D41_u7A0B" class="headerlink" title="4.3 view的工作流程"></a>4.3 view的工作流程</h2><p><strong>measure过程</strong></p>
+<p>getSuggestedMinimumWidth的逻辑：View如果没有背景，那么返回android:minWidth这个属性指定的值，这个值可以为0；如果设置了背景，则返回背景的最小宽度和minWidth中的较大值。</p>
+<p>view的measure过程和Activity的生命周期方法不是同步执行的，因此无法保证Activity执行了onCreate、onStart、onResume时某个view已经测量完毕了。如果view还没有测量完毕，那么获得的宽高就都是0。下面是四种解决该问题的方法：</p>
+<ol>
+<li><p>Activity/View # onWindowFocusChanged<br>onWindowFocusChanged方法表示view已经初始化完毕了，宽高已经准备好了，这个时候去获取宽高是没问题的。这个方法会被调用多次，当Activity继续执行或者暂停执行的时候，这个方法都会被调用。</p>
+</li>
+<li><p>view.post(runnable)<br>通过post将一个runnable投递到消息队列的尾部，然后等待Looper调用此runnable的时候，view也已经初始化好了。</p>
+</li>
+<li><p>ViewTreeObserver<br>使用ViewTreeObserver的众多回调方法可以完成这个功能，比如使用onGlobalLayoutListener接口，当view树的状态发生改变或者view树内部的view的可见性发生改变时，onGlobalLayout方法将被回调。伴随着view树的状态改变，这个方法也会被多次调用。</p>
+</li>
+<li><p>view.measure(int widthMeasureSpec, int heightMeasureSpec)<br>通过手动对view进行measure来得到view的宽高，这个要根据view的LayoutParams来处理：<br>match_parent：无法measure出具体的宽高；</p>
+<p> 精确值：例如100px</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> widthMeasureSpec = MeasureSpec.makeMeasureSpec(<span class="number">100</span>, MeasureSpec.EXACTLY);</span><br><span class="line"><span class="keyword">int</span> heightMeasureSpec = MeasureSpec.makeMeasureSpec(<span class="number">100</span>, MeasureSpec.EXACTLY);</span><br><span class="line">view.measure(widthMeasureSpec, heightMeasureSpec);</span><br></pre></td></tr></table></figure>
+<p> wrap_content：如下measure，设置最大值</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> widthMeasureSpec = MeasureSpec.makeMeasureSpec((<span class="number">1</span> &lt;&lt; <span class="number">30</span>) - <span class="number">1</span>, MeasureSpec.AT_MOST);</span><br><span class="line"><span class="keyword">int</span> heightMeasureSpec = MeasureSpec.makeMeasureSpec((<span class="number">1</span> &lt;&lt; <span class="number">30</span>) - <span class="number">1</span>, MeasureSpec.AT_MOST);</span><br><span class="line">view.measure(widthMeasureSpec, heightMeasureSpec);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><strong>layout过程</strong></p>
+<p>在view的默认实现中，view的测量宽高和最终宽高是相等的，只不过测量宽高形成于measure过程，而最终宽高形成于layout过程。</p>
+<p><strong>draw过程</strong></p>
+<p>draw过程大概有下面几步：</p>
+<ol>
+<li>绘制背景：background.draw(canvas)；</li>
+<li>绘制自己：onDraw()；</li>
+<li>绘制children：dispatchDraw；</li>
+<li>绘制装饰：onDrawScrollBars。</li>
+</ol>
+<p>setWillNotDraw方法用于在一个View不需要绘制时的优化（设置为true时）。</p>
+<h2 id="4-4__u81EA_u5B9A_u4E49view"><a href="#4-4__u81EA_u5B9A_u4E49view" class="headerlink" title="4.4 自定义view"></a>4.4 自定义view</h2><ol>
+<li>直接继承View或ViewGroup的需要自己处理wrap_content。 </li>
+<li>View要在onDraw方法中要处理padding，而ViewGroup要在onMeasure和onLayout中处理padding和margin。 </li>
+<li>尽量不要在View中使用Handler，因为view内部本身已经提供了post系列的方法，完全可以替代Handler的作用。</li>
+<li>view中如果有线程或者动画，需要在onDetachedFromWindow方法中及时停止。</li>
+<li>处理好view的滑动冲突情况。</li>
+</ol>
+<h1 id="u7B2C6_u7AE0_Android_u7684Drawable"><a href="#u7B2C6_u7AE0_Android_u7684Drawable" class="headerlink" title="第6章 Android的Drawable"></a>第6章 Android的Drawable</h1><h2 id="6-1_Drawable_u7B80_u4ECB"><a href="#6-1_Drawable_u7B80_u4ECB" class="headerlink" title="6.1 Drawable简介"></a>6.1 Drawable简介</h2><ol>
+<li>Android的Drawable表示的是一种可以在Canvas上进行绘制的概念，它的种类很多，最常见的就是图片和颜色了。它有两个重要的优点：一是比自定义view要简单；二是非图片类型的drawable占用空间小，利于减小apk大小。</li>
+<li>Drawable是抽象类，是所有Drawable对象的基类。</li>
+<li>Drawable的内部宽/高可以通过getIntrinsicWidth和getIntrinsicHeight方法获取，但是并不是所有Drawable都有内部宽/高。图片Drawable的内部宽高就是图片的宽高，但是颜色Drawable就没有宽高的概念，它一般是作为view的背景，所以会去适应view的大小，这两个方法都是返回-1。</li>
+</ol>
+<h2 id="6-2_Drawable_u5206_u7C7B"><a href="#6-2_Drawable_u5206_u7C7B" class="headerlink" title="6.2 Drawable分类"></a>6.2 Drawable分类</h2><ol>
+<li><p>BitmapDrawable和NinePatchDrawable</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;bitmap / nine-patch
+    xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:src=&quot;@[package:]drawable/drawable_resource&quot;
+    android:antialias=[&quot;true&quot; | &quot;false&quot;]
+    android:dither=[&quot;true&quot; | &quot;false&quot;]
+    android:filter=[&quot;true&quot; | &quot;false&quot;]
+    android:gravity=[&quot;top&quot; | &quot;bottom&quot; | &quot;left&quot; | &quot;right&quot; | &quot;center_vertical&quot; |
+                      &quot;fill_vertical&quot; | &quot;center_horizontal&quot; | &quot;fill_horizontal&quot; |
+                      &quot;center&quot; | &quot;fill&quot; | &quot;clip_vertical&quot; | &quot;clip_horizontal&quot;]
+    android:tileMode=[&quot;disabled&quot; | &quot;clamp&quot; | &quot;repeat&quot; | &quot;mirror&quot;] /&gt;
+</code></pre><p> 属性分析：<br> android:antialias：是否开启图片抗锯齿功能。开启后会让图片变得平滑，同时也会一定程度上降低图片的清晰度，建议开启；<br> android:dither：是否开启抖动效果。当图片的像素配置和手机屏幕像素配置不一致时，开启这个选项可以让高质量的图片在低质量的屏幕上还能保持较好的显示效果，建议开启。<br> android:filter：是否开启过滤效果。当图片尺寸被拉伸或压缩时，开启过滤效果可以保持较好的显示效果，建议开启；<br> android:gravity：当图片小于容器的尺寸时，设置此选项可以对图片进行定位。<br> android:tileMode：平铺模式，有四种选项[“disabled” | “clamp” | “repeat” | “mirror”]。当开启平铺模式后，gravity属性会被忽略。repeat是指水平和竖直方向上的平铺效果；mirror是指在水平和竖直方向上的镜面投影效果；clamp是指图片四周的像素会扩展到周围区域，这个比较特别。</p>
+</li>
+<li><p>ShapeDrawable</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;shape    
+    xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;    
+    android:shape=[&quot;rectangle&quot; | &quot;oval&quot; | &quot;line&quot; | &quot;ring&quot;] &gt;    
+    &lt;corners        //当shape为rectangle时使用
+        android:radius=&quot;integer&quot;        //半径值会被后面的单个半径属性覆盖，默认为1dp
+        android:topLeftRadius=&quot;integer&quot;        
+        android:topRightRadius=&quot;integer&quot;        
+        android:bottomLeftRadius=&quot;integer&quot;        
+        android:bottomRightRadius=&quot;integer&quot; /&gt;    
+    &lt;gradient       //渐变
+        android:angle=&quot;integer&quot;        
+        android:centerX=&quot;integer&quot;        
+        android:centerY=&quot;integer&quot;        
+        android:centerColor=&quot;integer&quot;        
+        android:endColor=&quot;color&quot;        
+        android:gradientRadius=&quot;integer&quot;        
+        android:startColor=&quot;color&quot;        
+        android:type=[&quot;linear&quot; | &quot;radial&quot; | &quot;sweep&quot;]        
+        android:useLevel=[&quot;true&quot; | &quot;false&quot;] /&gt;    
+    &lt;padding        //内边距
+        android:left=&quot;integer&quot;        
+        android:top=&quot;integer&quot;        
+        android:right=&quot;integer&quot;        
+        android:bottom=&quot;integer&quot; /&gt;    
+    &lt;size           //指定大小，一般用在imageview配合scaleType属性使用
+        android:width=&quot;integer&quot;        
+        android:height=&quot;integer&quot; /&gt;    
+    &lt;solid          //填充颜色
+        android:color=&quot;color&quot; /&gt;    
+       &lt;stroke         //边框
+          android:width=&quot;integer&quot;        
+        android:color=&quot;color&quot;        
+        android:dashWidth=&quot;integer&quot;        
+        android:dashGap=&quot;integer&quot; /&gt;
+&lt;/shape&gt;
+</code></pre><p> android:shape：默认的shape是矩形，line和ring这两种形状需要通过<stroke>来制定线的宽度和颜色，否则看不到效果。<br> gradient：solid表示纯色填充，而gradient表示渐变效果。andoid:angle指渐变的角度，默认为0，其值必须是45的倍数，0表示从左到右，90表示从下到上，其他类推。<br> padding：这个表示的是包含它的view的空白，四个属性分别表示四个方向上的padding值。<br> size：ShapeDrawable默认情况下是没有宽高的概念的，但是可以如果指定了size，那么这个时候shape就有了所谓的固有宽高，但是作为view的背景时，shape还是会被拉伸或者缩小为view的大小。</stroke></p>
+</li>
+<li><p>LayerDrawble<br>对应标签<layer-list>，表示层次化的Drawable集合，实现一种叠加后的效果。<br>属性android:top/left/right/bottom表示drawable相对于view的上下左右的偏移量，单位为像素。</layer-list></p>
+</li>
+<li><p>StateListDrawable<br>对应标签<selector>，也是表示Drawable集合，每个drawable对应着view的一种状态。<br>一般来说，默认的item都应该放在selector的最后一条并且不附带任何的状态。</selector></p>
+</li>
+<li><p>LevelListDrawable<br>对应标签<level-list>，同样是Drawable集合，每个drawable还有一个level值，根据不同的level，LevelListDrawable会切换不同的Drawable，level值范围从0到100000。</level-list></p>
+</li>
+<li><p>TransitionDrawable<br>对应标签<transition>，它用于是吸纳两个Drawable之间的淡入淡出效果。</transition></p>
+<pre><code>&lt;transition xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; &gt;
+    &lt;item android:drawable=&quot;@drawable/shape_drawable_gradient_linear&quot;/&gt;
+    &lt;item android:drawable=&quot;@drawable/shape_drawable_gradient_radius&quot;/&gt;
+&lt;/transition&gt;
+
+TransitionDrawable drawable = (TransitionDrawable) v.getBackground();
+drawable.startTransition(5000);
+</code></pre></li>
+<li><p>InsetDrawable<br>对应标签<inset>，它可以将其他drawable内嵌到自己当中，并可以在四周留出一定的间距。当一个view希望自己的背景比自己的实际区域小的时候，可以采用InsetDrawable来实现。</inset></p>
+<pre><code>&lt;inset xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:insetBottom=&quot;15dp&quot;
+    android:insetLeft=&quot;15dp&quot;
+    android:insetRight=&quot;15dp&quot;
+    android:insetTop=&quot;15dp&quot; &gt;
+
+    &lt;shape android:shape=&quot;rectangle&quot; &gt;
+        &lt;solid android:color=&quot;#ff0000&quot; /&gt;
+    &lt;/shape&gt;
+
+&lt;/inset&gt;
+</code></pre></li>
+<li><p>ScaleDrawable<br>对应标签<scale>，它可以根据自己的level将指定的Drawable缩放到一定比例。如果level越大，那么内部的drawable看起来就越大。</scale></p>
+</li>
+<li><p>ClipDrawable<br>对应标签<clip>，它可以根据自己当前的level来裁剪另一个drawable，裁剪方向由android:clipOrientation和andoid:gravity属性来共同控制。level越大，表示裁剪的区域越小。</clip></p>
+<pre><code>&lt;clip xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:clipOrientation=&quot;vertical&quot;
+    android:drawable=&quot;@drawable/image1&quot;
+    android:gravity=&quot;bottom&quot; /&gt;
+</code></pre></li>
+</ol>
+<h2 id="6-3__u81EA_u5B9A_u4E49Drawable"><a href="#6-3__u81EA_u5B9A_u4E49Drawable" class="headerlink" title="6.3 自定义Drawable"></a>6.3 自定义Drawable</h2><ol>
+<li>Drawable的工作核心就是draw方法，所以自定义drawable就是重写draw方法，当然还有setAlpha、setColorFilter和getOpacity这几个方法。当自定义Drawable有固有大小的时候最好重写getIntrinsicWidth和getIntrinsicHeight方法。</li>
+<li>Drawable的内部大小不等于Drawable的实际区域大小，Drawable的实际区域大小可以通过它的getBounds方法来得到，一般来说它和view的尺寸相同。</li>
+</ol>
+<h1 id="u7B2C_u4E03_u7AE0_uFF1AAndroid_u52A8_u753B_u6DF1_u5165_u5206_u6790"><a href="#u7B2C_u4E03_u7AE0_uFF1AAndroid_u52A8_u753B_u6DF1_u5165_u5206_u6790" class="headerlink" title="第七章：Android动画深入分析"></a>第七章：Android动画深入分析</h1><h2 id="7-1_View_u52A8_u753B"><a href="#7-1_View_u52A8_u753B" class="headerlink" title="7.1 View动画"></a>7.1 View动画</h2><p>(1)Android动画可分为三大类：view动画、帧动画和属性动画，属性动画是API 11(Android 3.0)的新特性，帧动画一般也认为是view动画。<br>(2)AnimationSet的属性android:shareInterpolator表示集合中的动画是否共享同一个插值器，如果集合不指定插值器，那么子动画需要单独指定所需的插值器或者使用默认值。<br>(3)自定义动画需要继承Animation抽象类，并重新它的initialize和applyTransformation方法，在initialize方法中做一些初始化工作，在applyTransformation方法中进行相应的矩阵变换，很多时候需要采用Camera类来简化矩阵变换的过程。<br>(4)帧动画使用比较简单，但是容易引起OOM，所以在使用的时候应尽量避免使用过多尺寸较大的图片。</p>
 <h2 id="7-2_View_u52A8_u753B_u7684_u7279_u6B8A_u4F7F_u7528_u573A_u666F"><a href="#7-2_View_u52A8_u753B_u7684_u7279_u6B8A_u4F7F_u7528_u573A_u666F" class="headerlink" title="7.2 View动画的特殊使用场景"></a>7.2 View动画的特殊使用场景</h2><p><strong>Activity的切换效果</strong></p>
 <p><code>overridePendingTransition(int enterAnim, int exitAnim)</code>这个方法必须在<code>startActivity(Intent)</code>或者<code>finish()</code>之后被调用才能生效。</p>
 <p>Fragment也可以添加切换动画，可以通过FragmentTransaction中的setCustomAnimations()方法来添加切换动画，这个切换动画需要是View动画。</p>
@@ -1161,6 +1823,7 @@ root.setView(view, wparams, panelParentView);
 <li>采用ValueAnimator，监听动画过程，自己实现属性的改变。</li>
 </ul>
 <p><strong>属性动画的工作原理</strong></p>
+<p>// TODO</p>
 <h2 id="7-4__u4F7F_u7528_u52A8_u753B_u7684_u6CE8_u610F_u4E8B_u9879"><a href="#7-4__u4F7F_u7528_u52A8_u753B_u7684_u6CE8_u610F_u4E8B_u9879" class="headerlink" title="7.4 使用动画的注意事项"></a>7.4 使用动画的注意事项</h2><ul>
 <li>OOM：尽量避免使用帧动画，使用的话应尽量避免使用过多尺寸较大的图片；</li>
 <li>内存泄露：属性动画中的无限循环动画需要在Activity退出的时候及时停止，否则将导致Activity无法释放而造成内存泄露。view动画不存在这个问题；</li>
@@ -1269,7 +1932,7 @@ root.setView(view, wparams, panelParentView);
     <link href="http://yuqirong.me/2016/03/17/%E5%A4%9C%E5%8D%8A%E4%B8%80%E5%BF%86/"/>
     <id>http://yuqirong.me/2016/03/17/夜半一忆/</id>
     <published>2016-03-17T15:13:58.000Z</published>
-    <updated>2016-08-18T15:09:33.942Z</updated>
+    <updated>2016-09-06T13:43:51.058Z</updated>
     <content type="html"><![CDATA[<blockquote class="blockquote-center"><p>素时锦年，稍纵即逝<br>半载青春，流转指间</p>
 </blockquote>
 <p>冬去春来，又一载。</p>
@@ -2120,499 +2783,6 @@ int heapSize = manager.getLargeMemoryClass();
       <category term="WebView" scheme="http://yuqirong.me/tags/WebView/"/>
     
       <category term="Android Tips" scheme="http://yuqirong.me/categories/Android-Tips/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[《Android群英传》笔记(上)]]></title>
-    <link href="http://yuqirong.me/2016/02/28/%E3%80%8AAndroid%E7%BE%A4%E8%8B%B1%E4%BC%A0%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8A)/"/>
-    <id>http://yuqirong.me/2016/02/28/《Android群英传》笔记(上)/</id>
-    <published>2016-02-28T12:20:04.000Z</published>
-    <updated>2016-08-18T15:09:33.864Z</updated>
-    <content type="html"><![CDATA[<h1 id="u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3"><a href="#u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3" class="headerlink" title="第三章：Android控件架构与自定义控件详解"></a>第三章：Android控件架构与自定义控件详解</h1><h2 id="3-1_Android_u63A7_u4EF6_u67B6_u6784"><a href="#3-1_Android_u63A7_u4EF6_u67B6_u6784" class="headerlink" title="3.1 Android控件架构"></a>3.1 Android控件架构</h2><p>控件分为两类：View和ViewGroup，通过ViewGroup整个界面形成一个树形结构，并且ViewGroup负责对子View的测量与绘制以及传递交互事件。通常在Activity中使用的findViewById()方法，就是在控件树中以树的深度优先遍历来查找对应元素。在每颗控件树的顶部，都有一个ViewParent对象，这就是整棵树的控制核心，所有的交互管理事件都由它来统一调度和分配。</p>
-<p><img src="/uploads/20160228/20160228230641.png" alt="这里写图片描述"></p>
-<p>如上图所示，每个Activity都包含一个Window对象，在Android中Window对象通常由PhoneWindow来实现。PhoneWindow对象又将一个DecorView设置为整个应用的根View。DecorView作为了窗口界面的顶层视图，封装了一些窗口操作的通用方法。可以说，DecorView将要显示的具体内容呈现在了PhoneWindow上，这里所有View的监听事件，都通过WindowManagerService来接收，并通过Activity对象来回调onClickListener。DecorView在显示上分为TitleView和ContentView两部分。ContentView是一个ID为content的FrameLayout，activity_main.xml就是设置在这样一个FrameLayout里。可以通过如下代码获得ContentView：</p>
-<pre><code>FrameLayout content = (FrameLayout)findViewById(android.R.id.content);
-</code></pre><p><img src="/uploads/20160228/20160228232837.png" alt="这里写图片描述"></p>
-<p>而在代码中，当程序在onCreate()方法中调用setContentView()方法后，ActivityManagerService会回调onResume()方法，此时系统才会把整个DecorView添加到PhoneWindow中，并让其显示出来，从而最终完成界面的绘制。</p>
-<h2 id="3-2_View_u7684_u6D4B_u91CF"><a href="#3-2_View_u7684_u6D4B_u91CF" class="headerlink" title="3.2 View的测量"></a>3.2 View的测量</h2><p>View的测量在onMeasure中进行，系统提供了MeasureSpec类，是一个32位的int值，其高2位为测量模式，低30位为测量的大小。测量模式有以下三种：</p>
-<ul>
-<li><p>EXACTLY：精确模式，当控件指定精确值（例如android:layout_width=”50dp”）或者指定为match_parent属性时系统使用该模式。</p>
-</li>
-<li><p>AT_MOST：最大值模式，指定wrap_content时系统使用该属性。控件大小一般随着控件的子空间或内容的变化而变化，此时控件的尺寸只要不超过父控件允许的最大尺寸即可。View类默认只支持EXACTLY，如果想使用wrap_content需自己在onMeasure中实现。</p>
-</li>
-<li><p>UNSPECIFIED：自定义模式，View想多大就多大，通常在绘制自定义View的时候才使用。</p>
-</li>
-</ul>
-<p>下面是onMeasure的示例代码：</p>
-<pre><code>@Override
-protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    int widthMode = MeasureSpec.getMode(widthMeasureSpec);// 获取宽度模式
-    int widthSize = MeasureSpec.getSize(widthMeasureSpec);// 获取宽度值
-    int width = 0;
-    if (widthMode == MeasureSpec.EXACTLY) {
-        width = widthSize;
-    } else {
-        width = 200;// 自定义的默认wrap_content值
-        if (widthMode == MeasureSpec.AT_MOST) {
-                width = Math.min(widthSize, width);
-        }
-
-    }
-    int heightMode = MeasureSpec.getMode(heightMeasureSpec);// 获取高度模式
-    int heightSize = MeasureSpec.getSize(heightMeasureSpec);// 获取高度值
-    int height = 0;
-    if (heightMode == MeasureSpec.EXACTLY) {
-        height = heightSize;
-    } else {
-        height = 200;// 自定义的默认wrap_content值
-        if (heightMode == MeasureSpec.AT_MOST) {
-            height = Math.min(heightSize, height);
-        }
-    }
-    setMeasuredDimension(width, height);// 最终将测量的值传入该方法完成测量
-}
-</code></pre><h2 id="3-3_View_u7684_u7ED8_u5236"><a href="#3-3_View_u7684_u7ED8_u5236" class="headerlink" title="3.3 View的绘制"></a>3.3 View的绘制</h2><p>View的绘制是通过onDraw()方法实现的，具体是通过对onDraw()方法中Canvas参数操作执行绘图。在其他地方，则需要自己创建Canvas对象，创建时需传入一个bitmap对象，这个过程我们称之为装载画布。bitmap是用来存储所有绘制在Canvas上的像素信息，当你通过这种方式创建了Canvas对象后，后面调用所有的Canvas.drawXXX方法都发生在这个bitmap上。</p>
-<h2 id="3-4_ViewGroup_u7684_u6D4B_u91CF"><a href="#3-4_ViewGroup_u7684_u6D4B_u91CF" class="headerlink" title="3.4 ViewGroup的测量"></a>3.4 ViewGroup的测量</h2><p>当ViewGroup的大小为wrap_content时，它就会遍历所有子View，以便获得所有子View的大小，从而来决定自身的大小，而在其他模式下则通过指定值来设置自身的大小。</p>
-<p>然后当子View测量完毕以后，ViewGroup会执行它的Layout方法，同样是遍历子View并调用其Layout方法来确定布局位置。</p>
-<p>在自定义ViewGroup时，通常会重写onLayout()方法来控制子View显示位置，若需支持wrap_content还需重写onMeasure()方法，这点与View是相同的。</p>
-<h2 id="3-5_ViewGroup_u7684_u7ED8_u5236"><a href="#3-5_ViewGroup_u7684_u7ED8_u5236" class="headerlink" title="3.5 ViewGroup的绘制"></a>3.5 ViewGroup的绘制</h2><p>ViewGroup通常情况下不需要绘制，如果不是指定了ViewGroup的背景颜色，那么ViewGroup的onDraw()方法都不会被调用。但是ViewGroup会调用dispatchDraw()方法来绘制其子View，过程同样是遍历子View，并调用子View的绘制方法来完成绘制工作。</p>
-<h2 id="3-6__u81EA_u5B9A_u4E49View"><a href="#3-6__u81EA_u5B9A_u4E49View" class="headerlink" title="3.6 自定义View"></a>3.6 自定义View</h2><p>自定义View时有一些比较重要的回调方法如下：</p>
-<ul>
-<li>onFinishInflate();//从xml加载组件后回调</li>
-<li>onSizeChanged();//组件大小改变时回调</li>
-<li>onMeasure();//回调该方法进行测量</li>
-<li>onLayout();//回调该方法来确定显示的位置</li>
-<li>onTouchEvent();//监听到触摸事件回调</li>
-</ul>
-<p>通常情况下，有以下三种方法来实现自定义的控件：</p>
-<ul>
-<li>对现有控件进行拓展</li>
-<li>通过组合来实现新的控件</li>
-<li>重写View来实现全新的控件</li>
-</ul>
-<p>PS ： LinearGradient也称作线性渲染，LinearGradient的作用是实现某一区域内颜色的线性渐变效果。构造函数有两个，分别如下：</p>
-<p><code>public LinearGradient(float x0, float y0, float x1, float y1, int color0, int color1, Shader.TileMode tile)</code></p>
-<p>其中，参数x0表示渐变的起始点x坐标；参数y0表示渐变的起始点y坐标；参数x1表示渐变的终点x坐标；参数y1表示渐变的终点y坐标　；color0表示渐变开始颜色；color1表示渐变结束颜色；参数tile表示平铺方式。</p>
-<p>Shader.TileMode有3种参数可供选择，分别为CLAMP、REPEAT和MIRROR：</p>
-<ul>
-<li><p>CLAMP的作用是如果渲染器超出原始边界范围，则会复制边缘颜色对超出范围的区域进行着色</p>
-</li>
-<li><p>REPEAT的作用是在横向和纵向上以平铺的形式重复渲染位图</p>
-</li>
-<li><p>MIRROR的作用是在横向和纵向上以镜像的方式重复渲染位图</p>
-</li>
-</ul>
-<p><code>public LinearGradient (float x0, float y0, float x1, float y1, int[] colors, float[] positions, Shader.TileMode tile)</code></p>
-<p>其中，参数x0表示渐变的起始点x坐标；参数y0表示渐变的起始点y坐标；参数x1表示渐变的终点x坐标；参数y1表示渐变的终点y坐标；参数colors表示渐变的颜色数组；参数positions用来定义每个颜色处于的渐变相对位置；参数tile表示平铺方式。通常，参数positions设为null，表示颜色数组按顺序均匀的分布。</p>
-<h2 id="3-7__u81EA_u5B9A_u4E49ViewGroup"><a href="#3-7__u81EA_u5B9A_u4E49ViewGroup" class="headerlink" title="3.7 自定义ViewGroup"></a>3.7 自定义ViewGroup</h2><p>自定义ViewGroup通常需要重写onMeasure()方法来对子View进行测量，重写onLayout()方法来确定子View的位置，重写onTouchEvent()方法增加响应事件。</p>
-<p><code>onMeasure(int widthMeasureSpec, int heightMeasureSpec)</code>方法：</p>
-<pre><code>@Override
-protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    int count = getChildCount();
-    for (int i = 0; i &lt; count; i++) {
-        measureChild(getChildAt(i), widthMeasureSpec, heightMeasureSpec);
-    }
-}
-</code></pre><h2 id="3-8__u4E8B_u4EF6_u62E6_u622A_u673A_u5236_u5206_u6790"><a href="#3-8__u4E8B_u4EF6_u62E6_u622A_u673A_u5236_u5206_u6790" class="headerlink" title="3.8 事件拦截机制分析"></a>3.8 事件拦截机制分析</h2><p>本章较为浅显的分析了下事件传递的机制。当ViewGroup接收到事件，通过调用dispatchTouchEvent()，由这个方法再调用onInterceptTouchEvent()方法来判断是否要拦截事件，如果返回true则拦截将事件交给自己的onTouchEvent处理，返回false则继续向下传递。当View在接受到事件时，通过调用dispatchTouchEvent()，由此方法再调用onTouchEvent方法，如果返回true则拦截事件自己处理，如果返回false则将事件向上传递回ViewGroup并且调用其onTouchEvent方法继续做判断。</p>
-<h1 id="u7B2C_u56DB_u7AE0_uFF1AListView_u4F7F_u7528_u6280_u5DE7"><a href="#u7B2C_u56DB_u7AE0_uFF1AListView_u4F7F_u7528_u6280_u5DE7" class="headerlink" title="第四章：ListView使用技巧"></a>第四章：ListView使用技巧</h1><h2 id="4-1_ListView_u5E38_u7528_u4F18_u5316_u6280_u5DE7"><a href="#4-1_ListView_u5E38_u7528_u4F18_u5316_u6280_u5DE7" class="headerlink" title="4.1 ListView常用优化技巧"></a>4.1 ListView常用优化技巧</h2><ul>
-<li>使用ViewHolder模式提高效率</li>
-<li><p>设置项目间分隔线：</p>
-<pre><code>android:divider=&quot;@android:color/darker_gray&quot;
-android:dividerHeight=&quot;10dp&quot;
-</code></pre><p>   特殊情况下，以下代码可以设置分割线为透明：</p>
-<pre><code>android:divider=&quot;@null&quot;
-</code></pre></li>
-<li><p>隐藏ListView的滚动条：</p>
-<pre><code>android:scrollbars=&quot;none&quot;
-</code></pre></li>
-<li><p>取消ListView的点击效果：</p>
-<pre><code>android:listSelector=&quot;#00000000&quot;
-</code></pre><p>  也可以用Android自带的透明色来实现这个效果：</p>
-<pre><code>android:listSelector=&quot;@android:color/transparent&quot;
-</code></pre></li>
-<li><p>设置ListView需要显示在第几项：</p>
-<pre><code>listView.setSelection(N);
-</code></pre><p>  其中N就是需要显示的第N个Item。</p>
-<p>  除此之外，还可以使用如下代码来实现平滑移动：</p>
-<pre><code>mListView.smoothScrollBy(distance,duration);
-mListView.smoothScrollByOffset(offset);
-mListView.smoothScrollToPosition(index);
-</code></pre></li>
-<li><p>动态修改ListView：</p>
-<pre><code>mAdapter.notifyDataSetChanged();
-</code></pre></li>
-<li><p>遍历ListView中的所有Item：</p>
-<pre><code>for(int i=0;i&lt;mListView.getChildCount();i++){
-    View view = mListView.getChildAt(i);
-}
-</code></pre></li>
-<li><p>处理空ListView：</p>
-<pre><code>&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;&gt;
-
-    &lt;ListView
-    android:id=&quot;@+id/listView&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot; /&gt;
-
-    &lt;ImageView
-        android:id=&quot;@+id/imageView&quot;
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;match_parent&quot;
-        android:src=&quot;@drawable/empty_view&quot; /&gt;
-
-&lt;/RelativeLayout&gt;
-</code></pre><p>  在代码中，我们通过以下方式给ListView设置空数据时要显示的布局，代码如下：</p>
-<pre><code>ListView listView = (ListView)findViewById(R.id.listView);
-listView.setEmptyView(findViewById(R.id.imageView));
-</code></pre></li>
-<li><p>ListView滑动监听：一种是通过OnTouchListener来实现监听，另外一种是使用OnScrollListener来实现监听。</p>
-<p>  OnScrollListener中有两个回调方法——onScrollStateChanged()和onScroll()</p>
-<pre><code> @Override
-public void onScrollStateChanged(AbsListView view, int scrollState) {
-    switch(scrollState){
-        case SCROLL_STATE_FLING:
-          // TODO    
-        break;
-        case SCROLL_STATE_IDLE:
-        // TODO 
-        break;
-        case SCROLL_STATE_TOUCH_SCROLL:
-        // TODO 
-        break;
-    }
-}
-</code></pre><p>  scrollState有以下三种模式：</p>
-<ul>
-<li>OnScrollListener.SCROLL_STATE_IDLE ： 滚动停止时；</li>
-<li>OnScrollListener.SCROLL_STATE_TOUCH_SCROLL ： 正在滚动时；</li>
-<li><p>OnScrollListener.SCROLL_STATE_FLING ： 手指抛动时，即手指用力滑动，在离开后ListView由于惯性继续滑动的状态；</p>
-<p>当手指没有做手指抛动的状态时，这个方法只会回调2次，否则会回调3次。</p>
-<pre><code>@Override
-public void onScroll(AbsListView view, int firstVisibleItem,
-        int visibleItemCount, int totalItemCount) {
-    // TODO Auto-generated method stub
-}
-</code></pre></li>
-<li><p>firstVisibleItem ： 当前能看见的第一个Item的ID（从0开始）</p>
-</li>
-<li><p>visibleItemCount ： 当前能看见的Item的总数</p>
-</li>
-<li><p>totalItemCount ： 整个ListView的Item总数</p>
-<p>判断是否滚动到最后一行：</p>
-<pre><code>if(firstVisibleItem + visibleItemCount == totalItemCount &amp;&amp; totalItemCount &gt; 0){
-    // 滚动到最后一行
-} 
-</code></pre><p>再比如，可以通过如下代码来判断滚动的方向：</p>
-<pre><code>if(firstVisibleItem &gt; lastVisibleItemPosition){
-    // 上滑
-}else if(firstVisibleItem &lt; lastVisibleItemPosition){
-    // 下滑
-}
-lastVisibleItemPosition = firstVisibleItem;
-</code></pre><p>当然，ListView也给我们提供了一些封装的方法来获得当前可视的Item的位置等信息：</p>
-<pre><code>// 获取可视区域内最后一个Item的id
-mListView.getLastVisiblePosition()；
-// 获取可视区域内第一个Item的id
-mListView。getFirstVisiblePosition();
-</code></pre></li>
-</ul>
-</li>
-</ul>
-<h2 id="4-2_ListView_u5E38_u7528_u62D3_u5C55"><a href="#4-2_ListView_u5E38_u7528_u62D3_u5C55" class="headerlink" title="4.2 ListView常用拓展"></a>4.2 ListView常用拓展</h2><ol>
-<li><p>具有弹性的ListView：</p>
-<pre><code>@Override
-protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
-    return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
-}
-</code></pre><p> 其中的maxOverScrollY，默认值为0。所以只要修改它的值，就可以让ListView具有弹性了。</p>
-</li>
-</ol>
-<h1 id="u7B2C_u4E94_u7AE0_uFF1AAndroid_Scroll_u5206_u6790"><a href="#u7B2C_u4E94_u7AE0_uFF1AAndroid_Scroll_u5206_u6790" class="headerlink" title="第五章：Android Scroll分析"></a>第五章：Android Scroll分析</h1><h2 id="5-1__u6ED1_u52A8_u6548_u679C_u662F_u5982_u4F55_u4EA7_u751F_u7684"><a href="#5-1__u6ED1_u52A8_u6548_u679C_u662F_u5982_u4F55_u4EA7_u751F_u7684" class="headerlink" title="5.1 滑动效果是如何产生的"></a>5.1 滑动效果是如何产生的</h2><p>滑动一个View，本质上来说就是移动一个View。改变其当前所处的位置，它的原理与动画效果的实现非常相似，都是通过不断地改变View的坐标来实现这一效果。所以，要实现View的滑动，就必须监听用户触摸的事件，并根据事件传入的坐标，动态且不断地改变View的坐标，从而实现View跟随用户触摸的滑动而滑动。</p>
-<p><strong>Android坐标系</strong></p>
-<p>Android的坐标系是以屏幕最左上角为顶点，向右为x轴正方向，向下是y轴正方向。在触控事件中通过<code>getRawX()</code>和<code>getRawY()</code>获取Android坐标系中的坐标。在View中通过<code>getLocationOnScreen(int[] location)</code>获取。</p>
-<p><strong>视图坐标系</strong></p>
-<p>描述的是子视图在父视图中的位置关系，原点为父视图的左上角，x、y轴方向与Android坐标系一致。触控事件中通过<code>getX()</code>,<code>getY()</code>获取视图坐标系的坐标。</p>
-<p><strong>触控事件——MotionEvent</strong></p>
-<pre><code>// 单点触摸按下动作
-public static final int MotionEvent.ACTION_DOWN = 0;
-// 单点触摸离开动作
-public static final int MotionEvent.ACTION_UP = 1;
-// 触摸点移动动作
-public static final int MotionEvent.ACTION_MOVE = 2;
-// 触摸动作取消
-public static final int MotionEvent.ACTION_CANCEL = 3;
-// 触摸动作超出边界
-public static final int MotionEvent.ACTION_OUTSIDE = 4;
-// 多点触摸按下动作
-public static final int MotionEvent.ACTION_POINTER_DOWN = 5;
-// 多点离开动作
-public static final int MotionEvent.ACTION_POINTER_UP = 6;
-</code></pre><p><strong>View提供的获取坐标方法</strong></p>
-<ul>
-<li>getTop()：获取到的是View自身的顶边到其父布局顶边的距离</li>
-<li>getLeft()：获取到的是View自身的左边到其父布局左边的距离</li>
-<li>getRight()：获取到的是View自身的右边到其父布局右边的距离</li>
-<li>getBottom()：获取到的是View自身的底边到其父布局底边的距离</li>
-</ul>
-<p><strong>MotionEvent提供的方法</strong></p>
-<ul>
-<li>getX()：获取点击事件距离控件左边的距离，即视图坐标</li>
-<li>getY()：获取点击事件距离控件顶边的距离，即视图坐标</li>
-<li>getRawX()：获取点击事件距离整个屏幕左边的距离，即绝对坐标</li>
-<li>getRawY()：获取点击事件距离整个屏幕顶边的距离，即绝对坐标</li>
-</ul>
-<h2 id="5-2__u5B9E_u73B0_u6ED1_u52A8_u7684_u4E03_u79CD_u65B9_u6CD5"><a href="#5-2__u5B9E_u73B0_u6ED1_u52A8_u7684_u4E03_u79CD_u65B9_u6CD5" class="headerlink" title="5.2 实现滑动的七种方法"></a>5.2 实现滑动的七种方法</h2><ul>
-<li><p>layout()方法</p>
-<pre><code>private int lastX;
-private int lastY;
-private int offsetX;
-private int offsetY;
-
-@Override
-public boolean onTouchEvent(MotionEvent event) {
-  int x = (int) event.getRawX();
-  int y = (int) event.getRawY();
-
-  switch (event.getAction()) {
-  case MotionEvent.ACTION_DOWN:
-      lastX = x;
-      lastY = y;
-      break;
-  case MotionEvent.ACTION_MOVE:
-      offsetX = x - lastX;
-      offsetY = y - lastY;
-
-      layout(getLeft() + offsetX, getTop() + offsetY, getRight() + offsetX, getBottom() + offsetY);
-
-      lastX = x;
-      lastY = y;
-      break;
-  }
-  return true;
-}
-</code></pre></li>
-<li><p>offsetLeftAndRight()与offsetTopAndBottom()</p>
-<pre><code>// 同时对left和right进行偏移
-offsetLeftAndRight(offsetX);
-// 同时对top和bottom进行偏移
-offsetTopAndBottom(offsetY);
-</code></pre></li>
-<li><p>LayoutParams</p>
-<pre><code>LinearLayout.MarginLayoutParams layoutParams=(LinearLayout.LayoutParams)getLayoutParams();
-layoutParams.leftMargin=getLeft()+offsetX;
-layoutParams.topMargin=getTop()+offsetY;
-setLayoutParams(layoutParams);
-</code></pre><p>  或者</p>
-<pre><code>ViewGroup.MarginLayoutParams layoutParams=(MarginLayoutParams) getLayoutParams();
-layoutParams.leftMargin=getLeft()+offsetX;
-layoutParams.topMargin=getTop()+offsetY;
-setLayoutParams(layoutParams);
-</code></pre></li>
-<li><p>scrollTo()和scrollBy()</p>
-<pre><code>//scrollTo和scrollBy移动的是view的内容而不是view本身
-//如果在viewgroup中使用就是移动所有子view。
-View view=(View) getParent();
-//scrollTo和scrollBy参考的坐标系正好与视图坐标系相反，所以offset需为负
-view.scrollBy(-offsetX, -offsetY);
-</code></pre></li>
-<li><p>Scroller</p>
-<p>  scrollTo()和scrollBy()都是使View的平移瞬间发生的，这样的效果会让人感觉很突兀，而Scroller可以实现平滑移动的效果，而不是瞬间完成的移动。</p>
-<p>  使用Scroller主要有三个步骤：</p>
-<ol>
-<li><p>初始化Scroller对象，一般在view初始化的时候同时初始化scroller，代码如下：<br><code>mScroller=new Scroller(context);</code></p>
-</li>
-<li><p>重写view的computeScroll()方法，实现模拟滑动。computeScroll()的模版代码如下：</p>
-<pre><code>@Override
-public void computeScroll() {
-  super.computeScroll();
-  // 判断Scroller是否执行完毕
-  if (mScroller.computeScrollOffset()) {
-      ((View) getParent()).scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
-      // 通过重绘来不断调用computeScroll
-      invalidate();
-  }
-}
-</code></pre><p> Scroller类提供了computeScrollOffset()方法来判断是否完成了整个滑动，同时也提供了getCurrX()和getCurrY()方法来获得当前的滑动坐标。computeScroll()方法是不会自动调用的，只能通过invalidate()-&gt;draw()-&gt;computeScroll()来间接调用，实现循环获取scrollX和scrollY的目的，当移动过程结束之后，Scroller.computeScrollOffset方法会返回false，从而中断循环,完成整个平滑移动过程；</p>
-</li>
-<li><p>startScroll开启模拟过程。调用Scroller.startScroll()方法，将起始位置、偏移量以及移动时间(可选)作为参数传递给startScroll()方法。在获取坐标时，通常可以使用getScrollX()和getScrollY()方法来获取父视图中content所滑动到的点的坐标，不过要注意的是这个值的正负，它与在scrollBy()、scrollTo()中讲解是一样的。另外，在startScroll()之后，还要invalidate()方法来通知View进行重绘，从而来调用computeScroll()的模拟过程。当然，可以给startScroll()方法增加一个duration的参数来设置滑动的持续时长。</p>
-</li>
-</ol>
-</li>
-</ul>
-<ul>
-<li><p>属性动画</p>
-</li>
-<li><p>ViewDragHelper</p>
-<p>  ViewDragHelper基本可以实现各种不同滑动需求，但使用稍微复杂。</p>
-<p>  示例代码：</p>
-<pre><code>public class DragViewGroup extends FrameLayout {
-
-  private ViewDragHelper mViewDragHelper;
-  private View mMenuView, mMainView;
-  private int mWidth;
-
-  public DragViewGroup(Context context) {
-      super(context);
-      initView();
-  }
-
-  public DragViewGroup(Context context, AttributeSet attrs) {
-      super(context, attrs);
-      initView();
-  }
-
-  public DragViewGroup(Context context, AttributeSet attrs, int defStyleAttr) {
-      super(context, attrs, defStyleAttr);
-      initView();
-  }
-
-  @Override
-  protected void onFinishInflate() {
-      super.onFinishInflate();
-      mMenuView = getChildAt(0);
-      mMainView = getChildAt(1);
-  }
-
-  @Override
-  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-      super.onSizeChanged(w, h, oldw, oldh);
-      mWidth = mMenuView.getMeasuredWidth();
-  }
-
-  @Override
-  public boolean onInterceptTouchEvent(MotionEvent ev) {
-      return mViewDragHelper.shouldInterceptTouchEvent(ev);
-  }
-
-  @Override
-  public boolean onTouchEvent(MotionEvent event) {
-      //将触摸事件传递给ViewDragHelper,此操作必不可少
-      mViewDragHelper.processTouchEvent(event);
-      return true;
-  }
-
-  private void initView() {
-      mViewDragHelper = ViewDragHelper.create(this, callback);
-  }
-
-  private ViewDragHelper.Callback callback = new ViewDragHelper.Callback() {
-
-      // 何时开始检测触摸事件
-      @Override
-      public boolean tryCaptureView(View child, int pointerId) {
-          //如果当前触摸的child是mMainView时开始检测
-          return mMainView == child;
-      }
-
-      // 触摸到View后回调
-      @Override
-      public void onViewCaptured(View capturedChild, int activePointerId) {
-          super.onViewCaptured(capturedChild, activePointerId);
-      }
-
-      // 当拖拽状态改变，比如idle，dragging
-      @Override
-      public void onViewDragStateChanged(int state) {
-          super.onViewDragStateChanged(state);
-      }
-
-      // 当位置改变的时候调用,常用与滑动时更改scale等
-      @Override
-      public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
-          super.onViewPositionChanged(changedView, left, top, dx, dy);
-      }
-
-      // 处理垂直滑动
-      @Override
-      public int clampViewPositionVertical(View child, int top, int dy) {
-          return 0;
-      }
-
-      // 处理水平滑动
-      @Override
-      public int clampViewPositionHorizontal(View child, int left, int dx) {
-          return left;
-      }
-
-      // 拖动结束后调用
-      @Override
-      public void onViewReleased(View releasedChild, float xvel, float yvel) {
-          super.onViewReleased(releasedChild, xvel, yvel);
-          //手指抬起后缓慢移动到指定位置
-          if (mMainView.getLeft() &lt; 500) {
-              //关闭菜单，相当于Scroller的startScroll方法
-              mViewDragHelper.smoothSlideViewTo(mMainView, 0, 0);
-              ViewCompat.postInvalidateOnAnimation(DragViewGroup.this);
-          } else {
-              //打开菜单
-              mViewDragHelper.smoothSlideViewTo(mMainView, 300, 0);
-              ViewCompat.postInvalidateOnAnimation(DragViewGroup.this);
-          }
-      }
-  };
-
-  @Override
-  public void computeScroll() {
-      if (mViewDragHelper.continueSettling(true)) {
-          ViewCompat.postInvalidateOnAnimation(this);
-      }
-  }
-}
-</code></pre></li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3"><a href="#u7B2C_u4E09_u7AE0_]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="《Android群英传》" scheme="http://yuqirong.me/tags/%E3%80%8AAndroid%E7%BE%A4%E8%8B%B1%E4%BC%A0%E3%80%8B/"/>
-    
-      <category term="Book Note" scheme="http://yuqirong.me/categories/Book-Note/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[使用RecyclerView实现仿喵街效果]]></title>
-    <link href="http://yuqirong.me/2016/02/26/%E4%BD%BF%E7%94%A8RecyclerView%E5%AE%9E%E7%8E%B0%E4%BB%BF%E5%96%B5%E8%A1%97%E6%95%88%E6%9E%9C/"/>
-    <id>http://yuqirong.me/2016/02/26/使用RecyclerView实现仿喵街效果/</id>
-    <published>2016-02-26T11:50:18.000Z</published>
-    <updated>2016-08-18T15:09:33.911Z</updated>
-    <content type="html"><![CDATA[<p>又到更新博客的时间了，本次给大家带来的是在RecyclerView的基础上实现喵街的效果。那么喵街是什么效果呢？下面就贴出效果图：</p>
-<p><img src="/uploads/20160226/20160226205314.gif" alt="这里写图片描述"></p>
-<p>值得一提的是，这是旧版本的特效，新版本的喵街已经去掉了这种效果。</p>
-<p>看完了效果，接下来就是动手的时间了。</p>
-<p>我们先来分析一下思路：我们先给RecyclerView添加一个OnScrollListener，然后分别去获得firstVisiblePosition和firstCompletelyVisiblePosition。这里要注意一下，firstVisiblePosition是第一个在屏幕中<strong>可见</strong>的itemView对应的position，而firstCompletelyVisiblePosition是是第一个在屏幕中<strong>完全可见</strong>的itemView对应的position。之后在滚动中去动态地设置itemView的高度。整体的思路就这样了，下面我们直接来看代码。</p>
-<p>创建几个自定义的属性，以便后面备用：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">declare-styleable</span> <span class="attribute">name</span>=<span class="value">"ExpandRecyclerView"</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- item最大的高度 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"max_item_height"</span> <span class="attribute">format</span>=<span class="value">"dimension"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- item普通的高度 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"normal_item_height"</span> <span class="attribute">format</span>=<span class="value">"dimension"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">declare-styleable</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>之后我们新建一个类继承自RecyclerView，类名就叫ExpandRecyclerView。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//最大item的高度</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">float</span> maxItemHeight;</span><br><span class="line"><span class="comment">//普通item的高度</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">float</span> normalItemHeight;</span><br><span class="line"><span class="comment">// 默认最大的item高度</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">float</span> defaultMaxItemHeight;</span><br><span class="line"><span class="comment">// 默认普通的item高度</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">float</span> defaultNormalItemHeight;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ExpandRecyclerView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ExpandRecyclerView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ExpandRecyclerView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyle)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(context, attrs, defStyle);</span><br><span class="line">    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ExpandRecyclerView);</span><br><span class="line">    defaultMaxItemHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, <span class="number">256</span>, context.getResources().getDisplayMetrics());</span><br><span class="line">    defaultNormalItemHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, <span class="number">120</span>, context.getResources().getDisplayMetrics());</span><br><span class="line">    maxItemHeight = a.getDimension(R.styleable.ExpandRecyclerView_max_item_height, defaultMaxItemHeight);</span><br><span class="line">    normalItemHeight = a.getDimension(R.styleable.ExpandRecyclerView_normal_item_height, defaultNormalItemHeight);</span><br><span class="line">    a.recycle();</span><br><span class="line"></span><br><span class="line">    setHasFixedSize(<span class="keyword">true</span>);</span><br><span class="line">    setLayoutManager(<span class="keyword">new</span> LinearLayoutManager(context));</span><br><span class="line">    setItemAnimator(<span class="keyword">new</span> DefaultItemAnimator());</span><br><span class="line">    <span class="keyword">this</span>.addOnScrollListener(listener);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在构造器中我们得到了<code>maxItemHeight</code>和<code>normalItemHeight</code>，之后设置了OnScrollListener。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">OnScrollListener listener = <span class="keyword">new</span> RecyclerView.OnScrollListener() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScrolled</span><span class="params">(RecyclerView recyclerView, <span class="keyword">int</span> dx, <span class="keyword">int</span> dy)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onScrolled(recyclerView, dx, dy);</span><br><span class="line">        Log.i(TAG,<span class="string">"dy : "</span> + dy);</span><br><span class="line">        LinearLayoutManager mLinearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();</span><br><span class="line">        <span class="comment">// 在屏幕中第一个可见的position</span></span><br><span class="line">        <span class="keyword">int</span> firstVisiblePosition = mLinearLayoutManager.findFirstVisibleItemPosition();</span><br><span class="line">        <span class="comment">// 得到第一个可见的ViewHolder</span></span><br><span class="line">        RecyclerView.ViewHolder firstVisibleViewHolder =</span><br><span class="line">                recyclerView.findViewHolderForLayoutPosition(firstVisiblePosition);</span><br><span class="line">        <span class="comment">// 在屏幕中第一个完全可见的position</span></span><br><span class="line">        <span class="keyword">int</span> firstCompletelyVisiblePosition = mLinearLayoutManager.findFirstCompletelyVisibleItemPosition();</span><br><span class="line">        <span class="comment">// 得到第一个完全可见的ViewHolder</span></span><br><span class="line">        RecyclerView.ViewHolder firstCompletelyVisibleViewHolder =</span><br><span class="line">                recyclerView.findViewHolderForLayoutPosition(firstCompletelyVisiblePosition);</span><br><span class="line"></span><br><span class="line">        Log.i(TAG, <span class="string">"firstVisiblePosition : "</span> + firstVisiblePosition + <span class="string">" , firstCompletelyVisiblePosition : "</span> + firstCompletelyVisiblePosition);</span><br><span class="line">        <span class="comment">// 当firstVisibleViewHolder被滑出屏幕时</span></span><br><span class="line">        <span class="keyword">if</span> (firstVisibleViewHolder.itemView.getLayoutParams().height - dy &lt; maxItemHeight</span><br><span class="line">                &amp;&amp; firstVisibleViewHolder.itemView.getLayoutParams().height - dy &gt;= normalItemHeight) &#123;</span><br><span class="line">            <span class="comment">// 高度减小</span></span><br><span class="line">            firstVisibleViewHolder.itemView.getLayoutParams().height -= dy;</span><br><span class="line">            firstVisibleViewHolder.itemView.setLayoutParams(firstVisibleViewHolder.itemView.getLayoutParams());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 当firstCompletelyVisibleViewHolder慢慢滑到屏幕顶部时</span></span><br><span class="line">        <span class="keyword">if</span> (firstCompletelyVisibleViewHolder.itemView.getLayoutParams().height + dy &lt;= maxItemHeight</span><br><span class="line">                &amp;&amp; firstCompletelyVisibleViewHolder.itemView.getLayoutParams().height + dy &gt;= normalItemHeight) &#123;</span><br><span class="line">            <span class="comment">// 高度增加</span></span><br><span class="line">            firstCompletelyVisibleViewHolder.itemView.getLayoutParams().height += dy;</span><br><span class="line">            firstCompletelyVisibleViewHolder.itemView.setLayoutParams(firstCompletelyVisibleViewHolder.itemView.getLayoutParams());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>在<code>onScrolled(RecyclerView recyclerView, int dx, int dy)</code>里大部分的代码都加上注释了，就是根据<code>dy</code>去动态地改变了<code>firstVisibleViewHolder</code>和<code>firstCompletelyVisibleViewHolder</code>的高度。</p>
-<p>上面的搞定了之后，别忘了要在Adapter里去初始化设置Item的高度。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 设置适配器</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> adapter</span><br><span class="line"> */</span></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAdapter</span><span class="params">(Adapter adapter)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.setAdapter(adapter);</span><br><span class="line">    <span class="keyword">if</span> (adapter <span class="keyword">instanceof</span> ExpandRecyclerViewAdapter) &#123;</span><br><span class="line">        ExpandRecyclerViewAdapter mAdapter = (ExpandRecyclerViewAdapter) adapter;</span><br><span class="line">        <span class="comment">//设置最大的item高度</span></span><br><span class="line">        mAdapter.setMaxItemHeight(maxItemHeight);</span><br><span class="line">        <span class="comment">//设置普通的item高度</span></span><br><span class="line">        mAdapter.setNormalItemHeight(normalItemHeight);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>ExpandRecyclerViewAdapter的代码，重写<code>onBindViewHolder(RecyclerView.ViewHolder holder, int position)</code>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindViewHolder</span><span class="params">(RecyclerView.ViewHolder holder, <span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(position == <span class="number">0</span>)&#123;</span><br><span class="line">            holder.itemView.setLayoutParams(<span class="keyword">new</span> RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (<span class="keyword">int</span>) maxItemHeight));</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            holder.itemView.setLayoutParams(<span class="keyword">new</span> RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (<span class="keyword">int</span>) normalItemHeight));</span><br><span class="line">        &#125;</span><br><span class="line">        bindCustomViewHolder(holder, position);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">bindCustomViewHolder</span><span class="params">(RecyclerView.ViewHolder holder, <span class="keyword">int</span> position)</span></span>;</span><br></pre></td></tr></table></figure></p>
-<p>好了，整体的代码就这些了，下面贴出运行效果：</p>
-<p><img src="/uploads/20160226/20160226210235.gif" alt="这里写图片描述"></p>
-<p>源码下载：</p>
-<p><a href="/uploads/20160226/ExpandRecyclerView.rar">ExpandRecyclerView.rar</a></p>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="http://www.jianshu.com/p/a2c3c21e3b99" target="_blank" rel="external">android版高仿喵街主页滑动效果</a></p>
-<h1 id="Thanks"><a href="#Thanks" class="headerlink" title="Thanks"></a>Thanks</h1><ul>
-<li><a href="https://github.com/dongjunkun/miaojiedemo" target="_blank" rel="external">miaojiedemo</a> created by <a href="https://github.com/dongjunkun" target="_blank" rel="external">dongjunkun</a></li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>又到更新博客的时间了，本次给大家带来的是在RecyclerView的基础上实现喵街的效果。那么喵街是什么效果呢？下面就贴出效果图：</p>
-<p><img src="/uploads/20160226/20160226205314.gif" alt="这里写图片描述"></]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
-    
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
   </entry>
   

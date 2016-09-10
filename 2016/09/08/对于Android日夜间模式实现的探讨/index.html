@@ -1,0 +1,976 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qirong Yu's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="0x0001关于 Android 的日间/夜间模式切换相信大家在平时使用 APP 的过程中都遇到过，比如知乎、简书中就有相关的模式切换。实现日间/夜间模式切换的方案也有许多种，趁着今天有空来讲一下日间/夜间模式切换的几种实现方案，也可以做一个横向的对比来看看哪种方案最好。
+在本篇文章中给出了三种实现日间/夜间模式切换的方案：
+
+使用 setTheme 的方法让 Activity 重新设置主题；
+设">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对于Android日夜间模式实现的探讨">
+<meta property="og:url" content="http://yuqirong.me/2016/09/08/对于Android日夜间模式实现的探讨/index.html">
+<meta property="og:site_name" content="Qirong Yu's Blog">
+<meta property="og:description" content="0x0001关于 Android 的日间/夜间模式切换相信大家在平时使用 APP 的过程中都遇到过，比如知乎、简书中就有相关的模式切换。实现日间/夜间模式切换的方案也有许多种，趁着今天有空来讲一下日间/夜间模式切换的几种实现方案，也可以做一个横向的对比来看看哪种方案最好。
+在本篇文章中给出了三种实现日间/夜间模式切换的方案：
+
+使用 setTheme 的方法让 Activity 重新设置主题；
+设">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160908/20160909103512.gif">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160908/20160910011353.gif">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160908/20160910114556.gif">
+<meta property="og:updated_time" content="2016-09-10T04:23:11.372Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="对于Android日夜间模式实现的探讨">
+<meta name="twitter:description" content="0x0001关于 Android 的日间/夜间模式切换相信大家在平时使用 APP 的过程中都遇到过，比如知乎、简书中就有相关的模式切换。实现日间/夜间模式切换的方案也有许多种，趁着今天有空来讲一下日间/夜间模式切换的几种实现方案，也可以做一个横向的对比来看看哪种方案最好。
+在本篇文章中给出了三种实现日间/夜间模式切换的方案：
+
+使用 setTheme 的方法让 Activity 重新设置主题；
+设">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 对于Android日夜间模式实现的探讨 | Qirong Yu's Blog </title>
+  <meta name="baidu-site-verification" content="MBYnGIEEPN" />
+  <meta name="baidu-site-verification" content="1Hx0jVHsgl" />
+  <meta name="baidu-site-verification" content="L0MgAErI0s" />
+  <meta name="google-site-verification" content="_hYRHLLoBRM6L31myWhOPTxzGtawe9z1zmCqcJ-aHA0" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Qirong Yu's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-comment fa-fw"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '8ZRfk21kUz89L8Xi6hZm','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                对于Android日夜间模式实现的探讨
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-08T18:32:11+08:00" content="2016-09-08">
+              2016-09-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/08/对于Android日夜间模式实现的探讨/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/08/对于Android日夜间模式实现的探讨/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="0x0001"><a href="#0x0001" class="headerlink" title="0x0001"></a>0x0001</h1><p>关于 Android 的日间/夜间模式切换相信大家在平时使用 APP 的过程中都遇到过，比如知乎、简书中就有相关的模式切换。实现日间/夜间模式切换的方案也有许多种，趁着今天有空来讲一下日间/夜间模式切换的几种实现方案，也可以做一个横向的对比来看看哪种方案最好。</p>
+<p>在本篇文章中给出了三种实现日间/夜间模式切换的方案：</p>
+<ol>
+<li>使用 setTheme 的方法让 Activity 重新设置主题；</li>
+<li>设置 Android Support Library 中的 UiMode 来支持日间/夜间模式的切换；</li>
+<li>通过资源 id 映射，回调自定义 ThemeChangeListener 接口来处理日间/夜间模式的切换。</li>
+</ol>
+<p>三种方案综合起来可能导致文章的篇幅过长，请耐心阅读。</p>
+<h1 id="0x0002"><a href="#0x0002" class="headerlink" title="0x0002"></a>0x0002</h1><h2 id="u4F7F_u7528_setTheme__u65B9_u6CD5"><a href="#u4F7F_u7528_setTheme__u65B9_u6CD5" class="headerlink" title="使用 setTheme 方法"></a>使用 setTheme 方法</h2><p>我们先来看看使用 setTheme 方法来实现日间/夜间模式切换的方案。这种方案的思路很简单，就是在用户选择夜间模式时，Activity 设置成夜间模式的主题，之后再让 Activity 调用 recreate() 方法重新创建一遍就行了。</p>
+<p>那就动手吧，在 colors.xml 中定义两组颜色，分别表示日间和夜间的主题色：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimary"</span>&gt;</span>#3F51B5<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimaryDark"</span>&gt;</span>#303F9F<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorAccent"</span>&gt;</span>#FF4081<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"nightColorPrimary"</span>&gt;</span>#3b3b3b<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"nightColorPrimaryDark"</span>&gt;</span>#383838<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"nightColorAccent"</span>&gt;</span>#a72b55<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>之后在 styles.xml 中定义两组主题，也就是日间主题和夜间主题：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Base application theme. --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme"</span> <span class="attribute">parent</span>=<span class="value">"Theme.AppCompat.Light.DarkActionBar"</span>&gt;</span><span class="css"></span><br><span class="line">        &lt;!<span class="tag">--</span> <span class="tag">Customize</span> <span class="tag">your</span> <span class="tag">theme</span> <span class="tag">here</span>. <span class="tag">--</span>&gt;</span><br><span class="line">        &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">colorPrimary</span>"&gt;<span class="at_rule">@<span class="keyword">color/colorPrimary&lt;/item&gt;</span></span><br><span class="line">        &lt;item name=<span class="string">"colorPrimaryDark"</span>&gt;@color/colorPrimaryDark&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"colorAccent"</span>&gt;@color/colorAccent&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"android:textColor"</span>&gt;@android:color/black&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"mainBackground"</span>&gt;@android:color/white&lt;/item&gt;</span><br><span class="line">    </span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"NightAppTheme"</span> <span class="attribute">parent</span>=<span class="value">"Theme.AppCompat.Light.DarkActionBar"</span>&gt;</span><span class="css"><span class="at_rule"></span><br><span class="line">        &lt;!-- Customize your theme here. --&gt;</span><br><span class="line">        &lt;item name=<span class="string">"colorPrimary"</span>&gt;@color/nightColorPrimary&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"colorPrimaryDark"</span>&gt;@color/nightColorPrimaryDark&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"colorAccent"</span>&gt;@color/nightColorAccent&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"android:textColor"</span>&gt;@android:color/white&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"mainBackground"</span>&gt;@color/nightColorPrimaryDark&lt;/item&gt;</span><br><span class="line">    </span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在主题中的 <code>mainBackground</code> 属性是我们自定义的属性，用来表示背景色：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"mainBackground"</span> <span class="attribute">format</span>=<span class="value">"color|reference"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>接下来就是看一下布局 activity_main.xml：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"?attr/mainBackground"</span></span><br><span class="line">    <span class="attribute">android:paddingBottom</span>=<span class="value">"@dimen/activity_vertical_margin"</span></span><br><span class="line">    <span class="attribute">android:paddingLeft</span>=<span class="value">"@dimen/activity_horizontal_margin"</span></span><br><span class="line">    <span class="attribute">android:paddingRight</span>=<span class="value">"@dimen/activity_horizontal_margin"</span></span><br><span class="line">    <span class="attribute">android:paddingTop</span>=<span class="value">"@dimen/activity_vertical_margin"</span></span><br><span class="line">    <span class="attribute">tools:context</span>=<span class="value">"com.yuqirong.themedemo.MainActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">Button</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/btn_theme"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"切换日/夜间模式"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/tv"</span></span><br><span class="line">        <span class="attribute">android:layout_below</span>=<span class="value">"@id/btn_theme"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center_horizontal"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"通过setTheme()的方法"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>&lt;RelativeLayout&gt;</code> 的 <code>android:background</code> 属性中，我们使用 <code>&quot;?attr/mainBackground&quot;</code> 来表示，这样就代表着 <code>RelativeLayout</code> 的背景色会去引用在主题中事先定义好的 <code>mainBackground</code> 属性的值。这样就实现了日间/夜间模式切换的换色了。</p>
+<p>最后就是 MainActivity 的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 默认是日间模式</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> theme = R.style.AppTheme;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">		<span class="comment">// 判断是否有主题存储</span></span><br><span class="line">        <span class="keyword">if</span>(savedInstanceState != <span class="keyword">null</span>)&#123;</span><br><span class="line">            theme = savedInstanceState.getInt(<span class="string">"theme"</span>);</span><br><span class="line">            setTheme(theme);</span><br><span class="line">        &#125;</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        Button btn_theme = (Button) findViewById(R.id.btn_theme);</span><br><span class="line">        btn_theme.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                theme = (theme == R.style.AppTheme) ? R.style.NightAppTheme : R.style.AppTheme;</span><br><span class="line">                MainActivity.<span class="keyword">this</span>.recreate();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onSaveInstanceState</span><span class="params">(Bundle outState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onSaveInstanceState(outState);</span><br><span class="line">        outState.putInt(<span class="string">"theme"</span>, theme);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onRestoreInstanceState</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onRestoreInstanceState(savedInstanceState);</span><br><span class="line">        theme = savedInstanceState.getInt(<span class="string">"theme"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 MainActivity 中有几点要注意一下：</p>
+<ol>
+<li><p>调用 <code>recreate()</code> 方法后 Activity 的生命周期会调用 <code>onSaveInstanceState(Bundle outState)</code> 来备份相关的数据，之后也会调用 <code>onRestoreInstanceState(Bundle savedInstanceState)</code> 来还原相关的数据，因此我们把 <code>theme</code> 的值保存进去，以便 Activity 重新创建后使用。</p>
+</li>
+<li><p>我们在 <code>onCreate(Bundle savedInstanceState)</code> 方法中还原得到了 <code>theme</code> 值后，<code>setTheme()</code> 方法一定要在 <code>setContentView()</code> 方法之前调用，否则的话就看不到效果了。</p>
+</li>
+<li><p><code>recreate()</code> 方法是在 API 11 中添加进来的，所以在 Android 2.X 中使用会抛异常。</p>
+</li>
+</ol>
+<p>贴完上面的代码之后，我们来看一下该方案实现的效果图：</p>
+<p><img src="/uploads/20160908/20160909103512.gif" alt="setTheme()效果图gif"></p>
+<h2 id="u4F7F_u7528_Android_Support_Library__u4E2D_u7684_UiMode__u65B9_u6CD5"><a href="#u4F7F_u7528_Android_Support_Library__u4E2D_u7684_UiMode__u65B9_u6CD5" class="headerlink" title="使用 Android Support Library 中的 UiMode 方法"></a>使用 Android Support Library 中的 UiMode 方法</h2><p>使用 UiMode 的方法也很简单，我们需要把 colors.xml 定义为日间/夜间两种。之后根据不同的模式会去选择不同的 colors.xml 。在 Activity 调用 recreate() 之后，就实现了切换日/夜间模式的功能。</p>
+<p>说了这么多，直接上代码。下面是 values/colors.xml ：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimary"</span>&gt;</span>#3F51B5<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimaryDark"</span>&gt;</span>#303F9F<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorAccent"</span>&gt;</span>#FF4081<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"textColor"</span>&gt;</span>#FF000000<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"backgroundColor"</span>&gt;</span>#FFFFFF<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>除了 values/colors.xml 之外，我们还要创建一个 values-night/colors.xml 文件，用来设置夜间模式的颜色，其中 <code>&lt;color&gt;</code> 的 name 必须要和 values/colors.xml 中的相对应：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimary"</span>&gt;</span>#3b3b3b<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimaryDark"</span>&gt;</span>#383838<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorAccent"</span>&gt;</span>#a72b55<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"textColor"</span>&gt;</span>#FFFFFF<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"backgroundColor"</span>&gt;</span>#3b3b3b<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在 styles.xml 中去引用我们在 colors.xml 中定义好的颜色：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Base application theme. --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme"</span> <span class="attribute">parent</span>=<span class="value">"Theme.AppCompat.Light.DarkActionBar"</span>&gt;</span><span class="css"></span><br><span class="line">        &lt;!<span class="tag">--</span> <span class="tag">Customize</span> <span class="tag">your</span> <span class="tag">theme</span> <span class="tag">here</span>. <span class="tag">--</span>&gt;</span><br><span class="line">        &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">colorPrimary</span>"&gt;<span class="at_rule">@<span class="keyword">color/colorPrimary&lt;/item&gt;</span></span><br><span class="line">        &lt;item name=<span class="string">"colorPrimaryDark"</span>&gt;@color/colorPrimaryDark&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"colorAccent"</span>&gt;@color/colorAccent&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"android:textColor"</span>&gt;@color/textColor&lt;/item&gt;</span><br><span class="line">        &lt;item name=<span class="string">"mainBackground"</span>&gt;@color/backgroundColor&lt;/item&gt;</span><br><span class="line">    </span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>activity_main.xml 布局的内容和上面 setTheme() 方法中的相差无几，这里就不贴出来了。之后的事情就变得很简单了，在 MyApplication 中先选择一个默认的 Mode ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyApplication</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate();</span><br><span class="line">        <span class="comment">// 默认设置为日间模式</span></span><br><span class="line">        AppCompatDelegate.setDefaultNightMode(</span><br><span class="line">                AppCompatDelegate.MODE_NIGHT_NO);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>要注意的是，这里的 Mode 有四种类型可以选择：</p>
+<ul>
+<li>MODE_NIGHT_NO： 使用亮色(light)主题，不使用夜间模式；</li>
+<li>MODE_NIGHT_YES：使用暗色(dark)主题，使用夜间模式；</li>
+<li>MODE_NIGHT_AUTO：根据当前时间自动切换 亮色(light)/暗色(dark)主题；</li>
+<li>MODE_NIGHT_FOLLOW_SYSTEM(默认选项)：设置为跟随系统，通常为 MODE_NIGHT_NO</li>
+</ul>
+<p>当用户点击按钮切换日/夜间时，重新去设置相应的 Mode ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        Button btn_theme = (Button) findViewById(R.id.btn_theme);</span><br><span class="line">        btn_theme.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">int</span> currentNightMode = getResources().getConfiguration().uiMode &amp; Configuration.UI_MODE_NIGHT_MASK;</span><br><span class="line">                getDelegate().setLocalNightMode(currentNightMode == Configuration.UI_MODE_NIGHT_NO</span><br><span class="line">                        ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);</span><br><span class="line">                <span class="comment">// 同样需要调用recreate方法使之生效</span></span><br><span class="line">                recreate();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们来看一下 UiMode 方案实现的效果图：</p>
+<p><img src="/uploads/20160908/20160910011353.gif" alt="UiMode的效果图gif"></p>
+<p>就前两种方法而言，配置比较简单，最后的实现效果也都基本上是一样的。但是缺点就是需要调用 <code>recreate()</code> 使之生效。而让 Activity 重新创建就必须涉及到一些状态的保存。这就增加了一些难度。所以，我们一起来看看第三种解决方法。</p>
+<h2 id="u901A_u8FC7_u8D44_u6E90_id__u6620_u5C04_uFF0C_u56DE_u8C03_u63A5_u53E3"><a href="#u901A_u8FC7_u8D44_u6E90_id__u6620_u5C04_uFF0C_u56DE_u8C03_u63A5_u53E3" class="headerlink" title="通过资源 id 映射，回调接口"></a>通过资源 id 映射，回调接口</h2><p>第三种方法的思路就是根据设置的主题去动态地获取资源 id 的映射，然后使用回调接口的方式让 UI 去设置相关的属性值。我们在这里先规定一下：夜间模式的资源在命名上都要加上后缀 “_night” ，比如日间模式的背景色命名为 color_background ，那么相对应的夜间模式的背景资源就要命名为 color_background_night 。好了，下面就是我们的 Demo 所需要用到的 colors.xml ：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimary"</span>&gt;</span>#3F51B5<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimary_night"</span>&gt;</span>#3b3b3b<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimaryDark"</span>&gt;</span>#303F9F<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorPrimaryDark_night"</span>&gt;</span>#383838<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorAccent"</span>&gt;</span>#FF4081<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"colorAccent_night"</span>&gt;</span>#a72b55<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"textColor"</span>&gt;</span>#FF000000<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"textColor_night"</span>&gt;</span>#FFFFFF<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"backgroundColor"</span>&gt;</span>#FFFFFF<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">color</span> <span class="attribute">name</span>=<span class="value">"backgroundColor_night"</span>&gt;</span>#3b3b3b<span class="tag">&lt;/<span class="title">color</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>可以看到每一项 color 都会有对应的 “_night” 与之匹配。</p>
+<p>看到这里，肯定有人会问，为什么要设置对应的 “_night” ？到底是通过什么方式来设置日/夜间模式的呢？下面就由 ThemeManager 来为你解答：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThemeManager</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 默认是日间模式</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ThemeMode mThemeMode = ThemeMode.DAY;</span><br><span class="line">    <span class="comment">// 主题模式监听器</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> List&lt;OnThemeChangeListener&gt; mThemeChangeListenerList = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    <span class="comment">// 夜间资源的缓存，key : 资源类型, 值&lt;key:资源名称, value:int值&gt;</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> HashMap&lt;String, HashMap&lt;String, Integer&gt;&gt; sCachedNightResrouces = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="comment">// 夜间模式资源的后缀，比如日件模式资源名为：R.color.activity_bg, 那么夜间模式就为 ：R.color.activity_bg_night</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String RESOURCE_SUFFIX = <span class="string">"_night"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 主题模式，分为日间模式和夜间模式</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">enum</span> ThemeMode &#123;</span><br><span class="line">        DAY, NIGHT</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 设置主题模式</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> themeMode</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setThemeMode</span><span class="params">(ThemeMode themeMode)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mThemeMode != themeMode) &#123;</span><br><span class="line">            mThemeMode = themeMode;</span><br><span class="line">            <span class="keyword">if</span> (mThemeChangeListenerList.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">for</span> (OnThemeChangeListener listener : mThemeChangeListenerList) &#123;</span><br><span class="line">                    listener.onThemeChanged();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 根据传入的日间模式的resId得到相应主题的resId，注意：必须是日间模式的resId</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> dayResId 日间模式的resId</span><br><span class="line">     * <span class="doctag">@return</span> 相应主题的resId，若为日间模式，则得到dayResId；反之夜间模式得到nightResId</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getCurrentThemeRes</span><span class="params">(Context context, <span class="keyword">int</span> dayResId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (getThemeMode() == ThemeMode.DAY) &#123;</span><br><span class="line">            <span class="keyword">return</span> dayResId;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 资源名</span></span><br><span class="line">        String entryName = context.getResources().getResourceEntryName(dayResId);</span><br><span class="line">        <span class="comment">// 资源类型</span></span><br><span class="line">        String typeName = context.getResources().getResourceTypeName(dayResId);</span><br><span class="line">        HashMap&lt;String, Integer&gt; cachedRes = sCachedNightResrouces.get(typeName);</span><br><span class="line">        <span class="comment">// 先从缓存中去取，如果有直接返回该id</span></span><br><span class="line">        <span class="keyword">if</span> (cachedRes == <span class="keyword">null</span>) &#123;</span><br><span class="line">            cachedRes = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        &#125;</span><br><span class="line">        Integer resId = cachedRes.get(entryName + RESOURCE_SUFFIX);</span><br><span class="line">        <span class="keyword">if</span> (resId != <span class="keyword">null</span> &amp;&amp; resId != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> resId;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//如果缓存中没有再根据资源id去动态获取</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 通过资源名，资源类型，包名得到资源int值</span></span><br><span class="line">                <span class="keyword">int</span> nightResId = context.getResources().getIdentifier(entryName + RESOURCE_SUFFIX, typeName, context.getPackageName());</span><br><span class="line">                <span class="comment">// 放入缓存中</span></span><br><span class="line">                cachedRes.put(entryName + RESOURCE_SUFFIX, nightResId);</span><br><span class="line">                sCachedNightResrouces.put(typeName, cachedRes);</span><br><span class="line">                <span class="keyword">return</span> nightResId;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Resources.NotFoundException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 注册ThemeChangeListener</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> listener</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">registerThemeChangeListener</span><span class="params">(OnThemeChangeListener listener)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!mThemeChangeListenerList.contains(listener)) &#123;</span><br><span class="line">            mThemeChangeListenerList.add(listener);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 反注册ThemeChangeListener</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> listener</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">unregisterThemeChangeListener</span><span class="params">(OnThemeChangeListener listener)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mThemeChangeListenerList.contains(listener)) &#123;</span><br><span class="line">            mThemeChangeListenerList.remove(listener);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 得到主题模式</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@return</span></span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ThemeMode <span class="title">getThemeMode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mThemeMode;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 主题模式切换监听器</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OnThemeChangeListener</span> </span>&#123;</span><br><span class="line">        <span class="comment">/**</span><br><span class="line">         * 主题切换时回调</span><br><span class="line">         */</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">onThemeChanged</span><span class="params">()</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面 ThemeManager 的代码基本上都有注释，想要看懂并不困难。其中最核心的就是 <code>getCurrentThemeRes</code> 方法了。在这里解释一下 <code>getCurrentThemeRes</code> 的逻辑。参数中的 dayResId 是日间模式的资源id，如果当前主题是日间模式的话，就直接返回 dayResId 。反之当前主题为夜间模式的话，先根据 dayResId 得到资源名称和资源类型。比如现在有一个资源为 R.color.colorPrimary ，那么资源名称就是 colorPrimary ，资源类型就是 color 。然后根据资源类型和资源名称去获取缓存。如果没有缓存，那么就要动态获取资源了。这里使用方法的是</p>
+<pre><code>context.getResources().getIdentifier(String name, String defType, String defPackage)
+</code></pre><ul>
+<li><code>name</code> 参数就是资源名称，不过要注意的是这里的资源名称还要加上后缀 “_night” ，也就是上面在 colors.xml 中定义的名称；</li>
+<li><code>defType</code> 参数就是资源的类型了。比如 color，drawable等；</li>
+<li><code>defPackage</code> 就是资源文件的包名，也就是当前 APP 的包名。</li>
+</ul>
+<p>有了上面的这个方法，就可以通过 R.color.colorPrimary 资源找到对应的 R.color.colorPrimary_night 资源了。最后还要把找到的夜间模式资源加入到缓存中。这样的话以后就直接去缓存中读取，而不用再次去动态查找资源 id 了。</p>
+<p>ThemeManager 中剩下的代码应该都是比较简单的，相信大家都可以看得懂了。</p>
+<p>现在我们来看看 MainActivity 的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> <span class="keyword">implements</span> <span class="title">ThemeManager</span>.<span class="title">OnThemeChangeListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TextView tv;</span><br><span class="line">    <span class="keyword">private</span> Button btn_theme;</span><br><span class="line">    <span class="keyword">private</span> RelativeLayout relativeLayout;</span><br><span class="line">    <span class="keyword">private</span> ActionBar supportActionBar;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        ThemeManager.registerThemeChangeListener(<span class="keyword">this</span>);</span><br><span class="line">        supportActionBar = getSupportActionBar();</span><br><span class="line">        btn_theme = (Button) findViewById(R.id.btn_theme);</span><br><span class="line">        relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);</span><br><span class="line">        tv = (TextView) findViewById(R.id.tv);</span><br><span class="line">        btn_theme.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY</span><br><span class="line">                        ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initTheme</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        tv.setTextColor(getResources().getColor(ThemeManager.getCurrentThemeRes(MainActivity.<span class="keyword">this</span>, R.color.textColor)));</span><br><span class="line">        btn_theme.setTextColor(getResources().getColor(ThemeManager.getCurrentThemeRes(MainActivity.<span class="keyword">this</span>, R.color.textColor)));</span><br><span class="line">        relativeLayout.setBackgroundColor(getResources().getColor(ThemeManager.getCurrentThemeRes(MainActivity.<span class="keyword">this</span>, R.color.backgroundColor)));</span><br><span class="line">        <span class="comment">// 设置标题栏颜色</span></span><br><span class="line">        <span class="keyword">if</span>(supportActionBar != <span class="keyword">null</span>)&#123;</span><br><span class="line">            supportActionBar.setBackgroundDrawable(<span class="keyword">new</span> ColorDrawable(getResources().getColor(ThemeManager.getCurrentThemeRes(MainActivity.<span class="keyword">this</span>, R.color.colorPrimary))));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 设置状态栏颜色</span></span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.LOLLIPOP) &#123;</span><br><span class="line">            Window window = getWindow();</span><br><span class="line">            window.setStatusBarColor(getResources().getColor(ThemeManager.getCurrentThemeRes(MainActivity.<span class="keyword">this</span>, R.color.colorPrimary)));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onThemeChanged</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        initTheme();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        ThemeManager.unregisterThemeChangeListener(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 MainActivity 中实现了 OnThemeChangeListener 接口，这样就可以在主题改变的时候执行回调方法。然后在 <code>initTheme()</code> 中去重新设置 UI 的相关颜色属性值。还有别忘了要在 <code>onDestroy()</code> 中移除 ThemeChangeListener 。</p>
+<p>最后就来看看第三种方法的效果吧：</p>
+<p><img src="/uploads/20160908/20160910114556.gif" alt="动态获取资源id的效果图gif"></p>
+<p>也许有人会说和前两种方法的效果没什么差异啊，但是仔细看就会发现前面两种方法在切换模式的瞬间会有短暂黑屏现象存在，而第三种方法没有。这是因为前两种方法都要调用 <code>recreate()</code> 。而第三种方法不需要 Activity 重新创建，使用回调的方法来实现。</p>
+<h1 id="0x0003"><a href="#0x0003" class="headerlink" title="0x0003"></a>0x0003</h1><p>到了这里，按照套路应该是要总结的时候了。那么就根据上面给的三种方法来一个简单的对比吧：</p>
+<ol>
+<li><p>setTheme 方法：可以配置多套主题，比较容易上手。除了日/夜间模式之外，还可以有其他五颜六色的主题。但是需要调用 recreate() ，切换瞬间会有黑屏闪现的现象；</p>
+</li>
+<li><p>UiMode 方法：优点就是 Android Support Library 中已经支持，简单规范。但是也需要调用 recreate() ，存在黑屏闪现的现象；</p>
+</li>
+<li><p>动态获取资源 id ，回调接口：该方法使用起来比前两个方法复杂，另外在回调的方法中需要设置每一项 UI 相关的属性值。但是不需要调用 recreate() ，没有黑屏闪现的现象。</p>
+</li>
+</ol>
+<p>三种方法整体的对比就如上所示了。当然除了上面的三种方法实现日/夜间模式切换之外，还有比如动态换肤等也都可以实现。方法有很多种，重要的是要根据自身情况选择合适的方法去实现。在下面我会给出其他几种实现日/夜间模式切换方法的链接，可以参考一下。</p>
+<p>好了，到了说再见的时候了。</p>
+<p>Goodbye !</p>
+<p><a href="/uploads/20160908/ThemeDemo_setTheme.rar">setTheme方法的Demo下载</a></p>
+<p><a href="/uploads/20160908/ThemeDemo_UiMode.rar">UiMode方法的Demo下载</a></p>
+<p><a href="/uploads/20160908/ThemeDemo_thememanager.rar">动态获取资源id方法的Demo下载</a></p>
+<h1 id="0x0004"><a href="#0x0004" class="headerlink" title="0x0004"></a>0x0004</h1><p><a href="https://segmentfault.com/a/1190000005736047?f=tt&amp;hmsr=toutiao.io&amp;utm_medium=toutiao.io&amp;utm_source=toutiao.io" target="_blank" rel="external">android 实现【夜晚模式】的另外一种思路</a></p>
+<p><a href="http://www.diycode.cc/topics/269" target="_blank" rel="external">知乎和简书的夜间模式实现套路</a></p>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/06/《Android开发艺术探索》笔记(下)/" rel="next" title="《Android开发艺术探索》笔记(下)">
+                <i class="fa fa-chevron-left"></i> 《Android开发艺术探索》笔记(下)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/09/08/对于Android日夜间模式实现的探讨/"
+     data-title="对于Android日夜间模式实现的探讨"
+     data-content=""
+     data-url="http://yuqirong.me/2016/09/08/对于Android日夜间模式实现的探讨/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/09/08/对于Android日夜间模式实现的探讨/"
+           data-title="对于Android日夜间模式实现的探讨" data-url="http://yuqirong.me/2016/09/08/对于Android日夜间模式实现的探讨/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar/27073358153.jpg"
+               alt="俞其荣" />
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+          <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank">
+                  
+                    <i class="fa fa-google-plus"></i>
+                  
+                  Google+
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yqr271228943@gmail.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+        
+        <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">友情链接</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://guolin.tech/" target="_blank">郭霖的专栏</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lmj623565791/" target="_blank">Hongyang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/singwhatiwanna/" target="_blank">任玉刚</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://liaohuqiu.net/" target="_blank">Srain</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hukai.me/" target="_blank">胡凯</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://stormzhang.com/" target="_blank">stormzhang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://drakeet.me/" target="_blank">Drakeet的个人博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/xuyisheng/" target="_blank">eclipse_xu</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.kymjs.com/" target="_blank">张涛-开源实验室</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.devtf.cn/" target="_blank">开发技术前线</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lzyzsd/" target="_blank">大头鬼Bruce</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.mcxiaoke.com/" target="_blank">Xiaoke's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.baoyz.com/" target="_blank">Baoyz's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://itangqi.me/" target="_blank">Qi Tang's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/zhaokaiqiang1992/" target="_blank">赵凯强</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x0001"><span class="nav-number">1.</span> <span class="nav-text">0x0001</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x0002"><span class="nav-number">2.</span> <span class="nav-text">0x0002</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u4F7F_u7528_setTheme__u65B9_u6CD5"><span class="nav-number">2.1.</span> <span class="nav-text">使用 setTheme 方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4F7F_u7528_Android_Support_Library__u4E2D_u7684_UiMode__u65B9_u6CD5"><span class="nav-number">2.2.</span> <span class="nav-text">使用 Android Support Library 中的 UiMode 方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u901A_u8FC7_u8D44_u6E90_id__u6620_u5C04_uFF0C_u56DE_u8C03_u63A5_u53E3"><span class="nav-number">2.3.</span> <span class="nav-text">通过资源 id 映射，回调接口</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x0003"><span class="nav-number">3.</span> <span class="nav-text">0x0003</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x0004"><span class="nav-number">4.</span> <span class="nav-text">0x0004</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣
+  
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/sitemap.xml">Google网站地图</a></span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/baidusitemap.xml">百度网站地图</a></span>
+  
+  </span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"yuqirong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '/js/src/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
