@@ -20,6 +20,7 @@ comments: false
 * Instagram : http://instagram.com/yyyuqirong
 * Google+: https://plus.google.com/116756215081118586533
 * LinkIn : https://cn.linkedin.com/in/yuqirong
+* 简书 : http://www.jianshu.com/users/1291f6690ea0
 * Weibo : http://weibo.com/yyyuqirong
 * 知乎 : https://www.zhihu.com/people/yuqirong
 * Email : <yqr271228943@gmail.com>
