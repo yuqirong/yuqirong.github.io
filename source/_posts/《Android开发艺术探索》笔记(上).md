@@ -561,7 +561,7 @@ setWillNotDraw方法用于在一个View不需要绘制时的优化（设置为tr
 4. view中如果有线程或者动画，需要在onDetachedFromWindow方法中及时停止。
 5. 处理好view的滑动冲突情况。
 
-第6章 Android的Drawable
+第六章 Android的Drawable
 =======
 6.1 Drawable简介
 ----------

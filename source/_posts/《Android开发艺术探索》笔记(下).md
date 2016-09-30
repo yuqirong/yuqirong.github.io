@@ -81,7 +81,7 @@ mWindowAdded = true;
 7. callback回调TN的show和hide方法后，会通过handler发送两个Runnable，里面的handleShow和handleHide方法是真正完成显示和隐藏Toast的地方。handleShow方法中将Toast的视图添加到Window中，handleHide方法将Toast视图从Window中移除。
 
 
-第10章 Android的消息机制
+第十章 Android的消息机制
 ==================
 10.1 Android消息机制概述
 --------------
@@ -181,7 +181,7 @@ Android的主线程就是ActivityThread，主线程的入口方法就是main，�
 
 ActivityThread通过ApplicationThread和AMS进行进程间通信，AMS以进程间通信的方法完成ActivityThread的请求后会回调ApplicationThread中的Binder方法，然后ApplicationThread会向H发送消息，H收到消息后会将ApplicationThread中的逻辑切换到ActivityThread中去执行，即切换到主线程中去执行，这个过程就是主线程的消息循环模型。
 
-第11章 Android的线程和线程池
+第十一章 Android的线程和线程池
 ======
 11.1 主线程和子线程
 -------
@@ -254,7 +254,7 @@ Executor只是一个接口，真正的线程池是ThreadPoolExecutor。ThreadPoo
 3. ScheduledThreadPool：核心线程数量固定，非核心线程数量没有限制的线程池，主要用于执行定时任务和具有固定周期的任务；
 4. SingleThreadPool：只有一个核心线程的线程池，确保了所有的任务都在同一个线程中按顺序执行。
 
-第12章 Bitmap的加载和Cache
+第十二章 Bitmap的加载和Cache
 ==============
 12.1 Bitmap的高速加载
 -----------------------
@@ -486,7 +486,7 @@ Activity的资源访问是通过ContextImpl来完成的，它有两个方法getA
 	
 	java -jar signapk.jar testkey.x509.pem testkey.pk8 [未签名apk] [已签名apk]
 
-第15章 Android性能优化
+第十五章 Android性能优化
 =====
 
 2015年Google关于Android性能优化典范的专题视频：
