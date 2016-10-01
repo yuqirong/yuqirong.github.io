@@ -3,6 +3,71 @@
 
 
     
+    
+  <url>
+    <loc>http://yuqirong.me/2016/09/25/%E7%94%A8Java%E5%AE%9E%E7%8E%B0Android%E5%A4%9A%E6%B8%A0%E9%81%93%E6%89%93%E5%8C%85%E5%B7%A5%E5%85%B7/</loc>
+    <lastmod>2016-10-01T01:15:16.980Z</lastmod>
+    <data>
+        <display>
+        <title>用Java实现Android多渠道打包工具</title>
+        <pubTime>2016-09-25T11:52:14.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2016/03/31/%E3%80%8AAndroid%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8A)/</loc>
+    <lastmod>2016-09-13T15:41:55.505Z</lastmod>
+    <data>
+        <display>
+        <title>《Android开发艺术探索》笔记(上)</title>
+        <pubTime>2016-03-31T11:49:28.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>《Android艺术开发探索》</tag>
+         
+         
+           
+             
+              <breadCrumb title="Book Note" url="http://yuqirong.me/categories/Book-Note/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2016/08/06/%E3%80%8AAndroid%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8B)/</loc>
+    <lastmod>2016-09-13T15:41:22.416Z</lastmod>
+    <data>
+        <display>
+        <title>《Android开发艺术探索》笔记(下)</title>
+        <pubTime>2016-08-05T16:12:02.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>《Android艺术开发探索》</tag>
+         
+         
+           
+             
+              <breadCrumb title="Book Note" url="http://yuqirong.me/categories/Book-Note/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
     <loc>http://yuqirong.me/2016/09/08/%E5%AF%B9%E4%BA%8EAndroid%E6%97%A5%E5%A4%9C%E9%97%B4%E6%A8%A1%E5%BC%8F%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%8E%A2%E8%AE%A8/</loc>
     <lastmod>2016-09-10T04:23:11.372Z</lastmod>
@@ -22,7 +87,6 @@
     </data>
     </url>
 
-    
     
     
   <url>
@@ -65,50 +129,6 @@
     </url>
 
     
-  <url>
-    <loc>http://yuqirong.me/2016/08/06/%E3%80%8AAndroid%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8B)/</loc>
-    <lastmod>2016-09-06T10:27:25.523Z</lastmod>
-    <data>
-        <display>
-        <title>《Android开发艺术探索》笔记(下)</title>
-        <pubTime>2016-08-05T16:12:02.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>《Android艺术开发探索》</tag>
-         
-         
-           
-             
-              <breadCrumb title="Book Note" url="http://yuqirong.me/categories/Book-Note/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2016/03/31/%E3%80%8AAndroid%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8A)/</loc>
-    <lastmod>2016-08-29T03:06:25.188Z</lastmod>
-    <data>
-        <display>
-        <title>《Android开发艺术探索》笔记(上)</title>
-        <pubTime>2016-03-31T11:49:28.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>《Android艺术开发探索》</tag>
-         
-         
-           
-             
-              <breadCrumb title="Book Note" url="http://yuqirong.me/categories/Book-Note/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
     
     
   <url>
@@ -132,56 +152,12 @@
 
     
   <url>
-    <loc>http://yuqirong.me/2016/01/22/%E8%87%AA%E5%AE%9A%E4%B9%89ViewGroup%E6%89%93%E9%80%A0%E6%B5%81%E5%BC%8F%E5%B8%83%E5%B1%80/</loc>
+    <loc>http://yuqirong.me/2015/12/13/%E8%AE%A9%E4%BD%A0%E7%9A%84ListView%E6%9B%B4%E7%82%AB%E9%85%B7%EF%BC%8C%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91%E5%88%A0%E9%99%A4%E6%95%88%E6%9E%9C/</loc>
     <lastmod>2016-08-18T15:09:34.098Z</lastmod>
     <data>
         <display>
-        <title>自定义ViewGroup打造流式布局</title>
-        <pubTime>2016-01-22T12:31:37.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>自定义View</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2015/10/23/%E8%87%AA%E5%AE%9A%E4%B9%89View%E4%B9%8B%E5%AE%9E%E7%8E%B0%E6%96%87%E5%AD%97%E7%99%BE%E5%88%86%E6%AF%94%E8%BF%9B%E5%BA%A6%E6%9D%A1/</loc>
-    <lastmod>2016-08-18T15:09:34.098Z</lastmod>
-    <data>
-        <display>
-        <title>自定义View之实现文字百分比进度条</title>
-        <pubTime>2015-10-23T15:26:56.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>自定义View</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2016/04/27/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0ViewPager%E6%8C%87%E7%A4%BA%E5%99%A8/</loc>
-    <lastmod>2016-08-18T15:09:34.098Z</lastmod>
-    <data>
-        <display>
-        <title>自定义实现ViewPager指示器</title>
-        <pubTime>2016-04-27T12:09:19.000Z</pubTime>
+        <title>让你的ListView更炫酷，实现侧滑删除效果</title>
+        <pubTime>2015-12-13T15:54:48.000Z</pubTime>
         
         <tag>Android</tag>
          
@@ -220,12 +196,34 @@
 
     
   <url>
-    <loc>http://yuqirong.me/2015/12/13/%E8%AE%A9%E4%BD%A0%E7%9A%84ListView%E6%9B%B4%E7%82%AB%E9%85%B7%EF%BC%8C%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91%E5%88%A0%E9%99%A4%E6%95%88%E6%9E%9C/</loc>
+    <loc>http://yuqirong.me/2016/04/27/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0ViewPager%E6%8C%87%E7%A4%BA%E5%99%A8/</loc>
     <lastmod>2016-08-18T15:09:34.098Z</lastmod>
     <data>
         <display>
-        <title>让你的ListView更炫酷，实现侧滑删除效果</title>
-        <pubTime>2015-12-13T15:54:48.000Z</pubTime>
+        <title>自定义实现ViewPager指示器</title>
+        <pubTime>2016-04-27T12:09:19.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>自定义View</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2015/10/23/%E8%87%AA%E5%AE%9A%E4%B9%89View%E4%B9%8B%E5%AE%9E%E7%8E%B0%E6%96%87%E5%AD%97%E7%99%BE%E5%88%86%E6%AF%94%E8%BF%9B%E5%BA%A6%E6%9D%A1/</loc>
+    <lastmod>2016-08-18T15:09:34.098Z</lastmod>
+    <data>
+        <display>
+        <title>自定义View之实现文字百分比进度条</title>
+        <pubTime>2015-10-23T15:26:56.000Z</pubTime>
         
         <tag>Android</tag>
          
@@ -264,21 +262,21 @@
 
     
   <url>
-    <loc>http://yuqirong.me/2015/10/19/%E7%BB%99%E4%BD%A0%E7%9A%84ScrollView%E8%AE%BE%E7%BD%AE%E6%BB%91%E5%8A%A8%E8%B7%9D%E7%A6%BB%E7%9B%91%E5%90%AC%E5%99%A8/</loc>
-    <lastmod>2016-08-18T15:09:34.082Z</lastmod>
+    <loc>http://yuqirong.me/2016/01/22/%E8%87%AA%E5%AE%9A%E4%B9%89ViewGroup%E6%89%93%E9%80%A0%E6%B5%81%E5%BC%8F%E5%B8%83%E5%B1%80/</loc>
+    <lastmod>2016-08-18T15:09:34.098Z</lastmod>
     <data>
         <display>
-        <title>给你的ScrollView设置滑动距离监听器</title>
-        <pubTime>2015-10-19T11:44:21.000Z</pubTime>
+        <title>自定义ViewGroup打造流式布局</title>
+        <pubTime>2016-01-22T12:31:37.000Z</pubTime>
         
         <tag>Android</tag>
          
-        <tag>ScrollView</tag>
+        <tag>自定义View</tag>
          
          
            
              
-              <breadCrumb title="Android Tips" url="http://yuqirong.me/categories/Android-Tips/"/>
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
           
         </display>
     </data>
@@ -301,6 +299,28 @@
            
              
               <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2015/10/19/%E7%BB%99%E4%BD%A0%E7%9A%84ScrollView%E8%AE%BE%E7%BD%AE%E6%BB%91%E5%8A%A8%E8%B7%9D%E7%A6%BB%E7%9B%91%E5%90%AC%E5%99%A8/</loc>
+    <lastmod>2016-08-18T15:09:34.082Z</lastmod>
+    <data>
+        <display>
+        <title>给你的ScrollView设置滑动距离监听器</title>
+        <pubTime>2015-10-19T11:44:21.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>ScrollView</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Tips" url="http://yuqirong.me/categories/Android-Tips/"/>
           
         </display>
     </data>
@@ -440,6 +460,28 @@
 
     
   <url>
+    <loc>http://yuqirong.me/2016/04/18/%E5%B8%A6%E4%BD%A0%E5%AE%9E%E7%8E%B0%E4%BB%BF%E7%BE%8E%E5%9B%A2%E7%9A%84%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0/</loc>
+    <lastmod>2016-08-18T15:09:33.973Z</lastmod>
+    <data>
+        <display>
+        <title>带你实现仿美团的下拉刷新</title>
+        <pubTime>2016-04-18T07:34:03.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>自定义View</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yuqirong.me/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop()%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2016-08-18T15:09:33.973Z</lastmod>
     <data>
@@ -466,28 +508,6 @@
         <display>
         <title>带你一步步实现可拖拽的GridView控件</title>
         <pubTime>2016-02-15T12:46:17.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>自定义View</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2016/04/18/%E5%B8%A6%E4%BD%A0%E5%AE%9E%E7%8E%B0%E4%BB%BF%E7%BE%8E%E5%9B%A2%E7%9A%84%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0/</loc>
-    <lastmod>2016-08-18T15:09:33.973Z</lastmod>
-    <data>
-        <display>
-        <title>带你实现仿美团的下拉刷新</title>
-        <pubTime>2016-04-18T07:34:03.000Z</pubTime>
         
         <tag>Android</tag>
          
@@ -696,14 +716,16 @@
 
     
   <url>
-    <loc>http://yuqirong.me/2016/06/08/%E5%85%B3%E4%BA%8EAndroid%20M%E7%9A%84%E8%BF%90%E8%A1%8C%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86/</loc>
+    <loc>http://yuqirong.me/2016/07/28/%E4%B8%80%E6%AD%A5%E6%AD%A5%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90AIDL/</loc>
     <lastmod>2016-08-18T15:09:33.911Z</lastmod>
     <data>
         <display>
-        <title>关于Android 6.0的运行时权限处理</title>
-        <pubTime>2016-06-08T14:12:20.000Z</pubTime>
+        <title>一步步深入解析AIDL</title>
+        <pubTime>2016-07-28T14:55:37.000Z</pubTime>
         
         <tag>Android</tag>
+         
+        <tag>IPC</tag>
          
          
            
@@ -716,16 +738,34 @@
 
     
   <url>
-    <loc>http://yuqirong.me/2016/07/28/%E4%B8%80%E6%AD%A5%E6%AD%A5%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90AIDL/</loc>
+    <loc>http://yuqirong.me/2016/02/18/%E4%B9%9D%E5%A4%A7%E5%9F%BA%E6%9C%AC%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</loc>
     <lastmod>2016-08-18T15:09:33.911Z</lastmod>
     <data>
         <display>
-        <title>一步步深入解析AIDL</title>
-        <pubTime>2016-07-28T14:55:37.000Z</pubTime>
+        <title>九大基本排序算法</title>
+        <pubTime>2016-02-18T13:56:06.000Z</pubTime>
+        
+        <tag>算法</tag>
+         
+         
+           
+             
+              <breadCrumb title="算法" url="http://yuqirong.me/categories/%E7%AE%97%E6%B3%95/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2016/06/08/%E5%85%B3%E4%BA%8EAndroid%20M%E7%9A%84%E8%BF%90%E8%A1%8C%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86/</loc>
+    <lastmod>2016-08-18T15:09:33.911Z</lastmod>
+    <data>
+        <display>
+        <title>关于Android 6.0的运行时权限处理</title>
+        <pubTime>2016-06-08T14:12:20.000Z</pubTime>
         
         <tag>Android</tag>
-         
-        <tag>IPC</tag>
          
          
            
@@ -775,26 +815,6 @@
            
              
               <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2016/02/18/%E4%B9%9D%E5%A4%A7%E5%9F%BA%E6%9C%AC%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2016-08-18T15:09:33.911Z</lastmod>
-    <data>
-        <display>
-        <title>九大基本排序算法</title>
-        <pubTime>2016-02-18T13:56:06.000Z</pubTime>
-        
-        <tag>算法</tag>
-         
-         
-           
-             
-              <breadCrumb title="算法" url="http://yuqirong.me/categories/%E7%AE%97%E6%B3%95/"/>
           
         </display>
     </data>

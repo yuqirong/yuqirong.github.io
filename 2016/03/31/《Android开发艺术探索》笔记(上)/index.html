@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion">
+<html class="theme-next muse use-motion">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -29,32 +29,6 @@
 
   <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
 
-
-
-
-  
-  
-  
-  
-
-  
-    
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    
-    
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-  
 
 
 
@@ -95,7 +69,7 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
 <meta property="og:image" content="http://yuqirong.me/uploads/20160809/20160814201234.png">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160809/20160809234757.png">
 <meta property="og:image" content="http://yuqirong.me/uploads/20160809/20160814191325.png">
-<meta property="og:updated_time" content="2016-08-29T03:06:25.188Z">
+<meta property="og:updated_time" content="2016-09-13T15:41:55.505Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Android开发艺术探索》笔记(上)">
 <meta name="twitter:description" content="第一章：Activity的生命周期和启动模式1.1 Activity的生命周期全面分析典型情况下的生命周期分析
@@ -107,7 +81,7 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
 <script type="text/javascript" id="hexo.configuration">
   var NexT = window.NexT || {};
   var CONFIG = {
-    scheme: 'Pisces',
+    scheme: 'Muse',
     sidebar: {"position":"left","display":"post"},
     fancybox: true,
     motion: true,
@@ -246,39 +220,9 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
       
 
       
-        <li class="menu-item menu-item-search">
-          
-            <a href="#" class="st-search-show-outputs">
-          
-            
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
-            
-            搜索
-          </a>
-        </li>
-      
     </ul>
   
 
-  
-    <div class="site-search">
-      
-  <form class="site-search-form">
-  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
-</form>
-
-<script type="text/javascript">
-  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
-    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
-    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
-  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
-
-  _st('install', '8ZRfk21kUz89L8Xi6hZm','2.0.0');
-</script>
-
-
-
-    </div>
   
 </nav>
 
@@ -343,14 +287,21 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
                   </a>
                 </span>
 
+					<!-- 
+					�Ķ��� 
+  								<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;�Ķ��� <span id="busuanzi_value_page_pv"></span> ��</span>
+					 
+					-->
+
                 
                 
 
               
             </span>
           
-
           
+           <!-- 
+        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -359,7 +310,8 @@ Activity A打开Activity B时，为了不影响B的显示，最好不要在Activ
                 </a>
               </span>
             
-          
+            
+          -->
 
           
 
@@ -698,7 +650,7 @@ root.setView(view, wparams, panelParentView);
 <li>view中如果有线程或者动画，需要在onDetachedFromWindow方法中及时停止。</li>
 <li>处理好view的滑动冲突情况。</li>
 </ol>
-<h1 id="u7B2C6_u7AE0_Android_u7684Drawable"><a href="#u7B2C6_u7AE0_Android_u7684Drawable" class="headerlink" title="第6章 Android的Drawable"></a>第6章 Android的Drawable</h1><h2 id="6-1_Drawable_u7B80_u4ECB"><a href="#6-1_Drawable_u7B80_u4ECB" class="headerlink" title="6.1 Drawable简介"></a>6.1 Drawable简介</h2><ol>
+<h1 id="u7B2C_u516D_u7AE0_Android_u7684Drawable"><a href="#u7B2C_u516D_u7AE0_Android_u7684Drawable" class="headerlink" title="第六章 Android的Drawable"></a>第六章 Android的Drawable</h1><h2 id="6-1_Drawable_u7B80_u4ECB"><a href="#6-1_Drawable_u7B80_u4ECB" class="headerlink" title="6.1 Drawable简介"></a>6.1 Drawable简介</h2><ol>
 <li>Android的Drawable表示的是一种可以在Canvas上进行绘制的概念，它的种类很多，最常见的就是图片和颜色了。它有两个重要的优点：一是比自定义view要简单；二是非图片类型的drawable占用空间小，利于减小apk大小。</li>
 <li>Drawable是抽象类，是所有Drawable对象的基类。</li>
 <li>Drawable的内部宽/高可以通过getIntrinsicWidth和getIntrinsicHeight方法获取，但是并不是所有Drawable都有内部宽/高。图片Drawable的内部宽高就是图片的宽高，但是颜色Drawable就没有宽高的概念，它一般是作为view的背景，所以会去适应view的大小，这两个方法都是返回-1。</li>
@@ -839,6 +791,27 @@ drawable.startTransition(5000);
     <div>
       
         
+<div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton", disable="enable", onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}", style="cursor: pointer; border: 0; outline: 0; border-radius: 100%; padding: 0; margin: 0; letter-spacing: normal; text-transform: none; text-indent: 0px; text-shadow: none">
+    <span onmouseover="this.style.color='rgb(236,96,0)';this.style.background='rgb(204,204,204)'" onMouseOut="this.style.color='#fff';this.style.background='rgb(236,96,0)'" style="display: inline-block; width: 70px; height: 70px; border-radius: 100%; line-height: 81px; color: #fff; font: 400 35px/75px 'microsofty'; background: rgb(236,96,0)">赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <p>微信打赏</p>
+      </div>
+    
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <p>支付宝打赏</p>
+      </div>
+    
+  </div>
+</div>
+
       
     </div>
 
@@ -958,7 +931,7 @@ drawable.startTransition(5000);
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-count">47</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1082,71 +1055,6 @@ drawable.startTransition(5000);
         
         <div class="links-of-blogroll motion-element">
           
-            <div class="links-of-blogroll-title">友情链接</div>
-            <ul class="links-of-blogroll-list">
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://guolin.tech/" target="_blank">郭霖的专栏</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://blog.csdn.net/lmj623565791/" target="_blank">Hongyang</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://blog.csdn.net/singwhatiwanna/" target="_blank">任玉刚</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://liaohuqiu.net/" target="_blank">Srain</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://hukai.me/" target="_blank">胡凯</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://stormzhang.com/" target="_blank">stormzhang</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://drakeet.me/" target="_blank">Drakeet的个人博客</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="https://github.com/xuyisheng/" target="_blank">eclipse_xu</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://www.kymjs.com/" target="_blank">张涛-开源实验室</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://www.devtf.cn/" target="_blank">开发技术前线</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://blog.csdn.net/lzyzsd/" target="_blank">大头鬼Bruce</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://blog.mcxiaoke.com/" target="_blank">Xiaoke's Blog</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://www.baoyz.com/" target="_blank">Baoyz's Blog</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://itangqi.me/" target="_blank">Qi Tang's Blog</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://blog.csdn.net/zhaokaiqiang1992/" target="_blank">赵凯强</a>
-                </li>
-              
-            </ul>
-          
         </div>
 
       </section>
@@ -1158,7 +1066,7 @@ drawable.startTransition(5000);
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F"><span class="nav-number">1.</span> <span class="nav-text">第一章：Activity的生命周期和启动模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1_Activity_u7684_u751F_u547D_u5468_u671F_u5168_u9762_u5206_u6790"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 Activity的生命周期全面分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2_Activity_u7684_u542F_u52A8_u6A21_u5F0F"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Activity的启动模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3_IntentFilter_u7684_u5339_u914D_u89C4_u5219"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 IntentFilter的匹配规则</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E8C_u7AE0_uFF1AIPC_u673A_u5236"><span class="nav-number">2.</span> <span class="nav-text">第二章：IPC机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1_Android_IPC_u7B80_u4ECB"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Android IPC简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2_Android_u4E2D_u7684_u591A_u8FDB_u7A0B_u6A21_u5F0F"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Android中的多进程模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3_IPC_u57FA_u7840_u6982_u5FF5_u4ECB_u7ECD"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 IPC基础概念介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4_IPC_u65B9_u5F0F"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 IPC方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5_Binder_u8FDE_u63A5_u6C60"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 Binder连接池</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6__u9009_u7528_u5408_u9002_u7684IPC_u65B9_u5F0F"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 选用合适的IPC方式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E09_u7AE0_uFF1AView_u7684_u4E8B_u4EF6_u4F53_u7CFB"><span class="nav-number">3.</span> <span class="nav-text">第三章：View的事件体系</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1_View_u57FA_u7840_u77E5_u8BC6"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 View基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2_View_u7684_u6ED1_u52A8"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 View的滑动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3__u5F39_u6027_u6ED1_u52A8"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 弹性滑动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4_View_u7684_u4E8B_u4EF6_u5206_u53D1_u673A_u5236"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 View的事件分发机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5_View_u7684_u6ED1_u52A8_u51B2_u7A81"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 View的滑动冲突</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406"><span class="nav-number">4.</span> <span class="nav-text">第四章：View的工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1__u521D_u8BC6ViewRoot_u548CDecorView"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 初识ViewRoot和DecorView</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2__u7406_u89E3MeasureSpec"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 理解MeasureSpec</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3_view_u7684_u5DE5_u4F5C_u6D41_u7A0B"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 view的工作流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4__u81EA_u5B9A_u4E49view"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 自定义view</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C6_u7AE0_Android_u7684Drawable"><span class="nav-number">5.</span> <span class="nav-text">第6章 Android的Drawable</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1_Drawable_u7B80_u4ECB"><span class="nav-number">5.1.</span> <span class="nav-text">6.1 Drawable简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2_Drawable_u5206_u7C7B"><span class="nav-number">5.2.</span> <span class="nav-text">6.2 Drawable分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3__u81EA_u5B9A_u4E49Drawable"><span class="nav-number">5.3.</span> <span class="nav-text">6.3 自定义Drawable</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E03_u7AE0_uFF1AAndroid_u52A8_u753B_u6DF1_u5165_u5206_u6790"><span class="nav-number">6.</span> <span class="nav-text">第七章：Android动画深入分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1_View_u52A8_u753B"><span class="nav-number">6.1.</span> <span class="nav-text">7.1 View动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2_View_u52A8_u753B_u7684_u7279_u6B8A_u4F7F_u7528_u573A_u666F"><span class="nav-number">6.2.</span> <span class="nav-text">7.2 View动画的特殊使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-3__u5C5E_u6027_u52A8_u753B"><span class="nav-number">6.3.</span> <span class="nav-text">7.3 属性动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-4__u4F7F_u7528_u52A8_u753B_u7684_u6CE8_u610F_u4E8B_u9879"><span class="nav-number">6.4.</span> <span class="nav-text">7.4 使用动画的注意事项</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E00_u7AE0_uFF1AActivity_u7684_u751F_u547D_u5468_u671F_u548C_u542F_u52A8_u6A21_u5F0F"><span class="nav-number">1.</span> <span class="nav-text">第一章：Activity的生命周期和启动模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1_Activity_u7684_u751F_u547D_u5468_u671F_u5168_u9762_u5206_u6790"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 Activity的生命周期全面分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2_Activity_u7684_u542F_u52A8_u6A21_u5F0F"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Activity的启动模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3_IntentFilter_u7684_u5339_u914D_u89C4_u5219"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 IntentFilter的匹配规则</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E8C_u7AE0_uFF1AIPC_u673A_u5236"><span class="nav-number">2.</span> <span class="nav-text">第二章：IPC机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1_Android_IPC_u7B80_u4ECB"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Android IPC简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2_Android_u4E2D_u7684_u591A_u8FDB_u7A0B_u6A21_u5F0F"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Android中的多进程模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3_IPC_u57FA_u7840_u6982_u5FF5_u4ECB_u7ECD"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 IPC基础概念介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4_IPC_u65B9_u5F0F"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 IPC方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5_Binder_u8FDE_u63A5_u6C60"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 Binder连接池</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6__u9009_u7528_u5408_u9002_u7684IPC_u65B9_u5F0F"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 选用合适的IPC方式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E09_u7AE0_uFF1AView_u7684_u4E8B_u4EF6_u4F53_u7CFB"><span class="nav-number">3.</span> <span class="nav-text">第三章：View的事件体系</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1_View_u57FA_u7840_u77E5_u8BC6"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 View基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2_View_u7684_u6ED1_u52A8"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 View的滑动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3__u5F39_u6027_u6ED1_u52A8"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 弹性滑动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4_View_u7684_u4E8B_u4EF6_u5206_u53D1_u673A_u5236"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 View的事件分发机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5_View_u7684_u6ED1_u52A8_u51B2_u7A81"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 View的滑动冲突</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u56DB_u7AE0_uFF1AView_u7684_u5DE5_u4F5C_u539F_u7406"><span class="nav-number">4.</span> <span class="nav-text">第四章：View的工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1__u521D_u8BC6ViewRoot_u548CDecorView"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 初识ViewRoot和DecorView</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2__u7406_u89E3MeasureSpec"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 理解MeasureSpec</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3_view_u7684_u5DE5_u4F5C_u6D41_u7A0B"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 view的工作流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4__u81EA_u5B9A_u4E49view"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 自定义view</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u516D_u7AE0_Android_u7684Drawable"><span class="nav-number">5.</span> <span class="nav-text">第六章 Android的Drawable</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1_Drawable_u7B80_u4ECB"><span class="nav-number">5.1.</span> <span class="nav-text">6.1 Drawable简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2_Drawable_u5206_u7C7B"><span class="nav-number">5.2.</span> <span class="nav-text">6.2 Drawable分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3__u81EA_u5B9A_u4E49Drawable"><span class="nav-number">5.3.</span> <span class="nav-text">6.3 自定义Drawable</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E03_u7AE0_uFF1AAndroid_u52A8_u753B_u6DF1_u5165_u5206_u6790"><span class="nav-number">6.</span> <span class="nav-text">第七章：Android动画深入分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1_View_u52A8_u753B"><span class="nav-number">6.1.</span> <span class="nav-text">7.1 View动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2_View_u52A8_u753B_u7684_u7279_u6B8A_u4F7F_u7528_u573A_u666F"><span class="nav-number">6.2.</span> <span class="nav-text">7.2 View动画的特殊使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-3__u5C5E_u6027_u52A8_u753B"><span class="nav-number">6.3.</span> <span class="nav-text">7.3 属性动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-4__u4F7F_u7528_u52A8_u753B_u7684_u6CE8_u610F_u4E8B_u9879"><span class="nav-number">6.4.</span> <span class="nav-text">7.4 使用动画的注意事项</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
@@ -1182,15 +1090,15 @@ drawable.startTransition(5000);
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">俞其荣
-  
+ <!--  
   &nbsp;&nbsp;|&nbsp;&nbsp;
-  <script type="text/javascript">
+ <script type="text/javascript">
   var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
   document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
   </script>
 
   &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/sitemap.xml">Google网站地图</a></span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/baidusitemap.xml">百度网站地图</a></span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/baidusitemap.xml">百度网站地图</a></span> -->
   
   </span>
 </div>
@@ -1202,7 +1110,7 @@ drawable.startTransition(5000);
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Pisces
+    NexT.Muse
   </a>
 </div>
 
@@ -1278,13 +1186,6 @@ drawable.startTransition(5000);
 
   
   
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
-
-
 
   
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>

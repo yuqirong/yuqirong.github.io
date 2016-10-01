@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion">
+<html class="theme-next muse use-motion">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -29,32 +29,6 @@
 
   <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
 
-
-
-
-  
-  
-  
-  
-
-  
-    
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    
-    
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-  
 
 
 
@@ -95,7 +69,7 @@
 <script type="text/javascript" id="hexo.configuration">
   var NexT = window.NexT || {};
   var CONFIG = {
-    scheme: 'Pisces',
+    scheme: 'Muse',
     sidebar: {"position":"left","display":"post"},
     fancybox: true,
     motion: true,
@@ -236,39 +210,9 @@
       
 
       
-        <li class="menu-item menu-item-search">
-          
-            <a href="#" class="st-search-show-outputs">
-          
-            
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
-            
-            搜索
-          </a>
-        </li>
-      
     </ul>
   
 
-  
-    <div class="site-search">
-      
-  <form class="site-search-form">
-  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
-</form>
-
-<script type="text/javascript">
-  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
-    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
-    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
-  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
-
-  _st('install', '8ZRfk21kUz89L8Xi6hZm','2.0.0');
-</script>
-
-
-
-    </div>
   
 </nav>
 
@@ -281,6 +225,138 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/10/19/给你的ScrollView设置滑动距离监听器/" itemprop="url">
+                  给你的ScrollView设置滑动距离监听器
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-10-19T19:44:21+08:00" content="2015-10-19">
+              2015-10-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Tips/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Tips</span>
+                  </a>
+                </span>
+
+					<!-- 
+					�Ķ���  
+					-->
+
+                
+                
+
+              
+            </span>
+          
+          
+           <!-- 
+        �Ƿ������� 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/10/19/给你的ScrollView设置滑动距离监听器/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/19/给你的ScrollView设置滑动距离监听器/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+            
+          -->
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          ScrollView是我们经常使用的一个UI控件，也许你在使用ScrollView的过程中会发现，当你想监听ScrollView滑动的距离时却没有合适的监听器！当然在API 23中有setOnScrollChangeListener(View.OnScrollChangeListener l)可以使用，但是并不兼容低版本的API。那怎么办呢？只好重写ScrollView来实现对滑动距离的监听了。
+话不多说，直接上代码：
+12345678910111213141516171819202122232425262728293031323334353637383940public class MySc
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/10/19/给你的ScrollView设置滑动距离监听器/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -336,14 +412,19 @@
                   </a>
                 </span>
 
+					<!-- 
+					�Ķ���  
+					-->
+
                 
                 
 
               
             </span>
           
-
           
+           <!-- 
+        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -352,7 +433,8 @@
                 </a>
               </span>
             
-          
+            
+          -->
 
           
 
@@ -462,14 +544,19 @@
                   </a>
                 </span>
 
+					<!-- 
+					�Ķ���  
+					-->
+
                 
                 
 
               
             </span>
           
-
           
+           <!-- 
+        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -478,7 +565,8 @@
                 </a>
               </span>
             
-          
+            
+          -->
 
           
 
@@ -587,14 +675,19 @@
                   </a>
                 </span>
 
+					<!-- 
+					�Ķ���  
+					-->
+
                 
                 
 
               
             </span>
           
-
           
+           <!-- 
+        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -603,7 +696,8 @@
                 </a>
               </span>
             
-          
+            
+          -->
 
           
 
@@ -712,14 +806,19 @@
                   </a>
                 </span>
 
+					<!-- 
+					�Ķ���  
+					-->
+
                 
                 
 
               
             </span>
           
-
           
+           <!-- 
+        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -728,7 +827,8 @@
                 </a>
               </span>
             
-          
+            
+          -->
 
           
 
@@ -839,14 +939,19 @@ Activity作为四大组件之一，几乎是每个人开始学习Android最先�
                   </a>
                 </span>
 
+					<!-- 
+					�Ķ���  
+					-->
+
                 
                 
 
               
             </span>
           
-
           
+           <!-- 
+        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -855,7 +960,8 @@ Activity作为四大组件之一，几乎是每个人开始学习Android最先�
                 </a>
               </span>
             
-          
+            
+          -->
 
           
 
@@ -968,14 +1074,19 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
                   </a>
                 </span>
 
+					<!-- 
+					�Ķ���  
+					-->
+
                 
                 
 
               
             </span>
           
-
           
+           <!-- 
+        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -984,7 +1095,8 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
                 </a>
               </span>
             
-          
+            
+          -->
 
           
 
@@ -1085,7 +1197,7 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-count">47</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1209,71 +1321,6 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
         
         <div class="links-of-blogroll motion-element">
           
-            <div class="links-of-blogroll-title">友情链接</div>
-            <ul class="links-of-blogroll-list">
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://guolin.tech/" target="_blank">郭霖的专栏</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://blog.csdn.net/lmj623565791/" target="_blank">Hongyang</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://blog.csdn.net/singwhatiwanna/" target="_blank">任玉刚</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://liaohuqiu.net/" target="_blank">Srain</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://hukai.me/" target="_blank">胡凯</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://stormzhang.com/" target="_blank">stormzhang</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://drakeet.me/" target="_blank">Drakeet的个人博客</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="https://github.com/xuyisheng/" target="_blank">eclipse_xu</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://www.kymjs.com/" target="_blank">张涛-开源实验室</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://www.devtf.cn/" target="_blank">开发技术前线</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://blog.csdn.net/lzyzsd/" target="_blank">大头鬼Bruce</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://blog.mcxiaoke.com/" target="_blank">Xiaoke's Blog</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://www.baoyz.com/" target="_blank">Baoyz's Blog</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://itangqi.me/" target="_blank">Qi Tang's Blog</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://blog.csdn.net/zhaokaiqiang1992/" target="_blank">赵凯强</a>
-                </li>
-              
-            </ul>
-          
         </div>
 
       </section>
@@ -1298,15 +1345,15 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">俞其荣
-  
+ <!--  
   &nbsp;&nbsp;|&nbsp;&nbsp;
-  <script type="text/javascript">
+ <script type="text/javascript">
   var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
   document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
   </script>
 
   &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/sitemap.xml">Google网站地图</a></span>
-  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/baidusitemap.xml">百度网站地图</a></span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/baidusitemap.xml">百度网站地图</a></span> -->
   
   </span>
 </div>
@@ -1318,7 +1365,7 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Pisces
+    NexT.Muse
   </a>
 </div>
 
@@ -1394,13 +1441,6 @@ $ git clone https://github.com/iissnan/hexo-theme-next themes/next
 
   
   
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
-
-
 
   
 
