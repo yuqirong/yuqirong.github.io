@@ -1,5 +1,6 @@
 title: 用Java实现Android多渠道打包工具
 date: 2016-09-25 19:52:14
+categories: Android Blog
 tags: Android
 ---
 0001b

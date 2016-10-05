@@ -2,7 +2,7 @@ title: about
 date: 2015-12-16 21:19:34
 comments: false
 ---
-{% centerquote %}Hey,it is me!{% endcenterquote %}
+{% centerquote %}Hey , it is me ! {% endcenterquote %}
 
 ## 个人介绍
 * 俞其荣 / 男 / 1993
@@ -26,6 +26,16 @@ comments: false
 * Email : <yqr271228943@gmail.com>
 
 ## 打赏我吧
-如果您觉得我的博文不错，可以选择用支付宝来打赏我。您的支持和鼓励是我最大的动力！
+<div id="QR" style="display: block;text-align: center;margin:0px auto">
+<div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+<div id="wechat" style="display: inline-block">
+<a href="/uploads/avatar/20161001102756.png" class="fancybox" rel="group"><img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"></a>
+<p>微信打赏</p>
+</div>
 
-<img alt="支付宝" src="/uploads/avatar/20160428221107.jpg" width="326" height="439"/>
+<div id="alipay" style="display: inline-block">
+<a href="/uploads/avatar/20160428221107.jpg" class="fancybox" rel="group"><img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"></a>
+<p>支付宝打赏</p>
+</div>
+
+</div>

@@ -15,7 +15,7 @@ duoshuo_shortname: yuqirong
 # 百度统计
 baidu_analytics: cb7fb9301d60e7ca4f45f2361955bd8f
 # swiftype全文检索
-swiftype_key: 8ZRfk21kUz89L8Xi6hZm
+#swiftype_key: 8ZRfk21kUz89L8Xi6hZm
 # 多说热评文章 true 或者 false
 # duoshuo_hotartical: true
 since: 2015
@@ -42,12 +42,13 @@ feed:
 # Social links
 social:
   GitHub: https://github.com/yuqirong
-  Google+: https://plus.google.com/116756215081118586533
   Twitter: https://twitter.com/yyyuqirong
   Instagram: https://www.instagram.com/yyyuqirong
+  Google+: https://plus.google.com/116756215081118586533
   LinkedIn: https://cn.linkedin.com/in/yuqirong
-  知乎: https://www.zhihu.com/people/yuqirong
+  Jianshu: http://www.jianshu.com/users/1291f6690ea0
   Weibo: http://weibo.com/yyyuqirong
+  Zhihu: https://www.zhihu.com/people/yuqirong
   Email: mailto:yqr271228943@gmail.com
   
 
@@ -55,21 +56,21 @@ social:
 links_title: 友情链接
 # links
 links:
-  郭霖的专栏: http://guolin.tech/
-  Hongyang: http://blog.csdn.net/lmj623565791/
-  任玉刚: http://blog.csdn.net/singwhatiwanna/
-  Srain: http://liaohuqiu.net/
-  胡凯: http://hukai.me/
-  stormzhang: http://stormzhang.com/
-  Drakeet的个人博客: http://drakeet.me/
-  eclipse_xu: https://github.com/xuyisheng/
-  张涛-开源实验室: http://www.kymjs.com/
-  开发技术前线: http://www.devtf.cn/
-  大头鬼Bruce: http://blog.csdn.net/lzyzsd/
-  Xiaoke's Blog: http://blog.mcxiaoke.com/
-  Baoyz's Blog: http://www.baoyz.com/
-  Qi Tang's Blog: http://itangqi.me/
-  赵凯强: http://blog.csdn.net/zhaokaiqiang1992/
+#  郭霖的专栏: http://guolin.tech/
+#  Hongyang: http://blog.csdn.net/lmj623565791/
+#  任玉刚: http://blog.csdn.net/singwhatiwanna/
+#  Srain: http://liaohuqiu.net/
+#  胡凯: http://hukai.me/
+#  stormzhang: http://stormzhang.com/
+#  Drakeet的个人博客: http://drakeet.me/
+#  eclipse_xu: https://github.com/xuyisheng/
+#  张涛-开源实验室: http://www.kymjs.com/
+#  开发技术前线: http://www.devtf.cn/
+#  大头鬼Bruce: http://blog.csdn.net/lzyzsd/
+#  Xiaoke's Blog: http://blog.mcxiaoke.com/
+#  Baoyz's Blog: http://www.baoyz.com/
+#  Qi Tang's Blog: http://itangqi.me/
+#  赵凯强: http://blog.csdn.net/zhaokaiqiang1992/
 
 # Share
 duoshuo_share: true

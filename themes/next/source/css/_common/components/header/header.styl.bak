@@ -1,3 +1,4 @@
+.header { background:url(/uploads/avatar/20191512062319231793.jpg) no-repeat;background-position:top right}
 
 .header-inner { position: relative; }
 

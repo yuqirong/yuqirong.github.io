@@ -71,6 +71,12 @@
                   </a>
                 </span>
 
+					<!-- 
+					阅读量 {% if not is_index %}
+  								<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
+					{% endif %} 
+					-->
+
                 {% set cat_length = post.categories.length %}
                 {% if cat_length > 1 and loop.index !== cat_length %}
                   {{ __('symbol.comma') }}
@@ -79,8 +85,9 @@
               {% endfor %}
             </span>
           {% endif %}
-
-          {% if post.comments %}
+          
+           <!-- 
+        是否有评论 {% if post.comments %}
             {% if (theme.duoshuo and theme.duoshuo.shortname) or theme.duoshuo_shortname %}
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -96,7 +103,8 @@
                 </a>
               </span>
             {% endif %}
-          {% endif %}
+          {% endif %}  
+          -->
 
           {% if not is_index and theme.facebook_sdk.enable and theme.facebook_sdk.like_button %}
             &nbsp; | &nbsp;
