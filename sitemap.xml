@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yuqirong.me/2016/10/02/%E6%8F%92%E4%BB%B6%E5%8C%96%E6%A1%86%E6%9E%B6android-pluginmgr%E5%85%A8%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2016-10-05T10:49:56.283Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://yuqirong.me/about/index.html</loc>
     <lastmod>2016-10-01T02:57:27.526Z</lastmod>
   </url>
@@ -92,12 +97,12 @@
   </url>
   
   <url>
-    <loc>http://yuqirong.me/2015/10/19/%E7%BB%99%E4%BD%A0%E7%9A%84ScrollView%E8%AE%BE%E7%BD%AE%E6%BB%91%E5%8A%A8%E8%B7%9D%E7%A6%BB%E7%9B%91%E5%90%AC%E5%99%A8/</loc>
+    <loc>http://yuqirong.me/2016/05/10/%E7%AE%80%E6%98%93%E5%AE%9E%E7%8E%B0Android%E4%B9%9D%E5%AE%AB%E6%A0%BC%E8%A7%A3%E9%94%81/</loc>
     <lastmod>2016-08-18T15:09:34.082Z</lastmod>
   </url>
   
   <url>
-    <loc>http://yuqirong.me/2016/05/10/%E7%AE%80%E6%98%93%E5%AE%9E%E7%8E%B0Android%E4%B9%9D%E5%AE%AB%E6%A0%BC%E8%A7%A3%E9%94%81/</loc>
+    <loc>http://yuqirong.me/2015/10/19/%E7%BB%99%E4%BD%A0%E7%9A%84ScrollView%E8%AE%BE%E7%BD%AE%E6%BB%91%E5%8A%A8%E8%B7%9D%E7%A6%BB%E7%9B%91%E5%90%AC%E5%99%A8/</loc>
     <lastmod>2016-08-18T15:09:34.082Z</lastmod>
   </url>
   
@@ -132,12 +137,12 @@
   </url>
   
   <url>
-    <loc>http://yuqirong.me/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop()%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/</loc>
+    <loc>http://yuqirong.me/2016/02/15/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AD%A5%E6%AD%A5%E5%AE%9E%E7%8E%B0%E5%8F%AF%E6%8B%96%E6%8B%BD%E7%9A%84GridView%E6%8E%A7%E4%BB%B6/</loc>
     <lastmod>2016-08-18T15:09:33.973Z</lastmod>
   </url>
   
   <url>
-    <loc>http://yuqirong.me/2016/02/15/%E5%B8%A6%E4%BD%A0%E4%B8%80%E6%AD%A5%E6%AD%A5%E5%AE%9E%E7%8E%B0%E5%8F%AF%E6%8B%96%E6%8B%BD%E7%9A%84GridView%E6%8E%A7%E4%BB%B6/</loc>
+    <loc>http://yuqirong.me/2016/01/05/%E5%AF%B9view%E7%9A%84getLeft()%E3%80%81getTop()%E7%AD%89%E7%9A%84%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2016-08-18T15:09:33.973Z</lastmod>
   </url>
   

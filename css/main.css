@@ -1021,10 +1021,6 @@ pre .javascript .function {
 .back-to-top.back-to-top-on {
   bottom: 19px;
 }
-.header {
-  background: url("/uploads/avatar/20191512062319231793.jpg") no-repeat;
-  background-position: top right;
-}
 .header-inner {
   position: relative;
 }
@@ -1527,7 +1523,8 @@ pre .javascript .function {
   width: 0;
   z-index: 1040;
   box-shadow: inset 0 2px 6px #000;
-  background: #222;
+  background: url("/uploads/avatar/20161005193356.jpg") no-repeat;
+  background-size: cover;
   -webkit-transform: translateZ(0);
 }
 .sidebar a {
@@ -1672,7 +1669,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #9c596e;
+  background: #c1ffff;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2234,6 +2231,10 @@ a.search-result {
 }
 .page-post-detail .comments {
   overflow: hidden;
+}
+body {
+  background: url("/uploads/avatar/20191512062319231793.jpg") no-repeat;
+  background-position: top right;
 }
 @media (max-width: 767px) {
   .header-inner,
