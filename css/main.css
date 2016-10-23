@@ -1669,7 +1669,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #c1ffff;
+  background: #1365ff;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2232,9 +2232,10 @@ a.search-result {
 .page-post-detail .comments {
   overflow: hidden;
 }
-body {
+#header {
   background: url("/uploads/avatar/20191512062319231793.jpg") no-repeat;
   background-position: top right;
+  background-size: cover;
 }
 @media (max-width: 767px) {
   .header-inner,
