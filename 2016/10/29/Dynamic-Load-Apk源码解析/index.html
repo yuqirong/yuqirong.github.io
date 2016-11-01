@@ -62,8 +62,8 @@
 <meta property="og:url" content="http://yuqirong.me/2016/10/29/Dynamic-Load-Apk源码解析/index.html">
 <meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="0x00趁着今天是周末，无所事事，来讲讲 Dynamic-Load-Apk 框架。Dynamic-Load-Apk 是任主席主导开发的一款插件化框架，其中心思想主要就是两个字——代理。和我之前分析的 android-pluginmgr 插件化框架不同的是，Dynamic-Load-Apk 框架完全基于在应用层上实现，并不依靠 ActivityThread 、Instrumentation 等。另外">
-<meta property="og:image" content="http://yuqirong.me/uploads/20161029/20161029223619.png">
-<meta property="og:updated_time" content="2016-10-30T06:31:07.279Z">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20161029/20161029223619.png">
+<meta property="og:updated_time" content="2016-11-01T15:12:44.828Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dynamic-Load-Apk源码解析">
 <meta name="twitter:description" content="0x00趁着今天是周末，无所事事，来讲讲 Dynamic-Load-Apk 框架。Dynamic-Load-Apk 是任主席主导开发的一款插件化框架，其中心思想主要就是两个字——代理。和我之前分析的 android-pluginmgr 插件化框架不同的是，Dynamic-Load-Apk 框架完全基于在应用层上实现，并不依靠 ActivityThread 、Instrumentation 等。另外">
@@ -325,7 +325,7 @@
 <h1 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h1><p>注：本文分析的 <a href="https://github.com/singwhatiwanna/dynamic-load-apk" target="_blank" rel="external">Dynamic-Load-Apk</a> 为 master 分支，版本为1.0.0；</p>
 <p>其实 <a href="https://github.com/singwhatiwanna/dynamic-load-apk" target="_blank" rel="external">Dynamic-Load-Apk</a> 框架的思想很巧妙，大致的思路如下：在宿主中首先申明了一些 ProxyActivity 以及 ProxyService ，插件中的 PluginActivity 要继承指定的 DLBasePluginActivity 。然后启动插件中的 Activity 时，实际上启动的是 ProxyActivity , 之后利用接口回调调用了 PluginActivity 中的生命周期方法。也就是说，PluginActivity 并不是实质上的 Activity ，其实只是一个普通的 Java 类。</p>
 <p>在分析源码之前，先在这里简单地说一下 <a href="https://github.com/singwhatiwanna/dynamic-load-apk" target="_blank" rel="external">Dynamic-Load-Apk</a> 框架的结构：</p>
-<p><img src="/uploads/20161029/20161029223619.png" alt="dynamic-load-apk的类结构"></p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20161029/20161029223619.png" alt="dynamic-load-apk的类结构"></p>
 <p>从上面的图中大致可以看出来，整个框架中的 Java 类基本可以分为五种类型：</p>
 <ul>
 <li><strong>DLPluginManager</strong> ：顾名思义，是整个插件的管理类。主要作用就是加载以及管理插件，启动插件中的Activity、Service等；</li>
@@ -395,13 +395,13 @@
   <div id="QR" style="display: none;">
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>微信打赏</p>
       </div>
     
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>支付宝打赏</p>
       </div>
     
@@ -519,7 +519,7 @@
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/uploads/avatar/27073358153.jpg"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
                alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
           <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>

@@ -64,8 +64,8 @@
 <meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用view.getTop()来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：
 123456789101112131415161718192021222324252627282930313233343536&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&amp;g">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160105/20160105202531.png">
-<meta property="og:updated_time" content="2016-08-18T15:09:33.973Z">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160105/20160105202531.png">
+<meta property="og:updated_time" content="2016-11-01T14:04:18.186Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="对view的getLeft()、getTop()等的笔记">
 <meta name="twitter:description" content="在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用view.getTop()来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：
@@ -327,7 +327,7 @@
         <p>在今天的开发中，遇到了一个之前没有关注过的细节。那就是我用<code>view.getTop()</code>来获取view距离屏幕顶部高度，结果发现得到的数值和理论不一致。我们来举个例子吧，比如我们有如下的布局：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/ll_01"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"60dp"</span></span><br><span class="line">        <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span></span><br><span class="line">        <span class="attribute">android:background</span>=<span class="value">"@android:color/holo_green_light"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/tv_01"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:text</span>=<span class="value">"我是第一行文字"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/ll_02"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"60dp"</span></span><br><span class="line">        <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span></span><br><span class="line">        <span class="attribute">android:background</span>=<span class="value">"@android:color/holo_blue_light"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/tv_02"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:text</span>=<span class="value">"我是第二行文字"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>上面是一个很简单的布局，UI效果图如下：</p>
-<p><img src="/uploads/20160105/20160105202531.png" alt="这里填写图片的描述"></p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160105/20160105202531.png" alt="这里填写图片的描述"></p>
 <p>当我们用<code>tv_01.getTop()</code>的时候，得到的返回值是0，符合我的想象。但是用<code>tv_02.getTop()</code>，得到的值也为0。而我原以为<code>tv_02.getTop()</code>的值为<code>ll_01</code>的高度，也就是<code>tv_02</code>距离屏幕顶部的长度。但是结果和我的想象不一致。</p>
 <p>后来我才知道原来<code>getTop()</code>方法返回的是该view距离<strong>父容器顶部</strong>的距离，所以理所应当<code>tv_02.getTop()</code>距离<code>ll_02</code>顶部的距离也为0了，同样的<code>getLeft()</code>、<code>getBottom()</code>、<code>getRight()</code>也是一个道理，以此类推。</p>
 <p>那么问题来了，如何按我之前的想法一样，得到<code>tv_02</code>距离<strong>屏幕顶部</strong>的值呢？很简单，我们只要<code>tv_02.getTop() + ll_02.getTop()</code>就好了。相信聪明的你已经懂了。</p>
@@ -353,13 +353,13 @@
   <div id="QR" style="display: none;">
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>微信打赏</p>
       </div>
     
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>支付宝打赏</p>
       </div>
     
@@ -475,7 +475,7 @@
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/uploads/avatar/27073358153.jpg"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
                alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
           <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>

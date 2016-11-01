@@ -64,8 +64,8 @@
 <meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="0001b最近在公司做了一个多渠道打包的工具，趁今天有空就来讲讲 Android 多渠道打包这件小事。众所周知，随着业务的不断增长，APP 的渠道也会越来越多，如果用 Gradle 打多渠道包的话，可能会耗费几个小时的时间才能打出几百个渠道包。所以就必须有一种方法能够解决这种问题。
 目前市面上比较好的解决方案就是在 apk 文件中“动手脚”，比如由一位360 Android 工程师提出的“在 ap">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160925/20160925221513.png">
-<meta property="og:updated_time" content="2016-10-01T01:15:16.980Z">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160925/20160925221513.png">
+<meta property="og:updated_time" content="2016-11-01T15:09:12.857Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用Java实现Android多渠道打包工具">
 <meta name="twitter:description" content="0001b最近在公司做了一个多渠道打包的工具，趁今天有空就来讲讲 Android 多渠道打包这件小事。众所周知，随着业务的不断增长，APP 的渠道也会越来越多，如果用 Gradle 打多渠道包的话，可能会耗费几个小时的时间才能打出几百个渠道包。所以就必须有一种方法能够解决这种问题。
@@ -327,7 +327,7 @@
         <h1 id="0001b"><a href="#0001b" class="headerlink" title="0001b"></a>0001b</h1><p>最近在公司做了一个多渠道打包的工具，趁今天有空就来讲讲 Android 多渠道打包这件小事。众所周知，随着业务的不断增长，APP 的渠道也会越来越多，如果用 Gradle 打多渠道包的话，可能会耗费几个小时的时间才能打出几百个渠道包。所以就必须有一种方法能够解决这种问题。</p>
 <p>目前市面上比较好的解决方案就是在 apk 文件中“动手脚”，比如由一位360 Android 工程师提出的“在 apk 文件中添加 comments 多渠道打包方法”，具体的代码在GitHub 上可以找到：<a href="https://github.com/seven456/MultiChannelPackageTool" target="_blank" rel="external">MultiChannelPackageTool</a> 。除此之外，还有美团点评技术团队在博客上发表过一篇<a href="http://tech.meituan.com/mt-apk-packaging.html" target="_blank" rel="external">《美团Android自动化之旅—生成渠道包》</a>，里面讲叙了一种在 apk 文件中的 META-INF 目录下添加渠道信息的方法，之后再在程序启动时去动态读取，具体的实现原理可以去美团博客上看，这里就不说了。</p>
 <p>我们解压多渠道打出来的 apk 包后，就会发现在 META-INF 目录下多了一个 channel_xxxxx 文件，而这个就是我们的渠道文件：</p>
-<p><img src="/uploads/20160925/20160925221513.png" alt="channel文件"></p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160925/20160925221513.png" alt="channel文件"></p>
 <p>本文所采用的方法就是根据美团提供的思路实现的，当然网上有很多使用 Python 语言实现美团思路的版本，经过测试发现 Python 版本比 Java 版本打渠道包的速度更快一些。但是，在这里只提供 Java 版本实现方案，Python 版本实现的方案会在文末以参考链接的方式给出。</p>
 <h1 id="0010b"><a href="#0010b" class="headerlink" title="0010b"></a>0010b</h1><p>在这里先说明一下，Java 编写的多渠道打包工具依赖 commons-io.jar 和 zip4j.jar 。下面我们就开始进入正题吧。</p>
 <p>我们先规定一下，渠道文件命名为 channel.txt ，并且要打包的 apk 文件和 channel.txt 与多渠道打包工具在同一目录下。</p>
@@ -360,7 +360,7 @@ pause&gt;nul
 exit
 </code></pre><p>通过我们的努力 Java 版的多渠道打包工具就做好了。但是不足的是，测试后发现 Java 版打渠道包的速度没有 Python 版的快，主要是在 apk 文件中添加渠道信息文件这一步操作耗费的时间有点多。如果哪位小伙伴有更好的解决方案，欢迎联系我！</p>
 <p>附上多渠道打包工具的源码：</p>
-<p><a href="/uploads/20160925/MultiChannelBuildTool.rar">MultiChannelBuildTool.rar</a></p>
+<p><a href="http://ofytl4mzu.bkt.clouddn.com/20160925/MultiChannelBuildTool.rar" target="_blank" rel="external">MultiChannelBuildTool.rar</a></p>
 <h1 id="0100b"><a href="#0100b" class="headerlink" title="0100b"></a>0100b</h1><p>References：</p>
 <ul>
 <li><a href="http://www.jianshu.com/p/7236ceca2630" target="_blank" rel="external">Gradle 多渠道打包实践</a></li>
@@ -390,13 +390,13 @@ exit
   <div id="QR" style="display: none;">
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>微信打赏</p>
       </div>
     
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>支付宝打赏</p>
       </div>
     
@@ -512,7 +512,7 @@ exit
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/uploads/avatar/27073358153.jpg"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
                alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
           <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>

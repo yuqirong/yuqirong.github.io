@@ -66,10 +66,10 @@
 <meta property="og:description" content="又到了更博的时间了，今天给大家带来的就是“导航Tab栏悬浮功能”了。通常大家在玩手机的过程中应该会注意到很多的app都有这种功能，比如说外卖达人常用的“饿了么”。下面就给出了“饿了么”导航Tab栏悬浮的效果图。
 
 可以看到上图中的“分类”、“排序”、“筛选”会悬浮在app的顶部，状态随着ScrollView(也可能不是ScrollView，在这里姑且把这滑动的UI控件当作ScrollView吧)的">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160112/20160112210653.gif">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160112/20160112201753.png">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160112/20160112204356.gif">
-<meta property="og:updated_time" content="2016-08-18T15:09:34.114Z">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160112/20160112210653.gif">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160112/20160112201753.png">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160112/20160112204356.gif">
+<meta property="og:updated_time" content="2016-11-01T14:06:50.540Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="轻松实现app中的导航Tab栏悬浮功能">
 <meta name="twitter:description" content="又到了更博的时间了，今天给大家带来的就是“导航Tab栏悬浮功能”了。通常大家在玩手机的过程中应该会注意到很多的app都有这种功能，比如说外卖达人常用的“饿了么”。下面就给出了“饿了么”导航Tab栏悬浮的效果图。
@@ -330,7 +330,7 @@
 
       
         <p>又到了更博的时间了，今天给大家带来的就是“导航Tab栏悬浮功能”了。通常大家在玩手机的过程中应该会注意到很多的app都有这种功能，比如说外卖达人常用的“饿了么”。下面就给出了“饿了么”导航Tab栏悬浮的效果图。</p>
-<p><img src="/uploads/20160112/20160112210653.gif" alt="这里填写图片的描述"></p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160112/20160112210653.gif" alt="这里填写图片的描述"></p>
 <p>可以看到上图中的“分类”、“排序”、“筛选”会悬浮在app的顶部，状态随着ScrollView(也可能不是ScrollView，在这里姑且把这滑动的UI控件当作ScrollView吧)的滚动而变化。像这种导航Tab栏悬浮的作用相信大家都能体会到，Tab栏不会随着ScrollView等的滚动而被滑出屏幕外，增加了与用户之间的交互性和方便性。</p>
 <p>看到上面的效果，相信大家都跃跃欲试了，那就让我们开始吧。</p>
 <p>首先大家要明白一点：Tab栏的状态变化是要监听ScrollView滑动距离的。至于如何得到ScrollView的滑动距离？可以看看我的一篇Tip：<a href="/2015/10/19/给你的ScrollView设置滑动距离监听器/">《给你的ScrollView设置滑动距离监听器》</a>，这里就不过多叙述了。</p>
@@ -341,7 +341,7 @@
 <p>Tab栏的布局，tab_layout.xml：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:id</span>=<span class="value">"@+id/ll_tab"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"40dp"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"@color/colorPrimary"</span></span><br><span class="line">    <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"0dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_weight</span>=<span class="value">"1"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"分类"</span></span><br><span class="line">        <span class="attribute">android:textColor</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">        <span class="attribute">android:textSize</span>=<span class="value">"18sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"0dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_weight</span>=<span class="value">"1"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"排序"</span></span><br><span class="line">        <span class="attribute">android:textColor</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">        <span class="attribute">android:textSize</span>=<span class="value">"18sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"0dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_weight</span>=<span class="value">"1"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"筛选"</span></span><br><span class="line">        <span class="attribute">android:textColor</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">        <span class="attribute">android:textSize</span>=<span class="value">"18sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>上面布局中的很多空白LinearLayout主要是拉长ScrollView，效果图就是这样的：</p>
-<p><img src="/uploads/20160112/20160112201753.png" alt="这里填写图片的描述"></p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160112/20160112201753.png" alt="这里填写图片的描述"></p>
 <p>然后我们来看看<code>onCreate(Bundle savedInstanceState)</code>：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    getSupportActionBar().hide();</span><br><span class="line">    setContentView(R.layout.activity_main);</span><br><span class="line">    mScrollView = (MyScrollView) findViewById(R.id.mScrollView);</span><br><span class="line">    mScrollView.setOnScrollListener(<span class="keyword">this</span>);</span><br><span class="line">    ll_tab = (LinearLayout) findViewById(R.id.ll_tab);</span><br><span class="line">    windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们先在<code>onCreate(Bundle savedInstanceState)</code>中给ScrollView添加了滑动距离监听器以及得到了一个windowManager的对象。还有一点需要注意的是：我们调用了<code>getSupportActionBar().hide();</code>去掉了标题栏(MainActivity继承了AppCompatActivity)。这是因为标题栏的存在导致了在计算悬浮窗y轴的值时要额外加上标题栏的高度(当然你也可以保留标题栏，然后计算时再加上标题栏的高度^_^!)。</p>
@@ -355,10 +355,10 @@
 <p>最后，不要忘了在AndroidManifest.xml里申请显示悬浮窗的权限：</p>
 <pre><code>&lt;uses-permission android:name=&quot;android.permission.SYSTEM_ALERT_WINDOW&quot; /&gt;
 </code></pre><p>到这里，整体的代码就这些了。一起来看看效果吧：</p>
-<p><img src="/uploads/20160112/20160112204356.gif" alt="这里填写图片的描述"></p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160112/20160112204356.gif" alt="这里填写图片的描述"></p>
 <p>但是用这种方法来实现Tab栏悬浮功能有一个缺点，那就是如果该app没有被赋予显示悬浮窗的权限，那么该功能就变成鸡肋了。当然还有第二种方法来实现，不过只能等到下一篇博文再讲了。</p>
 <p>本Demo源码下载：</p>
-<p><a href="/uploads/20160112/TabSuspendDemo.rar">TabSuspendDemo.rar</a></p>
+<p><a href="http://ofytl4mzu.bkt.clouddn.com/20160112/TabSuspendDemo.rar" target="_blank" rel="external">TabSuspendDemo.rar</a></p>
 <p>have a nice day~</p>
 
       
@@ -381,13 +381,13 @@
   <div id="QR" style="display: none;">
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>微信打赏</p>
       </div>
     
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>支付宝打赏</p>
       </div>
     
@@ -503,7 +503,7 @@
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/uploads/avatar/27073358153.jpg"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
                alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
           <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>

@@ -62,8 +62,8 @@
 <meta property="og:url" content="http://yuqirong.me/2016/02/03/对LayoutInflater的深入解析/index.html">
 <meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="前言今天要讲的主角就是LayoutInflater，相信大家都用过吧。在动态地加载布局时，经常可以看见它的身影。比如说在Fragment的onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)方法里，就需要我们返回Fragment的View。这时就可以用inflater.inflat">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160203/20160203183605.png">
-<meta property="og:updated_time" content="2016-08-18T15:09:33.957Z">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160203/20160203183605.png">
+<meta property="og:updated_time" content="2016-11-01T14:12:49.646Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="对LayoutInflater的深入解析">
 <meta name="twitter:description" content="前言今天要讲的主角就是LayoutInflater，相信大家都用过吧。在动态地加载布局时，经常可以看见它的身影。比如说在Fragment的onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)方法里，就需要我们返回Fragment的View。这时就可以用inflater.inflat">
@@ -326,7 +326,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Obtains the LayoutInflater from the given context.</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> LayoutInflater <span class="title">from</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    LayoutInflater LayoutInflater =</span><br><span class="line">            (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);</span><br><span class="line">    <span class="keyword">if</span> (LayoutInflater == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> AssertionError(<span class="string">"LayoutInflater not found."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> LayoutInflater;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们可以看到原来<code>from(Context context)</code>这个方法只不过把<code>context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)</code>进行简单地封装了一下，方便开发者调用。相信大家都看得懂。</p>
 <h1 id="inflate_28_u2026_29"><a href="#inflate_28_u2026_29" class="headerlink" title="inflate(…)"></a>inflate(…)</h1><p>在得到了LayoutInflater的对象之后，我们就要使用它的inflate()方法了。</p>
-<p><img src="/uploads/20160203/20160203183605.png" alt="这里填写图片的描述"></p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160203/20160203183605.png" alt="这里填写图片的描述"></p>
 <p>可以看到inflate()有四个重载的方法。我们先来看看前三个的源码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> View <span class="title">inflate</span><span class="params">(@LayoutRes <span class="keyword">int</span> resource, @Nullable ViewGroup root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> inflate(resource, root, root != <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> View <span class="title">inflate</span><span class="params">(XmlPullParser parser, @Nullable ViewGroup root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> inflate(parser, root, root != <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> View <span class="title">inflate</span><span class="params">(@LayoutRes <span class="keyword">int</span> resource, @Nullable ViewGroup root, <span class="keyword">boolean</span> attachToRoot)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Resources res = getContext().getResources();</span><br><span class="line">    <span class="keyword">if</span> (DEBUG) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"INFLATING from resource: \""</span> + res.getResourceName(resource) + <span class="string">"\" ("</span></span><br><span class="line">                + Integer.toHexString(resource) + <span class="string">")"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> XmlResourceParser parser = res.getLayout(resource);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> inflate(parser, root, attachToRoot);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        parser.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>看到这里，我们都明白了，前三个inflate()方法到最后都是调用了<code>inflate(XmlPullParser parser, @Nullable ViewGroup root, boolean attachToRoot)</code>这个方法。原来第四个inflate()方法才是“幕后黑手”。那让我们来揭开它的黑纱吧：</p>
@@ -365,13 +365,13 @@
   <div id="QR" style="display: none;">
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>微信打赏</p>
       </div>
     
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>支付宝打赏</p>
       </div>
     
@@ -489,7 +489,7 @@
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/uploads/avatar/27073358153.jpg"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
                alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
           <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>

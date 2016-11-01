@@ -62,8 +62,8 @@
 <meta property="og:url" content="http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/index.html">
 <meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&amp;gt;﹏&amp;lt;)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、Ac">
-<meta property="og:image" content="http://yuqirong.me/uploads/20151124/20151124235609.png">
-<meta property="og:updated_time" content="2016-08-18T15:09:33.926Z">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20151124/20151124235609.png">
+<meta property="og:updated_time" content="2016-11-01T13:56:10.593Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="初探Android ORM框架之greenDAO">
 <meta name="twitter:description" content="在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&amp;gt;﹏&amp;lt;)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、Ac">
@@ -355,7 +355,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GreenDaoGeneration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] arg0)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Schema schema = <span class="keyword">new</span> Schema(<span class="number">1</span>, <span class="string">"com.yuqirong.greendao"</span>);</span><br><span class="line">            addLocation(schema);</span><br><span class="line">            <span class="keyword">new</span> DaoGenerator().generateAll(schema, <span class="string">"C:/Users/yuqirong/Desktop/GreenDaoDemo/app/src/main/java-gen"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">addLocation</span><span class="params">(Schema schema)</span></span>&#123;</span><br><span class="line">        Entity location= schema.addEntity(<span class="string">"Location"</span>);</span><br><span class="line">        location.addIdProperty();</span><br><span class="line">        location.addDoubleProperty(<span class="string">"lon"</span>);</span><br><span class="line">        location.addIntProperty(<span class="string">"level"</span>);</span><br><span class="line">        location.addStringProperty(<span class="string">"address"</span>);</span><br><span class="line">        location.addStringProperty(<span class="string">"city_name"</span>);</span><br><span class="line">        location.addIntProperty(<span class="string">"alevel"</span>);</span><br><span class="line">        location.addDoubleProperty(<span class="string">"lat"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>其中在创建Schema对象的参数中，第一个表示数据库的版本号，我们传入了“1”，第二个参数是生成代码的包名，我们传入了”com.yuqirong.greendao”，那么生成的代码就自动在”com.yuqirong.greendao”包下了。</p>
 <p>在addLocatiion方法中，我们打算把“Location”这个类(其实到现在为止，Location实体类还未生成)保存在数据库中，<code>schema.addEntity(&quot;Location&quot;)</code>传入的Location，那么该表的表名就叫Location，然后我们又定义了在Location表中会有lon、lat、city_name三个字段。所以如果你想创建多张表，那么就要像addLocation()这样的方法多写几个。好了，该做的差不多都做了，最后再<code>new DaoGenerator().generateAll(schema, &quot;C:/Users/yuqirong/Desktop/GreenDaoDemo/app/src/main/java-gen&quot;);</code>把之前的schema传入，第二个参数传的是之前创建的java-gen的路径(建议传入绝对路径，之前在这里被坑了好久↖(~^~)↗)。代码运行之后再到”com.yuqirong.greendao”路径下去看，发现会有许多类生成：</p>
-<p><img src="/uploads/20151124/20151124235609.png" alt="这里写图片描述"></p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20151124/20151124235609.png" alt="这里写图片描述"></p>
 <p>至于这些类的作用，我们到下面再说。</p>
 <p>第二步在Android Studio的build.gradle(Module:app)中添加以下依赖：</p>
 <p><code>compile &#39;de.greenrobot:greendao:2.0.0&#39;</code>  </p>
@@ -395,7 +395,7 @@ locationDao.insert(local);
 </ul>
 <p>好了，关于greenDAO的简单使用就先到这里，至于深入使用我们有机会再讲吧！</p>
 <p>依据惯例，下面提供本Demo的源码:</p>
-<p><a href="/uploads/20151124/GreenDaoDemo.rar">GreenDaoDemo.rar</a></p>
+<p><a href="http://ofytl4mzu.bkt.clouddn.com/20151124/GreenDaoDemo.rar" target="_blank" rel="external">GreenDaoDemo.rar</a></p>
 
       
     </div>
@@ -417,13 +417,13 @@ locationDao.insert(local);
   <div id="QR" style="display: none;">
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>微信打赏</p>
       </div>
     
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>支付宝打赏</p>
       </div>
     
@@ -539,7 +539,7 @@ locationDao.insert(local);
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/uploads/avatar/27073358153.jpg"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
                alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
           <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>

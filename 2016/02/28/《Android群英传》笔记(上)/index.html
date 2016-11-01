@@ -62,9 +62,9 @@
 <meta property="og:url" content="http://yuqirong.me/2016/02/28/《Android群英传》笔记(上)/index.html">
 <meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="第三章：Android控件架构与自定义控件详解3.1 Android控件架构控件分为两类：View和ViewGroup，通过ViewGroup整个界面形成一个树形结构，并且ViewGroup负责对子View的测量与绘制以及传递交互事件。通常在Activity中使用的findViewById()方法，就是在控件树中以树的深度优先遍历来查找对应元素。在每颗控件树的顶部，都有一个ViewParent对象">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160228/20160228230641.png">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160228/20160228232837.png">
-<meta property="og:updated_time" content="2016-08-18T15:09:33.864Z">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160228/20160228230641.png">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160228/20160228232837.png">
+<meta property="og:updated_time" content="2016-11-01T14:26:28.366Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Android群英传》笔记(上)">
 <meta name="twitter:description" content="第三章：Android控件架构与自定义控件详解3.1 Android控件架构控件分为两类：View和ViewGroup，通过ViewGroup整个界面形成一个树形结构，并且ViewGroup负责对子View的测量与绘制以及传递交互事件。通常在Activity中使用的findViewById()方法，就是在控件树中以树的深度优先遍历来查找对应元素。在每颗控件树的顶部，都有一个ViewParent对象">
@@ -323,10 +323,10 @@
 
       
         <h1 id="u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3"><a href="#u7B2C_u4E09_u7AE0_uFF1AAndroid_u63A7_u4EF6_u67B6_u6784_u4E0E_u81EA_u5B9A_u4E49_u63A7_u4EF6_u8BE6_u89E3" class="headerlink" title="第三章：Android控件架构与自定义控件详解"></a>第三章：Android控件架构与自定义控件详解</h1><h2 id="3-1_Android_u63A7_u4EF6_u67B6_u6784"><a href="#3-1_Android_u63A7_u4EF6_u67B6_u6784" class="headerlink" title="3.1 Android控件架构"></a>3.1 Android控件架构</h2><p>控件分为两类：View和ViewGroup，通过ViewGroup整个界面形成一个树形结构，并且ViewGroup负责对子View的测量与绘制以及传递交互事件。通常在Activity中使用的findViewById()方法，就是在控件树中以树的深度优先遍历来查找对应元素。在每颗控件树的顶部，都有一个ViewParent对象，这就是整棵树的控制核心，所有的交互管理事件都由它来统一调度和分配。</p>
-<p><img src="/uploads/20160228/20160228230641.png" alt="这里写图片描述"></p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160228/20160228230641.png" alt="这里写图片描述"></p>
 <p>如上图所示，每个Activity都包含一个Window对象，在Android中Window对象通常由PhoneWindow来实现。PhoneWindow对象又将一个DecorView设置为整个应用的根View。DecorView作为了窗口界面的顶层视图，封装了一些窗口操作的通用方法。可以说，DecorView将要显示的具体内容呈现在了PhoneWindow上，这里所有View的监听事件，都通过WindowManagerService来接收，并通过Activity对象来回调onClickListener。DecorView在显示上分为TitleView和ContentView两部分。ContentView是一个ID为content的FrameLayout，activity_main.xml就是设置在这样一个FrameLayout里。可以通过如下代码获得ContentView：</p>
 <pre><code>FrameLayout content = (FrameLayout)findViewById(android.R.id.content);
-</code></pre><p><img src="/uploads/20160228/20160228232837.png" alt="这里写图片描述"></p>
+</code></pre><p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160228/20160228232837.png" alt="这里写图片描述"></p>
 <p>而在代码中，当程序在onCreate()方法中调用setContentView()方法后，ActivityManagerService会回调onResume()方法，此时系统才会把整个DecorView添加到PhoneWindow中，并让其显示出来，从而最终完成界面的绘制。</p>
 <h2 id="3-2_View_u7684_u6D4B_u91CF"><a href="#3-2_View_u7684_u6D4B_u91CF" class="headerlink" title="3.2 View的测量"></a>3.2 View的测量</h2><p>View的测量在onMeasure中进行，系统提供了MeasureSpec类，是一个32位的int值，其高2位为测量模式，低30位为测量的大小。测量模式有以下三种：</p>
 <ul>
@@ -778,13 +778,13 @@ public void computeScroll() {
   <div id="QR" style="display: none;">
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>微信打赏</p>
       </div>
     
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>支付宝打赏</p>
       </div>
     
@@ -902,7 +902,7 @@ public void computeScroll() {
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/uploads/avatar/27073358153.jpg"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
                alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
           <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>

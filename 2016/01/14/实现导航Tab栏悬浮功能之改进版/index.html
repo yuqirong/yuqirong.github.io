@@ -64,8 +64,8 @@
 <meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="在上一篇博文中，我们用WindowManager的方法实现了Tab栏的悬浮功能。如果你没有看过上篇博文，请点击《轻松实现app中的导航Tab栏悬浮功能》。
 当然，用WindowManager来实现由一个缺点就是当没有显示悬浮窗的权限时，该功能就无法体现出来。而在本篇博文中，我们用第二种方法，也就是不断地重新设置Tab栏的布局位置来实现悬浮功能，弥补了第一种方法的缺点。效果图这里就不放了，相信大家都">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160114/20160114223247.gif">
-<meta property="og:updated_time" content="2016-08-18T15:09:33.942Z">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160114/20160114223247.gif">
+<meta property="og:updated_time" content="2016-11-01T14:08:51.598Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="实现导航Tab栏悬浮功能之改进版">
 <meta name="twitter:description" content="在上一篇博文中，我们用WindowManager的方法实现了Tab栏的悬浮功能。如果你没有看过上篇博文，请点击《轻松实现app中的导航Tab栏悬浮功能》。
@@ -335,10 +335,10 @@
 <p>首先在父布局中添加了OnGlobalLayoutListener，以便当布局的状态或者控件的可见性改变时去重新设置Tab栏的布局。之后在<code>onWindowFocusChanged(boolean hasFocus)</code>里得到<code>iv_pic.getBottom()</code>的值，也就是<code>iv_pic</code>的高度。也就是说你一开始想把<code>ll_tab</code>布局在<code>iv_pic</code>的下面。因此可以当作Tab栏距离ScrollView顶部的距离。</p>
 <p>最后在<code>onScroll(int scrollY)</code>中比较scrollY，picBottom的最大值。当<code>scrollY&lt;picBottom</code>时，<code>ll_tab</code>会跟随ScrollView的滑动而滑动；当<code>scrollY&gt;picBottom</code>时，<code>ll_tab</code>布局的顶部的坐标始终是ScrollView的滑动距离，这样就造成了<code>ll_tab</code>悬浮在顶部的“假象”。</p>
 <p>好了，一起来看看效果吧：</p>
-<p><img src="/uploads/20160114/20160114223247.gif" alt="这里填写图片的描述"></p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160114/20160114223247.gif" alt="这里填写图片的描述"></p>
 <p>是不是和第一种方法的效果一样呢，相信大家都学会了。如果有问题可以在下面留言。</p>
 <p>最后，放出源码：</p>
-<p><a href="/uploads/20160114/TabSuspendDemo.rar">TabSuspendDemo.rar</a></p>
+<p><a href="http://ofytl4mzu.bkt.clouddn.com/20160114/TabSuspendDemo.rar" target="_blank" rel="external">TabSuspendDemo.rar</a></p>
 <p>~have fun!~</p>
 
       
@@ -361,13 +361,13 @@
   <div id="QR" style="display: none;">
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>微信打赏</p>
       </div>
     
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>支付宝打赏</p>
       </div>
     
@@ -483,7 +483,7 @@
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/uploads/avatar/27073358153.jpg"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
                alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
           <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>

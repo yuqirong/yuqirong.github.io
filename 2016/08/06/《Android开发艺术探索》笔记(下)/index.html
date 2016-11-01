@@ -62,7 +62,7 @@
 <meta property="og:url" content="http://yuqirong.me/2016/08/06/《Android开发艺术探索》笔记(下)/index.html">
 <meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="第八章：理解Window和WindowManager8.1 Window和WindowManagerWindow是抽象类，具体实现是PhoneWindow，通过WindowManager就可以创建Window。WindowManager是外界访问Window的入口，但是Window的具体实现是在WindowManagerService中，WindowManager和WindowManagerSer">
-<meta property="og:updated_time" content="2016-09-13T15:41:22.416Z">
+<meta property="og:updated_time" content="2016-11-01T15:03:28.650Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Android开发艺术探索》笔记(下)">
 <meta name="twitter:description" content="第八章：理解Window和WindowManager8.1 Window和WindowManagerWindow是抽象类，具体实现是PhoneWindow，通过WindowManager就可以创建Window。WindowManager是外界访问Window的入口，但是Window的具体实现是在WindowManagerService中，WindowManager和WindowManagerSer">
@@ -572,8 +572,8 @@ public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, in
 <h2 id="12-2_Android_u4E2D_u7684_u7F13_u5B58_u7B56_u7565"><a href="#12-2_Android_u4E2D_u7684_u7F13_u5B58_u7B56_u7565" class="headerlink" title="12.2 Android中的缓存策略"></a>12.2 Android中的缓存策略</h2><ol>
 <li>最常用的缓存算法是LRU，核心是当缓存满时，会优先淘汰那些近期最少使用的缓存对象，系统中采用LRU算法的缓存有两种：LruCache(内存缓存)和DiskLruCache(磁盘缓存)。</li>
 <li>LruCache是Android 3.1才有的，通过support-v4兼容包可以兼容到早期的Android版本。LruCache类是一个线程安全的泛型类，它内部采用一个LinkedHashMap以强引用的方式存储外界的缓存对象，其提供了get和put方法来完成缓存的获取和添加操作，当缓存满时，LruCache会移除较早使用的缓存对象，然后再添加新的缓存对象。</li>
-<li>DiskLruCache磁盘缓存，它不属于Android sdk的一部分，<a href="/uploads/20160826/DiskLruCache.java">它的源码可以在这里下载</a><br>DiskLruCache的创建、缓存查找和缓存添加操作</li>
-<li>ImageLoader的实现 具体内容看源码，<a href="/uploads/20160826/ImageLoader.java">点击下载</a><br>功能：图片的同步/异步加载，图片压缩，内存缓存，磁盘缓存，网络拉取</li>
+<li>DiskLruCache磁盘缓存，它不属于Android sdk的一部分，<a href="http://ofytl4mzu.bkt.clouddn.com/20160826/DiskLruCache.java" target="_blank" rel="external">它的源码可以在这里下载</a><br>DiskLruCache的创建、缓存查找和缓存添加操作</li>
+<li>ImageLoader的实现 具体内容看源码，<a href="http://ofytl4mzu.bkt.clouddn.com/20160826/ImageLoader.java" target="_blank" rel="external">点击下载</a><br>功能：图片的同步/异步加载，图片压缩，内存缓存，磁盘缓存，网络拉取</li>
 </ol>
 <h2 id="12-3_ImageLoader_u7684_u4F7F_u7528"><a href="#12-3_ImageLoader_u7684_u4F7F_u7528" class="headerlink" title="12.3 ImageLoader的使用"></a>12.3 ImageLoader的使用</h2><p>避免发生列表item错位的解决方法：给显示图片的imageview添加tag属性，值为要加载的图片的目标url，显示的时候判断一下url是否匹配。<br>优化列表的卡顿现象</p>
 <ol>
@@ -583,7 +583,7 @@ public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, in
 </ol>
 <h1 id="u7B2C_u5341_u4E09_u7AE0_uFF1A_u7EFC_u5408_u6280_u672F"><a href="#u7B2C_u5341_u4E09_u7AE0_uFF1A_u7EFC_u5408_u6280_u672F" class="headerlink" title="第十三章：综合技术"></a>第十三章：综合技术</h1><h2 id="13-1__u4F7F_u7528CrashHandler_u6765_u83B7_u53D6_u5E94_u7528_u7684Crash_u4FE1_u606F"><a href="#13-1__u4F7F_u7528CrashHandler_u6765_u83B7_u53D6_u5E94_u7528_u7684Crash_u4FE1_u606F" class="headerlink" title="13.1 使用CrashHandler来获取应用的Crash信息"></a>13.1 使用CrashHandler来获取应用的Crash信息</h2><p>应用发生Crash在所难免，但是如何采集crash信息以供后续开发处理这类问题呢？利用Thread类的setDefaultUncaughtExceptionHandler方法！defaultUncaughtHandler是Thread类的静态成员变量，所以如果我们将自定义的UncaughtExceptionHandler设置给Thread的话，那么当前进程内的所有线程都能使用这个UncaughtExceptionHandler来处理异常了。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setDefaultUncaughtExceptionHandler</span><span class="params">(UncaughtExceptionHandler handler)</span> </span>&#123;</span><br><span class="line">    Thread.defaultUncaughtHandler = handler;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里实现了一个简易版本的UncaughtExceptionHandler类的子类<a href="/uploads/20160826/CrashHandler.java">CrashHandler，点击下载</a>。</p>
+<p>这里实现了一个简易版本的UncaughtExceptionHandler类的子类<a href="http://ofytl4mzu.bkt.clouddn.com/20160826/CrashHandler.java" target="_blank" rel="external">CrashHandler，点击下载</a>。</p>
 <p>CrashHandler的使用方式就是在Application的onCreate方法中设置一下即可</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在这里为应用设置异常处理程序，然后我们的程序才能捕获未处理的异常</span></span><br><span class="line">CrashHandler crashHandler = CrashHandler.getInstance();</span><br><span class="line">crashHandler.init(<span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
 <h2 id="13-2__u4F7F_u7528multidex_u6765_u89E3_u51B3_u65B9_u6CD5_u6570_u8D8A_u754C"><a href="#13-2__u4F7F_u7528multidex_u6765_u89E3_u51B3_u65B9_u6CD5_u6570_u8D8A_u754C" class="headerlink" title="13.2 使用multidex来解决方法数越界"></a>13.2 使用multidex来解决方法数越界</h2><p>在Android中单个dex文件所能够包含的最大方法数是65536，这包含Android Framework、依赖的jar以及应用本身的代码中的所有方法。如果方法数超过了最大值，那么编译会报错<code>DexIndexOverflowException: method ID not in [0, 0xffff]:65536</code>。</p>
@@ -731,13 +731,13 @@ android/support/multidex/ZipUtil$CentralDirectory.class
   <div id="QR" style="display: none;">
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>微信打赏</p>
       </div>
     
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>支付宝打赏</p>
       </div>
     
@@ -855,7 +855,7 @@ android/support/multidex/ZipUtil$CentralDirectory.class
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/uploads/avatar/27073358153.jpg"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
                alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
           <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>

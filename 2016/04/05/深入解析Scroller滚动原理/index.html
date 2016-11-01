@@ -70,8 +70,8 @@
 
 创建一个Scroller对象，一般在View的构造器中创建：
 123456789101112public ScrollVi">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160405/20160405235023.png">
-<meta property="og:updated_time" content="2016-08-18T15:09:34.051Z">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160405/20160405235023.png">
+<meta property="og:updated_time" content="2016-11-01T14:42:28.650Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入解析Scroller滚动原理">
 <meta name="twitter:description" content="最近在看《Android开发艺术探索》这本书，不得不赞一句主席写得真好，受益匪浅。在书中的相关章节有介绍用Scroller来实现平滑滚动的效果。而我们今天就来探究一下为什么Scroller能够实现平滑滚动。
@@ -362,7 +362,7 @@
 <p>这个方法的返回值有讲究，若返回true则说明Scroller的滑动没有结束；若返回false说明Scroller的滑动结束了。再来看看内部的代码：先是计算出了已经滑动的时间，若已经滑动的时间小于总滑动的时间，则说明滑动没有结束；不然就说明滑动结束了，设置标记<code>mFinished = true;</code>。而在滑动未结束里面又分为了两个mode，不过这两个mode都干了差不多的事，大致就是根据刚才的时间<code>timePassed</code>和插补器来计算出该时间点滚动的距离<code>mCurrX</code>和<code>mCurrY</code>。也就是上面“三部曲”中第二部的mScroller.getCurrX(), mScroller.getCurrY()的值。</p>
 <p>然后在第二部曲中调用scrollTo()方法滚动到指定点(即上面的<code>mCurrX</code>, <code>mCurrY</code>)。之后又调用了<code>postInvalidate();</code>，让View重绘并重新调用<code>computeScroll()</code>以此循环下去，一直到View滚动到指定位置为止，至此Scroller滚动结束。</p>
 <p>其实Scroller的原理还是比较通俗易懂的。我们再来理清一下思路，以一张图的形式来终结今天的Scroller解析：</p>
-<p><img src="/uploads/20160405/20160405235023.png" alt="这里写图片描述"></p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160405/20160405235023.png" alt="这里写图片描述"></p>
 <p>好了，如果有什么问题可以在下面留言。</p>
 <p>Goodbye!</p>
 
@@ -386,13 +386,13 @@
   <div id="QR" style="display: none;">
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>微信打赏</p>
       </div>
     
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>支付宝打赏</p>
       </div>
     
@@ -510,7 +510,7 @@
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/uploads/avatar/27073358153.jpg"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
                alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
           <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>

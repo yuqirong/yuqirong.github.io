@@ -64,8 +64,8 @@
 <meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事件传递的机制了，顺便写一篇博客来记录一下。下面就让我们来看看吧。
 大家都知道一般我们使用的UI控件都是继承自共同的父类——Vi">
-<meta property="og:image" content="http://yuqirong.me/uploads/20151029/20151029230937.png">
-<meta property="og:updated_time" content="2016-08-18T15:09:33.786Z">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20151029/20151029230937.png">
+<meta property="og:updated_time" content="2016-11-01T13:45:47.575Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android onTouch事件传递机制解析">
 <meta name="twitter:description" content="记得刚开始学习Android的时候，对于onTouch相关的事件一头雾水。分不清onTouch()，onTouchEvent()和OnClick()之间的关系和先后顺序，觉得有必要搞清onTouch事件传递的原理。经过一段时间的琢磨以及网上相关博客的介绍，总算是了解了触摸事件传递的机制了，顺便写一篇博客来记录一下。下面就让我们来看看吧。
@@ -339,7 +339,8 @@
 <p>可以看到上面的<code>li.mOnClickListener.onClick(this);</code>，没错，我们好像又有了新的发现。根据上面的经验，这句代码会去回调我们设置好的点击事件监听器。也就是我们平常用的xxx.setOnClickListener(listener);</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Register a callback to be invoked when this view is clicked. If this view is not</span><br><span class="line"> * clickable, it becomes clickable.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> l The callback that will run</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@see</span> #setClickable(boolean)</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setOnClickListener</span><span class="params">(@Nullable OnClickListener l)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!isClickable()) &#123;</span><br><span class="line">        setClickable(<span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    getListenerInfo().mOnClickListener = l;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们可以看到上面方法设置正是mListenerInfo的点击监听器，验证了上面的猜想。到了这里onTouch事件的传递机制基本已经分析完成了,也算是告一段落了。</p>
-<p>好了，这下我们可以解决开头的问题了，顺便我们再来小结一下：在dispatchTouchEvent中，如果设置了OnTouchListener并且View是enable的，那么首先被执行的是OnTouchListener中的<code>onTouch(View v, MotionEvent event)</code>。若onTouch返回true,则dispatchTouchEvent不再往下执行并且返回true；不然会执行onTouchEvent，在onTouchEvent中若View是可点击的，则返回true，不然为false。还有在onTouchEvent中若View是可点击以及当前触摸事件为ACTION_UP，会执行performClick()，回调OnClickListener的onClick方法。下面是我画的一张草图：<br><img src="/uploads/20151029/20151029230937.png" alt="这里写图片描述"></p>
+<p>好了，这下我们可以解决开头的问题了，顺便我们再来小结一下：在dispatchTouchEvent中，如果设置了OnTouchListener并且View是enable的，那么首先被执行的是OnTouchListener中的<code>onTouch(View v, MotionEvent event)</code>。若onTouch返回true,则dispatchTouchEvent不再往下执行并且返回true；不然会执行onTouchEvent，在onTouchEvent中若View是可点击的，则返回true，不然为false。还有在onTouchEvent中若View是可点击以及当前触摸事件为ACTION_UP，会执行performClick()，回调OnClickListener的onClick方法。下面是我画的一张草图：</p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20151029/20151029230937.png" alt="这里写图片描述"></p>
 <p>还有一点值得注意的地方是：假如当前事件是ACTION_DOWN，只有dispatchTouchEvent返回true了之后该View才会接收到接下来的ACTION_MOVE,ACTION_UP事件，也就是说只有事件被消费了才能接收接下来的事件。</p>
 <p>好了，今天就到这里了，如果有什么问题可以在下面留言。</p>
 
@@ -363,13 +364,13 @@
   <div id="QR" style="display: none;">
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>微信打赏</p>
       </div>
     
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>支付宝打赏</p>
       </div>
     
@@ -487,7 +488,7 @@
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/uploads/avatar/27073358153.jpg"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
                alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
           <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>

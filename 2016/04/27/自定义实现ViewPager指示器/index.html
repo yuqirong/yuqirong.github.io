@@ -62,8 +62,8 @@
 <meta property="og:url" content="http://yuqirong.me/2016/04/27/自定义实现ViewPager指示器/index.html">
 <meta property="og:site_name" content="Qirong Yu's Blog">
 <meta property="og:description" content="今天来更新一发“自定义实现 ViewPager 指示器”。 ViewPager 指示器相信大家都用过吧，从一开始 JW 大神的 ViewPagerIndicator ，到现在 Material Design 中的 TabLayout 。GitHub 上还有其他形形色色的指示器。那么肯定有人会问：既然有了这么多的指示器可以用，那为什么还要自己自定义呢？其实，我们学习了自定义指示器之后，可以知道 Vi">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160427/20160427152924.gif">
-<meta property="og:updated_time" content="2016-08-18T15:09:34.098Z">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160427/20160427152924.gif">
+<meta property="og:updated_time" content="2016-11-01T14:51:15.098Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自定义实现ViewPager指示器">
 <meta name="twitter:description" content="今天来更新一发“自定义实现 ViewPager 指示器”。 ViewPager 指示器相信大家都用过吧，从一开始 JW 大神的 ViewPagerIndicator ，到现在 Material Design 中的 TabLayout 。GitHub 上还有其他形形色色的指示器。那么肯定有人会问：既然有了这么多的指示器可以用，那为什么还要自己自定义呢？其实，我们学习了自定义指示器之后，可以知道 Vi">
@@ -323,7 +323,7 @@
       
         <p>今天来更新一发“自定义实现 ViewPager 指示器”。 ViewPager 指示器相信大家都用过吧，从一开始 JW 大神的 <a href="https://github.com/JakeWharton/ViewPagerIndicator" target="_blank" rel="external">ViewPagerIndicator</a> ，到现在 Material Design 中的 TabLayout 。GitHub 上还有其他形形色色的指示器。那么肯定有人会问：既然有了这么多的指示器可以用，那为什么还要自己自定义呢？其实，我们学习了自定义指示器之后，可以知道 ViewPager 指示器的原理，还可以提高我们代码的水平哦！那还等什么，一起来学习吧。</p>
 <p>首先放上一张效果图，亮亮眼：</p>
-<p><img src="/uploads/20160427/20160427152924.gif" alt="这里写图片描述"></p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160427/20160427152924.gif" alt="这里写图片描述"></p>
 <p>接下来我们来大致地分析一下思路： ViewPager 指示器我们可以看作是一个横向的 LinearLayout ，相对应的 Tab 可以直接使用 TextView 来实现。而 LinearLayout 中有许多个 TextView ，当我们点击其中的 TextView 时， ViewPager 就切换到对应的 item 上。而当我们手动滑动 ViewPager 时，根据 OnPageChangeListener 来动态地改变指示器。好了，基本上思路就是这样了，下面就来看看代码了。</p>
 <p>自定义的属性 attrs.xml ：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">declare-styleable</span> <span class="attribute">name</span>=<span class="value">"ViewPagerIndicator"</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- tab可见的数量 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"visible_tab_num"</span> <span class="attribute">format</span>=<span class="value">"integer"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- tab选中时的颜色 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"selected_color"</span> <span class="attribute">format</span>=<span class="value">"color|reference"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- tab未选中时的颜色 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"unselected_color"</span> <span class="attribute">format</span>=<span class="value">"color|reference"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- tab中字体的大小 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"text_size"</span> <span class="attribute">format</span>=<span class="value">"dimension|reference"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- tab选中时横线的高度 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"indicator_height"</span> <span class="attribute">format</span>=<span class="value">"dimension|reference"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">declare-styleable</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -347,7 +347,7 @@
 <p>在 <code>onInterceptTouchEvent(MotionEvent ev)</code> 中，若滑动的距离超过 touchSlop ，则拦截该触摸事件自己处理，否则传递给子View。而在 <code>onTouchEvent(MotionEvent event)</code> 中，使用了 scrollBy 来处理滑动，并且设置了边界值的检查。</p>
 <p>在这里，整体代码讲解完成了。其实 ViewPagerIndicator 本质就是使用了 OnPageChangeListener 以及当用户点击时切换 ViewPager 到指定页面，并没有太难的地方。以后我们自己也可以实现各种炫酷的 ViewPagerIndicator 了！</p>
 <p>下面提供源码的下载链接：</p>
-<p><a href="/uploads/20160427/ViewPagerIndicator.rar">ViewPagerIndicator.rar</a></p>
+<p><a href="http://ofytl4mzu.bkt.clouddn.com/20160427/ViewPagerIndicator.rar" target="_blank" rel="external">ViewPagerIndicator.rar</a></p>
 <p>have a nice day !~~</p>
 
       
@@ -370,13 +370,13 @@
   <div id="QR" style="display: none;">
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>微信打赏</p>
       </div>
     
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
         <p>支付宝打赏</p>
       </div>
     
@@ -494,7 +494,7 @@
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/uploads/avatar/27073358153.jpg"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
                alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
           <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
