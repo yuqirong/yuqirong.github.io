@@ -112,6 +112,6 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
 
 效果就是如下所示了：
 
-![这里写图片描述](/uploads/20160413/20160413202356.gif)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160413/20160413202356.gif)
 
 好了，今天就到这了。bye！

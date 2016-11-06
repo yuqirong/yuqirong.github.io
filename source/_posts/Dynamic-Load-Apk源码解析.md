@@ -15,7 +15,7 @@ tags: [Android,插件化,开源框架,源码解析]
 
 在分析源码之前，先在这里简单地说一下 [Dynamic-Load-Apk](https://github.com/singwhatiwanna/dynamic-load-apk) 框架的结构：
 
-![dynamic-load-apk的类结构](/uploads/20161029/20161029223619.png)
+![dynamic-load-apk的类结构](http://ofyt9w4c2.bkt.clouddn.com/20161029/20161029223619.png)
 
 从上面的图中大致可以看出来，整个框架中的 Java 类基本可以分为五种类型：
 

@@ -11,13 +11,13 @@ tags: [Android,《Android群英传》]
 
 控件分为两类：View和ViewGroup，通过ViewGroup整个界面形成一个树形结构，并且ViewGroup负责对子View的测量与绘制以及传递交互事件。通常在Activity中使用的findViewById()方法，就是在控件树中以树的深度优先遍历来查找对应元素。在每颗控件树的顶部，都有一个ViewParent对象，这就是整棵树的控制核心，所有的交互管理事件都由它来统一调度和分配。
 
-![这里写图片描述](/uploads/20160228/20160228230641.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160228/20160228230641.png)
 
 如上图所示，每个Activity都包含一个Window对象，在Android中Window对象通常由PhoneWindow来实现。PhoneWindow对象又将一个DecorView设置为整个应用的根View。DecorView作为了窗口界面的顶层视图，封装了一些窗口操作的通用方法。可以说，DecorView将要显示的具体内容呈现在了PhoneWindow上，这里所有View的监听事件，都通过WindowManagerService来接收，并通过Activity对象来回调onClickListener。DecorView在显示上分为TitleView和ContentView两部分。ContentView是一个ID为content的FrameLayout，activity_main.xml就是设置在这样一个FrameLayout里。可以通过如下代码获得ContentView：
 
 	FrameLayout content = (FrameLayout)findViewById(android.R.id.content);
 
-![这里写图片描述](/uploads/20160228/20160228232837.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160228/20160228232837.png)
 
 而在代码中，当程序在onCreate()方法中调用setContentView()方法后，ActivityManagerService会回调onResume()方法，此时系统才会把整个DecorView添加到PhoneWindow中，并让其显示出来，从而最终完成界面的绘制。
 

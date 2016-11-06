@@ -7,7 +7,7 @@ tags: [Android]
 
 在 Android 6.0 中，app 如果想要获得某些权限，会在应用中弹出一个对话框，让用户确认是否授予该权限。具体的截图如下：
 
-![Runtime Permissions screenshot](/uploads/20160608/20160608161439.png)
+![Runtime Permissions screenshot](http://ofyt9w4c2.bkt.clouddn.com/20160608/20160608161439.png)
 
 这要做的好处就是运行一个 app 时可以拒绝其中的某些权限，防止 app 触及到你的隐私(比如说通讯录、短信之类的)。而在 Android 6.0 之前，若同意安装 app ，就意味着该 app 可以获取权限列表中的所有权限。(注：这里所指的都是原生 Android 系统，比如 MIUI 之类的第三方 ROM 很早就具备了这种功能。)
 

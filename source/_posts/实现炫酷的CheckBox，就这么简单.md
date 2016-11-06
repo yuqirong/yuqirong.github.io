@@ -7,7 +7,7 @@ tags: [Android,自定义View]
 
 之前在逛GitHub的时候看到一款比较新颖的CheckBox：[SmoothCheckBox](https://github.com/andyxialm/SmoothCheckBox)，它的效果预览触动到我了，于是趁着今天有空就试着自己写一写。尽管效果可能不如SmoothCheckBox那样动感，但是基本的效果还是实现了。按照惯例，下面就贴出我写的CheckBox的gif： 
 
-![这里写图片描述](/uploads/20151205/20151205234652.gif)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20151205/20151205234652.gif)
 
 gif的效果可能有点过快，在真机上运行的效果会更好一些。我们主要的思路就是利用属性动画来动态地画出选中状态以及对勾的绘制过程。看到上面的效果图，相信大家都迫不及待地要跃跃欲试了，那就让我们开始吧。
 
@@ -68,7 +68,7 @@ protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 ```
 一开始是测量了SmoothCheckBox的宽、高度，默认的宽高度随便定义了一个，当然你们可以自己去修改和完善它。然后就是设置半径之类的，最后的startPoint、breakPoint、endPoint分别对应着选中时对勾的三个点(至于为何是这几个数字，那完全是经验值);downLength就是startPoint和breakPoint的距离，而相对应的upLength就是breakPoint和endPoint的距离。即以下图示：
 
-![这里写图片描述](/uploads/20151205/20151205000130.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20151205/20151205000130.png)
 
 在看`onDraw(Canvas canvas)`之前我们先来看两组动画，分别是选中状态时的动画以及未选中状态的动画：
 ``` java
@@ -505,7 +505,7 @@ public class SmoothCheckBox extends View implements View.OnClickListener {
 ```
 下面是SmoothCheckBox的源码下载，如果有问题可以在下面留言来交流：
 
-[SmoothCheckBox.rar](/uploads/20151205/SmoothCheckBox.rar)
+[SmoothCheckBox.rar](http://ofytl4mzu.bkt.clouddn.com/20151205/SmoothCheckBox.rar)
 
 GitHub:
 

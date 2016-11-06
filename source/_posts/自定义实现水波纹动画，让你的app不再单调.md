@@ -7,13 +7,13 @@ tags: [Android,自定义View]
 
 至于效果怎样，我们一起来看看：
 
-![这里填写图片描述](/uploads/20151227/20151227231546.gif)
+![这里填写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20151227/20151227231546.gif)
 
 是不是觉得有新意多了呢？那就一起来看看吧，先简单讲述一下思路：首先波浪的形状主要是根据三角函数决定的。三角函数相信大家在中学的课程中学习过吧。通用公式就是f(x)=Asin(ωx+φ) + b。其中A就是波浪的振幅，ω与时间周期有关，x就是屏幕宽度的像素点，φ是初相，可以让波浪产生偏移，最后的b就是水位的高度了。最后根据这公式算出y坐标，用`canvas.drawLine(startX, startY, stopX, stopY, paint);`来画出竖直的线条，这样就形成了波浪。
 
 整体的思路就如下面示意图所示，当红色的线条间距越来越小，密度越来越大时就形成了波浪：
 
-![这里填写图片描述](/uploads/20151227/20151227230103.png)
+![这里填写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20151227/20151227230103.png)
 
 讲完了思路，那下面我们就来分析一下代码吧。
 
@@ -136,6 +136,6 @@ protected void onDraw(Canvas canvas) {
 
 到这里基本就讲得差不多了，以下是本案例的源码：
 
-[WaveView.rar](/uploads/20151227/WaveView.rar)
+[WaveView.rar](http://ofytl4mzu.bkt.clouddn.com/20151227/WaveView.rar)
 
 最后，预祝大家元旦快乐！

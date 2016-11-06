@@ -5,7 +5,7 @@ tags: [Android,自定义View]
 ---
 经常使用网易新闻的童鞋都知道在网易新闻中有一个新闻栏目管理，其中GridView的item是可以拖拽的，效果十分炫酷。具体效果如下图：
 
-![这里写图片描述](/uploads/20160215/20160215203853.gif)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160215/20160215203853.gif)
 
 是不是也想自己也想实现出相同的效果呢？那就一起来往下看吧。
 
@@ -76,7 +76,7 @@ public boolean onItemLongClick(AdapterView<?> parent, View view, int position, l
 
 在onItemLongClick()中先判断了一下模式，只有在`MODE_NORMAL`的情况下才会添加window。然后计算出mX和mY。可能有些童鞋在mX和mY的计算上看不懂，我给出了一个图示：
 
-![这里写图片描述](/uploads/20160215/20160215210800.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160215/20160215210800.png)
 
 其中红点是手指按下的坐标，也就是(mWindowX,mWindowY)这个点；绿边框为DragGridView，因为DragGridView有可能会有margin值；所以this.getLeft()就是绿边框到屏幕的距离，而view.getLeft()就是长按的Item的左边到绿边框的距离。这几个值相减就得到了mX。同理，mY也是这样得到的。
 
@@ -315,11 +315,11 @@ private void itemDrop() {
 
 讲了这么多，来看看最后的效果吧：
 
-![这里写图片描述](/uploads/20160215/20160215212234.gif)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160215/20160215212234.gif)
 
 和网易新闻的效果不相上下吧，完整的源码太长就不贴出了，下面提供源码下载：
 
-[DragGridView.rar](/uploads/20160215/DragGridView-master.rar)
+[DragGridView.rar](http://ofytl4mzu.bkt.clouddn.com/20160215/DragGridView-master.rar)
 
 GitHub：
 

@@ -75,7 +75,7 @@ public class GreenDaoGeneration {
 
 在addLocatiion方法中，我们打算把“Location”这个类(其实到现在为止，Location实体类还未生成)保存在数据库中，`schema.addEntity("Location")`传入的Location，那么该表的表名就叫Location，然后我们又定义了在Location表中会有lon、lat、city_name三个字段。所以如果你想创建多张表，那么就要像addLocation()这样的方法多写几个。好了，该做的差不多都做了，最后再` new DaoGenerator().generateAll(schema, "C:/Users/yuqirong/Desktop/GreenDaoDemo/app/src/main/java-gen");`把之前的schema传入，第二个参数传的是之前创建的java-gen的路径(建议传入绝对路径，之前在这里被坑了好久↖(~^~)↗)。代码运行之后再到"com.yuqirong.greendao"路径下去看，发现会有许多类生成：
 
-![这里写图片描述](/uploads/20151124/20151124235609.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20151124/20151124235609.png)
 
 至于这些类的作用，我们到下面再说。
 
@@ -128,4 +128,4 @@ public class GreenDaoGeneration {
 
 依据惯例，下面提供本Demo的源码:
 
-[GreenDaoDemo.rar](/uploads/20151124/GreenDaoDemo.rar)
+[GreenDaoDemo.rar](http://ofytl4mzu.bkt.clouddn.com/20151124/GreenDaoDemo.rar)

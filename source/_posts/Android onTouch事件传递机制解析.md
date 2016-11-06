@@ -297,8 +297,9 @@ public void setOnClickListener(@Nullable OnClickListener l) {
 
 我们可以看到上面方法设置正是mListenerInfo的点击监听器，验证了上面的猜想。到了这里onTouch事件的传递机制基本已经分析完成了,也算是告一段落了。
 
-好了，这下我们可以解决开头的问题了，顺便我们再来小结一下：在dispatchTouchEvent中，如果设置了OnTouchListener并且View是enable的，那么首先被执行的是OnTouchListener中的`onTouch(View v, MotionEvent event)`。若onTouch返回true,则dispatchTouchEvent不再往下执行并且返回true；不然会执行onTouchEvent，在onTouchEvent中若View是可点击的，则返回true，不然为false。还有在onTouchEvent中若View是可点击以及当前触摸事件为ACTION_UP，会执行performClick()，回调OnClickListener的onClick方法。下面是我画的一张草图：  
-![这里写图片描述](/uploads/20151029/20151029230937.png)
+好了，这下我们可以解决开头的问题了，顺便我们再来小结一下：在dispatchTouchEvent中，如果设置了OnTouchListener并且View是enable的，那么首先被执行的是OnTouchListener中的`onTouch(View v, MotionEvent event)`。若onTouch返回true,则dispatchTouchEvent不再往下执行并且返回true；不然会执行onTouchEvent，在onTouchEvent中若View是可点击的，则返回true，不然为false。还有在onTouchEvent中若View是可点击以及当前触摸事件为ACTION_UP，会执行performClick()，回调OnClickListener的onClick方法。下面是我画的一张草图：
+
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20151029/20151029230937.png)
 
 还有一点值得注意的地方是：假如当前事件是ACTION\_DOWN，只有dispatchTouchEvent返回true了之后该View才会接收到接下来的ACTION\_MOVE,ACTION\_UP事件，也就是说只有事件被消费了才能接收接下来的事件。
 

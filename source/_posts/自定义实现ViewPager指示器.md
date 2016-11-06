@@ -7,7 +7,7 @@ tags: [Android,自定义View]
 
 首先放上一张效果图，亮亮眼：
 
-![这里写图片描述](/uploads/20160427/20160427152924.gif)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160427/20160427152924.gif)
 
 接下来我们来大致地分析一下思路： ViewPager 指示器我们可以看作是一个横向的 LinearLayout ，相对应的 Tab 可以直接使用 TextView 来实现。而 LinearLayout 中有许多个 TextView ，当我们点击其中的 TextView 时， ViewPager 就切换到对应的 item 上。而当我们手动滑动 ViewPager 时，根据 OnPageChangeListener 来动态地改变指示器。好了，基本上思路就是这样了，下面就来看看代码了。
 
@@ -292,6 +292,6 @@ public boolean onTouchEvent(MotionEvent event) {
 
 下面提供源码的下载链接：
 
-[ViewPagerIndicator.rar](/uploads/20160427/ViewPagerIndicator.rar)
+[ViewPagerIndicator.rar](http://ofytl4mzu.bkt.clouddn.com/20160427/ViewPagerIndicator.rar)
 
 have a nice day !~~

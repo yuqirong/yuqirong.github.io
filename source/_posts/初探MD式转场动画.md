@@ -5,7 +5,7 @@ tags: [Android,Material Design]
 ---
 最近在做MD设计风格的APP，所以在转场动画上当然也得符合MD了。下面就是效果图：
 
-![这里写图片描述](/uploads/20160323/20160323165423.gif)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160323/20160323165423.gif)
 
 一开始并未了解过这种转场动画，原来是Google在SDK中已经给我们提供了。`ActivityOptions`是 Android 5.0 及以上使用的，但是也提供了`ActivityOptionsCompat`向下兼容。
 

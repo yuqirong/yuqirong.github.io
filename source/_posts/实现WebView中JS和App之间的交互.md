@@ -5,7 +5,7 @@ tags: [Android,WebView]
 ---
 今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。
 
-![这里写图片的描述](/uploads/20160307/20160307200816.png)
+![这里写图片的描述](http://ofyt9w4c2.bkt.clouddn.com/20160307/20160307200816.png)
 
 之后在脑海中回想到 WebView 中的JS可以和app产生交互，于是搜索了一下，果然网上有类似的实现效果。看了一下，在这里就做一个简单的笔记了以便之后查看。
 
@@ -112,8 +112,8 @@ public class AndroidJSInterface {
 
 经过上面的步骤，就可以实现和JS交互了，一起来看看效果吧：
 
-![这里写图片的描述](/uploads/20160307/20160307225743.gif)
+![这里写图片的描述](http://ofyt9w4c2.bkt.clouddn.com/20160307/20160307225743.gif)
 
 源码下载：
 
-[WebViewDemo.rar](/uploads/20160307/WebViewDemo.rar)
+[WebViewDemo.rar](http://ofytl4mzu.bkt.clouddn.com/20160307/WebViewDemo.rar)

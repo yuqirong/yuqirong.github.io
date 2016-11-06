@@ -7,7 +7,7 @@ tags: [Android,自定义View]
 
 好了，话说的那么多，先来看看我们实现的效果图吧：
 
-![这里填写图片描述](/uploads/20151213/20151213140251.gif)
+![这里填写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20151213/20151213140251.gif)
 
 可以看出来，我们实现的和QQ的效果相差无几。下面就是源码时间了。
 
@@ -461,7 +461,7 @@ public class SwipeListLayout extends FrameLayout {
 
 最后，提供SwipeListLayout的源码下载：
 
-[SwipeListView.rar](/uploads/20151213/SwipeListView.rar)
+[SwipeListView.rar](http://ofytl4mzu.bkt.clouddn.com/20151213/SwipeListView.rar)
 
 GitHub：
 

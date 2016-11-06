@@ -34,7 +34,7 @@ tags: [Hexo]
 
 我们会发现在xxx.github.io/source/里生成了一个名叫guestbook的文件夹，那就是我们想要的留言板。打开guestbook/index.md，设置`comments: true`，如下图所示：
 
-![这里写图片描述](/uploads/20150718/20150718193734.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20150718/20150718193734.png)
 
 然后找到你NexT主题中的`_config.yml`(即xxx.github.io/themes/next/_config.yml)，在menu中添加guestbook，即：
 

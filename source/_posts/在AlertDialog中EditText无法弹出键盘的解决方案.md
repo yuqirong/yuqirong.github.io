@@ -33,15 +33,15 @@ tags: [Android]
 ```
 AlertDialog的效果图是这样的：
 
-![这里填写图片的描述](/uploads/20160206/20160206160310.png)
+![这里填写图片的描述](http://ofyt9w4c2.bkt.clouddn.com/20160206/20160206160310.png)
 
 我们会发现无论怎么点击EditText也无法弹出键盘，其实我们只要加上`alertDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);`这一句，就可以让键盘弹出了。
 
-![这里填写图片的描述](/uploads/20160206/20160206161311.png)
+![这里填写图片的描述](http://ofyt9w4c2.bkt.clouddn.com/20160206/20160206161311.png)
 
 源码下载：
 
-[AlertDialogDemo.rar](/uploads/20160206/AlertDialogDemo.rar)
+[AlertDialogDemo.rar](http://ofytl4mzu.bkt.clouddn.com/20160206/AlertDialogDemo.rar)
 
 StackOverFlow：
 

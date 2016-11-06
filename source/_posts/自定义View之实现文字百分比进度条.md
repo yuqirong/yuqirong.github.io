@@ -3,8 +3,9 @@ date: 2015-10-23 23:26:56
 categories: Android Blog
 tags: [Android,自定义View]
 ---
-之前在学习自定义View的时候看到[鸿洋_](http://my.csdn.net/lmj623565791)的 [《Android 打造形形色色的进度条 实现可以如此简单》](http://blog.csdn.net/lmj623565791/article/details/43371299) 中自带百分比的进度条，于是照着例子自己实现了一下。下面是View的样子：  
-![这里写图片描述](/uploads/20151023/20151023211913.gif)
+之前在学习自定义View的时候看到[鸿洋_](http://my.csdn.net/lmj623565791)的 [《Android 打造形形色色的进度条 实现可以如此简单》](http://blog.csdn.net/lmj623565791/article/details/43371299) 中自带百分比的进度条，于是照着例子自己实现了一下。下面是View的样子：
+
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20151023/20151023211913.gif)
 
 大家都知道自定义View的主要步骤：  
 1. 自定义View的一些属性  
@@ -141,7 +142,9 @@ private int measureHeight(int mode, int size) {
 }
 ```
 上面三步完成之后就到了最后的重点onDraw()方法了。根据思路我们应该先画出已完成进度的矩形，再画出百分比文字，最后画出未完成的进度。需要注意的是绘制文字的时候Y轴起点为文字的baseline，而不是文字的顶部。下面给出了绘制时大概的思路图：  
-![这里写图片描述](/uploads/20151023/20151023214750.png)
+
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20151023/20151023214750.png)
+
 ``` java
 @Override
 protected void onDraw(Canvas canvas) {
@@ -173,5 +176,6 @@ protected void onDraw(Canvas canvas) {
 ```
 到了这里整体的View差不多已经写完了，其实总体并没有什么难点。只要搞清思路，相信大家都能定义出自己想要的View。  
 
-以下是完整代码下载地址：  
-[PercentProgressView.rar](/uploads/20151023/PercentProgressView.rar)
+以下是完整代码下载地址： 
+ 
+[PercentProgressView.rar](http://ofytl4mzu.bkt.clouddn.com/20151023/PercentProgressView.rar)

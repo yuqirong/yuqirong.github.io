@@ -7,7 +7,7 @@ tags: [Android,自定义View]
 
 首先流式布局相信大家都见到过，比如说下图中的京东热搜就是流式布局的应用。还有更多应用的地方在这里就不一一举例了。
 
-![这里写图片描述](/uploads/20160122/20160122205447.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160122/20160122205447.png)
 
 下面我们就来看看是如何实现的。首先新建一个class，继承自ViewGroup。在`generateLayoutParams(AttributeSet attrs)`里直接返回MarginLayoutParams就行了。
 ``` java
@@ -157,7 +157,7 @@ protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 ```
 运行的效果图：
 
-![这里写图片描述](/uploads/20160122/20160122220305.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160122/20160122220305.png)
 
 当`android:layout_width="300dp"`时：
 ``` xml
@@ -209,8 +209,8 @@ protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 ```
 运行的效果图：
 
-![这里写图片描述](/uploads/20160122/20160122220718.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160122/20160122220718.png)
 
 最后，提供源码下载：
 
-[FlowLayout.rar](/uploads/20160122/FlowLayout.rar)
+[FlowLayout.rar](http://ofytl4mzu.bkt.clouddn.com/20160122/FlowLayout.rar)

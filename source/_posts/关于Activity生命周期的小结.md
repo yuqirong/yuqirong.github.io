@@ -8,7 +8,9 @@ tags: [Android,Activity]
 Activity作为四大组件之一，几乎是每个人开始学习Android最先接触到的。常见的生命周期方法大家肯定都是非常熟悉的，所以Activity生命周期的顺序在这就不必过多叙述了。今天讲一下由FirstActivity启动SecondActivity而调用生命周期方法的顺序问题。
 
 首先我们创建一个如下图的FirstActivity:
-![这里写图片描述](/uploads/20150826/20150826213244536.jpg)
+
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20150826/20150826213244.jpg)
+
 很简单，LinearLayout里只有一个Button，用于启动SecondActivity。
 
 以下为FirstActivity的布局 activity_first.xml:
@@ -111,15 +113,23 @@ public class FirstActivity extends AppCompatActivity {
 SecondActivity的代码与FirstActivity并无差异，主要将Log中的FirstActivity替换成了SecondActivity。
 
 接下来我们就启动FirstActivity，可以看到Logcat中打印了如下的日志：
-![这里写图片描述](/uploads/20150826/20150826212633880.jpg)
+
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20150826/20150826212633.jpg)
+
 一切如我们想象的一样，然后我们点击按钮用于启动SecondActivity，可以看到打印出来的日志：
-![这里写图片描述](/uploads/20150826/20150826214443682.jpg)
+
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20150826/20150826214443.jpg)
+
 可以看到FirstActivity和SecondActivity的生命周期方法是交叉着的，并不是先让FirstActivity执行完然后再执行SecondActivity的方法，这正是我们需要注意的。
 
 然后我们点击Back键，返回FirstActivity:
-![这里写图片描述](/uploads/20150826/20150826214330231.jpg)
+
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20150826/20150826214330.jpg)
+
 FirstActivity调用的是onRestart方法，因为先前FirstActivity已经创建，所以并不会重新调用onCreate方法。最后再次点击Back键，退出Activity：
-![这里写图片描述](/uploads/20150826/20150826214929167.jpg)
+
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20150826/20150826214929.jpg)
+
 写到这里本篇博客的要讲内容已经差不多了，下面再补充一下关于切换横竖屏时Activity的生命周期调用，先前在网上看的一些博文叙述的都已经过时了，大都是在Android 2.2 或者 2.3 时写的，已经不适用于Android 4.0以上的版本了。所以在这里重新写一下：
 
 测试机型：红米2

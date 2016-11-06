@@ -11,7 +11,7 @@ tags: Android
 
 我们解压多渠道打出来的 apk 包后，就会发现在 META-INF 目录下多了一个 channel_xxxxx 文件，而这个就是我们的渠道文件：
 
-![channel文件](/uploads/20160925/20160925221513.png)
+![channel文件](http://ofyt9w4c2.bkt.clouddn.com/20160925/20160925221513.png)
 
 本文所采用的方法就是根据美团提供的思路实现的，当然网上有很多使用 Python 语言实现美团思路的版本，经过测试发现 Python 版本比 Java 版本打渠道包的速度更快一些。但是，在这里只提供 Java 版本实现方案，Python 版本实现的方案会在文末以参考链接的方式给出。
 
@@ -263,7 +263,7 @@ public static String getChannelFromMeta(Context context) {
 
 附上多渠道打包工具的源码：
 
-[MultiChannelBuildTool.rar](/uploads/20160925/MultiChannelBuildTool.rar)
+[MultiChannelBuildTool.rar](http://ofytl4mzu.bkt.clouddn.com/20160925/MultiChannelBuildTool.rar)
 
 0100b
 ======

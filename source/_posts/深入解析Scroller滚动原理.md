@@ -192,7 +192,7 @@ public boolean computeScrollOffset() {
 
 其实Scroller的原理还是比较通俗易懂的。我们再来理清一下思路，以一张图的形式来终结今天的Scroller解析：
 
-![这里写图片描述](/uploads/20160405/20160405235023.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160405/20160405235023.png)
 
 好了，如果有什么问题可以在下面留言。
 

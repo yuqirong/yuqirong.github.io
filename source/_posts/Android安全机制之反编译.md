@@ -19,11 +19,11 @@ tags: [Android]
 
 我们把上面下载下来的apk用winrar打开(当然你也可以用其他的解压工具)，我们可以看到里面的文件内容如下图所示：
 
-![这里写图片描述](/uploads/20160403/20160403112646.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160403/20160403112646.png)
 
 我们发现classes.dex这个文件，其实classes.dex反编译出来就是源代码。然后我们把Dex2jar解压出来，发现里面有d2j-dex2jar.bat，这就是主角了。
 
-![这里写图片描述](/uploads/20160403/20160403124449.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160403/20160403124449.png)
 
 在Dex2jar解压出来的目录下，打开命令提示符输入：
 
@@ -31,19 +31,19 @@ tags: [Android]
 
 比如：
 
-![这里写图片描述](/uploads/20160403/20160403124911.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160403/20160403124911.png)
 
 运行后，我们发现在Dex2jar解压出来的目录下多了一个classes-dex2jar.jar。
 
-![这里写图片描述](/uploads/20160403/20160403125136.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160403/20160403125136.png)
 
 然后我们把下载下来的jd-gui.zip解压，里面会有jd-gui.exe。相信大家都懂吧。用jd-gui.exe打开上面的classes-dex2jar.jar，你会惊喜地发现源代码就在你眼前！
 
-![这里写图片描述](/uploads/20160403/20160403125619.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160403/20160403125619.png)
 
 看上面的代码截图，我们会发现比如说`setContentView()`里面是一串数字。不过别怕，我们都知道R文件是用来关联资源文件的，把上面的那串数字复制下来，再打开R.class，查找一下：
 
-![这里写图片描述](/uploads/20160403/20160403130002.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160403/20160403130002.png)
 
 原来那串数字就代表了activity\_my\_favorite.xml这个layout。那么问题来了，我们如何反编译XML文件呢？那就要用到上面的apktool了。
 
@@ -57,15 +57,15 @@ tags: [Android]
 
 运行完成之后，我们可以发现在目录下多了一个名字叫koku的文件夹，而这就是我们反编译出来的XML文件了。
 
-![这里写图片描述](/uploads/20160403/20160403131154.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160403/20160403131154.png)
 
 我们打开里面的AndroidManifest.xml：
 
-![这里写图片描述](/uploads/20160403/20160403131326.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160403/20160403131326.png)
 
 里面真的有<uses-permission\>、<activity\>等信息！然后我们打开res里面的layout文件夹，会发现里面有我们上面提到的activity\_my\_favorite.xml：
 
-![这里写图片描述](/uploads/20160403/20160403131658.png)
+![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160403/20160403131658.png)
 
 里面的布局一目了然。到这里，这样一个apk的基本的源代码我们都可以看得到。当然，反编译别人的apk应该是以学习为主，而不是恶意地二次打包以及破坏。
 
@@ -84,10 +84,10 @@ tags: [Android]
 
 下面给出反编译工具的下载链接：
 
-[apktool_2.1.0.jar](/uploads/20160403/apktool_2.1.0.jar)
+[apktool_2.1.0.jar](http://ofytl4mzu.bkt.clouddn.com/20160403/apktool_2.1.0.jar)
 
-[dex2jar-2.0.zip](/uploads/20160403/dex2jar-2.0.zip)
+[dex2jar-2.0.zip](http://ofytl4mzu.bkt.clouddn.com/20160403/dex2jar-2.0.zip)
 
-[jd-gui-0.3.5.windows.zip](/uploads/20160403/jd-gui-0.3.5.windows.zip)
+[jd-gui-0.3.5.windows.zip](http://ofytl4mzu.bkt.clouddn.com/20160403/jd-gui-0.3.5.windows.zip)
 
 ~have a nice day~
