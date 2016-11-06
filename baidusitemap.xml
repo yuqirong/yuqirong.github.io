@@ -4,6 +4,33 @@
 
     
   <url>
+    <loc>http://yuqirong.me/2016/11/06/%E7%83%AD%E4%BF%AE%E5%A4%8D%E6%A1%86%E6%9E%B6HotFix%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2016-11-06T11:19:23.626Z</lastmod>
+    <data>
+        <display>
+        <title>热修复框架HotFix源码解析</title>
+        <pubTime>2016-11-06T05:15:59.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>热修复</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+  <url>
     <loc>http://yuqirong.me/2016/10/29/Dynamic-Load-Apk%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
     <lastmod>2016-11-01T15:12:44.828Z</lastmod>
     <data>
@@ -892,7 +919,6 @@
     </data>
     </url>
 
-    
     
     
   <url>

@@ -1,0 +1,876 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,开源框架,源码解析,热修复," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qirong Yu's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="0x00讲起 Android 的热修复，相信大家对其都略知一二。热修复可以说是继插件化之后，又一项新的技术。目前的 Android 热修复框架主要分为了两类：
+
+基于 Native Hook：使用 JNI 动态改变方法指针，比如有 Dexposed 、AndFix 等；
+基于 Java Dex 分包：改变 dex 加载顺序，比如有 HotFix 、Nuwa 、Amigo 等；
+
+Native Ho">
+<meta property="og:type" content="article">
+<meta property="og:title" content="热修复框架HotFix源码解析">
+<meta property="og:url" content="http://yuqirong.me/2016/11/06/热修复框架HotFix源码解析/index.html">
+<meta property="og:site_name" content="Qirong Yu's Blog">
+<meta property="og:description" content="0x00讲起 Android 的热修复，相信大家对其都略知一二。热修复可以说是继插件化之后，又一项新的技术。目前的 Android 热修复框架主要分为了两类：
+
+基于 Native Hook：使用 JNI 动态改变方法指针，比如有 Dexposed 、AndFix 等；
+基于 Java Dex 分包：改变 dex 加载顺序，比如有 HotFix 、Nuwa 、Amigo 等；
+
+Native Ho">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106151939.png">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106163934.png">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106163627.png">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106164537.png">
+<meta property="og:updated_time" content="2016-11-06T11:19:23.626Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="热修复框架HotFix源码解析">
+<meta name="twitter:description" content="0x00讲起 Android 的热修复，相信大家对其都略知一二。热修复可以说是继插件化之后，又一项新的技术。目前的 Android 热修复框架主要分为了两类：
+
+基于 Native Hook：使用 JNI 动态改变方法指针，比如有 Dexposed 、AndFix 等；
+基于 Java Dex 分包：改变 dex 加载顺序，比如有 HotFix 、Nuwa 、Amigo 等；
+
+Native Ho">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 热修复框架HotFix源码解析 | Qirong Yu's Blog </title>
+  <meta name="baidu-site-verification" content="MBYnGIEEPN" />
+  <meta name="baidu-site-verification" content="1Hx0jVHsgl" />
+  <meta name="baidu-site-verification" content="L0MgAErI0s" />
+  <meta name="google-site-verification" content="_hYRHLLoBRM6L31myWhOPTxzGtawe9z1zmCqcJ-aHA0" />
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Qirong Yu's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-comment fa-fw"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                热修复框架HotFix源码解析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-06T13:15:59+08:00" content="2016-11-06">
+              2016-11-06
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+
+					<!-- 
+					�Ķ��� 
+  								<span id="busuanzi_container_page_pv">&nbsp;&nbsp;|&nbsp;&nbsp;�Ķ��� <span id="busuanzi_value_page_pv"></span> ��</span>
+					 
+					-->
+
+                
+                
+
+              
+            </span>
+          
+          
+           <!-- 
+        �Ƿ������� 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/06/热修复框架HotFix源码解析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/06/热修复框架HotFix源码解析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+            
+          -->
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="0x00"><a href="#0x00" class="headerlink" title="0x00"></a>0x00</h1><p>讲起 Android 的热修复，相信大家对其都略知一二。热修复可以说是继插件化之后，又一项新的技术。目前的 Android 热修复框架主要分为了两类：</p>
+<ul>
+<li>基于 Native Hook：使用 JNI 动态改变方法指针，比如有 <a href="https://github.com/alibaba/dexposed" target="_blank" rel="external">Dexposed</a> 、<a href="https://github.com/alibaba/AndFix" target="_blank" rel="external">AndFix</a> 等；</li>
+<li>基于 Java Dex 分包：改变 dex 加载顺序，比如有 <a href="https://github.com/dodola/HotFix" target="_blank" rel="external">HotFix</a> 、<a href="https://github.com/jasonross/Nuwa" target="_blank" rel="external">Nuwa</a> 、<a href="https://github.com/eleme/Amigo" target="_blank" rel="external">Amigo</a> 等；</li>
+</ul>
+<p>Native Hook 方案有一定的兼容性问题，并且其热修复是基于方法的；而 Java Dex 分包的方案具有很好的兼容性，被大众所接受。其实早在去年年末，<a href="https://github.com/dodola/HotFix" target="_blank" rel="external">HotFix</a> 、 <a href="https://github.com/jasonross/Nuwa" target="_blank" rel="external">Nuwa</a> 就已经出现了，并且它们的原理是相同的，都是基于 QQ 空间终端开发团队发布的<a href="http://mp.weixin.qq.com/s?__biz=MzI1MTA1MzM2Nw==&amp;mid=400118620&amp;idx=1&amp;sn=b4fdd5055731290eef12ad0d17f39d4a&amp;scene=1&amp;srcid=1031x2ljgSF4xJGlH1xMCJxO&amp;uin=MjAyNzY1NTU%3D&amp;key=04dce534b3b035ef58d8714d714d36bcc6cc7e136bbd64850522b491d143aafceb62c46421c5965e18876433791d16ec&amp;devicetype=iMac+MacBookPro12%2C1+OSX+OSX+10.10.5+build(14F27)&amp;version=11020201&amp;lang=zh_CN&amp;pass_ticket=7O%2FVfztuLjqu23ED2WEkvy1SJstQD4eLRqX%2B%2BbCY3uE%3D" target="_blank" rel="external">《安卓App热补丁动态修复技术介绍》</a>文中介绍的思路来实现的。如果没有看过这篇文章的童鞋，强烈建议先阅读一遍。</p>
+<p>虽然现在 <a href="https://github.com/dodola/HotFix" target="_blank" rel="external">HotFix</a> 框架已经被作者 <a href="https://github.com/dodola" target="_blank" rel="external">dodola</a> 标注了 Deprecated ，但是这并不妨碍我们解析其源码。那么下面我们就开始进入正题。</p>
+<h1 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h1><p>首先来看一下 <a href="https://github.com/dodola/HotFix" target="_blank" rel="external">HotFix</a> 项目的结构：</p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106151939.png" alt="HotFix项目结构"></p>
+<p>可以看到项目中主要分为四个 module ：</p>
+<ul>
+<li>app : 里面有一个 HotFix 用法的 Demo ；</li>
+<li>buildSrc : 用于编译打包时代码注入的 Gradle 的 Task ；</li>
+<li>hackDex : 只有一个 AntilazyLoad 类，独立打成一个 hack.dex ，防止出现 CLASS_ISPREVERIFIED 相关的问题；</li>
+<li>hotfixlib : 热修复框架的 lib ；</li>
+</ul>
+<p>我们就先从 app 入手吧，先来看看 HotfixApplication :</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HotfixApplication</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate();</span><br><span class="line">        File dexPath = <span class="keyword">new</span> File(getDir(<span class="string">"dex"</span>, Context.MODE_PRIVATE), <span class="string">"hackdex_dex.jar"</span>);</span><br><span class="line">		<span class="comment">// 把 assets 中的 hackdex_dex.jar 复制给 dexPath</span></span><br><span class="line">        Utils.prepareDex(<span class="keyword">this</span>.getApplicationContext(), dexPath, <span class="string">"hackdex_dex.jar"</span>);</span><br><span class="line">        HotFix.patch(<span class="keyword">this</span>, dexPath.getAbsolutePath(), <span class="string">"dodola.hackdex.AntilazyLoad"</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.getClassLoader().loadClass(<span class="string">"dodola.hackdex.AntilazyLoad"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>onCreate()</code> 方法中，代码量很少。一开始使用 <code>Utils.prepareDex</code> 把 assets 中的 hackdex_dex.jar 复制到内部存储中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 把 assets 中的 hack_dex 复制到内部存储中</span><br><span class="line"> * <span class="doctag">@param</span> context</span><br><span class="line"> * <span class="doctag">@param</span> dexInternalStoragePath</span><br><span class="line"> * <span class="doctag">@param</span> dex_file</span><br><span class="line"> * <span class="doctag">@return</span></span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">prepareDex</span><span class="params">(Context context, File dexInternalStoragePath, String dex_file)</span> </span>&#123;</span><br><span class="line">    BufferedInputStream bis = <span class="keyword">null</span>;</span><br><span class="line">    OutputStream dexWriter = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        bis = <span class="keyword">new</span> BufferedInputStream(context.getAssets().open(dex_file));</span><br><span class="line">        dexWriter = <span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(dexInternalStoragePath));</span><br><span class="line">        <span class="keyword">byte</span>[] buf = <span class="keyword">new</span> <span class="keyword">byte</span>[BUF_SIZE];</span><br><span class="line">        <span class="keyword">int</span> len;</span><br><span class="line">        <span class="keyword">while</span> ((len = bis.read(buf, <span class="number">0</span>, BUF_SIZE)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            dexWriter.write(buf, <span class="number">0</span>, len);</span><br><span class="line">        &#125;</span><br><span class="line">        dexWriter.close();</span><br><span class="line">        bis.close();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (dexWriter != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                dexWriter.close();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException ioe) &#123;</span><br><span class="line">                ioe.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (bis != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                bis.close();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException ioe) &#123;</span><br><span class="line">                ioe.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制完后调用了 <code>HotFix.patch</code> ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">patch</span><span class="params">(Context context, String patchDexFile, String patchClassName)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (patchDexFile != <span class="keyword">null</span> &amp;&amp; <span class="keyword">new</span> File(patchDexFile).exists()) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (hasLexClassLoader()) &#123;</span><br><span class="line">                injectInAliyunOs(context, patchDexFile, patchClassName);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (hasDexClassLoader()) &#123;</span><br><span class="line">                injectAboveEqualApiLevel14(context, patchDexFile, patchClassName);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                injectBelowApiLevel14(context, patchDexFile, patchClassName);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable th) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>patch</code> 方法中，分为了三种情况：</p>
+<ol>
+<li>阿里云系统；</li>
+<li>Android 系统 API Level &gt;= 14 的；</li>
+<li>Android 系统 API Level &lt; 14 的；</li>
+</ol>
+<p>其实阿里云的热修复和 Android系统 API &lt; 14 的代码是差不多的，就是把 .dex 修改为了 .lex 。在这里就不分析，主要来看看 Android 系统 API &gt;= 14 和 Android 系统 API &lt; 14 两种情况。</p>
+<h2 id="Android__u7CFB_u7EDF_API_Level__26gt_3B_3D_14"><a href="#Android__u7CFB_u7EDF_API_Level__26gt_3B_3D_14" class="headerlink" title="Android 系统 API Level &gt;= 14"></a>Android 系统 API Level &gt;= 14</h2><p>先来分析 <code>injectAboveEqualApiLevel14</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">injectAboveEqualApiLevel14</span><span class="params">(Context context, String str, String str2)</span></span><br><span class="line">    <span class="keyword">throws</span> ClassNotFoundException, NoSuchFieldException, IllegalAccessException </span>&#123;</span><br><span class="line">    PathClassLoader pathClassLoader = (PathClassLoader) context.getClassLoader();</span><br><span class="line">    <span class="comment">// 合并 DexElements[] 数组</span></span><br><span class="line">    Object a = combineArray(getDexElements(getPathList(pathClassLoader)),</span><br><span class="line">        getDexElements(getPathList(</span><br><span class="line">            <span class="keyword">new</span> DexClassLoader(str, context.getDir(<span class="string">"dex"</span>, <span class="number">0</span>).getAbsolutePath(), str, context.getClassLoader()))));</span><br><span class="line">    <span class="comment">// 得到当前 pathClassLoader 中的 pathList</span></span><br><span class="line">   Object a2 = getPathList(pathClassLoader);</span><br><span class="line">    <span class="comment">// 把合并后的 DexElements[] 数组设置给 PathList 中的 dexElements</span></span><br><span class="line">    setField(a2, a2.getClass(), <span class="string">"dexElements"</span>, a);</span><br><span class="line">    pathClassLoader.loadClass(str2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>得到当前 <code>context</code> 内部的 <code>pathClassLoader</code> ，然后调用 <code>combineArray(getDexElements(getPathList(pathClassLoader)), getDexElements(getPathList(new DexClassLoader(str, context.getDir(&quot;dex&quot;, 0).getAbsolutePath(), str, context.getClassLoader()))))</code> 。这个 <code>combineArray</code> 方法中嵌套了很多层方法，我们一个一个来看。首先是 <code>getPathList</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title">getPathList</span><span class="params">(Object obj)</span> <span class="keyword">throws</span> ClassNotFoundException, NoSuchFieldException,</span><br><span class="line">    IllegalAccessException </span>&#123;</span><br><span class="line">	<span class="comment">// 得到当前 PathClassLoader 中的 pathList 属性</span></span><br><span class="line">    <span class="keyword">return</span> getField(obj, Class.forName(<span class="string">"dalvik.system.BaseDexClassLoader"</span>), <span class="string">"pathList"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title">getField</span><span class="params">(Object obj, Class cls, String str)</span></span><br><span class="line">    <span class="keyword">throws</span> NoSuchFieldException, IllegalAccessException </span>&#123;</span><br><span class="line">    Field declaredField = cls.getDeclaredField(str);</span><br><span class="line">    declaredField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">    <span class="keyword">return</span> declaredField.get(obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上面的源码中知道，其实 getPathList 就是获取 BaseDexClassLoader 类的对象中的 pathList 属性。</p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106163934.png" alt="BaseDexClassLoader源码"></p>
+<p>PathClassLoader 类继承自 BaseDexClassLoader：</p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106163627.png" alt="PathClassLoader源码"></p>
+<p>得到了 pathList 之后，调用了 <code>getDexElements</code> 。顾名思义，就是获得了 pathList 中的 dexElements 属性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title">getDexElements</span><span class="params">(Object obj)</span> <span class="keyword">throws</span> NoSuchFieldException, IllegalAccessException </span>&#123;</span><br><span class="line">	<span class="comment">// 得到当前 pathList 中的 dexElements 属性</span></span><br><span class="line">    <span class="keyword">return</span> getField(obj, obj.getClass(), <span class="string">"dexElements"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106164537.png" alt="DexPathList源码"></p>
+<p>所以在 <code>combineArray</code> 方法中传入的参数都是 Elements[] 。一个是当前应用程序中的 dexElements，另一个是 hackdex_dex.jar 中的 dexElements 。</p>
+<p>下面来看看 <code>combineArray</code> 中的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title">combineArray</span><span class="params">(Object obj, Object obj2)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 得到 DexElements[] 数组的 class</span></span><br><span class="line">    Class componentType = obj2.getClass().getComponentType();</span><br><span class="line">    <span class="comment">// 得到补丁包中 DexElements[] 数组的长度</span></span><br><span class="line">    <span class="keyword">int</span> length = Array.getLength(obj2);</span><br><span class="line">    <span class="comment">// 全长</span></span><br><span class="line">    <span class="keyword">int</span> length2 = Array.getLength(obj) + length;</span><br><span class="line">    Object newInstance = Array.newInstance(componentType, length2);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; length2; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i &lt; length) &#123;</span><br><span class="line">			<span class="comment">// obj2 中的 Element 顺序在 obj 前面</span></span><br><span class="line">            Array.set(newInstance, i, Array.get(obj2, i));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Array.set(newInstance, i, Array.get(obj, i - length));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> newInstance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>主要干的事情就是把传入的两个 dexElements 合并成一个 dexElements 。但是要注意的是第二个 obj2 中的 dex 要排在 obj 前面，这样才能达到热修复的效果。</p>
+<p>最后我们回过头来看看 <code>injectAboveEqualApiLevel14</code> 方法中剩下的代码：</p>
+<pre><code>// 得到当前 pathClassLoader 中的 pathList
+Object a2 = getPathList(pathClassLoader);
+// 把合并后的 DexElements[] 数组设置给 PathList
+setField(a2, a2.getClass(), &quot;dexElements&quot;, a);
+// 先加载 dodola.hackdex.AntilazyLoad.class
+pathClassLoader.loadClass(str2);
+</code></pre><p>这几行代码相信大家都能看懂了。这样 <code>injectAboveEqualApiLevel14</code> 整个流程就走完了。剩下，我们就看看 <code>injectBelowApiLevel14</code> 吧。</p>
+<h2 id="Android__u7CFB_u7EDF_API_Level__26lt_3B_14"><a href="#Android__u7CFB_u7EDF_API_Level__26lt_3B_14" class="headerlink" title="Android 系统 API Level &lt; 14"></a>Android 系统 API Level &lt; 14</h2><p><code>injectBelowApiLevel14</code> 方法代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@TargetApi</span>(<span class="number">14</span>)</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">injectBelowApiLevel14</span><span class="params">(Context context, String str, String str2)</span></span><br><span class="line">    <span class="keyword">throws</span> ClassNotFoundException, NoSuchFieldException, IllegalAccessException </span>&#123;</span><br><span class="line">    PathClassLoader obj = (PathClassLoader) context.getClassLoader();</span><br><span class="line">    DexClassLoader dexClassLoader =</span><br><span class="line">        <span class="keyword">new</span> DexClassLoader(str, context.getDir(<span class="string">"dex"</span>, <span class="number">0</span>).getAbsolutePath(), str, context.getClassLoader());</span><br><span class="line">    <span class="comment">// why load class str2</span></span><br><span class="line">    dexClassLoader.loadClass(str2);</span><br><span class="line">    setField(obj, PathClassLoader.class, <span class="string">"mPaths"</span>,</span><br><span class="line">        appendArray(getField(obj, PathClassLoader.class, <span class="string">"mPaths"</span>), getField(dexClassLoader, DexClassLoader.class,</span><br><span class="line">                <span class="string">"mRawDexPath"</span>)</span><br><span class="line">        ));</span><br><span class="line">    setField(obj, PathClassLoader.class, <span class="string">"mFiles"</span>,</span><br><span class="line">        combineArray(getField(obj, PathClassLoader.class, <span class="string">"mFiles"</span>), getField(dexClassLoader, DexClassLoader.class,</span><br><span class="line">                <span class="string">"mFiles"</span>)</span><br><span class="line">        ));</span><br><span class="line">    setField(obj, PathClassLoader.class, <span class="string">"mZips"</span>,</span><br><span class="line">        combineArray(getField(obj, PathClassLoader.class, <span class="string">"mZips"</span>), getField(dexClassLoader, DexClassLoader.class,</span><br><span class="line">            <span class="string">"mZips"</span>)));</span><br><span class="line">    setField(obj, PathClassLoader.class, <span class="string">"mDexs"</span>,</span><br><span class="line">        combineArray(getField(obj, PathClassLoader.class, <span class="string">"mDexs"</span>), getField(dexClassLoader, DexClassLoader.class,</span><br><span class="line">            <span class="string">"mDexs"</span>)));</span><br><span class="line">    obj.loadClass(str2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们发现在 API Level &lt; 14 中，流程还是那一套流程，和 API Level &gt;= 14 的一致，只不过要合并的属性变多了。主要因为 ClassLoader 源代码有变更，所以要分版本作出兼容。在这里就不分析了，相信看完 <code>injectAboveEqualApiLevel14</code> 之后对 <code>injectBelowApiLevel14</code> 也一定理解了。</p>
+<h1 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h1><p>在 MainActivity 中，进行了热修复，相关代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//准备补丁,从assert里拷贝到dex里</span></span><br><span class="line">File dexPath = <span class="keyword">new</span> File(getDir(<span class="string">"dex"</span>, Context.MODE_PRIVATE), <span class="string">"path_dex.jar"</span>);</span><br><span class="line">Utils.prepareDex(<span class="keyword">this</span>.getApplicationContext(), dexPath, <span class="string">"path_dex.jar"</span>);</span><br><span class="line"><span class="comment">//                DexInjector.inject(dexPath.getAbsolutePath(), defaultDexOptPath, "dodola.hotfix</span></span><br><span class="line"><span class="comment">// .BugClass");</span></span><br><span class="line"></span><br><span class="line">HotFix.patch(<span class="keyword">this</span>, dexPath.getAbsolutePath(), <span class="string">"dodola.hotfix.BugClass"</span>);</span><br></pre></td></tr></table></figure>
+<p>惊奇地发现 MainActivity 中热修复的代码和上面 HotfixApplication 中加载 hackdex_dex.jar 的代码是一模一样的。没错，都是用的同一套流程，所以同样的道理就很容易理解了。</p>
+<h1 id="0x03"><a href="#0x03" class="headerlink" title="0x03"></a>0x03</h1><p><a href="https://github.com/dodola/HotFix" target="_blank" rel="external">HotFix</a> 整个逻辑就是上面这样了。但是我们还有一个问题要去解决，那就是我们怎样把 AntilazyLoad 动态引入到构造方法中。<a href="https://github.com/dodola/HotFix" target="_blank" rel="external">HotFix</a> 使用 javassist 来做到代码动态注入。具体的代码就是在 buildSrc 中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 植入代码</span><br><span class="line"> * <span class="doctag">@param</span> buildDir 是项目的build class目录,就是我们需要注入的class所在地</span><br><span class="line"> * <span class="doctag">@param</span> lib 这个是hackdex的目录,就是AntilazyLoad类的class文件所在地</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(String buildDir, String lib)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    println(lib)</span><br><span class="line">    ClassPool classes = ClassPool.getDefault()</span><br><span class="line">    classes.appendClassPath(buildDir)</span><br><span class="line">    classes.appendClassPath(lib)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//下面的操作比较容易理解,在将需要关联的类的构造方法中插入引用代码</span></span><br><span class="line">    CtClass c = classes.getCtClass(<span class="string">"dodola.hotfix.BugClass"</span>)</span><br><span class="line">    <span class="keyword">if</span> (c.isFrozen()) &#123;</span><br><span class="line">        c.defrost()</span><br><span class="line">    &#125;</span><br><span class="line">    println(<span class="string">"====添加构造方法===="</span>)</span><br><span class="line">    def constructor = c.getConstructors()[<span class="number">0</span>];</span><br><span class="line">    constructor.insertBefore(<span class="string">"System.out.println(dodola.hackdex.AntilazyLoad.class);"</span>)</span><br><span class="line">    c.writeFile(buildDir)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    CtClass c1 = classes.getCtClass(<span class="string">"dodola.hotfix.LoadBugClass"</span>)</span><br><span class="line">    <span class="keyword">if</span> (c1.isFrozen()) &#123;</span><br><span class="line">        c1.defrost()</span><br><span class="line">    &#125;</span><br><span class="line">    println(<span class="string">"====添加构造方法===="</span>)</span><br><span class="line">    def constructor1 = c1.getConstructors()[<span class="number">0</span>];</span><br><span class="line">    constructor1.insertBefore(<span class="string">"System.out.println(dodola.hackdex.AntilazyLoad.class);"</span>)</span><br><span class="line">    c1.writeFile(buildDir)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="0x04"><a href="#0x04" class="headerlink" title="0x04"></a>0x04</h1><p><a href="https://github.com/dodola/HotFix" target="_blank" rel="external">HotFix</a> 框架总体就是这样的了，还是比较简单的。现在作者重新写了一个 <a href="https://github.com/dodola/RocooFix" target="_blank" rel="external">RocooFix</a> 框架，主要解决了 Gradle 1.4 以上无法打包的问题。如果有兴趣的童鞋可以关注一下。</p>
+<p>那么今天就到这里了，bye bye ！</p>
+<h1 id="0x05"><a href="#0x05" class="headerlink" title="0x05"></a>0x05</h1><p>References</p>
+<ul>
+<li><a href="http://mp.weixin.qq.com/s?__biz=MzI1MTA1MzM2Nw==&amp;mid=400118620&amp;idx=1&amp;sn=b4fdd5055731290eef12ad0d17f39d4a&amp;scene=1&amp;srcid=1031x2ljgSF4xJGlH1xMCJxO&amp;uin=MjAyNzY1NTU%3D&amp;key=04dce534b3b035ef58d8714d714d36bcc6cc7e136bbd64850522b491d143aafceb62c46421c5965e18876433791d16ec&amp;devicetype=iMac+MacBookPro12%2C1+OSX+OSX+10.10.5+build(14F27)&amp;version=11020201&amp;lang=zh_CN&amp;pass_ticket=7O%2FVfztuLjqu23ED2WEkvy1SJstQD4eLRqX%2B%2BbCY3uE%3D" target="_blank" rel="external">安卓App热补丁动态修复技术介绍</a></li>
+</ul>
+<ul>
+<li><a href="http://blog.csdn.net/lmj623565791/article/details/49883661" target="_blank" rel="external">Android 热补丁动态修复框架小结</a></li>
+</ul>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+<div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton", disable="enable", onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}", style="cursor: pointer; border: 0; outline: 0; border-radius: 100%; padding: 0; margin: 0; letter-spacing: normal; text-transform: none; text-indent: 0px; text-shadow: none">
+    <span onmouseover="this.style.color='rgb(236,96,0)';this.style.background='rgb(204,204,204)'" onMouseOut="this.style.color='#fff';this.style.background='rgb(236,96,0)'" style="display: inline-block; width: 70px; height: 70px; border-radius: 100%; line-height: 81px; color: #fff; font: 400 35px/75px 'microsofty'; background: rgb(236,96,0)">赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <p>微信打赏</p>
+      </div>
+    
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <p>支付宝打赏</p>
+      </div>
+    
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/开源框架/" rel="tag">#开源框架</a>
+          
+            <a href="/tags/源码解析/" rel="tag">#源码解析</a>
+          
+            <a href="/tags/热修复/" rel="tag">#热修复</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/29/Dynamic-Load-Apk源码解析/" rel="next" title="Dynamic-Load-Apk源码解析">
+                <i class="fa fa-chevron-left"></i> Dynamic-Load-Apk源码解析
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/11/06/热修复框架HotFix源码解析/"
+     data-title="热修复框架HotFix源码解析"
+     data-content=""
+     data-url="http://yuqirong.me/2016/11/06/热修复框架HotFix源码解析/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/06/热修复框架HotFix源码解析/"
+           data-title="热修复框架HotFix源码解析" data-url="http://yuqirong.me/2016/11/06/热修复框架HotFix源码解析/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+               alt="俞其荣" />
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+          <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">51</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank">
+                  
+                    <i class="fa fa-google-plus"></i>
+                  
+                  Google+
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/1291f6690ea0" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/yyyuqirong" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yqr271228943@gmail.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+        
+        <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00"><span class="nav-number">1.</span> <span class="nav-text">0x00</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01"><span class="nav-number">2.</span> <span class="nav-text">0x01</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android__u7CFB_u7EDF_API_Level__26gt_3B_3D_14"><span class="nav-number">2.1.</span> <span class="nav-text">Android 系统 API Level >= 14</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android__u7CFB_u7EDF_API_Level__26lt_3B_14"><span class="nav-number">2.2.</span> <span class="nav-text">Android 系统 API Level < 14</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02"><span class="nav-number">3.</span> <span class="nav-text">0x02</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03"><span class="nav-number">4.</span> <span class="nav-text">0x03</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x04"><span class="nav-number">5.</span> <span class="nav-text">0x04</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x05"><span class="nav-number">6.</span> <span class="nav-text">0x05</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣
+ <!--  
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+ <script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1257390016'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1257390016' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/sitemap.xml">Google网站地图</a></span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/baidusitemap.xml">百度网站地图</a></span> -->
+  
+  </span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"yuqirong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '/js/src/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
