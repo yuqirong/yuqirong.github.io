@@ -27,7 +27,11 @@
 
 
 
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
 
 
 
@@ -35,7 +39,7 @@
 
 <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
 
@@ -47,7 +51,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
 
 
 
@@ -74,20 +78,20 @@
     fancybox: true,
     motion: true,
     duoshuo: {
-      userId: undefined,
+      userId: 'undefined',
       author: '博主'
     }
   };
 </script>
 
+
+
+
+
   <title> Qirong Yu's Blog </title>
-  <meta name="baidu-site-verification" content="MBYnGIEEPN" />
-  <meta name="baidu-site-verification" content="1Hx0jVHsgl" />
-  <meta name="baidu-site-verification" content="L0MgAErI0s" />
-  <meta name="google-site-verification" content="_hYRHLLoBRM6L31myWhOPTxzGtawe9z1zmCqcJ-aHA0" />
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -120,7 +124,7 @@
  ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
       <div class="header-inner"><div class="site-meta ">
   
 
@@ -152,7 +156,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -162,7 +166,7 @@
         <li class="menu-item menu-item-categories">
           <a href="/categories" rel="section">
             
-              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
             
             分类
           </a>
@@ -172,7 +176,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -182,7 +186,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -192,9 +196,9 @@
         <li class="menu-item menu-item-guestbook">
           <a href="/guestbook" rel="section">
             
-              <i class="menu-item-icon fa fa-comment fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-comment"></i> <br />
             
-            留言
+            menu.guestbook
           </a>
         </li>
       
@@ -202,9 +206,19 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程
           </a>
         </li>
       
@@ -235,7 +249,7 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
 
     
       <header class="post-header">
@@ -280,19 +294,14 @@
                   </a>
                 </span>
 
-					<!-- 
-					�Ķ���  
-					-->
-
                 
                 
 
               
             </span>
           
+
           
-           <!-- 
-        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -301,14 +310,14 @@
                 </a>
               </span>
             
-            
-          -->
-
           
 
           
+
+          
           
 
+          
         </div>
       </header>
     
@@ -338,7 +347,7 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
         
       
     </div>
-    
+
     <div>
       
     </div>
@@ -370,7 +379,7 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
 
     
       <header class="post-header">
@@ -415,19 +424,14 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
                   </a>
                 </span>
 
-					<!-- 
-					�Ķ���  
-					-->
-
                 
                 
 
               
             </span>
           
+
           
-           <!-- 
-        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -436,14 +440,14 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
                 </a>
               </span>
             
-            
-          -->
-
           
 
           
+
+          
           
 
+          
         </div>
       </header>
     
@@ -481,7 +485,7 @@ code-push deployment ls your_app_name -k
         
       
     </div>
-    
+
     <div>
       
     </div>
@@ -513,7 +517,7 @@ code-push deployment ls your_app_name -k
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
 
     
       <header class="post-header">
@@ -558,19 +562,14 @@ code-push deployment ls your_app_name -k
                   </a>
                 </span>
 
-					<!-- 
-					�Ķ���  
-					-->
-
                 
                 
 
               
             </span>
           
+
           
-           <!-- 
-        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -579,14 +578,14 @@ code-push deployment ls your_app_name -k
                 </a>
               </span>
             
-            
-          -->
-
           
 
           
+
+          
           
 
+          
         </div>
       </header>
     
@@ -612,7 +611,7 @@ code-push deployment ls your_app_name -k
         
       
     </div>
-    
+
     <div>
       
     </div>
@@ -644,7 +643,7 @@ code-push deployment ls your_app_name -k
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
 
     
       <header class="post-header">
@@ -689,19 +688,14 @@ code-push deployment ls your_app_name -k
                   </a>
                 </span>
 
-					<!-- 
-					�Ķ���  
-					-->
-
                 
                 
 
               
             </span>
           
+
           
-           <!-- 
-        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -710,14 +704,14 @@ code-push deployment ls your_app_name -k
                 </a>
               </span>
             
-            
-          -->
-
           
 
           
+
+          
           
 
+          
         </div>
       </header>
     
@@ -743,7 +737,7 @@ Gradle
         
       
     </div>
-    
+
     <div>
       
     </div>
@@ -775,7 +769,7 @@ Gradle
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
 
     
       <header class="post-header">
@@ -820,19 +814,14 @@ Gradle
                   </a>
                 </span>
 
-					<!-- 
-					�Ķ���  
-					-->
-
                 
                 
 
               
             </span>
           
+
           
-           <!-- 
-        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -841,14 +830,14 @@ Gradle
                 </a>
               </span>
             
-            
-          -->
-
           
 
           
+
+          
           
 
+          
         </div>
       </header>
     
@@ -875,7 +864,7 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
         
       
     </div>
-    
+
     <div>
       
     </div>
@@ -907,7 +896,7 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
 
     
       <header class="post-header">
@@ -952,19 +941,14 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
                   </a>
                 </span>
 
-					<!-- 
-					�Ķ���  
-					-->
-
                 
                 
 
               
             </span>
           
+
           
-           <!-- 
-        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -973,14 +957,14 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
                 </a>
               </span>
             
-            
-          -->
-
           
 
           
+
+          
           
 
+          
         </div>
       </header>
     
@@ -1006,7 +990,7 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
         
       
     </div>
-    
+
     <div>
       
     </div>
@@ -1038,7 +1022,7 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
 
     
       <header class="post-header">
@@ -1083,19 +1067,14 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
                   </a>
                 </span>
 
-					<!-- 
-					�Ķ���  
-					-->
-
                 
                 
 
               
             </span>
           
+
           
-           <!-- 
-        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -1104,14 +1083,14 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
                 </a>
               </span>
             
-            
-          -->
-
           
 
           
+
+          
           
 
+          
         </div>
       </header>
     
@@ -1141,7 +1120,7 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
         
       
     </div>
-    
+
     <div>
       
     </div>
@@ -1173,7 +1152,7 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
 
     
       <header class="post-header">
@@ -1218,19 +1197,14 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
                   </a>
                 </span>
 
-					<!-- 
-					�Ķ���  
-					-->
-
                 
                 
 
               
             </span>
           
+
           
-           <!-- 
-        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -1239,14 +1213,14 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
                 </a>
               </span>
             
-            
-          -->
-
           
 
           
+
+          
           
 
+          
         </div>
       </header>
     
@@ -1272,7 +1246,7 @@ WindowManager.Lay
         
       
     </div>
-    
+
     <div>
       
     </div>
@@ -1304,7 +1278,7 @@ WindowManager.Lay
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
 
     
       <header class="post-header">
@@ -1349,19 +1323,14 @@ WindowManager.Lay
                   </a>
                 </span>
 
-					<!-- 
-					�Ķ���  
-					-->
-
                 
                 
 
               
             </span>
           
+
           
-           <!-- 
-        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -1370,14 +1339,14 @@ WindowManager.Lay
                 </a>
               </span>
             
-            
-          -->
-
           
 
           
+
+          
           
 
+          
         </div>
       </header>
     
@@ -1403,7 +1372,7 @@ WindowManager.Lay
         
       
     </div>
-    
+
     <div>
       
     </div>
@@ -1435,7 +1404,7 @@ WindowManager.Lay
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
 
     
       <header class="post-header">
@@ -1480,19 +1449,14 @@ WindowManager.Lay
                   </a>
                 </span>
 
-					<!-- 
-					�Ķ���  
-					-->
-
                 
                 
 
               
             </span>
           
+
           
-           <!-- 
-        �Ƿ������� 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
@@ -1501,14 +1465,14 @@ WindowManager.Lay
                 </a>
               </span>
             
-            
-          -->
-
           
 
           
+
+          
           
 
+          
         </div>
       </header>
     
@@ -1534,7 +1498,7 @@ WindowManager.Lay
         
       
     </div>
-    
+
     <div>
       
     </div>
@@ -1592,7 +1556,7 @@ WindowManager.Lay
       
 
       <section class="site-overview sidebar-panel  sidebar-panel-active ">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
                alt="俞其荣" />
@@ -1640,81 +1604,81 @@ WindowManager.Lay
           
             
               <span class="links-of-author-item">
-                <a href="https://github.com/yuqirong" target="_blank">
+                <a href="https://github.com/yuqirong" target="_blank" title="GitHub">
                   
-                    <i class="fa fa-github"></i>
+                    <i class="fa fa-fw fa-github"></i>
                   
                   GitHub
                 </a>
               </span>
             
               <span class="links-of-author-item">
-                <a href="https://twitter.com/yyyuqirong" target="_blank">
+                <a href="https://twitter.com/yyyuqirong" target="_blank" title="Twitter">
                   
-                    <i class="fa fa-twitter"></i>
+                    <i class="fa fa-fw fa-twitter"></i>
                   
                   Twitter
                 </a>
               </span>
             
               <span class="links-of-author-item">
-                <a href="https://www.instagram.com/yyyuqirong" target="_blank">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank" title="Instagram">
                   
-                    <i class="fa fa-instagram"></i>
+                    <i class="fa fa-fw fa-instagram"></i>
                   
                   Instagram
                 </a>
               </span>
             
               <span class="links-of-author-item">
-                <a href="https://plus.google.com/116756215081118586533" target="_blank">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank" title="Google+">
                   
-                    <i class="fa fa-google-plus"></i>
+                    <i class="fa fa-fw fa-google-plus"></i>
                   
                   Google+
                 </a>
               </span>
             
               <span class="links-of-author-item">
-                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank">
+                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank" title="LinkedIn">
                   
-                    <i class="fa fa-linkedin"></i>
+                    <i class="fa fa-fw fa-linkedin"></i>
                   
                   LinkedIn
                 </a>
               </span>
             
               <span class="links-of-author-item">
-                <a href="http://www.jianshu.com/users/1291f6690ea0" target="_blank">
+                <a href="http://www.jianshu.com/users/1291f6690ea0" target="_blank" title="简书">
                   
-                    <i class="fa fa-globe"></i>
+                    <i class="fa fa-fw fa-globe"></i>
                   
                   简书
                 </a>
               </span>
             
               <span class="links-of-author-item">
-                <a href="http://weibo.com/yyyuqirong" target="_blank">
+                <a href="http://weibo.com/yyyuqirong" target="_blank" title="Weibo">
                   
-                    <i class="fa fa-weibo"></i>
+                    <i class="fa fa-fw fa-weibo"></i>
                   
                   Weibo
                 </a>
               </span>
             
               <span class="links-of-author-item">
-                <a href="https://www.zhihu.com/people/yuqirong" target="_blank">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank" title="知乎">
                   
-                    <i class="fa fa-globe"></i>
+                    <i class="fa fa-fw fa-globe"></i>
                   
                   知乎
                 </a>
               </span>
             
               <span class="links-of-author-item">
-                <a href="mailto:yqr271228943@gmail.com" target="_blank">
+                <a href="mailto:yqr271228943@gmail.com" target="_blank" title="Email">
                   
-                    <i class="fa fa-envelope"></i>
+                    <i class="fa fa-fw fa-envelope"></i>
                   
                   Email
                 </a>
@@ -1722,20 +1686,12 @@ WindowManager.Lay
             
           
         </div>
-        
-        <div class="cc-license motion-element" itemprop="license">
-            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
-              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
-            </a>
-          </div>
 
         
         
 
         
-        <div class="links-of-blogroll motion-element">
-          
-        </div>
+        
 
       </section>
 
@@ -1758,12 +1714,11 @@ WindowManager.Lay
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">俞其荣
-  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣</span>
 </div>
 
 <div class="powered-by">
-  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
 </div>
 
 <div class="theme-info">
@@ -1773,17 +1728,9 @@ WindowManager.Lay
   </a>
 </div>
 
-<script>
-(function(){
-    var bp = document.createElement('script');
-    bp.src = '//push.zhanzhang.baidu.com/push.js';
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(bp, s);
-})();
-</script>
+        
 
-
-
+        
       </div>
     </footer>
 
@@ -1834,21 +1781,21 @@ WindowManager.Lay
   
 
 
-  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
 
-  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
 
 
 
   
-  
-
   
 
   
 
+  
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
 
 
 
@@ -1864,7 +1811,7 @@ WindowManager.Lay
       var ds = document.createElement('script');
       ds.type = 'text/javascript';ds.async = true;
       ds.id = 'duoshuo-script';
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '/js/src/embed.js';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
       ds.charset = 'UTF-8';
       (document.getElementsByTagName('head')[0]
       || document.getElementsByTagName('body')[0]).appendChild(ds);
@@ -1877,13 +1824,18 @@ WindowManager.Lay
 
 
 
-  
+
   
   
 
   
 
   
+
+  
+
+  
+
 
 </body>
 </html>
