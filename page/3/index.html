@@ -984,12 +984,10 @@ public class DisplayUtil {
       
         
           
-          今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。
+          Native App 和 JS 交互今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。
 
-之后在脑海中回想到 WebView 中的JS可以和app产生交互，于是搜索了一下，果然网上有类似的实现效果。看了一下，在这里就做一个简单的笔记了以便之后查看。
-在 WebView 中想要JS和app产生交互，就不得不提一个方法，那就是addJavascriptInterface(Object object, String name)：
-
-第一个
+之后在脑海中回想到 WebView 中的 JS 可以和 app 产生交互，于是搜索了一下，果然网上有类似的实现效果。看了一下，在这里就做一个简单的笔记了以便之后查看。
+在 WebView 中想要 JS 和 app 产生交互，就不得不提一个方法，那就是addJavascriptInterface(Object 
           ...
 
           <div class="post-more-link text-center">
