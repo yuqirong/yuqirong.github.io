@@ -251,6 +251,269 @@
             
               
                 
+                <a class="post-title-link" href="/2016/02/26/使用RecyclerView实现仿喵街效果/" itemprop="url">
+                  使用RecyclerView实现仿喵街效果
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-02-26T19:50:18+08:00" content="2016-02-26">
+              2016-02-26
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/26/使用RecyclerView实现仿喵街效果/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/26/使用RecyclerView实现仿喵街效果/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          又到更新博客的时间了，本次给大家带来的是在RecyclerView的基础上实现喵街的效果。那么喵街是什么效果呢？下面就贴出效果图：
+
+值得一提的是，这是旧版本的特效，新版本的喵街已经去掉了这种效果。
+看完了效果，接下来就是动手的时间了。
+我们先来分析一下思路：我们先给RecyclerView添加一个OnScrollListener，然后分别去获得firstVisiblePosition和firstCompletelyVisiblePosition。这里要注意一下，firstVisiblePosition是第一个在屏幕中可见的itemView对应的position，而firstCompletel
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/02/26/使用RecyclerView实现仿喵街效果/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/02/18/九大基本排序算法/" itemprop="url">
+                  九大基本排序算法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-02-18T21:56:06+08:00" content="2016-02-18">
+              2016-02-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/18/九大基本排序算法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/18/九大基本排序算法/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          冒泡排序冒泡排序的平均复杂度是O(N^2),最好的情况O(N),最坏的情况O(N^2);空间复杂度O(1)；稳定算法
+/**
+ * A为数组，n为数组的长度
+ */
+private static int[] bubbleSort(int[] A, int n) {
+    int temp;
+    for (int i = 0; i &lt; n - 1; i++) {
+        for (int j = 0; j &lt; n - i - 1; j++) {
+            if (A[j] &gt; A[j + 1]) {
+                temp = A[
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/02/18/九大基本排序算法/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/02/15/带你一步步实现可拖拽的GridView控件/" itemprop="url">
                   带你一步步实现可拖拽的GridView控件
                 </a>
@@ -1253,262 +1516,6 @@ activity_main.xml：123456789101112131415161718192021222324252627282930313233343
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/12/27/自定义实现水波纹动画，让你的app不再单调/" itemprop="url">
-                  自定义实现水波纹动画，让你的app不再单调
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-12-27T23:05:17+08:00" content="2015-12-27">
-              2015-12-27
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/12/27/自定义实现水波纹动画，让你的app不再单调/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/27/自定义实现水波纹动画，让你的app不再单调/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          在开发Android应用的过程中，动画是一个很重要的点。好的动画可以给用户一种耳目一新的感觉。比如说京东app里下拉刷新中的动画是一个奔跑的快递员，这样用户会有一种耳目一新的感觉。所以我们何尝不提供一种新的动画方式呢？而今天给大家带来的就是水波纹动画。
-至于效果怎样，我们一起来看看：
-
-是不是觉得有新意多了呢？那就一起来看看吧，先简单讲述一下思路：首先波浪的形状主要是根据三角函数决定的。三角函数相信大家在中学的课程中学习过吧。通用公式就是f(x)=Asin(ωx+φ) + b。其中A就是波浪的振幅，ω与时间周期有关，x就是屏幕宽度的像素点，φ是初相，可以让波浪产生偏移，最后的b就是水位的高度了
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/12/27/自定义实现水波纹动画，让你的app不再单调/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/" itemprop="url">
-                  让你的ListView更炫酷，实现侧滑删除效果
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-12-13T23:54:48+08:00" content="2015-12-13">
-              2015-12-13
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          又到了更新博客的时间了，今天给大家带来的是ListView侧滑出现删除等按钮的效果。相信大家在平时玩app的时候都接触过这种效果吧。比如说QQ聊天列表侧滑就会出现“置顶”、“标为已读”、“删除”等按钮。这篇博文将用ViewDragHelper这个神器来实现侧滑效果。友情链接一下之前写的博文使用ViewDragHelper来实现侧滑菜单的，点击此处跳转。如果你对ViewDragHelper不熟悉，你可以去看看鸿洋_的《Android ViewDragHelper完全解析 自定义ViewGroup神器》。
-好了，话说的那么多，先来看看我们实现的效果图吧：
-
-可以看出来，我们实现的和QQ的效果相差无
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1554,7 +1561,7 @@ activity_main.xml：123456789101112131415161718192021222324252627282930313233343
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">53</span>
+              <span class="site-state-item-count">55</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1562,7 +1569,7 @@ activity_main.xml：123456789101112131415161718192021222324252627282930313233343
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

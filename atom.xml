@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2016-11-30T14:46:18.722Z</updated>
+  <updated>2016-12-14T14:52:19.621Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -13,6 +13,277 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Android项目中集成React Native]]></title>
+    <link href="http://yuqirong.me/2016/12/04/Android%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90React%20Native/"/>
+    <id>http://yuqirong.me/2016/12/04/Android项目中集成React Native/</id>
+    <published>2016-12-04T13:04:35.000Z</published>
+    <updated>2016-12-14T14:52:19.621Z</updated>
+    <content type="html"><![CDATA[<h1 id="u96C6_u6210React_Native_u7684_u6B65_u9AA4"><a href="#u96C6_u6210React_Native_u7684_u6B65_u9AA4" class="headerlink" title="集成React Native的步骤"></a>集成React Native的步骤</h1><ol>
+<li><p>运行以下命令 ：</p>
+<pre><code>$ npm init
+</code></pre><p> 生成 <code>package.json</code> ，下面给出一份 Demo ：</p>
+<pre><code>{
+  &quot;name&quot;: &quot;HelloWorld&quot;,
+  &quot;version&quot;: &quot;0.0.1&quot;,
+  &quot;private&quot;: true,
+  &quot;main&quot;: &quot;index.android.js&quot;,
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;node node_modules/react-native/local-cli/cli.js start&quot;,
+    &quot;test&quot;: &quot;jest&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;react&quot;: &quot;^15.4.1&quot;,
+    &quot;react-native&quot;: &quot;^0.39.0&quot;
+  }
+}
+</code></pre></li>
+<li><p>运行以下命令安装 React Native , Android 项目根目录就生成了 <code>node_modules/</code> 文件夹：</p>
+<pre><code>$ npm install --save react react-native
+</code></pre><p> 在 <code>.gitignore</code> 中添加：</p>
+<pre><code># node.js
+node_modules/
+npm-debug.log
+</code></pre><p> 执行 <code>react-native upgrade</code> 可以更新已有组件。</p>
+</li>
+<li><p>运行以下命令生成 <code>.flowconfig</code> 文件：</p>
+<pre><code>$ curl -o .flowconfig https://raw.githubusercontent.com/facebook/react-native/master/.flowconfig
+</code></pre></li>
+<li><p>修改 <code>package.json</code> 中 <code>scripts</code> 的 <code>start</code> 部分：</p>
+<pre><code>&quot;start&quot;: &quot;node node_modules/react-native/local-cli/cli.js start&quot;
+</code></pre></li>
+<li><p>在 Android 项目的根目录下新建 <code>index.android.js</code> ：</p>
+<pre><code>&apos;use strict&apos;;
+
+import React from &apos;react&apos;;
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View
+} from &apos;react-native&apos;;
+
+class HelloWorld extends React.Component {
+  render() {
+    return (
+      &lt;View&gt;
+        &lt;Text&gt;Hello, World&lt;/Text&gt;
+        &lt;Text&gt;Hello, React Native&lt;/Text&gt;
+      &lt;/View&gt;
+    )
+  }
+}
+
+AppRegistry.registerComponent(&apos;HelloWorld&apos;, () =&gt; HelloWorld);
+</code></pre></li>
+<li><p>在 <code>app/build.gradle</code> 中添加：</p>
+<pre><code>defaultConfig {
+    ...
+    ndk {
+        abiFilters &quot;armeabi-v7a&quot;, &quot;x86&quot;
+    }
+}
+
+dependencies {
+    ...
+    compile &quot;com.facebook.react:react-native:0.39.0&quot; // From node_modules.
+}
+</code></pre><p> react-native 依赖的版本和 <code>package.json</code> 中保持一致。</p>
+</li>
+<li><p>在 Android 项目根目录下的 <code>build.gradle</code> 文件添加如下内容：</p>
+<pre><code>allprojects {
+    repositories {
+        maven {
+            // All of React Native (JS, Android binaries) is installed from npm
+            url &quot;$rootDir/node_modules/react-native/android&quot;
+        }
+    }
+}
+</code></pre></li>
+<li><p>新建一个 <code>MyApplication</code> 继承自 <code>Application</code> ，在 <code>AndroidManifest.xml</code> 中修改成相应的 <code>MyApplication</code> ：</p>
+<pre><code>public class MyApplication extends Application implements ReactApplication {
+
+    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+        @Override
+        protected boolean getUseDeveloperSupport() {
+            return BuildConfig.DEBUG;
+        }
+
+        @Override
+        protected List&lt;ReactPackage&gt; getPackages() {
+            return Arrays.&lt;ReactPackage&gt;asList(
+                    new MainReactPackage()
+            );
+        }
+
+    };
+
+    @Override
+    public ReactNativeHost getReactNativeHost() {
+        return mReactNativeHost;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        SoLoader.init(this, /* native exopackage */ false);
+    }
+
+}
+</code></pre></li>
+<li><p>新建一个 <code>ReactNativeActivity</code> ，用来展示 React Native 的页面：</p>
+<pre><code>public class ReactNativeActivity extends ReactActivity {
+
+    @Override
+    protected String getMainComponentName() {
+        return &quot;HelloWorld&quot;;
+    }
+
+}
+</code></pre><p> 其中 <code>getMainComponentName()</code> 返回的字符串要和 index.android.js 中的 <code>AppRegistry.registerComponent</code> 中保持一致。</p>
+</li>
+<li><p>在 <code>AndroidManifest.xml</code> 里需要添加相关内容</p>
+<pre><code>&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
+&lt;uses-permission android:name=&quot;android.permission.SYSTEM_ALERT_WINDOW&quot; /&gt;
+
+&lt;activity android:name=&quot;.ReactNativeActivity&quot; /&gt;
+&lt;activity android:name=&quot;com.facebook.react.devsupport.DevSettingsActivity&quot; /&gt;
+</code></pre></li>
+<li><p>启动服务。debug 模式下需要在 <code>package.json</code> 所在目录下执行 </p>
+<pre><code>$ npm start
+</code></pre><p>之后按照正常的 Android 程序调试即可。</p>
+</li>
+<li><p>发布正式包</p>
+<p>JS Bundle 打包：</p>
+<p>在 <code>app/src/main/</code> 下创建 <code>assets/</code> 文件夹，执行以下命令将 JS Bundle 保存到资源目录下</p>
+<pre><code>$ react-native bundle --platform android --dev false --entry-file index.android.js --bundle-output app/src/main/assets/index.android.bundle --assets-dest app/src/main/res/
+</code></pre><p>在 <code>app/src/main/assets/</code> 下就会生成 <code>index.android.bundle</code> 文件。图片会生成在 <code>app/sec/main/res/drawable-mdpi/</code> 目录下。之后按照 Android 项目正常打包即可，但别忘了添加 React Native 的混淆：</p>
+<pre><code>-dontobfuscate
+
+# React Native
+
+# Keep our interfaces so they can be used by other ProGuard rules.
+# See http://sourceforge.net/p/proguard/bugs/466/
+-keep,allowobfuscation @interface com.facebook.proguard.annotations.DoNotStrip
+-keep,allowobfuscation @interface com.facebook.proguard.annotations.KeepGettersAndSetters
+-keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
+
+# Do not strip any method/class that is annotated with @DoNotStrip
+-keep @com.facebook.proguard.annotations.DoNotStrip class *
+-keep @com.facebook.common.internal.DoNotStrip class *
+-keepclassmembers class * {
+    @com.facebook.proguard.annotations.DoNotStrip *;
+    @com.facebook.common.internal.DoNotStrip *;
+}
+
+-keepclassmembers @com.facebook.proguard.annotations.KeepGettersAndSetters class * {
+  void set*(***);
+  *** get*();
+}
+
+-keep class * extends com.facebook.react.bridge.JavaScriptModule { *; }
+-keep class * extends com.facebook.react.bridge.NativeModule { *; }
+-keepclassmembers,includedescriptorclasses class * { native &lt;methods&gt;; }
+-keepclassmembers class *  { @com.facebook.react.uimanager.UIProp &lt;fields&gt;; }
+-keepclassmembers class *  { @com.facebook.react.uimanager.annotations.ReactProp &lt;methods&gt;; }
+-keepclassmembers class *  { @com.facebook.react.uimanager.annotations.ReactPropGroup &lt;methods&gt;; }
+
+-dontwarn com.facebook.react.**
+
+# okhttp
+
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+
+# okio
+
+-keep class sun.misc.Unsafe { *; }
+-dontwarn java.nio.file.*
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn okio.**
+</code></pre></li>
+</ol>
+<h1 id="u5728_u96C6_u6210React_Native_u4E2D_u9047_u5230_u7684_u95EE_u9898"><a href="#u5728_u96C6_u6210React_Native_u4E2D_u9047_u5230_u7684_u95EE_u9898" class="headerlink" title="在集成React Native中遇到的问题"></a>在集成React Native中遇到的问题</h1><h2 id="Warning_3AConflict_with_dependency__u2018com-google-code-findbugs_3Ajsr305_u2019-_Resolved_versions_for_app__283-0-0_29_and_test_app__282-0-1_29_differ-_See_http_3A//g-co/androidstudio/app-test-app-conflict_for_details"><a href="#Warning_3AConflict_with_dependency__u2018com-google-code-findbugs_3Ajsr305_u2019-_Resolved_versions_for_app__283-0-0_29_and_test_app__282-0-1_29_differ-_See_http_3A//g-co/androidstudio/app-test-app-conflict_for_details" class="headerlink" title="Warning:Conflict with dependency ‘com.google.code.findbugs:jsr305’. Resolved versions for app (3.0.0) and test app (2.0.1) differ. See http://g.co/androidstudio/app-test-app-conflict for details."></a>Warning:Conflict with dependency ‘com.google.code.findbugs:jsr305’. Resolved versions for app (3.0.0) and test app (2.0.1) differ. See <a href="http://g.co/androidstudio/app-test-app-conflict" target="_blank" rel="external">http://g.co/androidstudio/app-test-app-conflict</a> for details.</h2><p>在 app/build.gradle 中添加如下：</p>
+<pre><code>android {
+    ...
+    configurations.all {
+        resolutionStrategy.force &apos;com.google.code.findbugs:jsr305:3.0.0&apos;
+    }
+}
+</code></pre><h2 id="Cannot_find_module__u2018invariant_u2019"><a href="#Cannot_find_module__u2018invariant_u2019" class="headerlink" title="Cannot find module ‘invariant’"></a>Cannot find module ‘invariant’</h2><p>在调用 <code>react-native init Test</code> 初始化某个项目时，抛出如下异常：</p>
+<pre><code>$ react-native init Test
+This may take some time...
+This will walk you through creating a new React Native project in C:\Users\Administrator\Desktop\Test
+Installing react-native package from npm...
+module.js:327
+    throw err;
+    ^
+
+Error: Cannot find module &apos;invariant&apos;
+    at Function.Module._resolveFilename (module.js:325:15)
+    at Function.Module._load (module.js:276:25)                
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+    at Object.&lt;anonymous&gt; (C:/Users/Administrator/Desktop/Test/node_modules/react-native/packager/react-packager/src/node-haste/Module.js:18:19)
+    at Module._compile (module.js:409:26)
+    at loader (C:\Users\Administrator\Desktop\Test\node_modules\react-native\node_modules\babel-register\lib\node.js:144:5)
+    at Object.require.extensions.(anonymous function) [as .js] (C:\Users\Administrator\Desktop\Test\node_modules\react-native\node_modules\babel-register\lib\node.js:154:7)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+</code></pre><p>解决方案：调用 <code>npm i --save-dev invariant</code> 命令，详见 <a href="https://github.com/facebook/react-native/issues/11327" target="_blank" rel="external">Cannot find module ‘invariant’ - react-native-cli</a></p>
+<h2 id="java-lang-IllegalAccessError_3A_Method__u2018void_android-support-v4-net-ConnectivityManagerCompat-_28_29_u2019_is_inaccessible_to_class__u2018com-facebook-react-modules-netinfo-NetInfoModule_u2019"><a href="#java-lang-IllegalAccessError_3A_Method__u2018void_android-support-v4-net-ConnectivityManagerCompat-_28_29_u2019_is_inaccessible_to_class__u2018com-facebook-react-modules-netinfo-NetInfoModule_u2019" class="headerlink" title="java.lang.IllegalAccessError: Method ‘void android.support.v4.net.ConnectivityManagerCompat.()’ is inaccessible to class ‘com.facebook.react.modules.netinfo.NetInfoModule’"></a>java.lang.IllegalAccessError: Method ‘void android.support.v4.net.ConnectivityManagerCompat.<init\>()’ is inaccessible to class ‘com.facebook.react.modules.netinfo.NetInfoModule’</init\></h2><p>在 React Native 程序运行时，报错：</p>
+<pre><code>E/AndroidRuntime: FATAL EXCEPTION: AsyncTask #1
+    Process: com.fanwei.reactnativeupdate, PID: 3139
+    java.lang.RuntimeException: An error occured while executing doInBackground()
+        at android.os.AsyncTask$3.done(AsyncTask.java:304)
+        at java.util.concurrent.FutureTask.finishCompletion(FutureTask.java:355)
+        at java.util.concurrent.FutureTask.setException(FutureTask.java:222)
+        at java.util.concurrent.FutureTask.run(FutureTask.java:242)
+        at android.os.AsyncTask$SerialExecutor$1.run(AsyncTask.java:231)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1112)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:587)
+        at java.lang.Thread.run(Thread.java:818)
+     Caused by: java.lang.IllegalAccessError: Method &apos;void android.support.v4.net.ConnectivityManagerCompat.&lt;init&gt;()&apos; is inaccessible to class &apos;com.facebook.react.modules.netinfo.NetInfoModule&apos; (declaration of &apos;com.facebook.react.modules.netinfo.NetInfoModule&apos; appears in /data/data/com.fanwei.reactnativeupdate/files/instant-run/dex/slice-com.facebook.react-react-native-0.20.1_3b7c8d9b91d5c989075fbd631ac74b192cee741b-classes.dex)
+        at com.facebook.react.modules.netinfo.NetInfoModule.&lt;init&gt;(NetInfoModule.java:55)
+        at com.facebook.react.shell.MainReactPackage.createNativeModules(MainReactPackage.java:67)
+        at com.facebook.react.ReactInstanceManagerImpl.processPackage(ReactInstanceManagerImpl.java:793)
+        at com.facebook.react.ReactInstanceManagerImpl.createReactContext(ReactInstanceManagerImpl.java:730)
+        at com.facebook.react.ReactInstanceManagerImpl.access$600(ReactInstanceManagerImpl.java:91)
+        at com.facebook.react.ReactInstanceManagerImpl$ReactContextInitAsyncTask.doInBackground(ReactInstanceManagerImpl.java:184)
+        at com.facebook.react.ReactInstanceManagerImpl$ReactContextInitAsyncTask.doInBackground(ReactInstanceManagerImpl.java:169)
+        at android.os.AsyncTask$2.call(AsyncTask.java:292)
+        at java.util.concurrent.FutureTask.run(FutureTask.java:237)
+        at android.os.AsyncTask$SerialExecutor$1.run(AsyncTask.java:231) 
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1112) 
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:587) 
+        at java.lang.Thread.run(Thread.java:818) 
+</code></pre><p>解决方案：修改依赖为 <code>com.android.support:appcompat-v7:23.0.1</code> ，详见 <a href="https://github.com/facebook/react-native/issues/6152" target="_blank" rel="external">Android java.lang.IllegalAccessError Method void android.support.v4.net.ConnectivityManagerCompat</a></p>
+<h2 id="ERROR_EPERM_3A_operation_not_permitted_2C_lstat__u2018C_3A_5CUsers_5CAdministrator_5CDesktop_5CReactNativeUpdate_5Capp_5Cbuild_5Cgenerated_5Cassets_5Cshaders_5Cdebug_u2019__7B_u201Cerrno_u201D_3A-4048_2C_u201Dcode_u201D_3A_u201DEPERM_u201D_2C_u201Dsyscall_u201D_3A_u201Dlstat_u201D_2C_u201Dpath_u201D_3A_u201DC_3A_5CUsers_5CAdministrator_5CDesktop_5CReactNativeUpdate_5Capp_5Cbuild_5Cgenerated_5Cassets_5Cshaders_5Cdebug_u201D_7DError_3A_EPERM_3A_operation_not_permitted_2C_lstat__u2018C_3A_5CUsers_5CAdministrator_5CDesktop_5CReactNativeUpdate_5Capp_5Cbuild_5Cgenerated_5Cassets_5Cshaders_5Cdebug_u2019_at_Error__28native_29"><a href="#ERROR_EPERM_3A_operation_not_permitted_2C_lstat__u2018C_3A_5CUsers_5CAdministrator_5CDesktop_5CReactNativeUpdate_5Capp_5Cbuild_5Cgenerated_5Cassets_5Cshaders_5Cdebug_u2019__7B_u201Cerrno_u201D_3A-4048_2C_u201Dcode_u201D_3A_u201DEPERM_u201D_2C_u201Dsyscall_u201D_3A_u201Dlstat_u201D_2C_u201Dpath_u201D_3A_u201DC_3A_5CUsers_5CAdministrator_5CDesktop_5CReactNativeUpdate_5Capp_5Cbuild_5Cgenerated_5Cassets_5Cshaders_5Cdebug_u201D_7DError_3A_EPERM_3A_operation_not_permitted_2C_lstat__u2018C_3A_5CUsers_5CAdministrator_5CDesktop_5CReactNativeUpdate_5Capp_5Cbuild_5Cgenerated_5Cassets_5Cshaders_5Cdebug_u2019_at_Error__28native_29" class="headerlink" title="ERROR EPERM: operation not permitted, lstat ‘C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug’ {“errno”:-4048,”code”:”EPERM”,”syscall”:”lstat”,”path”:”C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug”}Error: EPERM: operation not permitted, lstat ‘C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug’ at Error (native)"></a>ERROR EPERM: operation not permitted, lstat ‘C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug’ {“errno”:-4048,”code”:”EPERM”,”syscall”:”lstat”,”path”:”C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug”}Error: EPERM: operation not permitted, lstat ‘C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug’ at Error (native)</h2><p>在调用命令 <code>npm start</code> 时，出现以下错误：</p>
+<pre><code>ERROR  EPERM: operation not permitted, lstat &apos;C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug&apos;
+{&quot;errno&quot;:-4048,&quot;code&quot;:&quot;EPERM&quot;,&quot;syscall&quot;:&quot;lstat&quot;,&quot;path&quot;:&quot;C:\\Users\\Administrator\\Desktop\\ReactNativeUpdate\\app\\build\\generated\\assets\\shaders\\debug&quot;}
+Error: EPERM: operation not permitted, lstat &apos;C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug&apos;
+    at Error (native)
+</code></pre><p>解决方案：打开项目中 <code>node_modules/react-native/local-cli/server/server.js</code> 找到  <code>process.on(&#39;uncaughtException&#39;, error =&gt; {</code> 这个方法，把最后一句 <code>process.exit(11);</code> 注释掉。</p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a href="http://facebook.github.io/react-native/docs/integration-with-existing-apps.html" target="_blank" rel="external">Integration With Existing Apps</a></li>
+<li><a href="http://www.lcode.org/react-native%e7%a7%bb%e6%a4%8d%e5%8e%9f%e7%94%9fandroid%e9%a1%b9%e7%9b%ae-%e5%b7%b2%e6%9b%b4%e6%96%b0%e7%89%88%e6%9c%ac/" target="_blank" rel="external">React Native移植原生Android项目-已更新版本</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u96C6_u6210React_Native_u7684_u6B65_u9AA4"><a href="#u96C6_u6210React_Native_u7684_u6B65_u9AA4" class="headerlink" title="集成React Na]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="React Native" scheme="http://yuqirong.me/tags/React-Native/"/>
+    
+      <category term="React Native Blog" scheme="http://yuqirong.me/categories/React-Native-Blog/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Volley框架源码解析]]></title>
@@ -265,11 +536,11 @@ pathClassLoader.loadClass(str2);
   </entry>
   
   <entry>
-    <title><![CDATA[React Native热更新集成CodePush]]></title>
-    <link href="http://yuqirong.me/2016/11/03/React%20Native%E7%83%AD%E6%9B%B4%E6%96%B0%E9%9B%86%E6%88%90CodePush/"/>
-    <id>http://yuqirong.me/2016/11/03/React Native热更新集成CodePush/</id>
+    <title><![CDATA[React Native热更新集成Code Push]]></title>
+    <link href="http://yuqirong.me/2016/11/03/React%20Native%E7%83%AD%E6%9B%B4%E6%96%B0%E9%9B%86%E6%88%90Code%20Push/"/>
+    <id>http://yuqirong.me/2016/11/03/React Native热更新集成Code Push/</id>
     <published>2016-11-03T01:30:59.000Z</published>
-    <updated>2016-11-06T14:36:26.987Z</updated>
+    <updated>2016-12-14T12:55:50.913Z</updated>
     <content type="html"><![CDATA[<p>Code Push GitHub 地址: <a href="https://github.com/Microsoft/react-native-code-push" target="_blank" rel="external">https://github.com/Microsoft/react-native-code-push</a></p>
 <h1 id="u57FA_u672C_u5B89_u88C5"><a href="#u57FA_u672C_u5B89_u88C5" class="headerlink" title="基本安装"></a>基本安装</h1><ol>
 <li><p>安装 code push cli</p>
@@ -390,11 +661,9 @@ Failed to create \projectName\android\app\buildintermediates\debug\merging
     <![CDATA[<p>Code Push GitHub 地址: <a href="https://github.com/Microsoft/react-native-code-push" target="_blank" rel="external">https://github.com/Micr]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
       <category term="React Native" scheme="http://yuqirong.me/tags/React-Native/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="React Native Blog" scheme="http://yuqirong.me/categories/React-Native-Blog/"/>
     
   </entry>
   
@@ -553,6 +822,54 @@ KEY_PASSWORD=xxxxxxxxx
       <category term="Gradle" scheme="http://yuqirong.me/tags/Gradle/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[React Native环境安装流程]]></title>
+    <link href="http://yuqirong.me/2016/10/15/React%20Native%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E6%B5%81%E7%A8%8B/"/>
+    <id>http://yuqirong.me/2016/10/15/React Native环境安装流程/</id>
+    <published>2016-10-15T00:52:40.000Z</published>
+    <updated>2016-12-14T13:00:25.324Z</updated>
+    <content type="html"><![CDATA[<h1 id="React_Native__u73AF_u5883_u5B89_u88C5"><a href="#React_Native__u73AF_u5883_u5B89_u88C5" class="headerlink" title="React Native 环境安装"></a>React Native 环境安装</h1><ol>
+<li><p>安装 Java 、 Android SDK 。这个应该不用讲了，不会的直接自己百度吧。</p>
+</li>
+<li><p>安装 Node</p>
+<p> React Native 需要使用 Node JS 来做服务器，可以去 Node JS 的官网下载安装：</p>
+<p> 下载地址：<a href="https://nodejs.org/en/" target="_blank" rel="external">https://nodejs.org/en/</a></p>
+<p> 使用 <code>node -v</code> 可以查看 Node JS 安装的版本。</p>
+</li>
+<li><p>安装 Git</p>
+<p> 下载地址：<a href="https://git-scm.com/downloads" target="_blank" rel="external">https://git-scm.com/downloads</a></p>
+<p> 配置好环境变量后从 GitHub 把 React Native 仓库 clone 下来。</p>
+<p> React Native GitHub 地址：<a href="https://github.com/facebook/react-native.git" target="_blank" rel="external">https://github.com/facebook/react-native.git</a></p>
+</li>
+</ol>
+<ol>
+<li><p>安装 React Native 命令行工具 react-native-cli</p>
+<p> 打开 clone 下来的 React Native 仓库，进入 /react-native-cli 目录，输入命令 <code>npm install -g</code> 安装</p>
+</li>
+<li><p>创建 React Native 项目</p>
+<p> 进入你希望创建项目的目录后，输入 <code>react-native init [项目名]</code> 创建新项目，比如 <code>react-native init AwesomeProject</code>，等待一段时间项目会创建完成。</p>
+</li>
+<li><p>运行打包的 Node JS 服务器</p>
+<p> 在命令行中进入项目目录，输入 <code>react-native start</code> ，等待一段时间即可。</p>
+</li>
+<li><p>运行项目</p>
+<p> 第六步的服务端不要关闭，重新启动一个新的命令行，进入项目目录，输入 <code>react-native run-android</code> 运行 Android 项目。同理，输入 <code>react-native run-ios</code> 运行 iOS 项目。</p>
+</li>
+</ol>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a href="http://www.lcode.org/%e5%8f%b2%e4%b8%8a%e6%9c%80%e8%af%a6%e7%bb%86windows%e7%89%88%e6%9c%ac%e6%90%ad%e5%bb%ba%e5%ae%89%e8%a3%85react-native%e7%8e%af%e5%a2%83%e9%85%8d%e7%bd%ae/" target="_blank" rel="external">史上最详细Windows版本搭建安装React Native环境配置</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="React_Native__u73AF_u5883_u5B89_u88C5"><a href="#React_Native__u73AF_u5883_u5B89_u88C5" class="headerlink" title="React Native 环境安装"]]>
+    </summary>
+    
+      <category term="React Native" scheme="http://yuqirong.me/tags/React-Native/"/>
+    
+      <category term="React Native Blog" scheme="http://yuqirong.me/categories/React-Native-Blog/"/>
     
   </entry>
   
@@ -1960,91 +2277,6 @@ android/support/multidex/ZipUtil$CentralDirectory.class
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
     
       <category term="自定义View" scheme="http://yuqirong.me/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
-    
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[FloatingActionButton在滚动时显示或隐藏]]></title>
-    <link href="http://yuqirong.me/2016/04/10/FloatingActionButton%E5%9C%A8%E6%BB%9A%E5%8A%A8%E6%97%B6%E6%98%BE%E7%A4%BA%E6%88%96%E9%9A%90%E8%97%8F/"/>
-    <id>http://yuqirong.me/2016/04/10/FloatingActionButton在滚动时显示或隐藏/</id>
-    <published>2016-04-10T11:51:22.000Z</published>
-    <updated>2016-11-01T14:43:47.505Z</updated>
-    <content type="html"><![CDATA[<p>在Material Design中，FloatingActionButton(即FAB)是一个很重要的元素。而通常在列表向下滚动的时候，FAB应该会隐藏；而在向上滚动时，FAB应该会显示出来。本篇就记录其中一种实现FAB显示或隐藏的方案，主要应用了属性动画。</p>
-<p>其实关于FAB的显示和隐藏，Google官方就提供了其中一种方案：<code>fab.hidden()</code>和<code>fab.show()</code>。但是自带的是FAB缩放的效果。并不是上下移动的效果。</p>
-<p>那么我们就来看看如何实现FAB上下移动的效果吧！</p>
-<p>首先在你想要滑动的View(比如说RecyclerView等)的布局上加上：</p>
-<pre><code>app:layout_behavior=&quot;@string/appbar_scrolling_view_behavior&quot;
-</code></pre><p>然后再附上FAB的xml：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">android.support.design.widget.FloatingActionButton</span></span><br><span class="line">   <span class="attribute">android:id</span>=<span class="value">"@+id/fab"</span></span><br><span class="line">   <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">   <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">   <span class="attribute">android:layout_gravity</span>=<span class="value">"bottom|end"</span></span><br><span class="line">   <span class="attribute">android:layout_margin</span>=<span class="value">"@dimen/fab_margin"</span></span><br><span class="line">   <span class="attribute">app:layout_behavior</span>=<span class="value">"com.yuqirong.rxnews.ui.view.ScrollAwareFABBehavior"</span></span><br><span class="line">   <span class="attribute">android:src</span>=<span class="value">"@android:drawable/ic_dialog_email"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>注意其中的layout_behavior，是我们自己实现的一个类：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScrollAwareFABBehavior</span> <span class="keyword">extends</span> <span class="title">FloatingActionButton</span>.<span class="title">Behavior</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Interpolator INTERPOLATOR = <span class="keyword">new</span> FastOutSlowInInterpolator();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> mIsAnimatingOut = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ScrollAwareFABBehavior</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onStartNestedScroll</span><span class="params">(<span class="keyword">final</span> CoordinatorLayout coordinatorLayout, <span class="keyword">final</span> FloatingActionButton child,</span><br><span class="line">                                       <span class="keyword">final</span> View directTargetChild, <span class="keyword">final</span> View target, <span class="keyword">final</span> <span class="keyword">int</span> nestedScrollAxes)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Ensure we react to vertical scrolling</span></span><br><span class="line">        <span class="keyword">return</span> nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL</span><br><span class="line">                || <span class="keyword">super</span>.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, nestedScrollAxes);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNestedScroll</span><span class="params">(<span class="keyword">final</span> CoordinatorLayout coordinatorLayout, <span class="keyword">final</span> FloatingActionButton child,</span><br><span class="line">                               <span class="keyword">final</span> View target, <span class="keyword">final</span> <span class="keyword">int</span> dxConsumed, <span class="keyword">final</span> <span class="keyword">int</span> dyConsumed,</span><br><span class="line">                               <span class="keyword">final</span> <span class="keyword">int</span> dxUnconsumed, <span class="keyword">final</span> <span class="keyword">int</span> dyUnconsumed)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);</span><br><span class="line">        <span class="keyword">if</span> (dyConsumed &gt; <span class="number">0</span> &amp;&amp; !<span class="keyword">this</span>.mIsAnimatingOut &amp;&amp; child.getVisibility() == View.VISIBLE) &#123;</span><br><span class="line">            <span class="comment">// User scrolled down and the FAB is currently visible -&gt; hide the FAB</span></span><br><span class="line">            animateOut(child);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dyConsumed &lt; <span class="number">0</span> &amp;&amp; child.getVisibility() != View.VISIBLE) &#123;</span><br><span class="line">            <span class="comment">// User scrolled up and the FAB is currently not visible -&gt; show the FAB</span></span><br><span class="line">            animateIn(child);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Same animation that FloatingActionButton.Behavior uses to hide the FAB when the AppBarLayout exits</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">animateOut</span><span class="params">(<span class="keyword">final</span> FloatingActionButton button)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= <span class="number">14</span>) &#123;</span><br><span class="line">            ViewCompat.animate(button).translationY(button.getHeight() + getMarginBottom(button)).setInterpolator(INTERPOLATOR).withLayer()</span><br><span class="line">                    .setListener(<span class="keyword">new</span> ViewPropertyAnimatorListener() &#123;</span><br><span class="line">                        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationStart</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">                            ScrollAwareFABBehavior.<span class="keyword">this</span>.mIsAnimatingOut = <span class="keyword">true</span>;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationCancel</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">                            ScrollAwareFABBehavior.<span class="keyword">this</span>.mIsAnimatingOut = <span class="keyword">false</span>;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationEnd</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">                            ScrollAwareFABBehavior.<span class="keyword">this</span>.mIsAnimatingOut = <span class="keyword">false</span>;</span><br><span class="line">                            view.setVisibility(View.GONE);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;).start();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            button.hide();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Same animation that FloatingActionButton.Behavior uses to show the FAB when the AppBarLayout enters</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">animateIn</span><span class="params">(FloatingActionButton button)</span> </span>&#123;</span><br><span class="line">        button.setVisibility(View.VISIBLE);</span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= <span class="number">14</span>) &#123;</span><br><span class="line">            ViewCompat.animate(button).translationY(<span class="number">0</span>)</span><br><span class="line">                    .setInterpolator(INTERPOLATOR).withLayer().setListener(<span class="keyword">null</span>)</span><br><span class="line">                    .start();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            button.show();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">getMarginBottom</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> marginBottom = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">final</span> ViewGroup.LayoutParams layoutParams = v.getLayoutParams();</span><br><span class="line">        <span class="keyword">if</span> (layoutParams <span class="keyword">instanceof</span> ViewGroup.MarginLayoutParams) &#123;</span><br><span class="line">            marginBottom = ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> marginBottom;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们主要看<code>onNestedScroll()</code>这个方法，在方法里主要判断了一下是向上滑还是向下滑。再分别去调用<code>animateOut()</code>和<code>animateIn()</code>。那我们就来看看<code>animateOut()</code>。(<code>animateIn()</code>和<code>animateOut()</code>的原理一样的，我们只看<code>animateOut()</code>吧)</p>
-<p>在<code>animateOut()</code>根据SDK的版本判断，若大于或等于14使用属性动画；不然就是使用了自带的<code>hide()</code>方法。代码还是比较简单的，相信大家都能看得懂。当然如下想在SDK 14以下使用上下移动的效果，那就要用NineOldAndroids这个库了。</p>
-<p>效果就是如下所示了：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160413/20160413202356.gif" alt="这里写图片描述"></p>
-<p>好了，今天就到这了。bye！</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>在Material Design中，FloatingActionButton(即FAB)是一个很重要的元素。而通常在列表向下滚动的时候，FAB应该会隐藏；而在向上滚动时，FAB应该会显示出来。本篇就记录其中一种实现FAB显示或隐藏的方案，主要应用了属性动画。</p>
-<p>]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="Material Design" scheme="http://yuqirong.me/tags/Material-Design/"/>
-    
-      <category term="Android Tips" scheme="http://yuqirong.me/categories/Android-Tips/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[深入解析Scroller滚动原理]]></title>
-    <link href="http://yuqirong.me/2016/04/05/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90Scroller%E6%BB%9A%E5%8A%A8%E5%8E%9F%E7%90%86/"/>
-    <id>http://yuqirong.me/2016/04/05/深入解析Scroller滚动原理/</id>
-    <published>2016-04-05T12:21:10.000Z</published>
-    <updated>2016-11-01T14:42:28.650Z</updated>
-    <content type="html"><![CDATA[<p>最近在看《Android开发艺术探索》这本书，不得不赞一句主席写得真好，受益匪浅。在书中的相关章节有介绍用Scroller来实现平滑滚动的效果。而我们今天就来探究一下为什么Scroller能够实现平滑滚动。</p>
-<p>首先我们先来看一下Scroller的用法，基本可概括为“三部曲”：</p>
-<ol>
-<li><p>创建一个Scroller对象，一般在View的构造器中创建：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ScrollViewGroup</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ScrollViewGroup</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ScrollViewGroup</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">    mScroller = <span class="keyword">new</span> Scroller(context);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重写View的computeScroll()方法，下面的代码基本是不会变化的：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">computeScroll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.computeScroll();</span><br><span class="line">    <span class="keyword">if</span> (mScroller.computeScrollOffset()) &#123;</span><br><span class="line">        scrollTo(mScroller.getCurrX(), mScroller.getCurrY());</span><br><span class="line">        postInvalidate();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>调用startScroll()方法，startX和startY为开始滚动的坐标点，dx和dy为对应的偏移量：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mScroller.startScroll (<span class="keyword">int</span> startX, <span class="keyword">int</span> startY, <span class="keyword">int</span> dx, <span class="keyword">int</span> dy);</span><br><span class="line">invalidate();</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>上面的三步就是Scroller的基本用法了。那接下来的任务就是解析Scroller的滚动原理了。</p>
-<p>而在这之前，我们还有一件事要办，那就是搞清楚scrollTo()和scrollBy()的原理。scrollTo()和scrollBy()的区别我这里就不重复叙述了，不懂的可以自行google或百度。下面贴出scrollTo()的源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">scrollTo</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mScrollX != x || mScrollY != y) &#123;</span><br><span class="line">        <span class="keyword">int</span> oldX = mScrollX;</span><br><span class="line">        <span class="keyword">int</span> oldY = mScrollY;</span><br><span class="line">        mScrollX = x;</span><br><span class="line">        mScrollY = y;</span><br><span class="line">        invalidateParentCaches();</span><br><span class="line">        onScrollChanged(mScrollX, mScrollY, oldX, oldY);</span><br><span class="line">        <span class="keyword">if</span> (!awakenScrollBars()) &#123;</span><br><span class="line">            postInvalidateOnAnimation();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>设置好mScrollX和mScrollY之后，调用了<code>onScrollChanged(mScrollX, mScrollY, oldX, oldY);</code>，View就会被重新绘制。这样就达到了滑动的效果。</p>
-<p>下面我们再来看看scrollBy()：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">scrollBy</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    scrollTo(mScrollX + x, mScrollY + y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这样简短的代码相信大家都懂了，原来scrollBy()内部是调用了scrollTo()的。但是scrollTo()/scrollBy()的滚动都是瞬间完成的，怎么样才能实现平滑滚动呢。</p>
-<p>不知道大家有没有这样一种想法：如果我们把要滚动的偏移量分成若干份小的偏移量，当然这份量要大。然后用scrollTo()/scrollBy()每次都滚动小份的偏移量。在一定的时间内，不就成了平滑滚动了吗？没错，Scroller正是借助这一原理来实现平滑滚动的。下面我们就来看看源码吧！</p>
-<p>根据“三部曲”中第一部，先来看看Scroller的构造器：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Scroller</span><span class="params">(Context context, Interpolator interpolator, <span class="keyword">boolean</span> flywheel)</span> </span>&#123;</span><br><span class="line">    mFinished = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">if</span> (interpolator == <span class="keyword">null</span>) &#123;</span><br><span class="line">        mInterpolator = <span class="keyword">new</span> ViscousFluidInterpolator();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mInterpolator = interpolator;</span><br><span class="line">    &#125;</span><br><span class="line">    mPpi = context.getResources().getDisplayMetrics().density * <span class="number">160.0f</span>;</span><br><span class="line">    mDeceleration = computeDeceleration(ViewConfiguration.getScrollFriction());</span><br><span class="line">    mFlywheel = flywheel;</span><br><span class="line"></span><br><span class="line">    mPhysicalCoeff = computeDeceleration(<span class="number">0.84f</span>); <span class="comment">// look and feel tuning</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在构造器中做的主要就是指定了插补器，如果没有指定插补器，那么就用默认的ViscousFluidInterpolator。</p>
-<p>我们再来看看Scroller的startScroll()：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startScroll</span><span class="params">(<span class="keyword">int</span> startX, <span class="keyword">int</span> startY, <span class="keyword">int</span> dx, <span class="keyword">int</span> dy, <span class="keyword">int</span> duration)</span> </span>&#123;</span><br><span class="line">    mMode = SCROLL_MODE;</span><br><span class="line">    mFinished = <span class="keyword">false</span>;</span><br><span class="line">    mDuration = duration;</span><br><span class="line">    mStartTime = AnimationUtils.currentAnimationTimeMillis();</span><br><span class="line">    mStartX = startX;</span><br><span class="line">    mStartY = startY;</span><br><span class="line">    mFinalX = startX + dx;</span><br><span class="line">    mFinalY = startY + dy;</span><br><span class="line">    mDeltaX = dx;</span><br><span class="line">    mDeltaY = dy;</span><br><span class="line">    mDurationReciprocal = <span class="number">1.0f</span> / (<span class="keyword">float</span>) mDuration;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>我们发现，在startScroll()里面并没有开始滚动，而是设置了一堆变量的初始值，那么到底是什么让View开始滚动的？我们应该把目标集中在startScroll()的下一句<code>invalidate();</code>身上。我们可以这样理解：首先在startScroll()设置好了一堆初始值，之后调用了<code>invalidate();</code>让View重新绘制，这里又有一个很重要的点，在draw()中会调用<code>computeScroll()</code>这个方法！</p>
-<p>源码太长了，在这里就不贴出来了。想看的童鞋在View类里面搜<code>boolean draw(Canvas canvas, ViewGroup parent, long drawingTime)</code>这个方法就能看到了。通过ViewGroup.drawChild()方法就会调用子View的draw()方法。而在View类里面的<code>computeScroll()</code>是一个空的方法，需要我们去实现：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Called by a parent to request that a child update its values for mScrollX</span><br><span class="line"> * and mScrollY if necessary. This will typically be done if the child is</span><br><span class="line"> * animating a scroll using a &#123;<span class="doctag">@link</span> android.widget.Scroller Scroller&#125;</span><br><span class="line"> * object.</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">computeScroll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>而在上面“三部曲”的第二部中，我们就已经实现了<code>computeScroll()</code>。首先判断了<code>computeScrollOffset()</code>，我们来看看相关源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Call this when you want to know the new location.  If it returns true,</span><br><span class="line"> * the animation is not yet finished.</span><br><span class="line"> */</span> </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">computeScrollOffset</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mFinished) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> timePassed = (<span class="keyword">int</span>)(AnimationUtils.currentAnimationTimeMillis() - mStartTime);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (timePassed &lt; mDuration) &#123;</span><br><span class="line">        <span class="keyword">switch</span> (mMode) &#123;</span><br><span class="line">        <span class="keyword">case</span> SCROLL_MODE:</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">float</span> x = mInterpolator.getInterpolation(timePassed * mDurationReciprocal);</span><br><span class="line">            mCurrX = mStartX + Math.round(x * mDeltaX);</span><br><span class="line">            mCurrY = mStartY + Math.round(x * mDeltaY);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> FLING_MODE:</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">float</span> t = (<span class="keyword">float</span>) timePassed / mDuration;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> index = (<span class="keyword">int</span>) (NB_SAMPLES * t);</span><br><span class="line">            <span class="keyword">float</span> distanceCoef = <span class="number">1</span>.f;</span><br><span class="line">            <span class="keyword">float</span> velocityCoef = <span class="number">0</span>.f;</span><br><span class="line">            <span class="keyword">if</span> (index &lt; NB_SAMPLES) &#123;</span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">float</span> t_inf = (<span class="keyword">float</span>) index / NB_SAMPLES;</span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">float</span> t_sup = (<span class="keyword">float</span>) (index + <span class="number">1</span>) / NB_SAMPLES;</span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">float</span> d_inf = SPLINE_POSITION[index];</span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">float</span> d_sup = SPLINE_POSITION[index + <span class="number">1</span>];</span><br><span class="line">                velocityCoef = (d_sup - d_inf) / (t_sup - t_inf);</span><br><span class="line">                distanceCoef = d_inf + (t - t_inf) * velocityCoef;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            mCurrVelocity = velocityCoef * mDistance / mDuration * <span class="number">1000.0f</span>;</span><br><span class="line">            </span><br><span class="line">            mCurrX = mStartX + Math.round(distanceCoef * (mFinalX - mStartX));</span><br><span class="line">            <span class="comment">// Pin to mMinX &lt;= mCurrX &lt;= mMaxX</span></span><br><span class="line">            mCurrX = Math.min(mCurrX, mMaxX);</span><br><span class="line">            mCurrX = Math.max(mCurrX, mMinX);</span><br><span class="line">            </span><br><span class="line">            mCurrY = mStartY + Math.round(distanceCoef * (mFinalY - mStartY));</span><br><span class="line">            <span class="comment">// Pin to mMinY &lt;= mCurrY &lt;= mMaxY</span></span><br><span class="line">            mCurrY = Math.min(mCurrY, mMaxY);</span><br><span class="line">            mCurrY = Math.max(mCurrY, mMinY);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (mCurrX == mFinalX &amp;&amp; mCurrY == mFinalY) &#123;</span><br><span class="line">                mFinished = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        mCurrX = mFinalX;</span><br><span class="line">        mCurrY = mFinalY;</span><br><span class="line">        mFinished = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这个方法的返回值有讲究，若返回true则说明Scroller的滑动没有结束；若返回false说明Scroller的滑动结束了。再来看看内部的代码：先是计算出了已经滑动的时间，若已经滑动的时间小于总滑动的时间，则说明滑动没有结束；不然就说明滑动结束了，设置标记<code>mFinished = true;</code>。而在滑动未结束里面又分为了两个mode，不过这两个mode都干了差不多的事，大致就是根据刚才的时间<code>timePassed</code>和插补器来计算出该时间点滚动的距离<code>mCurrX</code>和<code>mCurrY</code>。也就是上面“三部曲”中第二部的mScroller.getCurrX(), mScroller.getCurrY()的值。</p>
-<p>然后在第二部曲中调用scrollTo()方法滚动到指定点(即上面的<code>mCurrX</code>, <code>mCurrY</code>)。之后又调用了<code>postInvalidate();</code>，让View重绘并重新调用<code>computeScroll()</code>以此循环下去，一直到View滚动到指定位置为止，至此Scroller滚动结束。</p>
-<p>其实Scroller的原理还是比较通俗易懂的。我们再来理清一下思路，以一张图的形式来终结今天的Scroller解析：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160405/20160405235023.png" alt="这里写图片描述"></p>
-<p>好了，如果有什么问题可以在下面留言。</p>
-<p>Goodbye!</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>最近在看《Android开发艺术探索》这本书，不得不赞一句主席写得真好，受益匪浅。在书中的相关章节有介绍用Scroller来实现平滑滚动的效果。而我们今天就来探究一下为什么Scroller能够实现平滑滚动。</p>
-<p>首先我们先来看一下Scroller的用法，基本可概括]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
