@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yuqirong.me/about/index.html</loc>
+    <lastmod>2016-12-18T17:00:33.804Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2016/12/18/ButterKnife%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2016-12-18T16:58:46.683Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://yuqirong.me/2016/12/04/Android%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90React%20Native/</loc>
     <lastmod>2016-12-14T14:52:19.621Z</lastmod>
   </url>
@@ -24,11 +34,6 @@
   <url>
     <loc>http://yuqirong.me/2016/03/07/%E5%AE%9E%E7%8E%B0WebView%E4%B8%ADJS%E5%92%8CApp%E4%B9%8B%E9%97%B4%E7%9A%84%E4%BA%A4%E4%BA%92/</loc>
     <lastmod>2016-11-14T15:56:22.326Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/about/index.html</loc>
-    <lastmod>2016-11-06T14:42:10.790Z</lastmod>
   </url>
   
   <url>
