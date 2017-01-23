@@ -1,0 +1,808 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qirong Yu's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="快过年了，更新春节前的最后一篇博客。
+最近在做一个需求：客户端按照规定的时间间隔向服务端发送定位。一看到这个需求就想到了使用 AlarmManager 来实现。 AlarmManager 经常被用来执行定时任务，比如设置闹铃、发送心跳包等。也许有人会有疑问：为什么不能使用相同具有定时效果的 Timer 和 Handler 呢？
+其实答案非常简单，相对于 Handler 来说，使用 sendEmpt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于使用AlarmManager的注意事项">
+<meta property="og:url" content="http://yuqirong.me/2017/01/21/关于使用AlarmManager的注意事项/index.html">
+<meta property="og:site_name" content="Qirong Yu's Blog">
+<meta property="og:description" content="快过年了，更新春节前的最后一篇博客。
+最近在做一个需求：客户端按照规定的时间间隔向服务端发送定位。一看到这个需求就想到了使用 AlarmManager 来实现。 AlarmManager 经常被用来执行定时任务，比如设置闹铃、发送心跳包等。也许有人会有疑问：为什么不能使用相同具有定时效果的 Timer 和 Handler 呢？
+其实答案非常简单，相对于 Handler 来说，使用 sendEmpt">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20170122/20170122224816.png">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20170122/20170122225322.png">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20170122/20170122232341.png">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20170122/20170122234141.png">
+<meta property="og:updated_time" content="2017-01-23T15:34:02.880Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于使用AlarmManager的注意事项">
+<meta name="twitter:description" content="快过年了，更新春节前的最后一篇博客。
+最近在做一个需求：客户端按照规定的时间间隔向服务端发送定位。一看到这个需求就想到了使用 AlarmManager 来实现。 AlarmManager 经常被用来执行定时任务，比如设置闹铃、发送心跳包等。也许有人会有疑问：为什么不能使用相同具有定时效果的 Timer 和 Handler 呢？
+其实答案非常简单，相对于 Handler 来说，使用 sendEmpt">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+
+  <title> 关于使用AlarmManager的注意事项 | Qirong Yu's Blog </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Qirong Yu's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comment"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                关于使用AlarmManager的注意事项
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-21T23:25:16+08:00" content="2017-01-21">
+              2017-01-21
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/21/关于使用AlarmManager的注意事项/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/21/关于使用AlarmManager的注意事项/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>快过年了，更新春节前的最后一篇博客。</p>
+<p>最近在做一个需求：客户端按照规定的时间间隔向服务端发送定位。一看到这个需求就想到了使用 <code>AlarmManager</code> 来实现。 <code>AlarmManager</code> 经常被用来执行定时任务，比如设置闹铃、发送心跳包等。也许有人会有疑问：为什么不能使用相同具有定时效果的 <code>Timer</code> 和 <code>Handler</code> 呢？</p>
+<p>其实答案非常简单，相对于 <code>Handler</code> 来说，使用 <code>sendEmptyMessageDelayed</code> 方法是依赖于 <code>Handler</code> 所在的线程的，如果线程结束，就起不到定时任务的效果；而 <code>AlarmManager</code> 依赖的是 Android 系统的服务，具备唤醒机制。比起 <code>Handler</code> 也就更合适了。</p>
+<p>而至于 <code>Timer</code> 可以精确地做到定时操作，但是相比于 <code>AlarmManager</code> 而言还是差了一截。同理，如果手机关屏后长时间不使用， CPU 就会进入休眠模式。这个使用如果使用 <code>Timer</code> 来执行定时任务就会失败，因为 <code>Timer</code> 无法唤醒 CPU 。</p>
+<p>所以，综上所述，<code>AlarmManager</code> 就成为了最佳选择。</p>
+<h1 id="SDK_API__26lt_3B_19"><a href="#SDK_API__26lt_3B_19" class="headerlink" title="SDK API &lt; 19"></a>SDK API &lt; 19</h1><p>一般情况下，使用 <code>AlarmManager</code> 来执行重复定时任务的代码如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), TIME_INTERVAL, pendingIntent);</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), TIME_INTERVAL, pendingIntent);</span><br></pre></td></tr></table></figure>
+<p><code>setRepeating</code> 该方法用于设置重复定时任务。</p>
+<ul>
+<li>第一个参数表示闹钟类型：一般为 <code>AlarmManager.ELAPSED_REALTIME_WAKEUP</code> 或者 <code>AlarmManager.RTC_WAKEUP</code> 。它们之间的区别就是前者是从手机开机后的时间，包含了手机睡眠时间；而后者使用的就是手机系统设置中的时间。所以如果设置为 <code>AlarmManager.RTC_WAKEUP</code> ，那么可以通过修改手机系统的时间来提前触发定时事件。另外，对于相似的 <code>AlarmManager.ELAPSED_REALTIME</code> 和 <code>AlarmManager.RTC</code> 来说，它们不会唤醒 CPU 。所以使用的频率较少；</li>
+<li>第二个参数表示任务首次执行时间：与第一个参数密切相关。第一个参数若为 <code>AlarmManager.ELAPSED_REALTIME_WAKEUP</code> ，那么当前时间就为 <code>SystemClock.elapsedRealtime()</code> ；若为 <code>AlarmManager.RTC_WAKEUP</code> ，那么当前时间就为 <code>System.currentTimeMillis()</code> ；</li>
+<li>第三个参数表示两次执行的间隔时间：这个参数没什么好讲的，一般为常量；</li>
+<li>第四个参数表示对应的响应动作：一般都是去发送广播，然后在广播接收 <code>onReceive(Context context, Intent intent)</code> 中做相关操作。</li>
+</ul>
+<p>至此，一切顺利，畅通无阻。</p>
+<h1 id="SDK_API__26gt_3B_3D_19__26amp_3B_26amp_3B_SDK_API__26lt_3B_23"><a href="#SDK_API__26gt_3B_3D_19__26amp_3B_26amp_3B_SDK_API__26lt_3B_23" class="headerlink" title="SDK API &gt;= 19 &amp;&amp; SDK API &lt; 23"></a>SDK API &gt;= 19 &amp;&amp; SDK API &lt; 23</h1><p>当你写好代码、满心欢喜地将程序跑在手机上的时候，傻眼了！你会发现在 Android 4.4 及以上版本的定时任务不是按照规定时间间隔来执行的。比如你设置了每隔 3 分钟发出一个 HTTP 请求，结果你一看莫名其妙地变成了隔 5 分钟发一次。</p>
+<p>What the fuck?</p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20170122/20170122224816.png" alt="what the fuck"></p>
+<p>然后你查阅 Android 官网中关于 <a href="https://developer.android.google.cn/about/versions/android-4.4.html" target="_blank" rel="external">Android 4.4 API</a> 会看到如下几句话：</p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20170122/20170122225322.png" alt="Android 4.4 API"></p>
+<p>恍然大悟！原来是 Google 为了追求系统省电，所以“偷偷加工”了一下唤醒的时间间隔。但也正如上面官网中所说的那样，如果在 Android 4.4 及以上的设备还要追求精准的闹钟定时任务，要使用 <code>setExact()</code> 方法。</p>
+<p>所以，相应的代码就变成了这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// pendingIntent 为发送广播</span></span><br><span class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT) &#123;</span><br><span class="line">    alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), TIME_INTERVAL, pendingIntent);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> BroadcastReceiver alarmReceiver = <span class="keyword">new</span> BroadcastReceiver() &#123;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onReceive</span><span class="params">(Context context, Intent intent)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 重复定时任务</span></span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT) &#123;</span><br><span class="line">            alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + TIME_INTERVAL, pendingIntent);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// to do something</span></span><br><span class="line">        doSomething();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>当你写好了“加强版”的 <code>AlarmManager</code> 之后，内心肯定无比小激动。这下总应该行了吧？运行一下，果然没错！在 Android 4.4 上的确按照规定的时间间隔在执行任务。哈哈，这下大功告成了！！！</p>
+<h1 id="SDK_API__26gt_3B_3D_23"><a href="#SDK_API__26gt_3B_3D_23" class="headerlink" title="SDK API &gt;= 23"></a>SDK API &gt;= 23</h1><p>在 Android 4.4 上品尝到胜利的甜头后，你顺便在 Android 6.0 的设备上测试了一下。结果。。。。。。你又 TMD 傻眼了！</p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20170122/20170122232341.png" alt="What the fuck"></p>
+<p>发现在设备关屏静止一段时间后， <code>AlarmManager</code> 又又又不能正常工作了。相必此时你连日狗的心都有了吧！强忍着泪水，再次打开 Android 官网中关于 <a href="https://developer.android.google.cn/about/versions/marshmallow/android-6.0-changes.html" target="_blank" rel="external">Android 6.0 变更</a> ，发现在 Android 6.0 中引入了低电耗模式和应用待机模式。然后接着往下看 <a href="https://developer.android.google.cn/training/monitoring-device-state/doze-standby.html" target="_blank" rel="external">对低电耗模式和应用待机模式进行针对性优化</a> ，发现会有下面一段话：</p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20170122/20170122234141.png" alt="Android 6.0 API"></p>
+<p>啊啊啊啊啊啊！之前在 Android 4.4 上能用的 <code>setExact()</code> 方法在 Android 6.0 上因为低电耗模式又不能正常使用了。但是，Google 又又又提供了新的方法 <code>setExactAndAllowWhileIdle()</code> 来解决在低电耗模式下的闹钟触发。</p>
+<p>所以，Attention！相关的代码又被改写为这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// pendingIntent 为发送广播</span></span><br><span class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.M) &#123;</span><br><span class="line">    alarmManager.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT) &#123;</span><br><span class="line">    alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), TIME_INTERVAL, pendingIntent);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> BroadcastReceiver alarmReceiver = <span class="keyword">new</span> BroadcastReceiver() &#123;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onReceive</span><span class="params">(Context context, Intent intent)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 重复定时任务</span></span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.M) &#123;</span><br><span class="line">            alarmManager.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + TIME_INTERVAL, pendingIntent);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT) &#123;</span><br><span class="line">            alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + TIME_INTERVAL, pendingIntent);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// to do something</span></span><br><span class="line">        doSomething();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>到了这里，总算是把因 Android 版本差异导致 <code>AlarmManager</code> 的“坑”填完了。这份代码已经可以满足日常的重复定时任务了。</p>
+<p>好了，该讲的都讲完了，上床睡觉。仓促地结尾，预祝大家新年快乐！</p>
+<p>Goodbye ！</p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a href="https://developer.android.google.cn/reference/android/app/AlarmManager.html" target="_blank" rel="external">AlarmManager</a></li>
+<li><a href="https://developer.android.google.cn/about/versions/android-4.4.html" target="_blank" rel="external">Android 4.4 API</a></li>
+<li><a href="https://developer.android.google.cn/about/versions/marshmallow/android-6.0-changes.html" target="_blank" rel="external">Android 6.0 变更</a></li>
+<li><a href="https://developer.android.google.cn/training/monitoring-device-state/doze-standby.html" target="_blank" rel="external">对低电耗模式和应用待机模式进行针对性优化</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/14/Say Hello To 2017/" rel="next" title="Say Hello To 2017">
+                <i class="fa fa-chevron-left"></i> Say Hello To 2017
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/01/21/关于使用AlarmManager的注意事项/"
+     data-title="关于使用AlarmManager的注意事项"
+     data-content=""
+     data-url="http://yuqirong.me/2017/01/21/关于使用AlarmManager的注意事项/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/01/21/关于使用AlarmManager的注意事项/"
+           data-title="关于使用AlarmManager的注意事项" data-url="http://yuqirong.me/2017/01/21/关于使用AlarmManager的注意事项/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+               alt="俞其荣" />
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+          <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">59</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank" title="Google+">
+                  
+                    <i class="fa fa-fw fa-google-plus"></i>
+                  
+                  Google+
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/1291f6690ea0" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/yyyuqirong" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yqr271228943@gmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SDK_API__26lt_3B_19"><span class="nav-number">1.</span> <span class="nav-text">SDK API < 19</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SDK_API__26gt_3B_3D_19__26amp_3B_26amp_3B_SDK_API__26lt_3B_23"><span class="nav-number">2.</span> <span class="nav-text">SDK API >= 19 && SDK API < 23</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SDK_API__26gt_3B_3D_23"><span class="nav-number">3.</span> <span class="nav-text">SDK API >= 23</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">4.</span> <span class="nav-text">References</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="http://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="http://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js"></script>
+
+  
+  <script type="text/javascript" src="http://cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="http://cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"yuqirong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = '/js/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
