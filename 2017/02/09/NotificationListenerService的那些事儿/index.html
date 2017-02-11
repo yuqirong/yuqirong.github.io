@@ -1,0 +1,814 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qirong Yu's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="最近在公司时接到一个需求：需要实时监听设备的通知栏消息，并可以捕获到通知的内容，然后进行对应的操作。刚看到这个需求的时候，脑子里第一反应就是使用 AccessibilityService 。 AccessibilityService 支持的事件监听类型中有 TYPE_NOTIFICATION_STATE_CHANGED ，该事件类型就是用来监听通知栏消息状态改变的，众多的抢红包插件利用的就是这个原">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NotificationListenerService的那些事儿">
+<meta property="og:url" content="http://yuqirong.me/2017/02/09/NotificationListenerService的那些事儿/index.html">
+<meta property="og:site_name" content="Qirong Yu's Blog">
+<meta property="og:description" content="最近在公司时接到一个需求：需要实时监听设备的通知栏消息，并可以捕获到通知的内容，然后进行对应的操作。刚看到这个需求的时候，脑子里第一反应就是使用 AccessibilityService 。 AccessibilityService 支持的事件监听类型中有 TYPE_NOTIFICATION_STATE_CHANGED ，该事件类型就是用来监听通知栏消息状态改变的，众多的抢红包插件利用的就是这个原">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20170209/20170209220914.png">
+<meta property="og:updated_time" content="2017-02-11T03:19:31.471Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NotificationListenerService的那些事儿">
+<meta name="twitter:description" content="最近在公司时接到一个需求：需要实时监听设备的通知栏消息，并可以捕获到通知的内容，然后进行对应的操作。刚看到这个需求的时候，脑子里第一反应就是使用 AccessibilityService 。 AccessibilityService 支持的事件监听类型中有 TYPE_NOTIFICATION_STATE_CHANGED ，该事件类型就是用来监听通知栏消息状态改变的，众多的抢红包插件利用的就是这个原">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+
+  <title> NotificationListenerService的那些事儿 | Qirong Yu's Blog </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Qirong Yu's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comment"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                NotificationListenerService的那些事儿
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-09T21:00:04+08:00" content="2017-02-09">
+              2017-02-09
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/02/09/NotificationListenerService的那些事儿/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/09/NotificationListenerService的那些事儿/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在公司时接到一个需求：需要实时监听设备的通知栏消息，并可以捕获到通知的内容，然后进行对应的操作。刚看到这个需求的时候，脑子里第一反应就是使用 <code>AccessibilityService</code> 。 <code>AccessibilityService</code> 支持的事件监听类型中有 <code>TYPE_NOTIFICATION_STATE_CHANGED</code> ，该事件类型就是用来监听通知栏消息状态改变的，众多的抢红包插件利用的就是这个原理。</p>
+<p>之后在 Github 上看到了 <a href="https://github.com/lendylongli/qianghongbao" target="_blank" rel="external">qianghongbao</a> 这个抢红包的项目，发现代码里面有一个 <a href="https://github.com/lendylongli/qianghongbao/blob/master/app/src/main/java/com/codeboy/qianghongbao/QHBNotificationService.java" target="_blank" rel="external">QHBNotificationService</a> 继承了 <code>NotificationListenerService</code> ，这个 <code>NotificationListenerService</code> 极大地引起了我的兴趣。查了一下资料，发现 <code>NotificationListenerService</code> 是在 Android 4.3 （API 18）时被加入的，作用就是用来监听通知栏消息。并且官方建议在 Android 4.3 及以上使用 <code>NotificationListenerService</code> 来监听通知栏消息，以此取代 <code>AccessibilityService</code> 。</p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20170209/20170209220914.png" alt="Notification Listener"></p>
+<p><code>NotificationListenerService</code> 的使用范围也挺广的，比如我们熟知的抢红包，智能手表同步通知，通知栏去广告工具等，都是利用它来完成的。所以，我也想赶时髦地好好利用这把“利器”。最后方案也就出来了：在 Android 4.3 以下（API &lt; 18）使用 <code>AccessibilityService</code> 来读取新通知，在 Android 4.3 及以上（API &gt;= 18）使用 <code>NotificationListenerService</code> 来满足需求。</p>
+<p>这也正是本篇博客诞生的“起源”。</p>
+<h1 id="NotificationListenerService"><a href="#NotificationListenerService" class="headerlink" title="NotificationListenerService"></a>NotificationListenerService</h1><p>在这里，我们就做一个小需求：实时检测微信的新通知，如果该通知是微信红包的话，就进入微信聊天页面。</p>
+<p>准备好了吗，我们开始吧！</p>
+<p>首先创建一个 <code>WeChatNotificationListenerService</code> 继承 <code>NotificationListenerService</code> 。然后在 <code>AndroidManifest.xml</code> 中进行声明相关权限和 <code>&lt;intent-filter&gt;</code> ：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">service</span> <span class="attribute">android:name</span>=<span class="value">"com.yuqirong.listenwechatnotification.WeChatNotificationListenerService"</span></span><br><span class="line">          <span class="attribute">android:label</span>=<span class="value">"@string/app_name"</span></span><br><span class="line">          <span class="attribute">android:permission</span>=<span class="value">"android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="title">intent-filter</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="title">action</span> <span class="attribute">android:name</span>=<span class="value">"android.service.notification.NotificationListenerService"</span> /&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="title">intent-filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">service</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后一般会重写下面这三个方法：</p>
+<ul>
+<li><code>onNotificationPosted(StatusBarNotification sbn)</code> ：当有新通知到来时会回调；</li>
+<li><code>onNotificationRemoved(StatusBarNotification sbn)</code> ：当有通知移除时会回调；</li>
+<li><code>onListenerConnected()</code> ：当 <code>NotificationListenerService</code> 是可用的并且和通知管理器连接成功时回调。</li>
+</ul>
+<h2 id="onNotificationPosted_28StatusBarNotification_sbn_29"><a href="#onNotificationPosted_28StatusBarNotification_sbn_29" class="headerlink" title="onNotificationPosted(StatusBarNotification sbn)"></a>onNotificationPosted(StatusBarNotification sbn)</h2><p>下面我们来看看 <code>NotificationListenerService</code> 中的重点： <code>onNotificationPosted(StatusBarNotification sbn)</code> 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNotificationPosted</span><span class="params">(StatusBarNotification sbn)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果该通知的包名不是微信，那么 pass 掉</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="string">"com.tencent.mm"</span>.equals(sbn.getPackageName())) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    Notification notification = sbn.getNotification();</span><br><span class="line">    <span class="keyword">if</span> (notification == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    PendingIntent pendingIntent = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">// 当 API &gt; 18 时，使用 extras 获取通知的详细信息</span></span><br><span class="line">    <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT) &#123;</span><br><span class="line">        Bundle extras = notification.extras;</span><br><span class="line">        <span class="keyword">if</span> (extras != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 获取通知标题</span></span><br><span class="line">            String title = extras.getString(Notification.EXTRA_TITLE, <span class="string">""</span>);</span><br><span class="line">            <span class="comment">// 获取通知内容</span></span><br><span class="line">            String content = extras.getString(Notification.EXTRA_TEXT, <span class="string">""</span>);</span><br><span class="line">            <span class="keyword">if</span> (!TextUtils.isEmpty(content) &amp;&amp; content.contains(<span class="string">"[微信红包]"</span>)) &#123;</span><br><span class="line">                pendingIntent = notification.contentIntent;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 当 API = 18 时，利用反射获取内容字段</span></span><br><span class="line">        List&lt;String&gt; textList = getText(notification);</span><br><span class="line">        <span class="keyword">if</span> (textList != <span class="keyword">null</span> &amp;&amp; textList.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (String text : textList) &#123;</span><br><span class="line">                <span class="keyword">if</span> (!TextUtils.isEmpty(text) &amp;&amp; text.contains(<span class="string">"[微信红包]"</span>)) &#123;</span><br><span class="line">                    pendingIntent = notification.contentIntent;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 发送 pendingIntent 以此打开微信</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (pendingIntent != <span class="keyword">null</span>) &#123;</span><br><span class="line">            pendingIntent.send();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (PendingIntent.CanceledException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上面的代码可知，对于分析 <code>Notification</code> 的内容分为了两种：</p>
+<ul>
+<li>当 API &gt; 18 时，利用 <code>Notification.extras</code> 来获取通知内容。<code>extras</code> 是在 API 19 时被加入的；</li>
+<li>当 API = 18 时，利用反射获取 <code>Notification</code> 中的内容。具体的代码在下方。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">getText</span><span class="params">(Notification notification)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">null</span> == notification) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    RemoteViews views = notification.bigContentView;</span><br><span class="line">    <span class="keyword">if</span> (views == <span class="keyword">null</span>) &#123;</span><br><span class="line">        views = notification.contentView;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (views == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Use reflection to examine the m_actions member of the given RemoteViews object.</span></span><br><span class="line">    <span class="comment">// It's not pretty, but it works.</span></span><br><span class="line">    List&lt;String&gt; text = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Field field = views.getClass().getDeclaredField(<span class="string">"mActions"</span>);</span><br><span class="line">        field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        <span class="annotation">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">        ArrayList&lt;Parcelable&gt; actions = (ArrayList&lt;Parcelable&gt;) field.get(views);</span><br><span class="line">        <span class="comment">// Find the setText() and setTime() reflection actions</span></span><br><span class="line">        <span class="keyword">for</span> (Parcelable p : actions) &#123;</span><br><span class="line">            Parcel parcel = Parcel.obtain();</span><br><span class="line">            p.writeToParcel(parcel, <span class="number">0</span>);</span><br><span class="line">            parcel.setDataPosition(<span class="number">0</span>);</span><br><span class="line">            <span class="comment">// The tag tells which type of action it is (2 is ReflectionAction, from the source)</span></span><br><span class="line">            <span class="keyword">int</span> tag = parcel.readInt();</span><br><span class="line">            <span class="keyword">if</span> (tag != <span class="number">2</span>) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="comment">// View ID</span></span><br><span class="line">            parcel.readInt();</span><br><span class="line">            String methodName = parcel.readString();</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == methodName) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (methodName.equals(<span class="string">"setText"</span>)) &#123;</span><br><span class="line">                <span class="comment">// Parameter type (10 = Character Sequence)</span></span><br><span class="line">                parcel.readInt();</span><br><span class="line">                <span class="comment">// Store the actual string</span></span><br><span class="line">                String t = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(parcel).toString().trim();</span><br><span class="line">                text.add(t);</span><br><span class="line">            &#125;</span><br><span class="line">            parcel.recycle();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> text;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>凭着 <code>onNotificationPosted(StatusBarNotification sbn)</code> 方法就已经可以完成监听微信通知并打开的动作了。下面我们来看一下其他关于 <code>NotificationListenerService</code> 的二三事。</p>
+<h2 id="u53D6_u6D88_u901A_u77E5"><a href="#u53D6_u6D88_u901A_u77E5" class="headerlink" title="取消通知"></a>取消通知</h2><p>有了监听，<code>NotificationListenerService</code> 自然提供了可以取消通知的方法。取消通知的方法有：</p>
+<ul>
+<li><code>cancelNotification(String key)</code> ：是 API &gt;= 21 才可以使用的。利用 <code>StatusBarNotification</code> 的 <code>getKey()</code> 方法来获取 <code>key</code> 并取消通知。</li>
+<li><code>cancelNotification(String pkg, String tag, int id)</code> ：在 API &lt; 21 时可以使用，在 API &gt;= 21 时使用此方法来取消通知将无效，被废弃。</li>
+</ul>
+<p>最后，取消通知的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancelNotification</span><span class="params">(StatusBarNotification sbn)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.LOLLIPOP) &#123;</span><br><span class="line">        cancelNotification(sbn.getKey());</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        cancelNotification(sbn.getPackageName(), sbn.getTag(), sbn.getId());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="u68C0_u6D4B_u901A_u77E5_u76D1_u542C_u670D_u52A1_u662F_u5426_u88AB_u6388_u6743"><a href="#u68C0_u6D4B_u901A_u77E5_u76D1_u542C_u670D_u52A1_u662F_u5426_u88AB_u6388_u6743" class="headerlink" title="检测通知监听服务是否被授权"></a>检测通知监听服务是否被授权</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isNotificationListenerEnabled</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    Set&lt;String&gt; packageNames = NotificationManagerCompat.getEnabledListenerPackages(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">if</span> (packageNames.contains(context.getPackageName())) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="u6253_u5F00_u901A_u77E5_u76D1_u542C_u8BBE_u7F6E_u9875_u9762"><a href="#u6253_u5F00_u901A_u77E5_u76D1_u542C_u8BBE_u7F6E_u9875_u9762" class="headerlink" title="打开通知监听设置页面"></a>打开通知监听设置页面</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openNotificationListenSettings</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Intent intent;</span><br><span class="line">        <span class="keyword">if</span> (android.os.Build.VERSION.SDK_INT &gt;= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) &#123;</span><br><span class="line">            intent = <span class="keyword">new</span> Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            intent = <span class="keyword">new</span> Intent(<span class="string">"android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        startActivity(intent);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="u88AB_u6740_u540E_u518D_u6B21_u542F_u52A8_u65F6_uFF0C_u76D1_u542C_u4E0D_u751F_u6548_u7684_u95EE_u9898"><a href="#u88AB_u6740_u540E_u518D_u6B21_u542F_u52A8_u65F6_uFF0C_u76D1_u542C_u4E0D_u751F_u6548_u7684_u95EE_u9898" class="headerlink" title="被杀后再次启动时，监听不生效的问题"></a>被杀后再次启动时，监听不生效的问题</h2><p>这个问题来源于知乎问题： <a href="https://www.zhihu.com/question/33540416" target="_blank" rel="external">NotificationListenerService不能监听到通知，研究了一天不知道是什么原因？</a></p>
+<p>从问题的回答中可以了解到，是因为 <code>NotificationListenerService</code> 被杀后再次启动时，并没有去 <code>bindService</code> ，所以导致监听效果无效。</p>
+<p>最后，在回答中还给出了解决方案：利用 <code>NotificationListenerService</code> 先 disable 再 enable ，重新触发系统的 rebind 操作。代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">toggleNotificationListenerService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    PackageManager pm = getPackageManager();</span><br><span class="line">    pm.setComponentEnabledSetting(<span class="keyword">new</span> ComponentName(<span class="keyword">this</span>, com.fanwei.alipaynotification.ui.AlipayNotificationListenerService.class),</span><br><span class="line">            PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);</span><br><span class="line">    pm.setComponentEnabledSetting(<span class="keyword">new</span> ComponentName(<span class="keyword">this</span>, com.fanwei.alipaynotification.ui.AlipayNotificationListenerService.class),</span><br><span class="line">            PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方法使用前提是 <code>NotificationListenerService</code> 已经被用户授予了权限，否则无效。另外，在自己的小米手机上实测，重新完成 rebind 操作需要等待 10 多秒（我的手机测试过大概在 13 秒左右）。幸运的是，官方也已经发现了这个问题，在 API 24 中提供了 <code>requestRebind(ComponentName componentName)</code> 方法来支持重新绑定。</p>
+<h1 id="AccessibilityService"><a href="#AccessibilityService" class="headerlink" title="AccessibilityService"></a>AccessibilityService</h1><p>讲完了 <code>NotificationListenerService</code> 之后，按照前面说的那样，在 API &lt; 18 的时候使用 <code>AccessibilityService</code> 。</p>
+<p>同样，创建一个 <code>WeChatAccessibilityService</code> ，并且在 <code>AndroidManifest.xml</code> 中进行声明：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;service</span><br><span class="line">    android:name="com.yuqirong.listenwechatnotification.WeChatAccessibilityService"</span><br><span class="line">    android:label="@string/app_name"</span><br><span class="line">    android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"&gt;</span><br><span class="line">    &lt;intent-filter&gt;</span><br><span class="line">        &lt;action android:name="android.accessibilityservice.AccessibilityService" /&gt;</span><br><span class="line">    &lt;/intent-filter&gt;</span><br><span class="line">    &lt;meta-data</span><br><span class="line">        android:name="android.accessibilityservice"</span><br><span class="line">        android:resource="@xml/accessible_service_config" /&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure>
+<p>声明之后，还要对 <code>WeChatAccessibilityService</code> 进行配置。需要在 res 目录下新建一个 xml 文件夹，在里面新建一个 accessible_service_config.xml 文件：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">accessibility-service</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:accessibilityEventTypes</span>=<span class="value">"typeNotificationStateChanged"</span></span><br><span class="line">    <span class="attribute">android:accessibilityFeedbackType</span>=<span class="value">"feedbackAllMask"</span></span><br><span class="line">    <span class="attribute">android:accessibilityFlags</span>=<span class="value">"flagIncludeNotImportantViews"</span></span><br><span class="line">    <span class="attribute">android:canRetrieveWindowContent</span>=<span class="value">"true"</span></span><br><span class="line">    <span class="attribute">android:description</span>=<span class="value">"@string/app_name"</span></span><br><span class="line">    <span class="attribute">android:notificationTimeout</span>=<span class="value">"100"</span></span><br><span class="line">    <span class="attribute">android:packageNames</span>=<span class="value">"com.tencent.mm"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>最后就是代码了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeChatAccessibilityService</span> <span class="keyword">extends</span> <span class="title">AccessibilityService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAccessibilityEvent</span><span class="params">(AccessibilityEvent event)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &lt; <span class="number">18</span>) &#123;</span><br><span class="line">            Notification notification = (Notification) event.getParcelableData();</span><br><span class="line">            List&lt;String&gt; textList = getText(notification);</span><br><span class="line">            <span class="keyword">if</span> (textList != <span class="keyword">null</span> &amp;&amp; textList.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">for</span> (String text : textList) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (!TextUtils.isEmpty(text) &amp;&amp;</span><br><span class="line">                            text.contains(<span class="string">"[微信红包]"</span>)) &#123;</span><br><span class="line">                        <span class="keyword">final</span> PendingIntent pendingIntent = notification.contentIntent;</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            <span class="keyword">if</span> (pendingIntent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                                pendingIntent.send();</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125; <span class="keyword">catch</span> (PendingIntent.CanceledException e) &#123;</span><br><span class="line">                            e.printStackTrace();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onInterrupt</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看了一圈 <code>WeChatAccessibilityService</code> 的代码，发现和 <code>WeChatNotificationListenerService</code> 在 API &lt; 18 时处理的逻辑是一样的，<code>getText(notification)</code> 方法就是上面那个，在这里就不复制粘贴了，基本没什么好讲的了。</p>
+<p>有了 <code>WeChatAccessibilityService</code> 之后，在 API &lt; 18 的情况下也能监听通知啦。\(^ο^)/</p>
+<p>我们终于实现了当初许下的那个需求了。 cry …</p>
+<h1 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h1><p>除了监听通知之外，<code>AccessibilityService</code> 还可以进行模拟点击、检测界面变化等功能。具体的可以在 GitHub 上搜索抢红包有关的 Repo 进行深入学习。</p>
+<p>而 <code>NotificationListenerService</code> 的监听通知功能更加强大，也更加专业。在一些设备上，如果 <code>NotificationListenerService</code> 被授予了权限，那么可以做到该监听进程不死的效果，也算是另类的进程保活。</p>
+<p>今天就到这儿了，拜拜！！</p>
+<p>源码下载：<a href="http://ofytl4mzu.bkt.clouddn.com/20170209/ListenWeChatNotification.rar" target="_blank" rel="external">ListenWeChatNotification.rar</a></p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a href="https://developer.android.google.cn/about/versions/android-4.3.html#NotificationListener" target="_blank" rel="external">Android 4.3 APIs</a></li>
+<li><a href="https://developer.android.google.cn/reference/android/service/notification/NotificationListenerService.html" target="_blank" rel="external">NotificationListenerService</a></li>
+<li><a href="https://www.zhihu.com/question/33540416" target="_blank" rel="external">NotificationListenerService不能监听到通知，研究了一天不知道是什么原因？</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/03/RecyclerView实现拖拽排序和侧滑删除/" rel="next" title="RecyclerView实现拖拽排序和侧滑删除">
+                <i class="fa fa-chevron-left"></i> RecyclerView实现拖拽排序和侧滑删除
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/02/09/NotificationListenerService的那些事儿/"
+     data-title="NotificationListenerService的那些事儿"
+     data-content=""
+     data-url="http://yuqirong.me/2017/02/09/NotificationListenerService的那些事儿/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/02/09/NotificationListenerService的那些事儿/"
+           data-title="NotificationListenerService的那些事儿" data-url="http://yuqirong.me/2017/02/09/NotificationListenerService的那些事儿/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+               alt="俞其荣" />
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+          <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">61</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank" title="Google+">
+                  
+                    <i class="fa fa-fw fa-google-plus"></i>
+                  
+                  Google+
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/1291f6690ea0" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/yyyuqirong" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yqr271228943@gmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NotificationListenerService"><span class="nav-number">1.</span> <span class="nav-text">NotificationListenerService</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#onNotificationPosted_28StatusBarNotification_sbn_29"><span class="nav-number">1.1.</span> <span class="nav-text">onNotificationPosted(StatusBarNotification sbn)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u53D6_u6D88_u901A_u77E5"><span class="nav-number">1.2.</span> <span class="nav-text">取消通知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u68C0_u6D4B_u901A_u77E5_u76D1_u542C_u670D_u52A1_u662F_u5426_u88AB_u6388_u6743"><span class="nav-number">1.3.</span> <span class="nav-text">检测通知监听服务是否被授权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6253_u5F00_u901A_u77E5_u76D1_u542C_u8BBE_u7F6E_u9875_u9762"><span class="nav-number">1.4.</span> <span class="nav-text">打开通知监听设置页面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u88AB_u6740_u540E_u518D_u6B21_u542F_u52A8_u65F6_uFF0C_u76D1_u542C_u4E0D_u751F_u6548_u7684_u95EE_u9898"><span class="nav-number">1.5.</span> <span class="nav-text">被杀后再次启动时，监听不生效的问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AccessibilityService"><span class="nav-number">2.</span> <span class="nav-text">AccessibilityService</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u603B_u7ED3"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">4.</span> <span class="nav-text">References</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="http://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="http://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js"></script>
+
+  
+  <script type="text/javascript" src="http://cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="http://cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"yuqirong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = '/js/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
