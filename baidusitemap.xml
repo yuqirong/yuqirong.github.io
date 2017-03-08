@@ -4,6 +4,54 @@
 
     
   <url>
+    <loc>http://yuqirong.me/2017/03/05/%E7%8E%A9%E8%BD%AC%E4%BB%BF%E6%8E%A2%E6%8E%A2%E5%8D%A1%E7%89%87%E5%BC%8F%E6%BB%91%E5%8A%A8%E6%95%88%E6%9E%9C/</loc>
+    <lastmod>2017-03-08T15:26:51.789Z</lastmod>
+    <data>
+        <display>
+        <title>玩转仿探探卡片式滑动效果</title>
+        <pubTime>2017-03-05T14:45:22.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>RecyclerView</tag>
+         
+        <tag>自定义View</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2016/02/26/%E4%BD%BF%E7%94%A8RecyclerView%E5%AE%9E%E7%8E%B0%E4%BB%BF%E5%96%B5%E8%A1%97%E6%95%88%E6%9E%9C/</loc>
+    <lastmod>2017-03-05T14:47:30.932Z</lastmod>
+    <data>
+        <display>
+        <title>使用RecyclerView实现仿喵街效果</title>
+        <pubTime>2016-02-26T11:50:18.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>RecyclerView</tag>
+         
+        <tag>自定义View</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yuqirong.me/2017/02/22/android-architecture%E4%B9%8Btodo-mvp%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</loc>
     <lastmod>2017-02-28T15:09:06.682Z</lastmod>
     <data>
@@ -748,28 +796,6 @@
            
              
               <breadCrumb title="Book Note" url="http://yuqirong.me/categories/Book-Note/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2016/02/26/%E4%BD%BF%E7%94%A8RecyclerView%E5%AE%9E%E7%8E%B0%E4%BB%BF%E5%96%B5%E8%A1%97%E6%95%88%E6%9E%9C/</loc>
-    <lastmod>2016-11-01T14:22:51.655Z</lastmod>
-    <data>
-        <display>
-        <title>使用RecyclerView实现仿喵街效果</title>
-        <pubTime>2016-02-26T11:50:18.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>自定义View</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
           
         </display>
     </data>
