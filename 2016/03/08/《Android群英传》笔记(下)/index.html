@@ -5,16 +5,19 @@
   
 
 
-<html class="theme-next muse use-motion">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
 
 <meta http-equiv="Cache-Control" content="no-transform" />
 <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
 
 
 
@@ -34,12 +37,38 @@
 
 
 
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
   <meta name="keywords" content="Android,《Android群英传》," />
@@ -53,7 +82,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -100,19 +129,31 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
 
 
 
-<script type="text/javascript" id="hexo.configuration">
+<script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
+    root: '/',
     scheme: 'Muse',
-    sidebar: {"position":"left","display":"post"},
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
     fancybox: true,
     motion: true,
     duoshuo: {
-      userId: 'undefined',
+      userId: '0',
       author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     }
   };
 </script>
+
+
+
+  <link rel="canonical" href="http://yuqirong.me/2016/03/08/《Android群英传》笔记(下)/"/>
 
 
 
@@ -121,9 +162,11 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
   <title> 《Android群英传》笔记(下) | Qirong Yu's Blog </title>
 </head>
 
-<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
+
+
 
 
 
@@ -131,11 +174,13 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
     var _hmt = _hmt || [];
     (function() {
       var hm = document.createElement("script");
-      hm.src = "//hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      hm.src = "https://hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
       var s = document.getElementsByTagName("script")[0];
       s.parentNode.insertBefore(hm, s);
     })();
   </script>
+
+
 
 
 
@@ -149,29 +194,33 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
-      <div class="header-inner"><div class="site-meta ">
-  
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
 
-  <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <span class="site-title">Qirong Yu's Blog</span>
-      <span class="logo-line-after"><i></i></span>
-    </a>
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Qirong Yu's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
   </div>
-  <p class="site-subtitle"></p>
-</div>
 
-<div class="site-nav-toggle">
-  <button>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-  </button>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
 </div>
 
 <nav class="site-nav">
@@ -248,6 +297,8 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
   
 </nav>
 
+
+
  </div>
     </header>
 
@@ -261,13 +312,23 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
     
 
   
-  
 
   
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/03/08/《Android群英传》笔记(下)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="俞其荣">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Qirong Yu's Blog">
+    </span>
 
     
       <header class="post-header">
@@ -286,24 +347,36 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
 
         <div class="post-meta">
           <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-03-08T20:22:27+08:00" content="2016-03-08">
-              2016-03-08
-            </time>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-08T20:22:27+08:00">
+                2016-03-08
+              </time>
+            
+
+            
+
+            
           </span>
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp;
+            
+              <span class="post-meta-divider">|</span>
+            
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">分类于</span>
               
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/Book-Note/" itemprop="url" rel="index">
                     <span itemprop="name">Book Note</span>
                   </a>
@@ -311,7 +384,6 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
 
                 
                 
-
               
             </span>
           
@@ -319,20 +391,26 @@ Android系统使用mdpi即密度值为160的屏幕作为标准，在这屏幕上
           
             
               <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/03/08/《Android群英传》笔记(下)/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/08/《Android群英传》笔记(下)/" itemprop="commentsCount"></span>
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2016/03/08/《Android群英传》笔记(下)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
                 </a>
               </span>
             
           
 
           
-
-          
           
 
           
+
+          
+
+          
+
         </div>
       </header>
     
@@ -1151,15 +1229,41 @@ int heapSize = manager.getLargeMemoryClass();
       
     </div>
 
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      俞其荣
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://yuqirong.me/2016/03/08/《Android群英传》笔记(下)/" title="《Android群英传》笔记(下)">http://yuqirong.me/2016/03/08/《Android群英传》笔记(下)/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
     <footer class="post-footer">
       
         <div class="post-tags">
           
-            <a href="/tags/Android/" rel="tag">#Android</a>
+            <a href="/tags/Android/" rel="tag"># Android</a>
           
-            <a href="/tags/《Android群英传》/" rel="tag">#《Android群英传》</a>
+            <a href="/tags/《Android群英传》/" rel="tag"># 《Android群英传》</a>
           
         </div>
+      
+
+      
+        
       
 
       
@@ -1171,6 +1275,8 @@ int heapSize = manager.getLargeMemoryClass();
               </a>
             
           </div>
+
+          <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
@@ -1191,24 +1297,43 @@ int heapSize = manager.getLargeMemoryClass();
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2016/03/08/《Android群英传》笔记(下)/"
-     data-title="《Android群英传》笔记(下)"
-     data-content=""
-     data-url="http://yuqirong.me/2016/03/08/《Android群英传》笔记(下)/">
-  <div class="ds-share-inline">
-    <ul  class="ds-share-icons-16">
-
-      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
-      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
-      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
-      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
-      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
-
-    </ul>
-    <div class="ds-share-icons-more">
-    </div>
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
   </div>
-</div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
       
     </div>
   </div>
@@ -1221,9 +1346,7 @@ int heapSize = manager.getLargeMemoryClass();
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/03/08/《Android群英传》笔记(下)/"
-           data-title="《Android群英传》笔记(下)" data-url="http://yuqirong.me/2016/03/08/《Android群英传》笔记(下)/">
-      </div>
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
     
   </div>
 
@@ -1256,25 +1379,32 @@ int heapSize = manager.getLargeMemoryClass();
         </ul>
       
 
-      <section class="site-overview sidebar-panel ">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
                alt="俞其荣" />
           <p class="site-author-name" itemprop="name">俞其荣</p>
-          <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+           
+              <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+          
         </div>
         <nav class="site-state motion-element">
-          <div class="site-state-item site-state-posts">
-            <a href="/archives">
-              <span class="site-state-item-count">63</span>
-              <span class="site-state-item-name">日志</span>
-            </a>
-          </div>
 
           
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">63</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
             <div class="site-state-item site-state-categories">
-              <a href="/categories">
+              <a href="/categories/index.html">
                 <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">分类</span>
               </a>
@@ -1282,8 +1412,10 @@ int heapSize = manager.getLargeMemoryClass();
           
 
           
+            
+            
             <div class="site-state-item site-state-tags">
-              <a href="/tags">
+              <a href="/tags/index.html">
                 <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
@@ -1390,23 +1522,39 @@ int heapSize = manager.getLargeMemoryClass();
 
         
         
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
 
         
         
+
+        
+
 
       </section>
 
       
+      <!--noindex-->
         <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
           <div class="post-toc">
+
             
               
             
+
             
               <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u516D_u7AE0_uFF1AAndroid_u7ED8_u56FE_u673A_u5236_u4E0E_u5904_u7406_u6280_u5DE7"><span class="nav-number">1.</span> <span class="nav-text">第六章：Android绘图机制与处理技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1__u5C4F_u5E55_u7684_u5C3A_u5BF8_u4FE1_u606F"><span class="nav-number">1.1.</span> <span class="nav-text">6.1 屏幕的尺寸信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2_2D_u7ED8_u56FE_u57FA_u7840"><span class="nav-number">1.2.</span> <span class="nav-text">6.2 2D绘图基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3_Android_XML_u7ED8_u56FE"><span class="nav-number">1.3.</span> <span class="nav-text">6.3 Android XML绘图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-4_Android_u7ED8_u56FE_u6280_u5DE7"><span class="nav-number">1.4.</span> <span class="nav-text">6.4 Android绘图技巧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-5_Android_u56FE_u50CF_u5904_u7406_u4E4B_u8272_u5F69_u7279_u6548_u5904_u7406"><span class="nav-number">1.5.</span> <span class="nav-text">6.5 Android图像处理之色彩特效处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-6_Android_u56FE_u50CF_u5904_u7406_u4E4B_u56FE_u5F62_u7279_u6548_u5904_u7406"><span class="nav-number">1.6.</span> <span class="nav-text">6.6 Android图像处理之图形特效处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-7_Android_u56FE_u50CF_u5904_u7406_u4E4B_u753B_u7B14_u7279_u6548_u5904_u7406"><span class="nav-number">1.7.</span> <span class="nav-text">6.7 Android图像处理之画笔特效处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-8_View_u4E4B_u5B6A_u751F_u5144_u5F1F_u2014_u2014SurfaceView"><span class="nav-number">1.8.</span> <span class="nav-text">6.8 View之孪生兄弟——SurfaceView</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E03_u7AE0_uFF1AAndroid_u52A8_u753B_u673A_u5236_u4E0E_u4F7F_u7528_u6280_u5DE7"><span class="nav-number">2.</span> <span class="nav-text">第七章：Android动画机制与使用技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1_Android_View_u52A8_u753B_u6846_u67B6"><span class="nav-number">2.1.</span> <span class="nav-text">7.1 Android View动画框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2_Android_u5C5E_u6027_u52A8_u753B_u5206_u6790"><span class="nav-number">2.2.</span> <span class="nav-text">7.2 Android属性动画分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-3_Android_u5E03_u5C40_u52A8_u753B"><span class="nav-number">2.3.</span> <span class="nav-text">7.3 Android布局动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-4_Interpolators_28_u63D2_u503C_u5668_29"><span class="nav-number">2.4.</span> <span class="nav-text">7.4 Interpolators(插值器)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-5__u81EA_u5B9A_u4E49_u52A8_u753B"><span class="nav-number">2.5.</span> <span class="nav-text">7.5 自定义动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-6_Android_5-X_SVG__u77E2_u91CF_u52A8_u753B_u673A_u5236"><span class="nav-number">2.6.</span> <span class="nav-text">7.6 Android 5.X SVG 矢量动画机制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u516B_u7AE0_uFF1AActivity_u4E0EActivity_u8C03_u7528_u6808_u5206_u6790"><span class="nav-number">3.</span> <span class="nav-text">第八章：Activity与Activity调用栈分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#8-1_Activity"><span class="nav-number">3.1.</span> <span class="nav-text">8.1 Activity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-2_Android_u4EFB_u52A1_u6808_u7B80_u4ECB"><span class="nav-number">3.2.</span> <span class="nav-text">8.2 Android任务栈简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-3_AndroidMainifest_u542F_u52A8_u6A21_u5F0F"><span class="nav-number">3.3.</span> <span class="nav-text">8.3 AndroidMainifest启动模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-4_Intent_Flag_u542F_u52A8_u6A21_u5F0F"><span class="nav-number">3.4.</span> <span class="nav-text">8.4 Intent Flag启动模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-5__u6E05_u7A7A_u4EFB_u52A1_u6808"><span class="nav-number">3.5.</span> <span class="nav-text">8.5 清空任务栈</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u4E5D_u7AE0_uFF1AAndroid_u7CFB_u7EDF_u4FE1_u606F_u4E0E_u5B89_u5168_u673A_u5236"><span class="nav-number">4.</span> <span class="nav-text">第九章：Android系统信息与安全机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#9-1_Android_u7CFB_u7EDF_u4FE1_u606F_u83B7_u53D6"><span class="nav-number">4.1.</span> <span class="nav-text">9.1 Android系统信息获取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-2_Android_Apk_u5E94_u7528_u4FE1_u606F_u83B7_u53D6_u4E4BPackageManager"><span class="nav-number">4.2.</span> <span class="nav-text">9.2 Android Apk应用信息获取之PackageManager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-3_Android_Apk_u5E94_u7528_u4FE1_u606F_u83B7_u53D6_u4E4BActivityManager"><span class="nav-number">4.3.</span> <span class="nav-text">9.3 Android Apk应用信息获取之ActivityManager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-4__u89E3_u6790Packages-xml_u83B7_u53D6_u7CFB_u7EDF_u4FE1_u606F"><span class="nav-number">4.4.</span> <span class="nav-text">9.4 解析Packages.xml获取系统信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-5_Android_u5B89_u5168_u673A_u5236"><span class="nav-number">4.5.</span> <span class="nav-text">9.5 Android安全机制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7B2C_u5341_u7AE0_uFF1AAndroid_u6027_u80FD_u4F18_u5316"><span class="nav-number">5.</span> <span class="nav-text">第十章：Android性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#10-1__u5E03_u5C40_u4F18_u5316"><span class="nav-number">5.1.</span> <span class="nav-text">10.1 布局优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-2__u5185_u5B58_u4F18_u5316"><span class="nav-number">5.2.</span> <span class="nav-text">10.2 内存优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-3_Lint_u5DE5_u5177"><span class="nav-number">5.3.</span> <span class="nav-text">10.3 Lint工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-4__u4F7F_u7528Android_Studio_u7684Memory_Monitor_u5DE5_u5177"><span class="nav-number">5.4.</span> <span class="nav-text">10.4 使用Android Studio的Memory Monitor工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-5__u4F7F_u7528TraceView_u5DE5_u5177_u4F18_u5316App_u6027_u80FD"><span class="nav-number">5.5.</span> <span class="nav-text">10.5 使用TraceView工具优化App性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-6__u4F7F_u7528MAT_u5DE5_u5177_u5206_u6790App_u5185_u5B58_u72B6_u6001"><span class="nav-number">5.6.</span> <span class="nav-text">10.6 使用MAT工具分析App内存状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-7__u4F7F_u7528Dumpsys_u547D_u4EE4_u5206_u6790_u7CFB_u7EDF_u72B6_u6001"><span class="nav-number">5.7.</span> <span class="nav-text">10.7 使用Dumpsys命令分析系统状态</span></a></li></ol></li></ol></div>
             
+
           </div>
         </section>
+      <!--/noindex-->
+      
+
       
 
     </div>
@@ -1429,6 +1577,7 @@ int heapSize = manager.getLargeMemoryClass();
   <span class="author" itemprop="copyrightHolder">俞其荣</span>
 </div>
 
+
 <div class="powered-by">
   由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
 </div>
@@ -1440,15 +1589,20 @@ int heapSize = manager.getLargeMemoryClass();
   </a>
 </div>
 
+
         
 
         
       </div>
     </footer>
 
-    <div class="back-to-top">
-      <i class="fa fa-arrow-up"></i>
-    </div>
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
   </div>
 
   
@@ -1471,69 +1625,78 @@ int heapSize = manager.getLargeMemoryClass();
 
 
 
-  
-  <script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
-
-  
-  <script type="text/javascript" src="http://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
-
-  
-  <script type="text/javascript" src="http://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js"></script>
-
-  
-  <script type="text/javascript" src="http://cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
-
-  
-  <script type="text/javascript" src="http://cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
-
-  
-  <script type="text/javascript" src="http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
 
 
 
   
-  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
 
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
 
 
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
 
 
 
   
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
 
   
     
-  
-
-  <script type="text/javascript">
-    var duoshuoQuery = {short_name:"yuqirong"};
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';ds.async = true;
-      ds.id = 'duoshuo-script';
-      ds.src = '/js/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0]
-      || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
-
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "954eb3f75a2f4b819bcab06e3e42b912",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
   
 
 
@@ -1541,17 +1704,38 @@ int heapSize = manager.getLargeMemoryClass();
 
 
 
+
+
+
+
   
-  
+
+
+
+
 
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
 
   
-
 
 </body>
 </html>
