@@ -11,7 +11,7 @@ language: zh-Hans
 timezone: Asia/Shanghai
 avatar: http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg
 # 多说
-duoshuo_shortname: yuqirong
+#duoshuo_shortname: yuqirong
 # 百度统计
 baidu_analytics: cb7fb9301d60e7ca4f45f2361955bd8f
 # swiftype全文检索
@@ -73,7 +73,7 @@ links:
 #  赵凯强: http://blog.csdn.net/zhaokaiqiang1992/
 
 # Share
-duoshuo_share: true
+#duoshuo_share: true
 
 # 多说热评文章 true 或者 false
 #duoshuo_hotartical: true
@@ -138,6 +138,8 @@ theme: next
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/yuqirong/yuqirong.github.io
+  repo: 
+    github: https://github.com/yuqirong/yuqirong.github.io,master
+    coding: git@git.coding.net:yuqirong/yuqirong.git,master
   branch: master
   message: Site updated:{{ now("YYYY-MM-DD HH:mm:ss") }}

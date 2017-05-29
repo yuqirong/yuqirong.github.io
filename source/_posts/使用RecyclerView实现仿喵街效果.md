@@ -1,7 +1,7 @@
 title: 使用RecyclerView实现仿喵街效果
 date: 2016-02-26 19:50:18
 categories: Android Blog
-tags: [Android,自定义View]
+tags: [Android,自定义View,RecyclerView]
 ---
 又到更新博客的时间了，本次给大家带来的是在RecyclerView的基础上实现喵街的效果。那么喵街是什么效果呢？下面就贴出效果图：
 

@@ -1,13 +1,12 @@
-title: about
 date: 2015-12-16 21:19:34
 comments: false
 ---
-{% centerquote %}Hey , it is me ! {% endcenterquote %}
+{% centerquote %}Hey , it is me !{% endcenterquote %}
 
 ## 个人介绍
 * 俞其荣 / 男 / 1993
 * 杭州 / 中国计量大学
-* Android / Java
+* Android / Java / Kotlin / React
 * 电影迷 / Google粉
 * 爱篮球 / 爱跑车 / 爱旅行
 
@@ -16,9 +15,9 @@ comments: false
 
 ## 联系方式
 * GitHub : https://github.com/yuqirong
-* Twitter: https://twitter.com/yyyuqirong
+* Twitter : https://twitter.com/yyyuqirong
 * Instagram : http://instagram.com/yyyuqirong
-* Google+: https://plus.google.com/116756215081118586533
+* Google+ : https://plus.google.com/116756215081118586533
 * LinkedIn : https://cn.linkedin.com/in/yuqirong
 * 简书 : http://www.jianshu.com/users/1291f6690ea0
 * Weibo : http://weibo.com/yyyuqirong

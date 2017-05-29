@@ -1,9 +1,0 @@
-#header { 
-	background:url(/uploads/avatar/20191512062319231793.jpg) no-repeat;background-position:top right;
-	background-size:cover;
-}
-
-@import "_layout.styl";
-@import "_logo.styl";
-@import "_menu.styl";
-@import "_search.styl";

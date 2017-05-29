@@ -1,4 +1,3 @@
-title: guestbook
 date: 2015-07-14 00:33:28
 type: "guestbook"
 comments: true
