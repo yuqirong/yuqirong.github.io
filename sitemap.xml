@@ -2,13 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yuqirong.me/guestbook/index.html</loc>
-    <lastmod>2017-05-29T07:59:34.117Z</lastmod>
+    <loc>http://yuqirong.me/2017/06/07/Kotlin%E5%85%A5%E5%85%A5%E5%85%A5%E9%97%A8(%E4%B8%80)/</loc>
+    <lastmod>2017-06-07T15:39:41.732Z</lastmod>
   </url>
   
   <url>
     <loc>http://yuqirong.me/about/index.html</loc>
-    <lastmod>2017-05-29T06:56:00.582Z</lastmod>
+    <lastmod>2017-05-30T15:14:35.945Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/guestbook/index.html</loc>
+    <lastmod>2017-05-29T07:59:34.117Z</lastmod>
   </url>
   
   <url>
