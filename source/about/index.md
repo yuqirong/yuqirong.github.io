@@ -7,8 +7,9 @@ comments: false
 * 俞其荣 / 男 / 1993
 * 杭州 / 中国计量大学
 * Android / Java / Kotlin / React
-* 电影迷 / Google粉
+* 电影迷 / Google粉 / Apple粉
 * 爱篮球 / 爱跑车 / 爱旅行
+* 二逼青年 / 偶尔文艺 / 外表冷 / 内心骚
 
 ## 版权说明
 本站原创文章使用 [署名-非商业性使用-相同方式共享 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 协议发布，转载请标注作者和文章链接，不得用于商业目的。
@@ -22,7 +23,14 @@ comments: false
 * 简书 : http://www.jianshu.com/users/1291f6690ea0
 * Weibo : http://weibo.com/yyyuqirong
 * 知乎 : https://www.zhihu.com/people/yuqirong
+* 掘金 : https://juejin.im/user/57faf0620bd1d00058c53a64
 * Email : <yqr271228943@gmail.com>
+
+## 微信公众号
+<div style="display: block;text-align: center;margin:0px auto">
+欢迎订阅我的微信公众号来获取我的动态！
+![wechat_qrcode](http://ofyt9w4c2.bkt.clouddn.com/avatar/20170529145032.jpg)
+</div>
 
 ## 打赏我吧
 <div id="QR" style="display: block;text-align: center;margin:0px auto">

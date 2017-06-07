@@ -4,6 +4,4 @@ comments: true
 ---
 {% centerquote %}你好，再见{% endcenterquote %}
 
->最近访客
-
-<div class="ds-recent-visitors" data-num-items="48" data-avatar-size="42" id="ds-recent-visitors"></div>
+>我想回到过去，沉默着欢喜。

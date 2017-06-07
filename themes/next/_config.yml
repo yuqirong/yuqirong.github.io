@@ -29,7 +29,7 @@ copyright: true
 canonical: true
 
 # Change headers hierarchy on site-subtitle (will be main site description) and on all post/pages titles for better SEO-optimization.
-seo: false
+seo: true
 
 # ---------------------------------------------------------------
 # Menu Settings
@@ -245,10 +245,10 @@ post_wordcount:
   min2read: false
 
 # Wechat Subscriber
-#wechat_subscriber:
-  #enabled: false
-  #qcode: 
-  #description: ex. subscribe to my blog by scanning my public wechat account
+wechat_subscriber:
+  enabled: true
+  qcode: http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg
+  description: 欢迎订阅我的微信公众号来获取我的动态！
 
 # Declare license on posts
 post_copyright:
@@ -297,7 +297,7 @@ mathjax:
 #swiftype_key: 8ZRfk21kUz89L8Xi6hZm
 
 # Baidu Analytics ID
-#baidu_analytics:
+baidu_analytics: cb7fb9301d60e7ca4f45f2361955bd8f
 
 # Duoshuo ShortName
 #duoshuo_shortname:
@@ -355,7 +355,7 @@ baidushare:
 #yandex_site_verification:
 
 # CNZZ count
-#cnzz_siteid:
+cnzz_siteid: 1257390016
 
 # Application Insights
 # See https://azure.microsoft.com/en-us/services/application-insights/
@@ -426,7 +426,7 @@ busuanzi_count:
 
 
 # Tencent analytics ID
-# tencent_analytics:
+tencent_analytics: 62363449
 
 # Tencent MTA ID
 # tencent_mta:
