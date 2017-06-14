@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2017-06-07T15:39:41.732Z</updated>
+  <updated>2017-06-14T14:14:52.084Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -15,11 +15,92 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[Kotlin入入入门(二)]]></title>
+    <link href="http://yuqirong.me/2017/06/13/Kotlin%E5%85%A5%E5%85%A5%E5%85%A5%E9%97%A8(%E4%BA%8C)/"/>
+    <id>http://yuqirong.me/2017/06/13/Kotlin入入入门(二)/</id>
+    <published>2017-06-13T12:16:20.000Z</published>
+    <updated>2017-06-14T14:14:52.084Z</updated>
+    <content type="html"><![CDATA[<h1 id="u627E_u4E0D_u540C"><a href="#u627E_u4E0D_u540C" class="headerlink" title="找不同"></a>找不同</h1><p>之前在 <a href="/2017/06/07/Kotlin入入入门(一)/">Kotlin入入入门(一)</a> 中已经介绍了如何配置 Kotlin 。另外，还把 Java 代码转换为了 Kotlin 代码。所以今天我们就来比较一下这两者代码之间的区别，从而实现快速入门 Kotlin 。</p>
+<p>Now ，我们把之前相同含义的 Java 和 Kotlin 代码粘贴出来（上面是 Java 代码，下面是 Kotlin 代码）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> me.yuqirong.kotlindemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.support.annotation.Nullable;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"><span class="keyword">import</span> android.widget.TextView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(@Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        TextView textView = (TextView) findViewById(R.id.textView);</span><br><span class="line">        textView.setText(<span class="string">"Hello World"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> me.yuqirong.kotlindemo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity</span><br><span class="line"><span class="keyword">import</span> kotlinx.android.synthetic.main.activity_main.*</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="typename">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="typename">Bundle?</span>)</span> &#123;</span></span><br><span class="line">        super.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">        textView.text = <span class="string">"Hello World"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="package"><a href="#package" class="headerlink" title="package"></a>package</h2><p>我们先慢慢地从上往下看，第一句 <code>package</code> 语句就有所不同。我们发现 Kotlin 中的所有代码没有以 <code>;</code> 结尾。另外，在 Kotlin 中并不要求包与目录匹配。即源文件可以在文件系统中的任意位置。</p>
+<p>比如 <code>package me.yuqirong.kotlintest</code> 可能位于 /me/yuqirong/kotlintest2/ 文件夹下，并不会报错；而在 Java 中，包与目录必须匹配。</p>
+<p>但是需要注意的一点是，在 AndroidManifest.xml 中配置的 Activity 的全类名必须和其路径一致，否则会找不到！</p>
+<h2 id="class"><a href="#class" class="headerlink" title="class"></a>class</h2><p>在 Kotlin 中，<code>class</code> 默认是 <code>public</code> 的，所以平常都省略不写。</p>
+<p>继承父类和实现接口都用 <code>:</code> 来表示。不同的是继承父类是带 <code>()</code> 的，即表示构造器，比如上面的 <code>AppCompatActivity()</code> ；而接口则不需要 <code>()</code> 。</p>
+<p>举个例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="typename">AppCompatActivity</span></span>(), View.OnClickListener &#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>AppCompatActivity()</code> 就是继承，而 <code>View.OnClickListener</code> 就是实现。</p>
+<h2 id="method"><a href="#method" class="headerlink" title="method"></a>method</h2><p>从比较的代码中可以知道：</p>
+<ol>
+<li>在 Kotlin 中默认方法的修饰符就是 <code>public</code> ，可以省略不写。</li>
+<li>在 Kotlin 中重写的方法是要加 <code>override</code> 关键字的，而 Java 是以注解 <code>@Override</code> 来修饰的；</li>
+<li>在 Kotlin 中方法都是用 <code>fun</code> 关键字来声明的；</li>
+<li>在 Kotlin 中方法的参数是参数名在前，参数类型在后，中间以 <code>:</code> 隔开；若参数可能为空，则在参数类型后加 <code>?</code> 来表示。即上面代码中的 <code>(savedInstanceState: Bundle?)</code> ；</li>
+<li><p>和参数表示类似，返回值也是以 <code>: 返回类型</code> 的方式表示的。比如上面的 Kotlin 代码可写为</p>
+ <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="typename">Bundle?</span>)</span>: Unit &#123;</span></span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> Kotlin 中的 <code>Unit</code> 类型即 Java 中的 void 类型，可以省略不写。</p>
+</li>
+</ol>
+<p>举个例子：</p>
+<p>方法名 <code>multiplication</code> ，参数 <code>int a</code> 和 <code>int b</code> ，返回 <code>a</code> 和 <code>b</code> 相乘的值：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">multiplication</span><span class="params">(a: <span class="typename">Int, b: Int</span>)</span>: Int &#123;</span></span><br><span class="line">    <span class="keyword">return</span> a * b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有人也许会有疑问，这和 Java 代码行数也差不多嘛。</p>
+<p>当然还有更加简单的写法，函数体可以是表达式，并可从中推断出返回值类型。返回类型就可以省略不写了：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">multiplication</span><span class="params">(a: <span class="typename">Int, b: Int</span>)</span> = a * b</span></span><br></pre></td></tr></table></figure>
+<h1 id="u9644_u52A0_u9898"><a href="#u9644_u52A0_u9898" class="headerlink" title="附加题"></a>附加题</h1><h2 id="u5B9A_u4E49_u53D8_u91CF"><a href="#u5B9A_u4E49_u53D8_u91CF" class="headerlink" title="定义变量"></a>定义变量</h2><p>只读变量 val</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">val</span> i</span>: <span class="typename">Int</span> = <span class="number">1</span></span><br><span class="line"><span class="comment">// 推测为 Int 类型</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> j</span> = <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>Kotlin 中的 <code>val</code> 关键字就类似于 Java 中的 <code>final</code> 。</p>
+<p>可变变量 var</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">var</span> i</span>: <span class="typename">Int</span> = <span class="number">1</span></span><br><span class="line">i += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h2 id="u5B57_u7B26_u4E32_u6A21_u677F"><a href="#u5B57_u7B26_u4E32_u6A21_u677F" class="headerlink" title="字符串模板"></a>字符串模板</h2><p>字符串可以包含模板表达式，即可求值的代码片段，并将其结果连接到字符串中。一个模板表达式由一个 $ 开始并包含另一个简单的名称。</p>
+<p>举个例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="typename">Array&lt;String&gt;</span>)</span> &#123;</span></span><br><span class="line">    <span class="variable"><span class="keyword">val</span> text</span> = <span class="string">"World!"</span></span><br><span class="line">    println(<span class="string">"Hello, $&#123;text&#125;"</span>) <span class="comment">// 也可以去掉&#123;&#125;，即 println("Hello, $text")</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果：Hello, World!</p>
+<h2 id="u57FA_u672C_u7C7B_u578B"><a href="#u57FA_u672C_u7C7B_u578B" class="headerlink" title="基本类型"></a>基本类型</h2><p>Kotlin 基本类型包括了数值、字符、布尔、字符串和数组。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// int 类型</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> a</span>: <span class="typename">Int</span> = <span class="number">10000</span></span><br><span class="line"><span class="comment">// double 类型</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> b</span>: <span class="typename">Double</span> = <span class="number">125.2</span></span><br><span class="line"><span class="comment">// float 类型</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> c</span>: <span class="typename">Float</span> = <span class="number">123.2</span>f</span><br><span class="line"><span class="comment">// long 类型</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> d</span>: <span class="typename">Long</span> = <span class="number">1234</span>L</span><br><span class="line"><span class="comment">// boolean 类型</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> e</span>: <span class="typename">Boolean</span> = <span class="literal">false</span></span><br><span class="line"><span class="comment">// char 类型</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> f</span>: <span class="typename">Char</span> = 'e'</span><br><span class="line"><span class="comment">// string 类型</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> g</span>: String = <span class="string">"hello"</span></span><br><span class="line"><span class="comment">// byte 类型</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> h</span>: <span class="typename">Byte</span> = <span class="number">1</span></span><br><span class="line"><span class="comment">// short 类型</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> i</span>: <span class="typename">Short</span> = <span class="number">3</span></span><br><span class="line"><span class="comment">// 数组类型</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> x</span>: IntArray = intArrayOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="u6D41_u7A0B_u63A7_u5236"><a href="#u6D41_u7A0B_u63A7_u5236" class="headerlink" title="流程控制"></a>流程控制</h2><ul>
+<li><p>if 表达式<br>  除了 Java 中 if 使用方法外，在 Kotlin 中还支持如下的写法：</p>
+  <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="typename">Array&lt;String&gt;</span>)</span> &#123;</span></span><br><span class="line">    <span class="variable"><span class="keyword">val</span> a</span> = <span class="number">101</span></span><br><span class="line">	<span class="variable"><span class="keyword">val</span> b</span>: <span class="typename">Boolean</span> = <span class="keyword">if</span>(a &gt; <span class="number">100</span>)&#123;</span><br><span class="line">		print(<span class="string">"a &gt; 100 "</span>)</span><br><span class="line">		<span class="literal">true</span></span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		print(<span class="string">"a &lt;= 100 "</span>)</span><br><span class="line">		<span class="literal">false</span></span><br><span class="line">		&#125;</span><br><span class="line">    println(b)</span><br><span class="line">	<span class="variable"><span class="keyword">val</span> c</span>: <span class="typename">Boolean</span> = <span class="keyword">if</span>(a &gt; <span class="number">0</span>) <span class="literal">true</span> <span class="keyword">else</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  运行结果：a &gt; 100 true</p>
+  <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="typename">Array&lt;String&gt;</span>)</span> &#123;</span></span><br><span class="line">    println(testIf(<span class="number">100</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">testIf</span><span class="params">(a: <span class="typename">Int</span>)</span> = <span class="title">if</span><span class="params">(a &gt; 100)</span> true <span class="keyword">else</span> false</span></span><br></pre></td></tr></table></figure>
+<p>  运行结果：false</p>
+</li>
+<li><p>when 表达式<br>  Kotlin 中的 when 表达式就是 Java 中的 switch 表达式，具体例子如下：</p>
+  <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">when</span> (x) &#123;</span><br><span class="line">    <span class="number">1</span> -&gt; print(<span class="string">"x == 1"</span>)</span><br><span class="line">    <span class="number">2</span> -&gt; print(<span class="string">"x == 2"</span>)</span><br><span class="line">    <span class="keyword">else</span> -&gt; print(<span class="string">"x is neither 1 nor 2"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>for 循环</p>
+  <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">val</span> collection</span>: IntArray = intArrayOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"><span class="keyword">for</span> (item <span class="keyword">in</span> collection) &#123;</span><br><span class="line">	print(item)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>while 循环<br>  while 循环与 Java 中的无异。</p>
+</li>
+</ul>
+<h1 id="End"><a href="#End" class="headerlink" title="End"></a>End</h1><p>今天就讲到这里了，更多 Kotlin 的使用方法就期待下一篇吧！</p>
+<p>Goodbye ! ~ ~</p>
+<p>更多关于 Kotlin 的博客：</p>
+<ul>
+<li><a href="/2017/06/07/Kotlin入入入门(一)/">Kotlin入入入门(一)</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u627E_u4E0D_u540C"><a href="#u627E_u4E0D_u540C" class="headerlink" title="找不同"></a>找不同</h1><p>之前在 <a href="/2017/06/07/Kotlin入入入门(一)]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="Kotlin" scheme="http://yuqirong.me/tags/Kotlin/"/>
+    
+      <category term="Kotlin Blog" scheme="http://yuqirong.me/categories/Kotlin-Blog/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Kotlin入入入门(一)]]></title>
     <link href="http://yuqirong.me/2017/06/07/Kotlin%E5%85%A5%E5%85%A5%E5%85%A5%E9%97%A8(%E4%B8%80)/"/>
     <id>http://yuqirong.me/2017/06/07/Kotlin入入入门(一)/</id>
     <published>2017-06-07T12:10:22.000Z</published>
-    <updated>2017-06-07T15:39:41.732Z</updated>
+    <updated>2017-06-14T14:15:16.961Z</updated>
     <content type="html"><![CDATA[<h1 id="Android_Studio__u914D_u7F6E"><a href="#Android_Studio__u914D_u7F6E" class="headerlink" title="Android Studio 配置"></a>Android Studio 配置</h1><p>Android Studio 3.0 版本已经默认添加了对 Kotlin 的支持，所以以下 Android Studio 配置是针对于 3.0 版本以下的。</p>
 <ol>
 <li><p>安装 Kotlin 插件</p>
@@ -83,7 +164,7 @@ apply plugin: &apos;kotlin-android-extensions&apos;
     
       <category term="Kotlin" scheme="http://yuqirong.me/tags/Kotlin/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Kotlin Blog" scheme="http://yuqirong.me/categories/Kotlin-Blog/"/>
     
   </entry>
   
@@ -1839,415 +1920,6 @@ exit
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[《Android开发艺术探索》笔记(下)]]></title>
-    <link href="http://yuqirong.me/2016/08/06/%E3%80%8AAndroid%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E7%AC%94%E8%AE%B0(%E4%B8%8B)/"/>
-    <id>http://yuqirong.me/2016/08/06/《Android开发艺术探索》笔记(下)/</id>
-    <published>2016-08-05T16:12:02.000Z</published>
-    <updated>2016-11-01T15:03:28.650Z</updated>
-    <content type="html"><![CDATA[<h1 id="u7B2C_u516B_u7AE0_uFF1A_u7406_u89E3Window_u548CWindowManager"><a href="#u7B2C_u516B_u7AE0_uFF1A_u7406_u89E3Window_u548CWindowManager" class="headerlink" title="第八章：理解Window和WindowManager"></a>第八章：理解Window和WindowManager</h1><h2 id="8-1_Window_u548CWindowManager"><a href="#8-1_Window_u548CWindowManager" class="headerlink" title="8.1 Window和WindowManager"></a>8.1 Window和WindowManager</h2><p>Window是抽象类，具体实现是PhoneWindow，通过WindowManager就可以创建Window。WindowManager是外界访问Window的入口，但是Window的具体实现是在WindowManagerService中，WindowManager和WindowManagerService的交互是一个IPC过程。所有的视图例如Activity、Dialog、Toast都是附加在Window上的。因此，Window是实际上View的直接管理者。</p>
-<p>WindowManager.LayoutParams中的flags参数解析：</p>
-<ul>
-<li>FLAG_NOT_FOCUSABLE：表示window不需要获取焦点，也不需要接收各种输入事件。此标记会同时启用FLAG_NOT_TOUCH_MODAL，最终事件会直接传递给下层的具有焦点的window；</li>
-<li>FLAG_NOT_TOUCH_MODAL：在此模式下，系统会将window区域外的单击事件传递给底层的window，当前window区域内的单击事件则自己处理，一般都需要开启这个标记；</li>
-<li>FLAG_SHOW_WHEN_LOCKED：开启此模式可以让Window显示在锁屏的界面上。</li>
-</ul>
-<p>type参数表示window的类型，window共有三种类型：应用window，子window和系统window。应用window对应着一个Activity，子window不能独立存在，需要附属在特定的父window之上，比如Dialog就是子window。系统window是需要声明权限才能创建的window，比如Toast和系统状态栏这些都是系统window，需要声明的权限是<code>&lt;uses-permission android:name=&quot;android.permission.SYSTEM_ALERT_WINDOW&quot; /&gt;</code>。</p>
-<p>window是分层的，每个window都对应着z-ordered，层级大的会覆盖在层级小的上面，应用window的层级范围是1~99，子window的层级范围是1000~1999，系统window的层级范围是2000~2999。</p>
-<p>WindowManager继承自ViewManager，常用的只有三个方法：addView、updateView和removeView。</p>
-<h2 id="8-2_Window_u7684_u5185_u90E8_u673A_u5236"><a href="#8-2_Window_u7684_u5185_u90E8_u673A_u5236" class="headerlink" title="8.2 Window的内部机制"></a>8.2 Window的内部机制</h2><p>Window是一个抽象的概念，不是实际存在的，它也是以View的形式存在。在实际使用中无法直接访问Window，只能通过WindowManager才能访问Window。每个Window都对应着一个View和一个ViewRootImpl，Window和View通过ViewRootImpl来建立联系。</p>
-<p>Window的添加、删除和更新过程都是IPC过程。WindowManager的实现类(即：WindowManagerImpl)对于addView、updateView和removeView方法都是委托给WindowManagerGlobal类，该类保存了很多数据列表，例如所有window对应的view集合mViews、所有window对应的ViewRootImpl的集合mRoots，其他的还有mParams和mDyingViews等。</p>
-<p><strong>Window的添加过程</strong>：</p>
-<ol>
-<li>WindowManagerGlobal中的addView；</li>
-<li>检查参数是否合法，如果子Window还需要调节布局参数；</li>
-<li>创建ViewRootImpl并将View添加到列表中；</li>
-<li>通过ViewRootImpl的setView来更新界面并完成Window的添加过程。在setView内部会调用requestLayout来完成异步刷新请求。在requestLayout中的scheduleTraversals是View绘制的入口，最终通过WindowSession来完成Window的添加过程，注意其实这里是个IPC过程，最终会通过WindowManagerService的addWindow方法来实现Window的添加。 </li>
-</ol>
-<p><strong>Window的删除过程</strong>：</p>
-<ol>
-<li>WinodwManagerGlobal中的removeView；</li>
-<li>findViewLocked来查找待删除待View的索引，再调用removeViewLocked来做进一步删除；</li>
-<li>removeViewLocked通过ViewRootImpl的die方法来完成删除操作，包括同步和异步两种方式，同步方式可能会导致意外的错误，不推荐，一般使用异步的方式，其实就是通过handler发送了一个删除请求，将View添加到mDyingViews中；</li>
-<li>die方法本质调用了doDie方法，真正删除View的逻辑在该方法的dispatchDetachedFromWindow方法中，主要做了四件事：垃圾回收，通过Session的remove方法删除Window，调用View的dispatchDetachedFromWindow方法同时会回调View的onDetachedFromWindow以及onDetachedFromWindowInternal，调用WindowManagerGlobal的doRemoveView刷新数据。 </li>
-</ol>
-<p><strong>Window的更新过程</strong>：</p>
-<ol>
-<li>WindowManagerGlobal的updateViewLayout；</li>
-<li>更新View的LayoutParams；</li>
-<li>更新ViewImple的LayoutParams，实现对View的重新测量，布局，重绘；</li>
-<li>通过WindowSession更新Window的视图，WindowManagerService.relayoutWindow()。</li>
-</ol>
-<h2 id="8-3_Window_u7684_u521B_u5EFA_u8FC7_u7A0B"><a href="#8-3_Window_u7684_u521B_u5EFA_u8FC7_u7A0B" class="headerlink" title="8.3 Window的创建过程"></a>8.3 Window的创建过程</h2><p><strong>Activity的window创建过程</strong>：</p>
-<ol>
-<li>Activity的启动过程很复杂，最终会由ActivityThread中的performLaunchActivity来完成整个启动过程，在这个方法内部会通过类加载器创建Activity的实例对象，并调用它的attach方法为其关联运行过程中所依赖的一系列上下文环境变量；</li>
-<li>Activity实现了Window的Callback接口，当window接收到外界的状态变化时就会回调Activity的方法，例如onAttachedToWindow、onDetachedFromWindow、dispatchTouchEvent等；</li>
-<li>Activity的Window是由PolicyManager来创建的，它的真正实现是Policy类，它会新建一个PhoneWindow对象，Activity的setContentView的实现是由PhoneWindow来实现的；</li>
-<li>Activity的顶级View是DecorView，它本质上是一个FrameLayout。如果没有DecorView，那么PhoneWindow会先创建一个DecorView，然后加载具体的布局文件并将view添加到DecorView的mContentParent中，最后就是回调Activity的onContentChanged通知Activity视图已经发生了变化；</li>
-<li>还有一个步骤是让WindowManager能够识别DecorView，在ActivityThread调用handleResumeActivity方法时，首先会调用Activity的onResume方法，然后会调用makeVisible方法，这个方法中DecorView真正地完成了添加和显示过程。</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ViewManager vm = getWindowManager();</span><br><span class="line">vm.addView(mDecor, getWindow().getAttributes());</span><br><span class="line">mWindowAdded = <span class="keyword">true</span>;</span><br></pre></td></tr></table></figure>
-<p><strong>Dialog的Window创建过程</strong>：</p>
-<p>过程与Activity的Window创建过程类似，普通的Dialog的有一个特别之处，即它必须采用Activity的Context，如果采用Application的Context会报错。原因是Application没有应用token，应用token一般是Activity拥有的。解决的方案就是通过<code>dialog.getWindow.setType</code>方法设置成系统级别的type，记得在manifest中设置权限。</p>
-<p><strong>Toast的Window创建过程</strong>：</p>
-<ol>
-<li>Toast内部有两类IPC：Toast访问NotificationManagerService；NotificationManagerService（下文简称NMS）访问Toast的TN接口；</li>
-<li>Toast属于系统Window，内部视图mNextView一种为系统默认样式，另一种通过setView方法来指定一个自定义View。</li>
-<li>TN是一个Binder类，NMS处理Toast的显示隐藏请求时会跨进程回调TN中的方法，所以TN运行在Binder线程池中，所以需要handler切换到当前发送Toast请求的线程中，也就是说没有Looper的线程是无法弹出Toast的。</li>
-<li>Toast的show方法调用了NMS的enqueueToast方法，该方法先将Toast请求封装成ToastRecord并丢入mToastQueue队列中（非系统应用最多塞50个）。</li>
-<li>NMS通过showNextToastLocked方法来显示当前View，Toast显示由ToastRecord的callback方法中的show方法完成，callback其实就是TN对象的远程Binder，所以最终调用的是TN中的方法，并运行在发起Toast请求应用的Binder线程池中。</li>
-<li>显示以后，NMS通过scheduleTimeoutLocked方法发送延时消息，延时后NMS通过cancelToastLocked方法来隐藏Toast并从队列中移除，隐藏依然通过ToastRecord的callback中的hide方法实现。</li>
-<li>callback回调TN的show和hide方法后，会通过handler发送两个Runnable，里面的handleShow和handleHide方法是真正完成显示和隐藏Toast的地方。handleShow方法中将Toast的视图添加到Window中，handleHide方法将Toast视图从Window中移除。</li>
-</ol>
-<h1 id="u7B2C_u5341_u7AE0_Android_u7684_u6D88_u606F_u673A_u5236"><a href="#u7B2C_u5341_u7AE0_Android_u7684_u6D88_u606F_u673A_u5236" class="headerlink" title="第十章 Android的消息机制"></a>第十章 Android的消息机制</h1><h2 id="10-1_Android_u6D88_u606F_u673A_u5236_u6982_u8FF0"><a href="#10-1_Android_u6D88_u606F_u673A_u5236_u6982_u8FF0" class="headerlink" title="10.1 Android消息机制概述"></a>10.1 Android消息机制概述</h2><p>Android的消息机制主要是指Handler的运行机制，其底层需要MessageQueue和Looper的支撑。MessageQueue是以单链表的数据结构存储消息列表但是以队列的形式对外提供插入和删除消息操作的消息队列。MessageQueue只是消息的存储单元，而Looper则是以无限循环的形式去查找是否有新消息，如果有的话就去处理消息，否则就一直等待着。</p>
-<p>Handler的主要作用是将一个任务切换到某个指定的线程中去执行。</p>
-<ul>
-<li>为什么要提供这个功能呢？</li>
-</ul>
-<p>Android规定UI操作只能在主线程中进行，ViewRootImpl的checkThread方法会验证当前线程是否可以进行UI操作。</p>
-<ul>
-<li>为什么不允许子线程访问UI呢？</li>
-</ul>
-<p>这是因为UI组件不是线程安全的，如果在多线程中并发访问可能会导致UI组件处于不可预期的状态。另外，如果对UI组件的访问进行加锁机制的话又会降低UI访问的效率，所以还是采用单线程模型来处理UI事件。</p>
-<p>Handler的创建会采用当前线程的Looper来构建内部的消息循环系统，如果当前线程中不存在Looper的话就会报错。Handler可以用post方法将一个Runnable投递到消息队列中，也可以用send方法发送一个消息投递到消息队列中，其实post最终还是调用了send方法。</p>
-<h2 id="10-2_Android_u7684_u6D88_u606F_u673A_u5236_u5206_u6790"><a href="#10-2_Android_u7684_u6D88_u606F_u673A_u5236_u5206_u6790" class="headerlink" title="10.2 Android的消息机制分析"></a>10.2 Android的消息机制分析</h2><p>(1).ThreadLocal的工作原理</p>
-<ol>
-<li>ThreadLocal是一个线程内部的数据存储类，通过它可以在指定的线程中存储数据，数据存储以后，只有在指定线程中可以获取到存储的数据，对于其他线程来说则无法获取到数据。一般来说，当某些数据是以线程为作用域并且不同线程具有不同的数据副本的时候，可以考虑使用ThreadLocal。 对于Handler来说，它需要获取当前线程的Looper，而Looper的作用域就是线程并且不同线程具有不同的Looper，这个时候通过ThreadLocal就可以实现Looper在线程中的存取了。</li>
-<li>ThreadLocal的原理：不同线程访问同一个ThreadLocal的get方法时，ThreadLocal内部会从各自的线程中取出一个数组，然后再从数组中根据当前ThreadLocal的索引去查找出对应的value值，不同线程中的数组是不同的，这就是为什么通过ThreadLocal可以在不同线程中维护一套数据的副本并且彼此互不干扰。</li>
-<li><p>ThreadLocal是一个泛型类public class ThreadLocal<t>，下面是它的set方法</t></p>
-<pre><code>public void set(T value) {
-    Thread currentThread = Thread.currentThread();
-    Values values = values(currentThread);
-    if (values == null) {
-        values = initializeValues(currentThread);
-    }
-    values.put(this, value);
-}
-</code></pre><p> Values是Thread类内部专门用来存储线程的ThreadLocal数据的，它内部有一个数组private Object[] table，ThreadLocal的值就存在这个table数组中。如果values的值为null，那么就需要对其进行初始化然后再将ThreadLocal的值进行存储。<br> ThreadLocal数据的存储规则：ThreadLocal的值在table数组中的存储位置总是ThreadLocal的索引+1的位置。</p>
-</li>
-</ol>
-<p>(2).MessageQueue的工作原理</p>
-<ol>
-<li>MessageQueue其实是通过单链表来维护消息列表的，它包含两个主要操作enqueueMessage和next，前者是插入消息，后者是取出一条消息并移除。</li>
-<li>next方法是一个无限循环的方法，如果消息队列中没有消息，那么next方法会一直阻塞在这里。当有新消息到来时，next方法会返回这条消息并将它从链表中移除。</li>
-</ol>
-<p>(3).Looper的工作原理</p>
-<ol>
-<li><p>为一个线程创建Looper的方法，代码如下所示</p>
-<pre><code>new Thread(&quot;test&quot;){
-    @Override
-    public void run() {
-        Looper.prepare();//创建looper
-        Handler handler = new Handler();//可以创建handler了
-        Looper.loop();//开始looper循环
-    }
-}.start();
-</code></pre></li>
-<li><p>Looper的prepareMainLooper方法主要是给主线程也就是ActivityThread创建Looper使用的，本质也是调用了prepare方法。</p>
-</li>
-<li>Looper的quit和quitSafely方法的区别是：前者会直接退出Looper，后者只是设定一个退出标记，然后把消息队列中的已有消息处理完毕后才安全地退出。Looper退出之后，通过Handler发送的消息就会失败，这个时候Handler的send方法会返回false。<br>在子线程中，如果手动为其创建了Looper，那么在所有的事情完成以后应该调用quit方法来终止消息循环，否则这个子线程就会一直处于等待的状态，而如果退出Looper以后，这个线程就会立刻终止，因此建议不需要的时候终止Looper。</li>
-<li>当Looper的quit方法被调用时，Looper就会调用MessageQueue的quit或者quitSafely方法来通知消息队列退出，当消息队列被标记为退出状态时，它的next方法就会返回null。也就是说，Looper必须退出，否则loop方法就会无限循环下去。Looper的loop方法会调用MessageQueue的next方法来获取新消息，而next是一个阻塞操作，当没有消息时，next方法会一直阻塞着在那里，这也导致了loop方法一直阻塞在那里。如果MessageQueue的next方法返回了新消息，Looper就会处理这条消息：msg.target.dispatchMessage(msg)，其中的msg.target就是发送这条消息的Handler对象。</li>
-</ol>
-<p>(4).Handler的工作原理</p>
-<ol>
-<li>Handler就是处理消息的发送和接收之后的处理；</li>
-<li><p>Handler处理消息的过程</p>
-<pre><code>public void dispatchMessage(Message msg) {
-    if (msg.callback != null) {
-        handleCallback(msg);//当message是runnable的情况，也就是Handler的post方法传递的参数，这种情况下直接执行runnable的run方法
-    } else {
-        if (mCallback != null) {//如果创建Handler的时候是给Handler设置了Callback接口的实现，那么此时调用该实现的handleMessage方法
-            if (mCallback.handleMessage(msg)) {
-                return;
-            }
-        }
-        handleMessage(msg);//如果是派生Handler的子类，就要重写handleMessage方法，那么此时就是调用子类实现的handleMessage方法
-    }
-}
-
-private static void handleCallback(Message message) {
-        message.callback.run();
-}
-
-/**
- * Subclasses must implement this to receive messages.
- */
-public void handleMessage(Message msg) {
-}
-</code></pre></li>
-<li><p>Handler还有一个特殊的构造方法，它可以通过特定的Looper来创建Handler。</p>
-<pre><code>public Handler(Looper looper){
-  this(looper, null, false);
-}
-</code></pre></li>
-</ol>
-<h2 id="10-3__u4E3B_u7EBF_u7A0B_u7684_u6D88_u606F_u5FAA_u73AF"><a href="#10-3__u4E3B_u7EBF_u7A0B_u7684_u6D88_u606F_u5FAA_u73AF" class="headerlink" title="10.3 主线程的消息循环"></a>10.3 主线程的消息循环</h2><p>Android的主线程就是ActivityThread，主线程的入口方法就是main，其中调用了Looper.prepareMainLooper()来创建主线程的Looper以及MessageQueue，并通过Looper.loop()方法来开启主线程的消息循环。主线程内有一个Handler，即ActivityThread.H，它定义了一组消息类型，主要包含了四大组件的启动和停止等过程，例如LAUNCH_ACTIVITY等。</p>
-<p>ActivityThread通过ApplicationThread和AMS进行进程间通信，AMS以进程间通信的方法完成ActivityThread的请求后会回调ApplicationThread中的Binder方法，然后ApplicationThread会向H发送消息，H收到消息后会将ApplicationThread中的逻辑切换到ActivityThread中去执行，即切换到主线程中去执行，这个过程就是主线程的消息循环模型。</p>
-<h1 id="u7B2C_u5341_u4E00_u7AE0_Android_u7684_u7EBF_u7A0B_u548C_u7EBF_u7A0B_u6C60"><a href="#u7B2C_u5341_u4E00_u7AE0_Android_u7684_u7EBF_u7A0B_u548C_u7EBF_u7A0B_u6C60" class="headerlink" title="第十一章 Android的线程和线程池"></a>第十一章 Android的线程和线程池</h1><h2 id="11-1__u4E3B_u7EBF_u7A0B_u548C_u5B50_u7EBF_u7A0B"><a href="#11-1__u4E3B_u7EBF_u7A0B_u548C_u5B50_u7EBF_u7A0B" class="headerlink" title="11.1 主线程和子线程"></a>11.1 主线程和子线程</h2><ol>
-<li>在Java中默认情况下一个进程只有一个线程，也就是主线程，其他线程都是子线程，也叫工作线程。Android中的主线程主要处理和界面相关的事情，而子线程则往往用于执行耗时操作。线程的创建和销毁的开销较大，所以如果一个进程要频繁地创建和销毁线程的话，都会采用线程池的方式。</li>
-<li>在Android中除了Thread，还有HandlerThread、AsyncTask以及IntentService等也都扮演着线程的角色，只是它们具有不同的特性和使用场景。AsyncTask封装了线程池和Handler，它主要是为了方便开发者在子线程中更新UI。HandlerThread是一种具有消息循环的线程，在它的内部可以使用Handler。IntentService是一个服务，它内部采用HandlerThread来执行任务，当任务执行完毕后就会自动退出。因为它是服务的缘故，所以和后台线程相比，它比较不容易被系统杀死。</li>
-<li>从Android 3.0开始，系统要求网络访问必须在子线程中进行，否则网络访问将会失败并抛出NetworkOnMainThreadException这个异常，这样做是为了避免主线程由于被耗时操作所阻塞从而出现ANR现象。</li>
-<li>AsyncTask是一个抽象泛型类，它提供了Params、Progress、Result三个泛型参数，如果task确实不需要传递具体的参数，那么都可以设置为Void。下面是它的四个核心方法，其中doInBackground不是在主线程执行的。<br>onPreExecute、doInBackground、onProgressUpdate、onPostResult</li>
-</ol>
-<h2 id="11-2_Android_u4E2D_u7684_u7EBF_u7A0B_u5F62_u6001"><a href="#11-2_Android_u4E2D_u7684_u7EBF_u7A0B_u5F62_u6001" class="headerlink" title="11.2 Android中的线程形态"></a>11.2 Android中的线程形态</h2><ol>
-<li><p>AsyncTask的使用过程中的条件限制：</p>
-<p> (1).AsyncTask的类必须在主线程中加载，这个过程在Android 4.1及以上版本中已经被系统自动完成。</p>
-<p> (2).AsyncTask对象必须在主线程中创建，execute方法必须在UI线程中调用。</p>
-<p> (3).一个AsyncTask对象只能执行一次，即只能调用一次execute方法，否则会报运行时异常。</p>
-<p> (4).在Android 1.6之前，AsyncTask是串行执行任务的，Android 1.6的时候AsyncTask开始采用线程池并行处理任务，但是从Android 3.0开始，为了避免AsyncTask带来的并发错误，AsyncTask又采用一个线程来串行执行任务。尽管如此，在Android 3.0以及后续版本中，我们可以使用AsyncTask的executeOnExecutor方法来并行执行任务。但是这个方法是Android 3.0新添加的方法，并不能在低版本上使用。</p>
-</li>
-<li><p>AsyncTask的原理：</p>
-<p> (1).AsyncTask中有两个线程池：SerialExecutor和THREAD_POOL_EXECUTOR。前者是用于任务的排队，默认是串行的线程池；后者用于真正执行任务。AsyncTask中还有一个Handler，即InternalHandler，用于将执行环境从线程池切换到主线程。AsyncTask内部就是通过InternalHandler来发送任务执行的进度以及执行结束等消息。</p>
-<p> (2).AsyncTask排队执行过程：系统先把参数Params封装为FutureTask对象，它相当于Runnable；接着将FutureTask交给SerialExecutor的execute方法，它先把FutureTask插入到任务队列tasks中，如果这个时候没有正在活动的AsyncTask任务，那么就会执行下一个AsyncTask任务，同时当一个AsyncTask任务执行完毕之后，AsyncTask会继续执行其他任务直到所有任务都被执行为止。</p>
-</li>
-<li><p>HandlerThread就是一种可以使用Handler的Thread，它的实现就是在run方法中通过Looper.prepare()来创建消息队列，并通过Looper.loop()来开启消息循环，这样在实际的使用中就允许在HandlerThread中创建Handler了，外界可以通过Handler的消息方式通知HandlerThread执行一个具体的任务。HandlerThread的run方法是一个无限循环，因此当明确不需要再使用HandlerThread的时候，可以通过它的quit或者quitSafely方法来终止线程的执行。HandlerThread的最主要的应用场景就是用在IntentService中。</p>
-</li>
-<li><p>IntentService是一个继承自Service的抽象类，要使用它就要创建它的子类。IntentService适合执行一些高优先级的后台任务，这样不容易被系统杀死。IntentService的onCreate方法中会创建HandlerThread，并使用HandlerThread的Looper来构造一个Handler对象ServiceHandler，这样通过ServiceHandler对象发送的消息最终都会在HandlerThread中执行。IntentService会将Intent封装到Message中，通过ServiceHandler发送出去，在ServiceHandler的handleMessage方法中会调用IntentService的抽象方法onHandleIntent，所以IntentService的子类都要是实现这个方法。</p>
-</li>
-</ol>
-<h2 id="11-3_Android_u4E2D_u7684_u7EBF_u7A0B_u6C60"><a href="#11-3_Android_u4E2D_u7684_u7EBF_u7A0B_u6C60" class="headerlink" title="11.3 Android中的线程池"></a>11.3 Android中的线程池</h2><p><strong>使用线程池的好处</strong>：</p>
-<ol>
-<li>重用线程，避免线程的创建和销毁带来的性能开销；</li>
-<li>能有效控制线程池的最大并发数，避免大量的线程之间因互相抢占系统资源而导致的阻塞现象；</li>
-<li>能够对线程进行简单的管理，并提供定时执行以及指定间隔循环执行等功能。</li>
-</ol>
-<p>Executor只是一个接口，真正的线程池是ThreadPoolExecutor。ThreadPoolExecutor提供了一系列参数来配置线程池，通过不同的参数可以创建不同的线程池，Android的线程池都是通过Executors提供的工厂方法得到的。</p>
-<p><strong>ThreadPoolExecutor的构造参数</strong>：</p>
-<ol>
-<li>corePoolSize：核心线程数，默认情况下，核心线程会在线程中一直存活；</li>
-<li>maximumPoolSize：最大线程数，当活动线程数达到这个数值后，后续的任务将会被阻塞；</li>
-<li>keepAliveTime：非核心线程闲置时的超时时长，超过这个时长，闲置的非核心线程就会被回收；</li>
-<li>unit：用于指定keepAliveTime参数的时间单位，有TimeUnit.MILLISECONDS、TimeUnit.SECONDS、TimeUnit.MINUTES等；</li>
-<li>workQueue：任务队列，通过线程池的execute方法提交的Runnable对象会存储在这个参数中；</li>
-<li>threadFactory：线程工厂，为线程池提供创建新线程的功能。它是一个接口，它只有一个方法Thread newThread(Runnable r)；</li>
-<li>RejectedExecutionHandler：当线程池无法执行新任务时，可能是由于任务队列已满或者是无法成功执行任务，这个时候就会调用这个Handler的rejectedExecution方法来通知调用者，默认情况下，rejectedExecution会直接抛出一个rejectedExecutionException。</li>
-</ol>
-<p><strong>ThreadPoolExecutor执行任务的规则</strong>：</p>
-<ol>
-<li>如果线程池中的线程数未达到核心线程的数量，那么会直接启动一个核心线程来执行任务；</li>
-<li>如果线程池中的线程数量已经达到或者超过核心线程的数量，那么任务会被插入到任务队列中排队等待执行；</li>
-<li>如果在步骤2中无法将任务插入到的任务队列中，可能是任务队列已满，这个时候如果线程数量没有达到规定的最大值，那么会立刻启动非核心线程来执行这个任务；</li>
-<li>如果步骤3中线程数量已经达到线程池规定的最大值，那么就拒绝执行此任务，ThreadPoolExecutor会调用RejectedExecutionHandler的rejectedExecution方法来通知调用者。</li>
-</ol>
-<p><strong>AsyncTask的THREAD_POOL_EXECUTOR线程池的配置</strong>：</p>
-<ol>
-<li>corePoolSize=CPU核心数+1；</li>
-<li>maximumPoolSize=2倍的CPU核心数+1；</li>
-<li>核心线程无超时机制，非核心线程在闲置时间的超时时间为1s；</li>
-<li>任务队列的容量为128。</li>
-</ol>
-<p><strong>Android中常见的4类具有不同功能特性的线程池</strong>：</p>
-<ol>
-<li>FixedThreadPool：线程数量固定的线程池，它只有核心线程；</li>
-<li>CachedThreadPool：线程数量不固定的线程池，它只有非核心线程；</li>
-<li>ScheduledThreadPool：核心线程数量固定，非核心线程数量没有限制的线程池，主要用于执行定时任务和具有固定周期的任务；</li>
-<li>SingleThreadPool：只有一个核心线程的线程池，确保了所有的任务都在同一个线程中按顺序执行。</li>
-</ol>
-<h1 id="u7B2C_u5341_u4E8C_u7AE0_Bitmap_u7684_u52A0_u8F7D_u548CCache"><a href="#u7B2C_u5341_u4E8C_u7AE0_Bitmap_u7684_u52A0_u8F7D_u548CCache" class="headerlink" title="第十二章 Bitmap的加载和Cache"></a>第十二章 Bitmap的加载和Cache</h1><h2 id="12-1_Bitmap_u7684_u9AD8_u901F_u52A0_u8F7D"><a href="#12-1_Bitmap_u7684_u9AD8_u901F_u52A0_u8F7D" class="headerlink" title="12.1 Bitmap的高速加载"></a>12.1 Bitmap的高速加载</h2><ol>
-<li><p>Bitmap是如何加载的？</p>
-<p> BitmapFactory类提供了四类方法：decodeFile、decodeResource、decodeStream和decodeByteArray从不同来源加载出一个Bitmap对象，最终的实现是在底层实现的。</p>
-</li>
-<li><p>如何高效加载Bitmap？</p>
-<p> 采用BitmapFactory.Options按照一定的采样率来加载所需尺寸的图片，因为imageview所需的图片大小往往小于图片的原始尺寸。</p>
-</li>
-<li><p>BitmapFactory.Options的inSampleSize参数，即采样率<br>官方文档指出采样率的取值应该是2的指数，例如k，那么采样后的图片宽高均为原图片大小的 1/k。<br>如何获取采样率？</p>
-<p> 下面是常用的获取采样率的代码片段：</p>
-<pre><code>public Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
-    // First decode with inJustDecodeBounds=true to check dimensions
-    final BitmapFactory.Options options = new BitmapFactory.Options();
-    options.inJustDecodeBounds = true;
-    BitmapFactory.decodeResource(res, resId, options);
-
-    // Calculate inSampleSize
-    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-    // Decode bitmap with inSampleSize set
-    options.inJustDecodeBounds = false;
-    return BitmapFactory.decodeResource(res, resId, options);
-}
-
-public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-    if (reqWidth == 0 || reqHeight == 0) {
-        return 1;
-    }
-
-    // Raw height and width of image
-    final int height = options.outHeight;
-    final int width = options.outWidth;
-    Log.d(TAG, &quot;origin, w= &quot; + width + &quot; h=&quot; + height);
-    int inSampleSize = 1;
-
-    if (height &gt; reqHeight || width &gt; reqWidth) {
-        final int halfHeight = height / 2;
-        final int halfWidth = width / 2;
-
-        // Calculate the largest inSampleSize value that is a power of 2 and
-        // keeps both height and width larger than the requested height and width.
-        while ((halfHeight / inSampleSize) &gt;= reqHeight &amp;&amp; (halfWidth / inSampleSize) &gt;= reqWidth) {
-            inSampleSize *= 2;
-        }
-    }
-
-    Log.d(TAG, &quot;sampleSize:&quot; + inSampleSize);
-    return inSampleSize;
-}
-</code></pre><p> 将inJustDecodeBounds设置为true的时候，BitmapFactory只会解析图片的原始宽高信息，并不会真正的加载图片，所以这个操作是轻量级的。需要注意的是，这个时候BitmapFactory获取的图片宽高信息和图片的位置以及程序运行的设备有关，这都会导致BitmapFactory获取到不同的结果。</p>
-</li>
-</ol>
-<h2 id="12-2_Android_u4E2D_u7684_u7F13_u5B58_u7B56_u7565"><a href="#12-2_Android_u4E2D_u7684_u7F13_u5B58_u7B56_u7565" class="headerlink" title="12.2 Android中的缓存策略"></a>12.2 Android中的缓存策略</h2><ol>
-<li>最常用的缓存算法是LRU，核心是当缓存满时，会优先淘汰那些近期最少使用的缓存对象，系统中采用LRU算法的缓存有两种：LruCache(内存缓存)和DiskLruCache(磁盘缓存)。</li>
-<li>LruCache是Android 3.1才有的，通过support-v4兼容包可以兼容到早期的Android版本。LruCache类是一个线程安全的泛型类，它内部采用一个LinkedHashMap以强引用的方式存储外界的缓存对象，其提供了get和put方法来完成缓存的获取和添加操作，当缓存满时，LruCache会移除较早使用的缓存对象，然后再添加新的缓存对象。</li>
-<li>DiskLruCache磁盘缓存，它不属于Android sdk的一部分，<a href="http://ofytl4mzu.bkt.clouddn.com/20160826/DiskLruCache.java" target="_blank" rel="external">它的源码可以在这里下载</a><br>DiskLruCache的创建、缓存查找和缓存添加操作</li>
-<li>ImageLoader的实现 具体内容看源码，<a href="http://ofytl4mzu.bkt.clouddn.com/20160826/ImageLoader.java" target="_blank" rel="external">点击下载</a><br>功能：图片的同步/异步加载，图片压缩，内存缓存，磁盘缓存，网络拉取</li>
-</ol>
-<h2 id="12-3_ImageLoader_u7684_u4F7F_u7528"><a href="#12-3_ImageLoader_u7684_u4F7F_u7528" class="headerlink" title="12.3 ImageLoader的使用"></a>12.3 ImageLoader的使用</h2><p>避免发生列表item错位的解决方法：给显示图片的imageview添加tag属性，值为要加载的图片的目标url，显示的时候判断一下url是否匹配。<br>优化列表的卡顿现象</p>
-<ol>
-<li>不要在getView中执行耗时操作，不要在getView中直接加载图片，否则肯定会导致卡顿；</li>
-<li>控制异步任务的执行频率：在列表滑动的时候停止加载图片，等列表停下来以后再加载图片；</li>
-<li>使用硬件加速来解决莫名的卡顿问题，给Activity添加配置<code>android:hardwareAccelerated=&quot;true&quot;</code>。</li>
-</ol>
-<h1 id="u7B2C_u5341_u4E09_u7AE0_uFF1A_u7EFC_u5408_u6280_u672F"><a href="#u7B2C_u5341_u4E09_u7AE0_uFF1A_u7EFC_u5408_u6280_u672F" class="headerlink" title="第十三章：综合技术"></a>第十三章：综合技术</h1><h2 id="13-1__u4F7F_u7528CrashHandler_u6765_u83B7_u53D6_u5E94_u7528_u7684Crash_u4FE1_u606F"><a href="#13-1__u4F7F_u7528CrashHandler_u6765_u83B7_u53D6_u5E94_u7528_u7684Crash_u4FE1_u606F" class="headerlink" title="13.1 使用CrashHandler来获取应用的Crash信息"></a>13.1 使用CrashHandler来获取应用的Crash信息</h2><p>应用发生Crash在所难免，但是如何采集crash信息以供后续开发处理这类问题呢？利用Thread类的setDefaultUncaughtExceptionHandler方法！defaultUncaughtHandler是Thread类的静态成员变量，所以如果我们将自定义的UncaughtExceptionHandler设置给Thread的话，那么当前进程内的所有线程都能使用这个UncaughtExceptionHandler来处理异常了。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setDefaultUncaughtExceptionHandler</span><span class="params">(UncaughtExceptionHandler handler)</span> </span>&#123;</span><br><span class="line">    Thread.defaultUncaughtHandler = handler;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里实现了一个简易版本的UncaughtExceptionHandler类的子类<a href="http://ofytl4mzu.bkt.clouddn.com/20160826/CrashHandler.java" target="_blank" rel="external">CrashHandler，点击下载</a>。</p>
-<p>CrashHandler的使用方式就是在Application的onCreate方法中设置一下即可</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在这里为应用设置异常处理程序，然后我们的程序才能捕获未处理的异常</span></span><br><span class="line">CrashHandler crashHandler = CrashHandler.getInstance();</span><br><span class="line">crashHandler.init(<span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="13-2__u4F7F_u7528multidex_u6765_u89E3_u51B3_u65B9_u6CD5_u6570_u8D8A_u754C"><a href="#13-2__u4F7F_u7528multidex_u6765_u89E3_u51B3_u65B9_u6CD5_u6570_u8D8A_u754C" class="headerlink" title="13.2 使用multidex来解决方法数越界"></a>13.2 使用multidex来解决方法数越界</h2><p>在Android中单个dex文件所能够包含的最大方法数是65536，这包含Android Framework、依赖的jar以及应用本身的代码中的所有方法。如果方法数超过了最大值，那么编译会报错<code>DexIndexOverflowException: method ID not in [0, 0xffff]:65536</code>。</p>
-<p>有时方法数没有超过最大值，但是安装在低版本手机上时应用异常终止了，报错：</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">E/<span class="string">dalvikvm :</span> Optimization failed</span><br><span class="line">E<span class="regexp">/installed : dexopt failed on '/</span>data<span class="regexp">/dalvik-cache/</span>data<span class="annotation">@app</span><span class="annotation">@com</span>.ryg.multidextest-<span class="number">2.</span>apk<span class="annotation">@classes</span>.dex<span class="string">' res=65280</span></span><br></pre></td></tr></table></figure>
-<p>这是因为应用在安装的时候，系统会通过dexopt程序来优化dex文件，在优化的过程中dexopt采用一个固定大小的缓冲区来存储应用中所有方法的信息，这个缓冲区就是LinearAlloc。LinearAlloc缓冲区在新版本的Android系统中大小是8MB或者16MB，但是在Android 2.2和2.3中却只有5MB，当待安装的应用的方法数比较多的时候，尽管它还没有达到最大方法数，但是它的存储空间仍然有可能超过5MB，这种情况下dexopt就会报错导致安装失败。</p>
-<p>如何解决方法数越界的问题呢？ Google在2014年提出了简单方便的multidex的解决方案。<br>在Android 5.0之前使用multidex需要引入android-support-multidex.jar包，从Android 5.0开始，系统默认支持了multidex，它可以从apk中加载多个dex。这里Multidex方案主要针对AndroidStudio和Gradle编译环境。</p>
-<p>使用Multidex的步骤：</p>
-<ol>
-<li><p>在build.gradle文件中添加multiDexEnabled true</p>
-<pre><code>android {
-    ...
-
-    defaultConfig {
-        ...
-
-        multiDexEnabled true // [添加的配置] enable multidex support
-    }
-    ...
-}
-</code></pre></li>
-<li><p>添加对multidex的依赖</p>
-<pre><code>compile &apos;com.android.support:multidex:1.0.0&apos;
-</code></pre></li>
-<li><p>在代码中添加对multidex的支持，这里有三种方案：</p>
-<p> ① 在AndroidManifest文件中指定Application为MultiDexApplication；</p>
-<pre><code>&lt;application android:name=&quot;android.support.multidex.MultiDexApplication&quot;
-...
-&lt;/application&gt;
-</code></pre><p> ② 让应用的Application继承自MultiDexApplication；</p>
-<p> ③ 重写Application的attachBaseContext方法，这个方法要先于onCreate方法执行；</p>
-<pre><code>public class TestApplication extends Application {
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
-}
-</code></pre></li>
-</ol>
-<p>采用上面的配置之后，如果应用的方法数没有越界，那么Gradle并不会生成多个dex文件；如果方法数越界后，Gradle就会在apk中打包2个或者多个dex文件，具体会打包多少个dex文件要看当前项目的代码规模。在有些情况下，可能需要指定主dex文件中所要包含的类，这个可以通过–main-dex-list选项来实现这个功能。</p>
-<p>build.gradle：</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">afterEvaluate &#123;</span><br><span class="line">    <span class="keyword">println</span> <span class="string">"afterEvaluate"</span></span><br><span class="line">    tasks.matching &#123;</span><br><span class="line">        it.name.startsWith(<span class="string">'dex'</span>)</span><br><span class="line">    &#125;.<span class="keyword">each</span> &#123; dx -&gt;</span><br><span class="line">        <span class="keyword">def</span> listFile = <span class="keyword">project</span>.rootDir.absolutePath + <span class="string">'/app/maindexlist.txt'</span></span><br><span class="line">        <span class="keyword">println</span> <span class="string">"root dir:"</span> + <span class="keyword">project</span>.rootDir.absolutePath</span><br><span class="line">        <span class="keyword">println</span> <span class="string">"dex task found: "</span> + dx.name</span><br><span class="line">        <span class="keyword">if</span> (dx.additionalParameters == <span class="keyword">null</span>) &#123;</span><br><span class="line">            dx.additionalParameters = []</span><br><span class="line">        &#125;</span><br><span class="line">        dx.additionalParameters += <span class="string">'--multi-dex'</span></span><br><span class="line">        dx.additionalParameters += <span class="string">'--main-dex-list='</span> + listFile</span><br><span class="line">        dx.additionalParameters += <span class="string">'--minimal-main-dex'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>maindexlist.txt：</p>
-<pre><code>com/ryg/multidextest/TestApplication.class
-com/ryg/multidextest/MainActivity.class
-
-// multidex
-android/support/multidex/MultiDex.class
-android/support/multidex/MultiDexApplication.class
-android/support/multidex/MultiDexExtractor.class
-android/support/multidex/MultiDexExtractor$1.class
-android/support/multidex/MultiDex$V4.class
-android/support/multidex/MultiDex$V14.class
-android/support/multidex/MultiDex$V19.class
-android/support/multidex/ZipUtil.class
-android/support/multidex/ZipUtil$CentralDirectory.class
-</code></pre><p>–multi-dex表明当方法数越界时生成多个dex文件，–main-dex-list指定了要在主dex中打包的类的列表，–minimal-main-dex表明只有–main-dex-list所指定的类才能打包到主dex中。multidex的jar包中的9个类必须要打包到主dex中，其次不能在Application中成员以及代码块中访问其他dex中的类，否个程序会因为无法加载对应的类而中止执行。</p>
-<p>Multidex方案可能带来的问题：</p>
-<ol>
-<li>应用启动速度会降低，因为应用启动的时候会加载额外的dex文件，甚至可能出现ANR现象。所以要避免生成较大的dex文件；</li>
-<li>需要做大量的兼容性测试，因为Dalvik LinearAlloc的bug，可能导致使用multidex的应用无法在Android 4.0以前的手机上运行。同时由于Dalvik linearAlloc的bug，有可能会出现应用在运行中由于采用了multidex方案从而产生大量的内存消耗的情况，这会导致奔溃。</li>
-</ol>
-<p>在实际项目中，1.中的现象是客观存在的，但是2.中的现象目前极少遇到。</p>
-<h2 id="13-3_Android_u7684_u52A8_u6001_u52A0_u8F7D_u6280_u672F"><a href="#13-3_Android_u7684_u52A8_u6001_u52A0_u8F7D_u6280_u672F" class="headerlink" title="13.3 Android的动态加载技术"></a>13.3 Android的动态加载技术</h2><p>动态加载技术又称插件化技术，将应用插件化可以减轻应用的内存和CPU占用，还可以在不发布新版本的情况下更新某些模块。不同的插件化方案各有特色，但是都需要解决三个基础性问题：资源访问，Activity生命周期管理和插件ClassLoader的管理。</p>
-<p>宿主和插件：宿主是指普通的apk，插件是经过处理的dex或者apk。在主流的插件化框架中多采用特殊处理的apk作为插件，处理方式往往和编译以及打包环节有关，另外很多插件化框架都需要用到代理Activity的概念，插件Activity的启动大多数是借助一个代理Activity来实现的。</p>
-<p>三个基础性问题的解决方案：</p>
-<ol>
-<li>资源访问：宿主程序调起未安装的插件apk，插件中凡是R开头的资源都不能访问了，因为宿主程序中并没有插件的资源，通过R来访问插件的资源是行不通的。<br>Activity的资源访问是通过ContextImpl来完成的，它有两个方法getAssets()和getResources()方法是用来加载资源的。<br>具体实现方式是通过反射，调用AssetManager的addAssetPath方法添加插件的路径，然后将插件apk中的资源加载到Resources对象中即可。</li>
-<li>Activity生命周期管理：有两种常见的方式，反射方式和接口方式。反射方式就是通过反射去获取Activity的各个生命周期方法，然后在代理Activity中去调用插件Activity对应的生命周期方法即可。<br>反射方式代码繁琐，性能开销大。接口方式将Activity的生命周期方法提取出来作为一个接口，然后通过代理Activity去调用插件Activity的生命周期方法，这样就完成了插件Activity的生命周期管理。</li>
-<li>插件ClassLoader的管理：为了更好地对多插件进行支持，需要合理地去管理各个插件的DexClassLoader，这样同一个插件就可以采用同一个ClassLoader去加载类，从而避免了多个ClassLoader加载同一个类时所引起的类型转换错误。</li>
-</ol>
-<p>其他详细信息看作者插件化框架 <a href="https://github.com/singwhatiwanna/dynamic-load-apk" target="_blank" rel="external">singwhatiwanna/dynamic-load-apk</a></p>
-<h2 id="13-4__u53CD_u7F16_u8BD1_u521D_u6B65"><a href="#13-4__u53CD_u7F16_u8BD1_u521D_u6B65" class="headerlink" title="13.4 反编译初步"></a>13.4 反编译初步</h2><p>反编译可查看<a href="/2016/04/03/Android%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6%E4%B9%8B%E5%8F%8D%E7%BC%96%E8%AF%91/">Android安全机制之反编译</a></p>
-<p>二次打包：</p>
-<pre><code>apktool.bat b [解包后文件所在的位置] [二次打包之后的文件名]
-</code></pre><p>签名：</p>
-<pre><code>java -jar signapk.jar testkey.x509.pem testkey.pk8 [未签名apk] [已签名apk]
-</code></pre><h1 id="u7B2C_u5341_u4E94_u7AE0_Android_u6027_u80FD_u4F18_u5316"><a href="#u7B2C_u5341_u4E94_u7AE0_Android_u6027_u80FD_u4F18_u5316" class="headerlink" title="第十五章 Android性能优化"></a>第十五章 Android性能优化</h1><p>2015年Google关于Android性能优化典范的专题视频：</p>
-<p><a href="https://www.youtube.com/playlist?list=PLWz5rJ2EKKc9CBxr3BVjPTPoDPLdPIFCE" target="_blank" rel="external">Youtube视频地址</a></p>
-<h2 id="15-1_Android_u7684_u6027_u80FD_u4F18_u5316_u65B9_u6CD5"><a href="#15-1_Android_u7684_u6027_u80FD_u4F18_u5316_u65B9_u6CD5" class="headerlink" title="15.1 Android的性能优化方法"></a>15.1 Android的性能优化方法</h2><ol>
-<li><p>布局优化</p>
-<p> (1).删除布局中无用的组件和层级，有选择地使用性能较低的ViewGroup；</p>
-<p> (2).使用<include>、<merge>、<viewstub>等标签：<include>标签主要用于布局重用，<merge>标签一般和<include>配合使用，它可以减少布局中的层级；<viewstub>标签则提供了按需加载的功能，当需要的时候才会将ViewStub中的布局加载到内存，提供了程序的初始化效率。</viewstub></include></merge></include></viewstub></merge></include></p>
-<p> (3).<include>标签只支持android:layout_开头的属性，android:id属性例外。</include></p>
-<p> (4).ViewStub继承自View，它非常轻量级且宽高都为0，它本身不参与任何的布局和绘制过程。实际开发中，很多布局文件在正常情况下不会显示，例如网络异常时的界面，这个时候就没有必要在整个界面初始化的时候加载进行，通过ViewStub可以做到在需要的时候再加载。<br> 如下面示例，android:id是ViewStub的id，而android:inflatedId是布局的根元素的id。</p>
-<pre><code>&lt;ViewStub android:id=&quot;@+id/xxx&quot;
-  android:inflatedId=&quot;@+id/yyy&quot;
-  android:layout=&quot;@layout/zzz&quot;
-  ...
-&lt;/ViewStub&gt;
-</code></pre></li>
-<li><p>绘制优化</p>
-<p> (1).在onDraw中不要创建新的布局对象，因为onDraw会被频繁调用；<br> (2).onDraw方法中不要指定耗时任务，也不能执行成千上万次的循环操作。</p>
-</li>
-<li><p>内存泄露优化</p>
-<p> 可能导致内存泄露的场景很多，例如静态变量、单例模式、属性动画、AsyncTask、Handler等等</p>
-</li>
-<li><p>响应速度优化和ANR日志分析</p>
-<p> (1).ANR出现的情况：Activity如果5s内没有响应屏幕触摸事件或者键盘输入事件就会ANR，而BroadcastReceiver如果10s内没有执行完操作也会出现ANR。</p>
-<p> (2).当一个进程发生了ANR之后，系统会在/data/anr目录下创建一个文件traces.txt，通过分析这个文件就能定位ANR的原因。</p>
-</li>
-<li><p>ListView和Bitmap优化</p>
-<p> (1).ListView优化：采用ViewHolder并避免在getView方法中执行耗时操作；根据列表的滑动状态来绘制任务的执行频率；可以尝试开启硬件加速来使ListView的滑动更加流畅。</p>
-<p> (2).Bitmap优化：根据需要对图片进行采样，详情请看第12章 Bitmap的加载和Cache。</p>
-</li>
-<li><p>线程优化</p>
-<p> 采用线程池，详情请看第11章 Android的线程和线程池。</p>
-</li>
-<li><p>一些性能优化建议</p>
-<p> (1).不要过多使用枚举，枚举占用的内存空间要比整型大；</p>
-<p> (2).常量请使用static final来修饰；</p>
-<p> (3).使用一些Android特有的数据结构，比如SparseArray和Pair等，他们都具有更好的性能；</p>
-<p> (4).适当使用软引用和弱引用；</p>
-<p> (5).采用内存缓存和磁盘缓存；</p>
-<p> (6).尽量采用静态内部类，这样可以避免潜在的由于内部类而导致的内存泄露。</p>
-</li>
-</ol>
-<h2 id="15-2__u5185_u5B58_u6CC4_u9732_u5206_u6790_u4E4BMAT_u5DE5_u5177"><a href="#15-2__u5185_u5B58_u6CC4_u9732_u5206_u6790_u4E4BMAT_u5DE5_u5177" class="headerlink" title="15.2 内存泄露分析之MAT工具"></a>15.2 内存泄露分析之MAT工具</h2><p>MAT是功能强大的内存分析工具，主要有Histograms和Dominator Tree等功能。</p>
-<p>详细的可以查看 <a href="http://gold.xitu.io/entry/563b341e60b20bd506b55592" target="_blank" rel="external">内存泄露从入门到精通三部曲</a>。</p>
-<h2 id="15-3__u63D0_u9AD8_u7A0B_u5E8F_u7684_u53EF_u7EF4_u62A4_u6027"><a href="#15-3__u63D0_u9AD8_u7A0B_u5E8F_u7684_u53EF_u7EF4_u62A4_u6027" class="headerlink" title="15.3 提高程序的可维护性"></a>15.3 提高程序的可维护性</h2><ol>
-<li>命名规范。比如私有成员变量以m开头，静态成员变量以s开头，常量全部以大写字母表示；</li>
-<li>代码的排版上需要留出合理的空白来区分不同的代码块；</li>
-<li>仅为非常关键的代码添加注释，其他地方不用注释。</li>
-</ol>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="u7B2C_u516B_u7AE0_uFF1A_u7406_u89E3Window_u548CWindowManager"><a href="#u7B2C_u516B_u7AE0_uFF1A_u7406_u89E3Window_u548CWindowManager]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="《Android艺术开发探索》" scheme="http://yuqirong.me/tags/%E3%80%8AAndroid%E8%89%BA%E6%9C%AF%E5%BC%80%E5%8F%91%E6%8E%A2%E7%B4%A2%E3%80%8B/"/>
-    
-      <category term="Book Note" scheme="http://yuqirong.me/categories/Book-Note/"/>
     
   </entry>
   
