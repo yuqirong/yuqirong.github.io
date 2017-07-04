@@ -1,0 +1,1017 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,自定义View," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qirong Yu's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本项目的 GitHub 地址：https://github.com/yuqirong/FlexibleSearchBar
+关于搜索栏，可以说各种 app 都有不同的样式。影响比较深刻的就有华为应用市场的搜索栏（同样，简书的搜索栏也是类似的）。
+而今天，就是带你来实现华为应用市场那样的搜索栏。
+我们先放上我们实现的效果图吧：
+
+怎么样，想不想学？
+我们先来简述一下实现的思路吧，其实并不复杂。
+首先，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="可以伸缩的搜索栏，模仿华为应用市场">
+<meta property="og:url" content="http://yuqirong.me/2017/07/03/可以伸缩的搜索栏，模仿华为应用市场/index.html">
+<meta property="og:site_name" content="Qirong Yu's Blog">
+<meta property="og:description" content="本项目的 GitHub 地址：https://github.com/yuqirong/FlexibleSearchBar
+关于搜索栏，可以说各种 app 都有不同的样式。影响比较深刻的就有华为应用市场的搜索栏（同样，简书的搜索栏也是类似的）。
+而今天，就是带你来实现华为应用市场那样的搜索栏。
+我们先放上我们实现的效果图吧：
+
+怎么样，想不想学？
+我们先来简述一下实现的思路吧，其实并不复杂。
+首先，">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20170703/20170703150542.gif">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20170703/20170704204905.png">
+<meta property="og:updated_time" content="2017-07-04T14:55:44.586Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="可以伸缩的搜索栏，模仿华为应用市场">
+<meta name="twitter:description" content="本项目的 GitHub 地址：https://github.com/yuqirong/FlexibleSearchBar
+关于搜索栏，可以说各种 app 都有不同的样式。影响比较深刻的就有华为应用市场的搜索栏（同样，简书的搜索栏也是类似的）。
+而今天，就是带你来实现华为应用市场那样的搜索栏。
+我们先放上我们实现的效果图吧：
+
+怎么样，想不想学？
+我们先来简述一下实现的思路吧，其实并不复杂。
+首先，">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yuqirong.me/2017/07/03/可以伸缩的搜索栏，模仿华为应用市场/"/>
+
+
+
+
+
+  <title> 可以伸缩的搜索栏，模仿华为应用市场 | Qirong Yu's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=62363449";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1257390016&web_id=1257390016" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Qirong Yu's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comment"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2017/07/03/可以伸缩的搜索栏，模仿华为应用市场/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="俞其荣">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Qirong Yu's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                可以伸缩的搜索栏，模仿华为应用市场
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-03T21:42:56+08:00">
+                2017-07-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2017/07/03/可以伸缩的搜索栏，模仿华为应用市场/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本项目的 GitHub 地址：<a href="https://github.com/yuqirong/FlexibleSearchBar" target="_blank" rel="external">https://github.com/yuqirong/FlexibleSearchBar</a></p>
+<p>关于搜索栏，可以说各种 app 都有不同的样式。影响比较深刻的就有华为应用市场的搜索栏（同样，简书的搜索栏也是类似的）。</p>
+<p>而今天，就是带你来实现华为应用市场那样的搜索栏。</p>
+<p>我们先放上我们实现的效果图吧：</p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20170703/20170703150542.gif" alt="demo效果图"></p>
+<p>怎么样，想不想学？</p>
+<p>我们先来简述一下实现的思路吧，其实并不复杂。</p>
+<p>首先，在搜索栏还未打开时，先确定半径 R ，然后假设一个变量 offset 用来动态改变搜索栏的宽度。如图所示：</p>
+<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20170703/20170704204905.png" alt="示意图"></p>
+<p>所以可以得到一个公式：offset = total width - 2 * R ;</p>
+<p>那么显而易见，offset 的取值就在 [0, total width - 2 * R] 之间了。</p>
+<p>所以，我们可以借助属性动画来完成这数值的变化。在调用 <code>invalidate()</code> 进行重绘，达到动态增加搜索栏宽度的效果。反之，关闭搜索栏也是同理的。</p>
+<p>那么下面就用代码来实现它咯！</p>
+<h2 id="attrs"><a href="#attrs" class="headerlink" title="attrs"></a>attrs</h2><p>关于自定义的属性，我们可以想到的有搜索栏的背景颜色、搜索栏的位置（左或右）、搜索栏的状态（打开或关闭）等。具体的可以查看下面的 attrs.xml 。根据英文应该能知道对应属性的作用了。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">declare-styleable</span> <span class="attribute">name</span>=<span class="value">"SearchBarView"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"search_bar_color"</span> <span class="attribute">format</span>=<span class="value">"color|reference"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"search_bar_position"</span> <span class="attribute">format</span>=<span class="value">"enum"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">enum</span> <span class="attribute">name</span>=<span class="value">"position_left"</span> <span class="attribute">value</span>=<span class="value">"4"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">enum</span> <span class="attribute">name</span>=<span class="value">"position_right"</span> <span class="attribute">value</span>=<span class="value">"1"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"search_bar_status"</span> <span class="attribute">format</span>=<span class="value">"enum"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">enum</span> <span class="attribute">name</span>=<span class="value">"status_close"</span> <span class="attribute">value</span>=<span class="value">"4"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">enum</span> <span class="attribute">name</span>=<span class="value">"status_open"</span> <span class="attribute">value</span>=<span class="value">"1"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"search_bar_duration"</span> <span class="attribute">format</span>=<span class="value">"integer"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"search_bar_hint_text"</span> <span class="attribute">format</span>=<span class="value">"string|reference"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"search_bar_icon"</span> <span class="attribute">format</span>=<span class="value">"reference"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"search_bar_hint_text_color"</span> <span class="attribute">format</span>=<span class="value">"color|reference"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"search_bar_hint_text_size"</span> <span class="attribute">format</span>=<span class="value">"dimension|reference"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">declare-styleable</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="constructor-NaN"><a href="#constructor-NaN" class="headerlink" title="constructor"></a>constructor</h2><p>而在构造器中，肯定就是初始化一些 attrs 中的全局变量了，这也不是重点，都是机械式的代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">SearchBarView</span><span class="params">(Context context, @Nullable AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">    TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.SearchBarView);</span><br><span class="line">    searchBarColor = array.getColor(R.styleable.SearchBarView_search_bar_color, DEFAULT_SEARCH_BAR_COLOR);</span><br><span class="line">    mPosition = array.getInteger(R.styleable.SearchBarView_search_bar_position, DEFAULT_RIGHT_POSITION);</span><br><span class="line">    mStatus = array.getInteger(R.styleable.SearchBarView_search_bar_status, STATUS_CLOSE);</span><br><span class="line">    <span class="keyword">int</span> mDuration = array.getInteger(R.styleable.SearchBarView_search_bar_duration, DEFAULT_ANIMATION_DURATION);</span><br><span class="line">    <span class="keyword">int</span> searchBarIcon = array.getResourceId(R.styleable.SearchBarView_search_bar_icon, android.R.drawable.ic_search_category_default);</span><br><span class="line">    mSearchText = array.getText(R.styleable.SearchBarView_search_bar_hint_text);</span><br><span class="line">    searchTextColor = array.getColor(R.styleable.SearchBarView_search_bar_hint_text_color, DEFAULT_SEARCH_TEXT_COLOR);</span><br><span class="line">    <span class="keyword">float</span> defaultTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, DEFAULT_HINT_TEXT_SIZE, getResources().getDisplayMetrics());</span><br><span class="line">    <span class="keyword">float</span> searchTextSize = array.getDimension(R.styleable.SearchBarView_search_bar_hint_text_size, defaultTextSize);</span><br><span class="line">    defaultHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_HEIGHT, getResources().getDisplayMetrics());</span><br><span class="line">    array.recycle();</span><br><span class="line">    mPaint = <span class="keyword">new</span> Paint(Paint.ANTI_ALIAS_FLAG);</span><br><span class="line">    mPaint.setColor(searchBarColor);</span><br><span class="line">    mPaint.setTextSize(searchTextSize);</span><br><span class="line">    mRectF = <span class="keyword">new</span> RectF();</span><br><span class="line">    mDstRectF = <span class="keyword">new</span> RectF();</span><br><span class="line">    bitmap = BitmapFactory.decodeResource(getResources(), searchBarIcon);</span><br><span class="line">    initAnimator(mDuration);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="initAnimator"><a href="#initAnimator" class="headerlink" title="initAnimator"></a>initAnimator</h2><p><code>initAnimator</code> 方法中是两个属性动画，打开和关闭动画。非常 easy 的代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initAnimator</span><span class="params">(<span class="keyword">long</span> duration)</span> </span>&#123;</span><br><span class="line">    AccelerateInterpolator accelerateInterpolator = <span class="keyword">new</span> AccelerateInterpolator();</span><br><span class="line">    ValueAnimator.AnimatorUpdateListener animatorUpdateListener = <span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;</span><br><span class="line">            mOffsetX = (<span class="keyword">int</span>) animation.getAnimatedValue();</span><br><span class="line">            invalidate();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// init open animator</span></span><br><span class="line">    openAnimator = <span class="keyword">new</span> ValueAnimator();</span><br><span class="line">    openAnimator.setInterpolator(accelerateInterpolator);</span><br><span class="line">    openAnimator.setDuration(duration);</span><br><span class="line">    openAnimator.addUpdateListener(animatorUpdateListener);</span><br><span class="line">    openAnimator.addListener(<span class="keyword">new</span> AnimatorListenerAdapter() &#123;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationStart</span><span class="params">(Animator animation)</span> </span>&#123;</span><br><span class="line">            mStatus = STATUS_PROCESS;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationEnd</span><span class="params">(Animator animation)</span> </span>&#123;</span><br><span class="line">            mStatus = STATUS_OPEN;</span><br><span class="line">            invalidate();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">// init close animator</span></span><br><span class="line">    closeAnimator = <span class="keyword">new</span> ValueAnimator();</span><br><span class="line">    openAnimator.setInterpolator(accelerateInterpolator);</span><br><span class="line">    closeAnimator.setDuration(duration);</span><br><span class="line">    closeAnimator.addUpdateListener(animatorUpdateListener);</span><br><span class="line">    closeAnimator.addListener(<span class="keyword">new</span> AnimatorListenerAdapter() &#123;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationStart</span><span class="params">(Animator animation)</span> </span>&#123;</span><br><span class="line">            mStatus = STATUS_PROCESS;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationEnd</span><span class="params">(Animator animation)</span> </span>&#123;</span><br><span class="line">            mStatus = STATUS_CLOSE;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="onMeasure"><a href="#onMeasure" class="headerlink" title="onMeasure"></a>onMeasure</h2><p>同样，<code>onMeasure</code> 中的代码也是很机械的，基本上都是同一个套路了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> widthMode = MeasureSpec.getMode(widthMeasureSpec);</span><br><span class="line">    <span class="keyword">int</span> widthSize = MeasureSpec.getSize(widthMeasureSpec);</span><br><span class="line">    <span class="keyword">int</span> heightMode = MeasureSpec.getMode(heightMeasureSpec);</span><br><span class="line">    <span class="keyword">int</span> heightSize = MeasureSpec.getSize(heightMeasureSpec);</span><br><span class="line">    <span class="keyword">if</span> (widthMode == MeasureSpec.EXACTLY) &#123;</span><br><span class="line">        mWidth = widthSize;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mWidth = widthSize;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (heightMode == MeasureSpec.EXACTLY) &#123;</span><br><span class="line">        mHeight = heightSize;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mHeight = (<span class="keyword">int</span>) defaultHeight;</span><br><span class="line">        <span class="keyword">if</span> (heightMode == MeasureSpec.AT_MOST) &#123;</span><br><span class="line">            mHeight = Math.min(heightSize, mHeight);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 搜索栏小圆圈的半径</span></span><br><span class="line">    mRadius = Math.min(mWidth, mHeight) / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span> (mStatus == STATUS_OPEN) &#123;</span><br><span class="line">        mOffsetX = mWidth - mRadius * <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    setMeasuredDimension(mWidth, mHeight);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="onDraw"><a href="#onDraw" class="headerlink" title="onDraw"></a>onDraw</h2><p>在 <code>onDraw</code> 中先画了搜索栏的背景，然后是搜索栏的图标，最后是搜索栏的提示文字。</p>
+<p>画背景的时候，是需要根据搜索栏在左边还是右边的位置来确定值的。</p>
+<p>而画图标的时候，是根据搜索栏关闭时那个圆的内切正方形作为 Rect 的。</p>
+<p>最后画提示文字没什么好讲的了，都是定死的代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// draw search bar</span></span><br><span class="line">    mPaint.setColor(searchBarColor);</span><br><span class="line">    <span class="keyword">int</span> left = mPosition == DEFAULT_RIGHT_POSITION ? mWidth - <span class="number">2</span> * mRadius - mOffsetX : <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> right = mPosition == DEFAULT_RIGHT_POSITION ? mWidth : <span class="number">2</span> * mRadius + mOffsetX;</span><br><span class="line">    <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.LOLLIPOP) &#123;</span><br><span class="line">        canvas.drawRoundRect(left, <span class="number">0</span>, right, mHeight, mRadius, mRadius, mPaint);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mRectF.set(left, <span class="number">0</span>, right, mHeight);</span><br><span class="line">        canvas.drawRoundRect(mRectF, mRadius, mRadius, mPaint);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// draw search bar icon</span></span><br><span class="line">    mDstRectF.set(left + (<span class="keyword">int</span>) ((<span class="number">1</span> - Math.sqrt(<span class="number">2</span>) / <span class="number">2</span>) * mRadius), (<span class="keyword">int</span>) ((<span class="number">1</span> - Math.sqrt(<span class="number">2</span>) / <span class="number">2</span>) * mRadius),</span><br><span class="line">            left + (<span class="keyword">int</span>) ((<span class="number">1</span> + Math.sqrt(<span class="number">2</span>) / <span class="number">2</span>) * mRadius), (<span class="keyword">int</span>) ((<span class="number">1</span> + Math.sqrt(<span class="number">2</span>) / <span class="number">2</span>) * mRadius));</span><br><span class="line">    canvas.drawBitmap(bitmap, <span class="keyword">null</span>, mDstRectF, mPaint);</span><br><span class="line">    <span class="comment">// draw search bar text</span></span><br><span class="line">    <span class="keyword">if</span> (mStatus == STATUS_OPEN &amp;&amp; !TextUtils.isEmpty(mSearchText)) &#123;</span><br><span class="line">        mPaint.setColor(searchTextColor);</span><br><span class="line">        Paint.FontMetrics fm = mPaint.getFontMetrics();</span><br><span class="line">        <span class="keyword">double</span> textHeight = Math.ceil(fm.descent - fm.ascent);</span><br><span class="line">        canvas.drawText(mSearchText.toString(), <span class="number">2</span> * mRadius, (<span class="keyword">float</span>) (mRadius + textHeight / <span class="number">2</span> - fm.descent), mPaint);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="startOpen_u3001startClose"><a href="#startOpen_u3001startClose" class="headerlink" title="startOpen、startClose"></a>startOpen、startClose</h2><p>最后，需要将 <code>startOpen</code> 和 <code>startClose</code> 方法暴露给外部，方便调用。在其内部就是调用两个属性动画而已。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 判断搜索栏是否为打开状态</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@return</span></span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isOpen</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mStatus == STATUS_OPEN;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 判断搜索栏是否为关闭状态</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@return</span></span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isClose</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mStatus == STATUS_CLOSE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 打开搜索栏</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startOpen</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isOpen()) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (openAnimator.isStarted()) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (closeAnimator.isStarted()) &#123;</span><br><span class="line">        closeAnimator.cancel();</span><br><span class="line">    &#125;</span><br><span class="line">    openAnimator.setIntValues(mOffsetX, mWidth - mRadius * <span class="number">2</span>);</span><br><span class="line">    openAnimator.start();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 关闭搜索栏</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startClose</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isClose()) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (closeAnimator.isStarted()) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (openAnimator.isStarted()) &#123;</span><br><span class="line">        openAnimator.cancel();</span><br><span class="line">    &#125;</span><br><span class="line">    closeAnimator.setIntValues(mOffsetX, <span class="number">0</span>);</span><br><span class="line">    closeAnimator.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="End"><a href="#End" class="headerlink" title="End"></a>End</h2><p>到这也差不多了，该讲的都讲了，这篇写得真 TMD 简洁。至于和 <code>AppBarLayout</code> 的混合使用，见 GitHub 中的代码即可。</p>
+<p>有问题的可以在下面留言。没问题的老铁可以来一波 star 。</p>
+<p>FlexibleSearchBar：<a href="https://github.com/yuqirong/FlexibleSearchBar" target="_blank" rel="external">https://github.com/yuqirong/FlexibleSearchBar</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号来获取我的动态！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      俞其荣
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://yuqirong.me/2017/07/03/可以伸缩的搜索栏，模仿华为应用市场/" title="可以伸缩的搜索栏，模仿华为应用市场">http://yuqirong.me/2017/07/03/可以伸缩的搜索栏，模仿华为应用市场/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/自定义View/" rel="tag"># 自定义View</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/25/一起来写OKHttp的拦截器/" rel="next" title="一起来写OKHttp的拦截器">
+                <i class="fa fa-chevron-left"></i> 一起来写OKHttp的拦截器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+               alt="俞其荣" />
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank" title="Google+">
+                  
+                    <i class="fa fa-fw fa-google-plus"></i>
+                  
+                  Google+
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/1291f6690ea0" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/yyyuqirong" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yqr271228943@gmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#attrs"><span class="nav-number">1.</span> <span class="nav-text">attrs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constructor-NaN"><span class="nav-number">2.</span> <span class="nav-text">constructor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#initAnimator"><span class="nav-number">3.</span> <span class="nav-text">initAnimator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#onMeasure"><span class="nav-number">4.</span> <span class="nav-text">onMeasure</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#onDraw"><span class="nav-number">5.</span> <span class="nav-text">onDraw</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#startOpen_u3001startClose"><span class="nav-number">6.</span> <span class="nav-text">startOpen、startClose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#End"><span class="nav-number">7.</span> <span class="nav-text">End</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+<p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "954eb3f75a2f4b819bcab06e3e42b912",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+</body>
+</html>
