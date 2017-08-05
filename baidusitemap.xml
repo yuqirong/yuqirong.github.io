@@ -3,9 +3,34 @@
 
 
     
+    
+  <url>
+    <loc>http://yuqirong.me/2017/08/03/Retrofit%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2017-08-05T11:47:36.359Z</lastmod>
+    <data>
+        <display>
+        <title>Retrofit源码解析</title>
+        <pubTime>2017-08-03T15:19:17.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
     <loc>http://yuqirong.me/2017/07/25/OkHttp%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2017-07-25T13:18:07.992Z</lastmod>
+    <lastmod>2017-08-03T15:13:44.879Z</lastmod>
     <data>
         <display>
         <title>OkHttp源码解析</title>
@@ -114,7 +139,6 @@
     </data>
     </url>
 
-    
     
     
     

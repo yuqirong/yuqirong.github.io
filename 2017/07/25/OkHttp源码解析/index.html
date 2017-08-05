@@ -104,7 +104,7 @@ OkHttp in GitHub：https://github.com/square/okhttp
 然而，简单地会使用 OkHttp 并不能让我们得到满足。更深层次的，我们需要阅读框架的源码，才能用起来得心应手，融会贯通。
 An HTTP &amp;amp">
 <meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20170725/20170722185657.png">
-<meta property="og:updated_time" content="2017-07-25T13:18:07.992Z">
+<meta property="og:updated_time" content="2017-08-03T15:13:44.879Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp源码解析">
 <meta name="twitter:description" content="Header注：本文 OkHttp 源码解析基于 v3.8.1 。
@@ -391,15 +391,17 @@ An HTTP &amp;amp">
 
           
             
+            <!--noindex-->
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a class="cloud-tie-join-count" href="/2017/07/25/OkHttp源码解析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                <a href="/2017/07/25/OkHttp源码解析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/07/25/OkHttp源码解析/" itemprop="commentsCount"></span>
                 </a>
               </span>
+              <!--/noindex-->
             
           
 
@@ -506,7 +508,7 @@ An HTTP &amp;amp">
 <p>在 <code>finished(Deque&lt;T&gt; calls, T call, boolean promoteCalls)</code> 中对该 call 移除。</p>
 <p>若在 <code>readyAsyncCalls</code> 中其他的 call ，就移动到 <code>runningAsyncCalls</code> 中并加入线程池中。</p>
 <p>这样，完整的流程就循环起来了。</p>
-<h1 id="End"><a href="#End" class="headerlink" title="End"></a>End</h1><p>基本上 OkHttp 的请求响应的流程就讲完了，篇幅有点长长长啊。</p>
+<h1 id="Footer"><a href="#Footer" class="headerlink" title="Footer"></a>Footer</h1><p>基本上 OkHttp 的请求响应的流程就讲完了，篇幅有点长长长啊。</p>
 <p>不过还有很多点没有涉及到的，比如连接池、缓存策略等等，都是值得我们去深究的。也是需要花很大的功夫才能了解透彻。</p>
 <p>好了，那就到这里吧，有问题的同学可以留言。</p>
 <p>Goodbye !</p>
@@ -612,6 +614,10 @@ An HTTP &amp;amp">
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/08/03/Retrofit源码解析/" rel="prev" title="Retrofit源码解析">
+                Retrofit源码解析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -674,7 +680,7 @@ An HTTP &amp;amp">
           
   <div class="comments" id="comments">
     
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+      <div id="hypercomments_widget"></div>
     
   </div>
 
@@ -722,7 +728,7 @@ An HTTP &amp;amp">
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-count">69</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -744,7 +750,7 @@ An HTTP &amp;amp">
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -875,7 +881,7 @@ An HTTP &amp;amp">
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Header"><span class="nav-number">1.</span> <span class="nav-text">Header</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OkHttp_u7684_u7B80_u5355_u4F7F_u7528_u65B9_u6CD5"><span class="nav-number">2.</span> <span class="nav-text">OkHttp的简单使用方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u6DF1_u5165_u6E90_u7801"><span class="nav-number">3.</span> <span class="nav-text">深入源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u540C_u6B65_u8BF7_u6C42"><span class="nav-number">4.</span> <span class="nav-text">同步请求</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#OkHttpClient"><span class="nav-number">4.1.</span> <span class="nav-text">OkHttpClient</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RealCall"><span class="nav-number">4.2.</span> <span class="nav-text">RealCall</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RealInterceptorChain"><span class="nav-number">4.3.</span> <span class="nav-text">RealInterceptorChain</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RetryAndFollowUpInterceptor"><span class="nav-number">4.4.</span> <span class="nav-text">RetryAndFollowUpInterceptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BridgeInterceptor"><span class="nav-number">4.5.</span> <span class="nav-text">BridgeInterceptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CacheInterceptor"><span class="nav-number">4.6.</span> <span class="nav-text">CacheInterceptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ConnectInterceptor"><span class="nav-number">4.7.</span> <span class="nav-text">ConnectInterceptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CallServerInterceptor"><span class="nav-number">4.8.</span> <span class="nav-text">CallServerInterceptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5C0F_u7ED3"><span class="nav-number">4.9.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u5F02_u6B65_u8BF7_u6C42"><span class="nav-number">5.</span> <span class="nav-text">异步请求</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RealCall-1"><span class="nav-number">5.1.</span> <span class="nav-text">RealCall</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dispatcher"><span class="nav-number">5.2.</span> <span class="nav-text">Dispatcher</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AsyncCall"><span class="nav-number">5.3.</span> <span class="nav-text">AsyncCall</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#End"><span class="nav-number">6.</span> <span class="nav-text">End</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">7.</span> <span class="nav-text">References</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Header"><span class="nav-number">1.</span> <span class="nav-text">Header</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OkHttp_u7684_u7B80_u5355_u4F7F_u7528_u65B9_u6CD5"><span class="nav-number">2.</span> <span class="nav-text">OkHttp的简单使用方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u6DF1_u5165_u6E90_u7801"><span class="nav-number">3.</span> <span class="nav-text">深入源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u540C_u6B65_u8BF7_u6C42"><span class="nav-number">4.</span> <span class="nav-text">同步请求</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#OkHttpClient"><span class="nav-number">4.1.</span> <span class="nav-text">OkHttpClient</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RealCall"><span class="nav-number">4.2.</span> <span class="nav-text">RealCall</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RealInterceptorChain"><span class="nav-number">4.3.</span> <span class="nav-text">RealInterceptorChain</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RetryAndFollowUpInterceptor"><span class="nav-number">4.4.</span> <span class="nav-text">RetryAndFollowUpInterceptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BridgeInterceptor"><span class="nav-number">4.5.</span> <span class="nav-text">BridgeInterceptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CacheInterceptor"><span class="nav-number">4.6.</span> <span class="nav-text">CacheInterceptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ConnectInterceptor"><span class="nav-number">4.7.</span> <span class="nav-text">ConnectInterceptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CallServerInterceptor"><span class="nav-number">4.8.</span> <span class="nav-text">CallServerInterceptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5C0F_u7ED3"><span class="nav-number">4.9.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u5F02_u6B65_u8BF7_u6C42"><span class="nav-number">5.</span> <span class="nav-text">异步请求</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RealCall-1"><span class="nav-number">5.1.</span> <span class="nav-text">RealCall</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dispatcher"><span class="nav-number">5.2.</span> <span class="nav-text">Dispatcher</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AsyncCall"><span class="nav-number">5.3.</span> <span class="nav-text">AsyncCall</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Footer"><span class="nav-number">6.</span> <span class="nav-text">Footer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">7.</span> <span class="nav-text">References</span></a></li></ol></div>
             
 
           </div>
@@ -1011,22 +1017,29 @@ An HTTP &amp;amp">
 
 	
 
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 94126, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 94126, xid: "2017/07/25/OkHttp源码解析/"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/94126/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
 
 
-
-
-  
-    
-    <script>
-      var cloudTieConfig = {
-        url: document.location.href, 
-        sourceId: "",
-        productKey: "954eb3f75a2f4b819bcab06e3e42b912",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
-  
 
 
 

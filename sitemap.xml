@@ -2,8 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yuqirong.me/about/index.html</loc>
+    <lastmod>2017-08-05T11:56:28.701Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2017/08/03/Retrofit%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2017-08-05T11:47:36.359Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://yuqirong.me/2017/07/25/OkHttp%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2017-07-25T13:18:07.992Z</lastmod>
+    <lastmod>2017-08-03T15:13:44.879Z</lastmod>
   </url>
   
   <url>
@@ -24,11 +34,6 @@
   <url>
     <loc>http://yuqirong.me/2017/06/13/Kotlin%E5%85%A5%E5%85%A5%E5%85%A5%E9%97%A8(%E4%BA%8C)/</loc>
     <lastmod>2017-06-14T14:14:52.084Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/about/index.html</loc>
-    <lastmod>2017-05-30T15:14:35.945Z</lastmod>
   </url>
   
   <url>
