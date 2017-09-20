@@ -309,10 +309,10 @@ disqus:
   count: true
 
 # Hypercomments
-#hypercomments_id:
+hypercomments_id: 94126
 
 # Gentie productKey
-gentie_productKey: 954eb3f75a2f4b819bcab06e3e42b912
+#gentie_productKey: 954eb3f75a2f4b819bcab06e3e42b912
 
 # changyan
 changyan:

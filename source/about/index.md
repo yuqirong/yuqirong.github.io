@@ -24,6 +24,7 @@ comments: false
 * Weibo : http://weibo.com/yyyuqirong
 * 知乎 : https://www.zhihu.com/people/yuqirong
 * 掘金 : https://juejin.im/user/57faf0620bd1d00058c53a64
+* 微信 : yuqirong01
 * Email : <yqr271228943@gmail.com>
 
 ## 微信公众号

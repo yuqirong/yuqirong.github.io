@@ -1,6 +1,6 @@
 title: Kotlin入入入门(一)
 date: 2017-06-07 20:10:22
-categories: Android Blog
+categories: Kotlin Blog
 tags: [Android,Kotlin]
 ---
 Android Studio 配置

@@ -247,7 +247,7 @@ post_wordcount:
 # Wechat Subscriber
 wechat_subscriber:
   enabled: true
-  qcode: http://ofyt9w4c2.bkt.clouddn.com/avatar/20170529145032.jpg
+  qcode: http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg
   description: 欢迎订阅我的微信公众号来获取我的动态！
 
 # Declare license on posts
@@ -309,7 +309,7 @@ disqus:
   count: true
 
 # Hypercomments
-#hypercomments_id:
+hypercomments_id: 94126
 
 # Gentie productKey
 gentie_productKey: 954eb3f75a2f4b819bcab06e3e42b912
