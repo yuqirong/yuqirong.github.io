@@ -98,7 +98,7 @@ View绘制的起点WindowManagerGlobaladdView(View view, ViewGroup.LayoutParams 
 <meta property="og:description" content="注：本文分析的源码基于 Android API 25
 View绘制的起点WindowManagerGlobaladdView(View view, ViewGroup.LayoutParams params, Display display, Window parentWindow)在 WindowManagerGlobal 的 addView(View view, ViewGroup.Layou">
 <meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20170918/20170821150637571.png">
-<meta property="og:updated_time" content="2017-09-19T14:11:06.445Z">
+<meta property="og:updated_time" content="2017-09-21T13:38:35.602Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="View的工作原理">
 <meta name="twitter:description" content="注：本文分析的源码基于 Android API 25
@@ -419,6 +419,8 @@ View绘制的起点WindowManagerGlobaladdView(View view, ViewGroup.LayoutParams 
         <p>注：本文分析的源码基于 Android API 25</p>
 <h1 id="View_u7ED8_u5236_u7684_u8D77_u70B9"><a href="#View_u7ED8_u5236_u7684_u8D77_u70B9" class="headerlink" title="View绘制的起点"></a>View绘制的起点</h1><h2 id="WindowManagerGlobal"><a href="#WindowManagerGlobal" class="headerlink" title="WindowManagerGlobal"></a>WindowManagerGlobal</h2><h3 id="addView_28View_view_2C_ViewGroup-LayoutParams_params_2C_Display_display_2C_Window_parentWindow_29"><a href="#addView_28View_view_2C_ViewGroup-LayoutParams_params_2C_Display_display_2C_Window_parentWindow_29" class="headerlink" title="addView(View view, ViewGroup.LayoutParams params, Display display, Window parentWindow)"></a>addView(View view, ViewGroup.LayoutParams params, Display display, Window parentWindow)</h3><p>在 <code>WindowManagerGlobal</code> 的 <code>addView(View view, ViewGroup.LayoutParams params, Display display, Window parentWindow)</code> 方法中，创建了 <code>ViewRootImpl</code> 对象，将 <code>ViewRootImpl</code> 和 <code>DecorView</code> 相关联：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root = <span class="keyword">new</span> ViewRootImpl(view.getContext(), display);</span><br><span class="line">...</span><br><span class="line"><span class="comment">// view 是 PhoneWindow 的 DecorView</span></span><br><span class="line">root.setView(view, wparams, panelParentView);</span><br></pre></td></tr></table></figure>
+<p><code>ViewRootImpl</code> 是用来连接 WindowManager 和 DecorView 的桥梁。通俗地来讲，Window 和 View 就是通过 <code>ViewRootImpl</code> 来建立联系的。</p>
+<p>而 DecorView 是顶级的 View ，从它开始向下传递 measure 、 layout 和 draw 三个流程。</p>
 <p>创建好了 <code>root</code> 之后，调用了 <code>ViewRootImpl</code> 的 <code>setView(View view, WindowManager.LayoutParams attrs, View panelParentView)</code> 方法。</p>
 <p>将 DecorView 和 ViewRootImpl 相关联。</p>
 <h2 id="ViewRootImpl"><a href="#ViewRootImpl" class="headerlink" title="ViewRootImpl"></a>ViewRootImpl</h2><h3 id="setView_28View_view_2C_WindowManager-LayoutParams_attrs_2C_View_panelParentView_29"><a href="#setView_28View_view_2C_WindowManager-LayoutParams_attrs_2C_View_panelParentView_29" class="headerlink" title="setView(View view, WindowManager.LayoutParams attrs, View panelParentView)"></a>setView(View view, WindowManager.LayoutParams attrs, View panelParentView)</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setView</span><span class="params">(View view, WindowManager.LayoutParams attrs, View panelParentView)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">           <span class="keyword">if</span> (mView == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="comment">// 将 decorView 设置给全局的 mView</span></span><br><span class="line">               mView = view;</span><br><span class="line">			...</span><br><span class="line">			<span class="comment">// 标记已经添加了 decorView</span></span><br><span class="line">			mAdded = <span class="keyword">true</span>;</span><br><span class="line">			...</span><br><span class="line">			<span class="comment">// 第一次发起布局，在添加到 WindowManager 之前</span></span><br><span class="line">			<span class="comment">// 确保在接收其他系统事件之前完成重新布局</span></span><br><span class="line">			requestLayout();</span><br><span class="line">			...</span><br><span class="line">			<span class="comment">// 利用 mWindowSession 以跨进程的方式向 WMS 发起一个调用，从而将DecorView 最终添加到 Window 上</span></span><br><span class="line">		  	<span class="keyword">try</span> &#123;</span><br><span class="line">		  	    mOrigWindowType = mWindowAttributes.type;</span><br><span class="line">		  	    mAttachInfo.mRecomputeGlobalAttributes = <span class="keyword">true</span>;</span><br><span class="line">		  	    collectViewAttributes();</span><br><span class="line">		  	    res = mWindowSession.addToDisplay(mWindow, mSeq, mWindowAttributes, getHostVisibility(), mDisplay.getDisplayId(), mAttachInfo.mContentInsets, mAttachInfo.mStableInsets, mAttachInfo.mOutsets, mInputChannel);</span><br><span class="line">               &#125; </span><br><span class="line">			...</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -674,6 +676,10 @@ View绘制的起点WindowManagerGlobaladdView(View view, ViewGroup.LayoutParams 
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/09/28/Window源码解析(一)：与DecorView的那些事/" rel="prev" title="Window源码解析(一)：与DecorView的那些事">
+                Window源码解析(一)：与DecorView的那些事 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -784,7 +790,7 @@ View绘制的起点WindowManagerGlobaladdView(View view, ViewGroup.LayoutParams 
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">70</span>
+                <span class="site-state-item-count">72</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -806,7 +812,7 @@ View绘制的起点WindowManagerGlobaladdView(View view, ViewGroup.LayoutParams 
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
