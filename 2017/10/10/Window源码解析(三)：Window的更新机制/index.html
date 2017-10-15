@@ -1,0 +1,1022 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,Window,源码解析," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qirong Yu's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。
+第一篇：《Window源码解析(一)：与DecorView的那些事》
+第二篇：《Window源码解析(二)：Window的添加机制》
+Header在上一篇中，介绍了 Window 添加机制的实现。
+那么今天就好好探究探究 Window 更新机制。其实 Window 的更新内部流程和添加 Window 并无什么差异">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Window源码解析(三)：Window的更新机制">
+<meta property="og:url" content="http://yuqirong.me/2017/10/10/Window源码解析(三)：Window的更新机制/index.html">
+<meta property="og:site_name" content="Qirong Yu's Blog">
+<meta property="og:description" content="注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。
+第一篇：《Window源码解析(一)：与DecorView的那些事》
+第二篇：《Window源码解析(二)：Window的添加机制》
+Header在上一篇中，介绍了 Window 添加机制的实现。
+那么今天就好好探究探究 Window 更新机制。其实 Window 的更新内部流程和添加 Window 并无什么差异">
+<meta property="og:updated_time" content="2017-10-15T07:48:06.507Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Window源码解析(三)：Window的更新机制">
+<meta name="twitter:description" content="注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。
+第一篇：《Window源码解析(一)：与DecorView的那些事》
+第二篇：《Window源码解析(二)：Window的添加机制》
+Header在上一篇中，介绍了 Window 添加机制的实现。
+那么今天就好好探究探究 Window 更新机制。其实 Window 的更新内部流程和添加 Window 并无什么差异">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yuqirong.me/2017/10/10/Window源码解析(三)：Window的更新机制/"/>
+
+
+
+
+
+  <title> Window源码解析(三)：Window的更新机制 | Qirong Yu's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=62363449";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1257390016&web_id=1257390016" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Qirong Yu's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comment"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2017/10/10/Window源码解析(三)：Window的更新机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="俞其荣">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Qirong Yu's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Window源码解析(三)：Window的更新机制
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-10T20:53:03+08:00">
+                2017-10-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/10/10/Window源码解析(三)：Window的更新机制/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/10/10/Window源码解析(三)：Window的更新机制/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。</p>
+<p>第一篇：<a href="/2017/09/28/Window源码解析(一)：与DecorView的那些事/">《Window源码解析(一)：与DecorView的那些事》</a></p>
+<p>第二篇：<a href="/2017/10/08/Window源码解析(二)：Window的添加机制/">《Window源码解析(二)：Window的添加机制》</a></p>
+<h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>在上一篇中，介绍了 Window 添加机制的实现。</p>
+<p>那么今天就好好探究探究 Window 更新机制。其实 Window 的更新内部流程和添加 Window 并无什么差异，所以本篇可能会讲得比较简略。</p>
+<p>但是还是值得我们去了解的，那么老死机开车了。</p>
+<h1 id="Window_u7684_u66F4_u65B0_u673A_u5236"><a href="#Window_u7684_u66F4_u65B0_u673A_u5236" class="headerlink" title="Window的更新机制"></a>Window的更新机制</h1><p>我们更新 Window 的代码：</p>
+<p><code>WindowManager.updateViewLayout</code></p>
+<h2 id="WindowManagerImpl"><a href="#WindowManagerImpl" class="headerlink" title="WindowManagerImpl"></a>WindowManagerImpl</h2><h3 id="updateViewLayout_28@NonNull_View_view_2C_@NonNull_ViewGroup-LayoutParams_params_29"><a href="#updateViewLayout_28@NonNull_View_view_2C_@NonNull_ViewGroup-LayoutParams_params_29" class="headerlink" title="updateViewLayout(@NonNull View view, @NonNull ViewGroup.LayoutParams params)"></a>updateViewLayout(@NonNull View view, @NonNull ViewGroup.LayoutParams params)</h3><p>所以我们的入口就是 WindowManagerImpl 实现类的，先看代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateViewLayout</span><span class="params">(@NonNull View view, @NonNull ViewGroup.LayoutParams params)</span> </span>&#123;</span><br><span class="line">    applyDefaultToken(params);</span><br><span class="line">    mGlobal.updateViewLayout(view, params);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>果然，内部还是交给了 WindowManagerGlobal 来处理了，而且这代码和 <code>addView</code> 的极其类似。</p>
+<h2 id="WindowManagerGlobal"><a href="#WindowManagerGlobal" class="headerlink" title="WindowManagerGlobal"></a>WindowManagerGlobal</h2><h3 id="updateViewLayout_28View_view_2C_ViewGroup-LayoutParams_params_29"><a href="#updateViewLayout_28View_view_2C_ViewGroup-LayoutParams_params_29" class="headerlink" title="updateViewLayout(View view, ViewGroup.LayoutParams params)"></a>updateViewLayout(View view, ViewGroup.LayoutParams params)</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateViewLayout</span><span class="params">(View view, ViewGroup.LayoutParams params)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (view == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"view must not be null"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!(params <span class="keyword">instanceof</span> WindowManager.LayoutParams)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Params must be WindowManager.LayoutParams"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> WindowManager.LayoutParams wparams = (WindowManager.LayoutParams)params;</span><br><span class="line"></span><br><span class="line">    view.setLayoutParams(wparams);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">        <span class="comment">// 找到该 view 的索引</span></span><br><span class="line">        <span class="keyword">int</span> index = findViewLocked(view, <span class="keyword">true</span>);</span><br><span class="line">        ViewRootImpl root = mRoots.get(index);</span><br><span class="line">        <span class="comment">// 替换 params</span></span><br><span class="line">        mParams.remove(index);</span><br><span class="line">        mParams.add(index, wparams);</span><br><span class="line">        root.setLayoutParams(wparams, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这代码也基本上一看就懂的。因为是更新 Window ，所以肯定是要替换 params 了。</p>
+<p>之后就是调用 <code>ViewRootImpl.setLayoutParams</code> 来设置新的 params 。</p>
+<h2 id="ViewRootImpl"><a href="#ViewRootImpl" class="headerlink" title="ViewRootImpl"></a>ViewRootImpl</h2><h3 id="setLayoutParams_28WindowManager-LayoutParams_attrs_2C_boolean_newView_29"><a href="#setLayoutParams_28WindowManager-LayoutParams_attrs_2C_boolean_newView_29" class="headerlink" title="setLayoutParams(WindowManager.LayoutParams attrs, boolean newView)"></a>setLayoutParams(WindowManager.LayoutParams attrs, boolean newView)</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setLayoutParams</span><span class="params">(WindowManager.LayoutParams attrs, <span class="keyword">boolean</span> newView)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        applyKeepScreenOnFlag(mWindowAttributes);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 传入的 newView 是 false ，不执行这些代码</span></span><br><span class="line">        <span class="keyword">if</span> (newView) &#123;</span><br><span class="line">            mSoftInputMode = attrs.softInputMode;</span><br><span class="line">            requestLayout();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Don't lose the mode we last auto-computed.</span></span><br><span class="line">        <span class="keyword">if</span> ((attrs.softInputMode &amp; WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST)</span><br><span class="line">                == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED) &#123;</span><br><span class="line">            mWindowAttributes.softInputMode = (mWindowAttributes.softInputMode</span><br><span class="line">                    &amp; ~WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST)</span><br><span class="line">                    | (oldSoftInputMode &amp; WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        mWindowAttributesChanged = <span class="keyword">true</span>;</span><br><span class="line">        <span class="comment">// 使 view 重走三大流程</span></span><br><span class="line">        scheduleTraversals();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>setLayoutParams</code> 中，调用了 <code>scheduleTraversals()</code> 方法。</p>
+<p>在之前讲 View 工作原理的时候，我们都看过 <code>scheduleTraversals()</code> 最后会调用 <code>performTraversals()</code> 来开始 View 的测量、布局和绘制。所以在这，也就触发了 View 重新去调整自己。</p>
+<h3 id="performTraversals_28_29"><a href="#performTraversals_28_29" class="headerlink" title="performTraversals()"></a>performTraversals()</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">performTraversals</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	...</span><br><span class="line">	relayoutResult = relayoutWindow(params, viewVisibility, insetsPending);</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>performTraversals()</code> 方法太长了，其他的都不看了，我们只注意这一句代码。</p>
+<p>接着，在内部又调用了 <code>relayoutWindow(params, viewVisibility, insetsPending)</code> 方法。一看这方法名就知道这方法都干什么了。</p>
+<h3 id="relayoutWindow_28_29"><a href="#relayoutWindow_28_29" class="headerlink" title="relayoutWindow()"></a>relayoutWindow()</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">relayoutWindow</span><span class="params">(WindowManager.LayoutParams params, <span class="keyword">int</span> viewVisibility,</span><br><span class="line">        <span class="keyword">boolean</span> insetsPending)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 看得出来，这里又是调用 session 来走 IPC 流程，然后得到更新 window 的结果 relayoutResult</span></span><br><span class="line">    <span class="keyword">int</span> relayoutResult = mWindowSession.relayout(</span><br><span class="line">            mWindow, mSeq, params,</span><br><span class="line">            (<span class="keyword">int</span>) (mView.getMeasuredWidth() * appScale + <span class="number">0.5f</span>),</span><br><span class="line">            (<span class="keyword">int</span>) (mView.getMeasuredHeight() * appScale + <span class="number">0.5f</span>),</span><br><span class="line">            viewVisibility, insetsPending ? WindowManagerGlobal.RELAYOUT_INSETS_PENDING : <span class="number">0</span>,</span><br><span class="line">            mWinFrame, mPendingOverscanInsets, mPendingContentInsets, mPendingVisibleInsets,</span><br><span class="line">            mPendingStableInsets, mPendingOutsets, mPendingBackDropFrame, mPendingConfiguration,</span><br><span class="line">            mSurface);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> relayoutResult;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到了这一步，我们再次相遇熟悉的 <code>mWindowSession</code> 。</p>
+<p>也知道了其实这是走了一个 IPC 的调用过程，在它内部肯定会利用 WindowManagerService 来完成 Window 的更新。</p>
+<p>而 relayoutResult 就是这 IPC 最后返回的结果，也就是 Window 更新的结果。</p>
+<p>虽然套路都懂了，但是有时候我们还是要吃。那么就去 Session 类中看看。</p>
+<h2 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h2><h3 id="relayout_28IWindow_window_2C_int_seq_2C_WindowManager-LayoutParams_attrs__u2026__29"><a href="#relayout_28IWindow_window_2C_int_seq_2C_WindowManager-LayoutParams_attrs__u2026__29" class="headerlink" title="relayout(IWindow window, int seq, WindowManager.LayoutParams attrs … )"></a>relayout(IWindow window, int seq, WindowManager.LayoutParams attrs … )</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">relayout</span><span class="params">(IWindow window, <span class="keyword">int</span> seq, WindowManager.LayoutParams attrs,</span><br><span class="line">        <span class="keyword">int</span> requestedWidth, <span class="keyword">int</span> requestedHeight, <span class="keyword">int</span> viewFlags,</span><br><span class="line">        <span class="keyword">int</span> flags, Rect outFrame, Rect outOverscanInsets, Rect outContentInsets,</span><br><span class="line">        Rect outVisibleInsets, Rect outStableInsets, Rect outsets, Rect outBackdropFrame,</span><br><span class="line">        Configuration outConfig, Surface outSurface)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">false</span>) Slog.d(TAG_WM, <span class="string">"&gt;&gt;&gt;&gt;&gt;&gt; ENTERED relayout from "</span></span><br><span class="line">            + Binder.getCallingPid());</span><br><span class="line">    <span class="keyword">int</span> res = mService.relayoutWindow(<span class="keyword">this</span>, window, seq, attrs,</span><br><span class="line">            requestedWidth, requestedHeight, viewFlags, flags,</span><br><span class="line">            outFrame, outOverscanInsets, outContentInsets, outVisibleInsets,</span><br><span class="line">            outStableInsets, outsets, outBackdropFrame, outConfig, outSurface);</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">false</span>) Slog.d(TAG_WM, <span class="string">"&lt;&lt;&lt;&lt;&lt;&lt; EXITING relayout to "</span></span><br><span class="line">            + Binder.getCallingPid());</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>和我们预想的一样，内部是调用了 mService ，也就是 WindowManagerService 。</p>
+<h2 id="WindowManagerService"><a href="#WindowManagerService" class="headerlink" title="WindowManagerService"></a>WindowManagerService</h2><h3 id="relayoutWindow_28Session_session_2C_IWindow_client_2C_int_seq_2C_WindowManager-LayoutParams_attrs__u2026__29"><a href="#relayoutWindow_28Session_session_2C_IWindow_client_2C_int_seq_2C_WindowManager-LayoutParams_attrs__u2026__29" class="headerlink" title="relayoutWindow(Session session, IWindow client, int seq, WindowManager.LayoutParams attrs … )"></a>relayoutWindow(Session session, IWindow client, int seq, WindowManager.LayoutParams attrs … )</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">relayoutWindow</span><span class="params">(Session session, IWindow client, <span class="keyword">int</span> seq,</span><br><span class="line">           WindowManager.LayoutParams attrs, <span class="keyword">int</span> requestedWidth,</span><br><span class="line">           <span class="keyword">int</span> requestedHeight, <span class="keyword">int</span> viewVisibility, <span class="keyword">int</span> flags,</span><br><span class="line">           Rect outFrame, Rect outOverscanInsets, Rect outContentInsets,</span><br><span class="line">           Rect outVisibleInsets, Rect outStableInsets, Rect outOutsets, Rect outBackdropFrame,</span><br><span class="line">           Configuration outConfig, Surface outSurface)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">boolean</span> configChanged;</span><br><span class="line">       <span class="keyword">boolean</span> hasStatusBarPermission =</span><br><span class="line">               mContext.checkCallingOrSelfPermission(android.Manifest.permission.STATUS_BAR)</span><br><span class="line">                       == PackageManager.PERMISSION_GRANTED;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">long</span> origId = Binder.clearCallingIdentity();</span><br><span class="line">       <span class="keyword">synchronized</span>(mWindowMap) &#123;</span><br><span class="line">		<span class="comment">// 根据 session 和client 得到 windowState 对象</span></span><br><span class="line">           WindowState win = windowForClientLocked(session, client, <span class="keyword">false</span>);</span><br><span class="line">           <span class="keyword">if</span> (win == <span class="keyword">null</span>) &#123;</span><br><span class="line">               <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 将属性进行相应的转换后保存到 WindowState</span></span><br><span class="line">		...</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 去更新  window</span></span><br><span class="line">		<span class="keyword">if</span> (viewVisibility == View.VISIBLE &amp;&amp;</span><br><span class="line">               (win.mAppToken == <span class="keyword">null</span> || !win.mAppToken.clientHidden)) &#123;</span><br><span class="line">            result = relayoutVisibleWindow(outConfig, result, win, winAnimator, attrChanges,</span><br><span class="line">                    oldVisibility);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                result = createSurfaceControl(outSurface, result, win, winAnimator);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                mInputMonitor.updateInputWindowsLw(<span class="keyword">true</span> <span class="comment">/*force*/</span>);</span><br><span class="line"></span><br><span class="line">                Slog.w(TAG_WM, <span class="string">"Exception thrown when creating surface for client "</span></span><br><span class="line">                         + client + <span class="string">" ("</span> + win.mAttrs.getTitle() + <span class="string">")"</span>,</span><br><span class="line">                         e);</span><br><span class="line">                Binder.restoreCallingIdentity(origId);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		...			</span><br><span class="line"></span><br><span class="line">           <span class="keyword">boolean</span> toBeDisplayed = (result &amp; WindowManagerGlobal.RELAYOUT_RES_FIRST_TIME) != <span class="number">0</span>;</span><br><span class="line">           <span class="keyword">if</span> (imMayMove &amp;&amp; (moveInputMethodWindowsIfNeededLocked(<span class="keyword">false</span>) || toBeDisplayed)) &#123;</span><br><span class="line">               <span class="comment">// Little hack here -- we -should- be able to rely on the</span></span><br><span class="line">               <span class="comment">// function to return true if the IME has moved and needs</span></span><br><span class="line">               <span class="comment">// its layer recomputed.  However, if the IME was hidden</span></span><br><span class="line">               <span class="comment">// and isn't actually moved in the list, its layer may be</span></span><br><span class="line">               <span class="comment">// out of data so we make sure to recompute it.</span></span><br><span class="line">               <span class="comment">// 如果窗口排序有改动，那么为 DisplayContent 的所有窗口分配最终的显示次序</span></span><br><span class="line">               mLayersController.assignLayersLocked(win.getWindowList());</span><br><span class="line">           &#125;</span><br><span class="line">		...</span><br><span class="line">		<span class="comment">// 更新 window 后设置一些变量</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>WMS 的 <code>relayoutWindow</code> 方法中，先得到了需要更新的 WindowState 对象，接着去执行更新。如果 Window 的显示次序变化了的话，需要重新分配次序。最后就是设置一些 Window 更新完成后的一些变量了。</p>
+<p>而其他的代码太复杂了，学艺不精，不能全部分析出来。</p>
+<h1 id="Footer"><a href="#Footer" class="headerlink" title="Footer"></a>Footer</h1><p>总之，Window 更新也和添加一样，都是通过 session 来调用 IPC 过程完成的。并且最终实现都是在 WindowManagerService 里。</p>
+<p>至此，还有一篇 Window 删除还没分析。不用猜也知道，这流程肯定也是差不多的。但是我们还是要深入其中一探究竟。</p>
+<p>今天就完结了，bye !</p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a href="http://blog.csdn.net/amwihihc/article/details/7992329" target="_blank" rel="external">Android源码分析之WindowManager.LayoutParams属性更新过程</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号来获取我的动态！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      俞其荣
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://yuqirong.me/2017/10/10/Window源码解析(三)：Window的更新机制/" title="Window源码解析(三)：Window的更新机制">http://yuqirong.me/2017/10/10/Window源码解析(三)：Window的更新机制/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/Window/" rel="tag"># Window</a>
+          
+            <a href="/tags/源码解析/" rel="tag"># 源码解析</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/08/Window源码解析(二)：Window的添加机制/" rel="next" title="Window源码解析(二)：Window的添加机制">
+                <i class="fa fa-chevron-left"></i> Window源码解析(二)：Window的添加机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+               alt="俞其荣" />
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">73</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank" title="Google+">
+                  
+                    <i class="fa fa-fw fa-google-plus"></i>
+                  
+                  Google+
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/1291f6690ea0" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/yyyuqirong" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yqr271228943@gmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Header"><span class="nav-number">1.</span> <span class="nav-text">Header</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Window_u7684_u66F4_u65B0_u673A_u5236"><span class="nav-number">2.</span> <span class="nav-text">Window的更新机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#WindowManagerImpl"><span class="nav-number">2.1.</span> <span class="nav-text">WindowManagerImpl</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#updateViewLayout_28@NonNull_View_view_2C_@NonNull_ViewGroup-LayoutParams_params_29"><span class="nav-number">2.1.1.</span> <span class="nav-text">updateViewLayout(@NonNull View view, @NonNull ViewGroup.LayoutParams params)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WindowManagerGlobal"><span class="nav-number">2.2.</span> <span class="nav-text">WindowManagerGlobal</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#updateViewLayout_28View_view_2C_ViewGroup-LayoutParams_params_29"><span class="nav-number">2.2.1.</span> <span class="nav-text">updateViewLayout(View view, ViewGroup.LayoutParams params)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ViewRootImpl"><span class="nav-number">2.3.</span> <span class="nav-text">ViewRootImpl</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#setLayoutParams_28WindowManager-LayoutParams_attrs_2C_boolean_newView_29"><span class="nav-number">2.3.1.</span> <span class="nav-text">setLayoutParams(WindowManager.LayoutParams attrs, boolean newView)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#performTraversals_28_29"><span class="nav-number">2.3.2.</span> <span class="nav-text">performTraversals()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#relayoutWindow_28_29"><span class="nav-number">2.3.3.</span> <span class="nav-text">relayoutWindow()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Session"><span class="nav-number">2.4.</span> <span class="nav-text">Session</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#relayout_28IWindow_window_2C_int_seq_2C_WindowManager-LayoutParams_attrs__u2026__29"><span class="nav-number">2.4.1.</span> <span class="nav-text">relayout(IWindow window, int seq, WindowManager.LayoutParams attrs … )</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WindowManagerService"><span class="nav-number">2.5.</span> <span class="nav-text">WindowManagerService</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#relayoutWindow_28Session_session_2C_IWindow_client_2C_int_seq_2C_WindowManager-LayoutParams_attrs__u2026__29"><span class="nav-number">2.5.1.</span> <span class="nav-text">relayoutWindow(Session session, IWindow client, int seq, WindowManager.LayoutParams attrs … )</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Footer"><span class="nav-number">3.</span> <span class="nav-text">Footer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">4.</span> <span class="nav-text">References</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+<p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 94126, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 94126, xid: "2017/10/10/Window源码解析(三)：Window的更新机制/"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/94126/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+</body>
+</html>
