@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2017-10-28T05:57:05.781Z</updated>
+  <updated>2017-11-03T14:07:44.246Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -13,6 +13,92 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[View事件分发机制源码解析]]></title>
+    <link href="http://yuqirong.me/2017/10/31/View%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+    <id>http://yuqirong.me/2017/10/31/View事件分发机制源码解析/</id>
+    <published>2017-10-31T13:06:30.000Z</published>
+    <updated>2017-11-03T14:07:44.246Z</updated>
+    <content type="html"><![CDATA[<p>注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。</p>
+<h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>Android View 事件分发的机制可以说是 Android 开发者必知点之一，一般在面试的过程中肯定也有涉及。之前重新梳理了一下 View 事件的分发，所以为了有所记录，下定决心要写一篇关于 View 事件分发的博客。</p>
+<p>虽然很早之前也写了一篇关于事件分发的博客<a href="http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/">《Android onTouch事件传递机制解析》</a>，但是在这篇中分析不够全面，Activity 和 ViewGroup 没有涉及到。那么就来“再续前缘”吧。</p>
+<p>事件分发可以说分为三个部分，</p>
+<ul>
+<li>一个是 Activity </li>
+<li>然后是 ViewGroup</li>
+<li>最后是 View</li>
+</ul>
+<p>我们在分析事件分发时，也会依次按照这三个部分来入手。</p>
+<p>因为最后的 View 部分在之前已经分析过了（也就是<a href="http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/">《Android onTouch事件传递机制解析》</a>），所以今天的内容里关于 View 部分的就不再讲了，大家可以自己去这篇博客中接着看下去。</p>
+<p>好咯，下面就是我们的 show time ！</p>
+<h1 id="Activity"><a href="#Activity" class="headerlink" title="Activity"></a>Activity</h1><p>先入手第一部分：Activity 。</p>
+<h2 id="Activity-1"><a href="#Activity-1" class="headerlink" title="Activity"></a>Activity</h2><h3 id="dispatchTouchEvent_28MotionEvent_ev_29"><a href="#dispatchTouchEvent_28MotionEvent_ev_29" class="headerlink" title="dispatchTouchEvent(MotionEvent ev)"></a>dispatchTouchEvent(MotionEvent ev)</h3><p>在 Activity 的扎堆代码中，我们先从 <code>dispatchTouchEvent(MotionEvent ev)</code> 看起。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果是 down 事件，回调 onUserInteraction()</span></span><br><span class="line">    <span class="comment">// onUserInteraction 是空方法，可以用来判断用户是否正在和设备交互</span></span><br><span class="line">    <span class="comment">// 当用户触摸屏幕或是点击按键都会回调此方法</span></span><br><span class="line">    <span class="keyword">if</span> (ev.getAction() == MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line">        onUserInteraction();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (getWindow().superDispatchTouchEvent(ev)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果 getWindow().superDispatchTouchEvent 返回 false 的话就交给 onTouchEvent 处理</span></span><br><span class="line">    <span class="keyword">return</span> onTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Activity 的 <code>dispatchTouchEvent(MotionEvent ev)</code> 方法代码很短，我们先跟着 <code>getWindow().superDispatchTouchEvent(ev)</code> 去走。如果 <code>getWindow().superDispatchTouchEvent(ev)</code> 返回了 true ，那就代表着事件有 View 去响应处理了；否则返回 false 的话，就说明没有 View 处理，那么就转回来交给了 Activity 来处理，也就是 <code>onTouchEvent(ev)</code> 方法。</p>
+<h3 id="onTouchEvent_28MotionEvent_event_29"><a href="#onTouchEvent_28MotionEvent_event_29" class="headerlink" title="onTouchEvent(MotionEvent event)"></a>onTouchEvent(MotionEvent event)</h3><p>在 Activity 的 <code>onTouchEvent(ev)</code> 方法中会去判断该触摸事件的坐标是否在 Window 范围之外，如果在范围之外就关闭该 Activity （注意：Window 设置了 mCloseOnTouchOutside 为 true 的情况下）并且返回 true；否则返回 false 。具体代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mWindow.shouldCloseOnTouch(<span class="keyword">this</span>, event)) &#123;</span><br><span class="line">        finish();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>好了，现在回过头来讲讲有 View 去处理事件的情形。</p>
+<p>我们都知道 getWindow() 实际上是得到了当前 Activity 的 Window 对象，而 Window 的具体实现是 PhoneWindow 。所以我们接着要去看 PhoneWindow 的 <code>superDispatchTouchEvent(ev)</code> 方法。</p>
+<h2 id="PhoneWindow"><a href="#PhoneWindow" class="headerlink" title="PhoneWindow"></a>PhoneWindow</h2><h3 id="superDispatchTouchEvent_28MotionEvent_event_29"><a href="#superDispatchTouchEvent_28MotionEvent_event_29" class="headerlink" title="superDispatchTouchEvent(MotionEvent event)"></a>superDispatchTouchEvent(MotionEvent event)</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">superDispatchTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mDecor.superDispatchTouchEvent(event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 PhoneWindow 中直接把事件交给了 mDecor 来处理，而 mDecor 正是 Window 中持有的 DecorView 对象。在这里，也代表着事件从 Activity 传给了 ViewGroup 。</p>
+<p>接着跟下去。</p>
+<h2 id="DecorView"><a href="#DecorView" class="headerlink" title="DecorView"></a>DecorView</h2><h3 id="superDispatchTouchEvent_28MotionEvent_event_29-1"><a href="#superDispatchTouchEvent_28MotionEvent_event_29-1" class="headerlink" title="superDispatchTouchEvent(MotionEvent event)"></a>superDispatchTouchEvent(MotionEvent event)</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">superDispatchTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.dispatchTouchEvent(event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>DecorView 的 <code>superDispatchTouchEvent(MotionEvent event)</code> 方法代码也很短了[/笑哭]，直接调用了父类的 <code>dispatchTouchEvent(event)</code> 方法。DecorView 是继承了 FrameLayout 的。而在 FrameLayout 中并没有去重写 <code>dispatchTouchEvent(event)</code> 。所以我们要去看 ViewGroup 的 <code>dispatchTouchEvent(event)</code> 方法了。</p>
+<p>至此为止，我们第一部分关于 Activity 的事件分发已经讲完了。接下去的就是第二部分关于 ViewGroup 的了。</p>
+<h1 id="ViewGroup"><a href="#ViewGroup" class="headerlink" title="ViewGroup"></a>ViewGroup</h1><p>第二部分，ViewGroup 。</p>
+<h2 id="ViewGroup-1"><a href="#ViewGroup-1" class="headerlink" title="ViewGroup"></a>ViewGroup</h2><p>上面讲到了我们要去 ViewGroup 中看 <code>dispatchTouchEvent(event)</code> 方法。</p>
+<h3 id="dispatchTouchEvent_28event_29"><a href="#dispatchTouchEvent_28event_29" class="headerlink" title="dispatchTouchEvent(event)"></a>dispatchTouchEvent(event)</h3><p><code>dispatchTouchEvent(event)</code> 方法挺长的，在这里我们就把它分段进行分析，这样也更加容易理解。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mInputEventConsistencyVerifier != <span class="keyword">null</span>) &#123;</span><br><span class="line">        mInputEventConsistencyVerifier.onTouchEvent(ev, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">                         </span><br><span class="line">    <span class="comment">// If the event targets the accessibility focused view and this is it, start</span></span><br><span class="line">    <span class="comment">// normal event dispatch. Maybe a descendant is what will handle the click.</span></span><br><span class="line">    <span class="keyword">if</span> (ev.isTargetAccessibilityFocus() &amp;&amp; isAccessibilityFocusedViewOrHost()) &#123;</span><br><span class="line">        ev.setTargetAccessibilityFocus(<span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 返回值，代表着该View是否处理事件</span></span><br><span class="line">    <span class="keyword">boolean</span> handled = <span class="keyword">false</span>;</span><br><span class="line">    <span class="comment">// 判断当前 window 是否有被遮挡，若返回 false 则丢弃这个事件</span></span><br><span class="line">    <span class="keyword">if</span> (onFilterTouchEventForSecurity(ev)) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> action = ev.getAction();</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> actionMasked = action &amp; MotionEvent.ACTION_MASK;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果是 ACTION_DOWN 事件，那么需要恢复初始状态以及 mFirstTouchTarget 置空等</span></span><br><span class="line">        <span class="keyword">if</span> (actionMasked == MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line">            <span class="comment">// Throw away all previous state when starting a new touch gesture.</span></span><br><span class="line">            <span class="comment">// The framework may have dropped the up or cancel event for the previous gesture</span></span><br><span class="line">            <span class="comment">// due to an app switch, ANR, or some other state change.</span></span><br><span class="line">            cancelAndClearTouchTargets(ev);</span><br><span class="line">            <span class="comment">// 在 resetTouchState 会对 FLAG_DISALLOW_INTERCEPT 重置</span></span><br><span class="line">            resetTouchState();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">     ...</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>dispatchTouchEvent(event)</code> 方法的一开始，首先以 Window 是否被遮挡来过滤掉一些不必要的事件。之后若是手指按下的 ACTION_DOWN 事件的话，做一些状态清除等工作，比如 mFirstTouchTarget = null 。 当 ViewGroup 的子元素成功处理了事件后，mFirstTouchTarget 就会被赋值并指向了子元素。因此当触摸事件为 ACTION_DOWN 时，说明这是一轮新的事件，还不知道哪个 View 可以处理该事件，所以 mFirstTouchTarget 会被置为 null 了。</p>
+<p>这一小段代码理解后，我们再接着往下看。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ----------第 1 小点----------</span></span><br><span class="line"><span class="comment">// 检查是否需要拦截事件</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">boolean</span> intercepted;</span><br><span class="line"><span class="keyword">if</span> (actionMasked == MotionEvent.ACTION_DOWN</span><br><span class="line">        || mFirstTouchTarget != <span class="keyword">null</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ----------第 2 小点----------</span></span><br><span class="line">    <span class="comment">// disallowIntercept 代表着子View是否禁止让父ViewGroup拦截事件</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> disallowIntercept = (mGroupFlags &amp; FLAG_DISALLOW_INTERCEPT) != <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 如果不禁止，就调用 onInterceptTouchEvent </span></span><br><span class="line">    <span class="keyword">if</span> (!disallowIntercept) &#123;</span><br><span class="line">        intercepted = onInterceptTouchEvent(ev);</span><br><span class="line">        ev.setAction(action); <span class="comment">// restore action in case it was changed</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        intercepted = <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// There are no touch targets and this action is not an initial down</span></span><br><span class="line">    <span class="comment">// so this view group continues to intercept touches.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// ----------第 3 小点----------</span></span><br><span class="line">    <span class="comment">// 如果 mFirstTouchTarget 等于 null ，则说明子 view 中都不处理事件，并且不是 ACTION_DOWN 事件，当前 viewgroup 默认拦截该事件</span></span><br><span class="line">    intercepted = <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (intercepted || mFirstTouchTarget != <span class="keyword">null</span>) &#123;</span><br><span class="line">    ev.setTargetAccessibilityFocus(<span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里判断了 ViewGroup 是否要去拦截事件。根据判断 <code>actionMasked == MotionEvent.ACTION_DOWN || mFirstTouchTarget != null</code> ，我们可以知道一点，当 <code>mFirstTouchTarget</code> 为 null 时，就说明了子 View 中都不会处理这轮事件了，那么就应该把该事件直接交回给 ViewGroup （此时的事件肯定是 ACTION_MOVE 或者 ACTION_UP 了）。所以直接设置了 <code>intercepted = true</code> ，也就是上面代码中的第 3 小点。</p>
+<p>反之，若为 ACTION_DOWN 事件，那么说明是一轮全新的事件。是需要去问问子 View 到底要不要处理事件的。同理，mFirstTouchTarget != null 的话肯定是找到子 View 来处理事件了，所以也不能马上判断是否拦截，需要继续深入。也就是上面的第 1 小点。</p>
+<p>剩下最后一个第 2 小点。</p>
+<p>之后先得到 disallowIntercept ，disallowIntercept 与 FLAG_DISALLOW_INTERCEPT 有关。而 FLAG_DISALLOW_INTERCEPT 又是通过 <code>requestDisallowInterceptTouchEvent</code> 方法来设置的。如果 disallowIntercept 是 true ，说明子 View 禁止让父 ViewGroup 拦截事件。那就直接设置 <code>intercepted = false</code> 。这里要注意下，当为 ACTION_DOWN 事件时，会重置 FLAG_DISALLOW_INTERCEPT 标记位，所以 ACTION_DOWN 事件在 ViewGroup 的 <code>onInterceptTouchEvent</code> 方法中一定会询问自己是否需要拦截，而 ACTION_MOVE 和 ACTION_UP 则不一定。</p>
+<p>反之，若 disallowIntercept 为 false 的话，那么 ViewGroup 会调用 <code>onInterceptTouchEvent(ev)</code> 方法来判断自己是否要去拦截，开发者可以去重写这个方法来达到一些拦截的目的，该方法默认返回 false ，也就是不拦截。</p>
+<p>趁热，接着撸。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 检查下是否是 ACTION_CANCEL 事件</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">boolean</span> canceled = resetCancelNextUpFlag(<span class="keyword">this</span>)</span><br><span class="line">        || actionMasked == MotionEvent.ACTION_CANCEL;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 是否分发给多个子 View ，默认是 false</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">boolean</span> split = (mGroupFlags &amp; FLAG_SPLIT_MOTION_EVENTS) != <span class="number">0</span>;</span><br><span class="line">TouchTarget newTouchTarget = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">boolean</span> alreadyDispatchedToNewTouchTarget = <span class="keyword">false</span>;</span><br><span class="line"><span class="comment">// 不被 ViewGroup 拦截并且不是 ACTION_CANCEL 事件</span></span><br><span class="line"><span class="keyword">if</span> (!canceled &amp;&amp; !intercepted) &#123;</span><br><span class="line"></span><br><span class="line">    View childWithAccessibilityFocus = ev.isTargetAccessibilityFocus()</span><br><span class="line">            ? findChildWithAccessibilityFocus() : <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 当为 ACTION_DOWN 等事件时，要去寻找可以处理的子View，然后下发</span></span><br><span class="line">    <span class="keyword">if</span> (actionMasked == MotionEvent.ACTION_DOWN</span><br><span class="line">            || (split &amp;&amp; actionMasked == MotionEvent.ACTION_POINTER_DOWN)</span><br><span class="line">            || actionMasked == MotionEvent.ACTION_HOVER_MOVE) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> actionIndex = ev.getActionIndex(); <span class="comment">// always 0 for down</span></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> idBitsToAssign = split ? <span class="number">1</span> &lt;&lt; ev.getPointerId(actionIndex)</span><br><span class="line">                : TouchTarget.ALL_POINTER_IDS;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Clean up earlier touch targets for this pointer id in case they</span></span><br><span class="line">        <span class="comment">// have become out of sync.</span></span><br><span class="line">        removePointersFromTouchTargets(idBitsToAssign);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> childrenCount = mChildrenCount;</span><br><span class="line">        <span class="keyword">if</span> (newTouchTarget == <span class="keyword">null</span> &amp;&amp; childrenCount != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">float</span> x = ev.getX(actionIndex);</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">float</span> y = ev.getY(actionIndex);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取 z 轴上从大到小排序的子 view 顺序</span></span><br><span class="line">            <span class="keyword">final</span> ArrayList&lt;View&gt; preorderedList = buildTouchDispatchChildList();</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">boolean</span> customOrder = preorderedList == <span class="keyword">null</span></span><br><span class="line">                    &amp;&amp; isChildrenDrawingOrderEnabled();</span><br><span class="line">            <span class="keyword">final</span> View[] children = mChildren;</span><br><span class="line">            <span class="comment">// 开始遍历子 view</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = childrenCount - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">                <span class="comment">// 确认子 View 的下标</span></span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">int</span> childIndex = getAndVerifyPreorderedIndex(</span><br><span class="line">                        childrenCount, i, customOrder);</span><br><span class="line">                <span class="comment">// 根据下标，得到子View</span></span><br><span class="line">                <span class="keyword">final</span> View child = getAndVerifyPreorderedView(</span><br><span class="line">                        preorderedList, children, childIndex);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 如果当前 view 没有焦点，那么跳过</span></span><br><span class="line">                <span class="keyword">if</span> (childWithAccessibilityFocus != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (childWithAccessibilityFocus != child) &#123;</span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    childWithAccessibilityFocus = <span class="keyword">null</span>;</span><br><span class="line">                    i = childrenCount - <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 点击是否落在子view范围内和子view是否正在动画</span></span><br><span class="line">                <span class="keyword">if</span> (!canViewReceivePointerEvents(child)</span><br><span class="line">                        || !isTransformedTouchPointInView(x, y, child, <span class="keyword">null</span>)) &#123;</span><br><span class="line">                    ev.setTargetAccessibilityFocus(<span class="keyword">false</span>);</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                newTouchTarget = getTouchTarget(child);</span><br><span class="line">                <span class="keyword">if</span> (newTouchTarget != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="comment">// Child is already receiving touch within its bounds.</span></span><br><span class="line">                    <span class="comment">// Give it the new pointer in addition to the ones it is handling.</span></span><br><span class="line">                    newTouchTarget.pointerIdBits |= idBitsToAssign;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                resetCancelNextUpFlag(child);</span><br><span class="line">                <span class="comment">// 分发给该子 View 的 dispatchTouchEvent 方法</span></span><br><span class="line">                <span class="keyword">if</span> (dispatchTransformedTouchEvent(ev, <span class="keyword">false</span>, child, idBitsToAssign)) &#123;</span><br><span class="line">                    <span class="comment">// Child wants to receive touch within its bounds.</span></span><br><span class="line">                    mLastTouchDownTime = ev.getDownTime();</span><br><span class="line">                    <span class="keyword">if</span> (preorderedList != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        <span class="comment">// childIndex points into presorted list, find original index</span></span><br><span class="line">                        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; childrenCount; j++) &#123;</span><br><span class="line">                            <span class="keyword">if</span> (children[childIndex] == mChildren[j]) &#123;</span><br><span class="line">                                mLastTouchDownIndex = j;</span><br><span class="line">                                <span class="keyword">break</span>;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        mLastTouchDownIndex = childIndex;</span><br><span class="line">                    &#125;</span><br><span class="line">                    mLastTouchDownX = ev.getX();</span><br><span class="line">                    mLastTouchDownY = ev.getY();</span><br><span class="line">                    <span class="comment">//给 mFirstTouchTarget 赋值，该事件已经交给子 View 处理了</span></span><br><span class="line">                    newTouchTarget = addTouchTarget(child, idBitsToAssign);</span><br><span class="line">                    alreadyDispatchedToNewTouchTarget = <span class="keyword">true</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// The accessibility focus didn't handle the event, so clear</span></span><br><span class="line">                <span class="comment">// the flag and do a normal dispatch to all children.</span></span><br><span class="line">                ev.setTargetAccessibilityFocus(<span class="keyword">false</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (preorderedList != <span class="keyword">null</span>) preorderedList.clear();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (newTouchTarget == <span class="keyword">null</span> &amp;&amp; mFirstTouchTarget != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// Did not find a child to receive the event.</span></span><br><span class="line">            <span class="comment">// Assign the pointer to the least recently added target.</span></span><br><span class="line">            newTouchTarget = mFirstTouchTarget;</span><br><span class="line">            <span class="keyword">while</span> (newTouchTarget.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                newTouchTarget = newTouchTarget.next;</span><br><span class="line">            &#125;</span><br><span class="line">            newTouchTarget.pointerIdBits |= idBitsToAssign;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码较长，基本上的逻辑就是为 ACTION_DOWN 等事件找一个可以处理的子 View 。</p>
+<p>先遍历了所有的子 View ，会根据点击坐标是否落在子view范围内以及子view是否正在动画来判断是否接收事件。</p>
+<p>如果找到了一个子 View 可以接收事件，那么就会调用它的 <code>dispatchTouchEvent</code> 方法。若 <code>dispatchTouchEvent</code> 方法返回 true 的话，说明该 View 确认处理该事件了，那么之后给 mFirstTouchTarget 赋值；否则就继续遍历重复之前的流程了。</p>
+<p>三言两语就概括了这段代码的逻辑。</p>
+<p>再来看最后一段代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">        <span class="comment">// Dispatch to touch targets.</span></span><br><span class="line">        <span class="comment">// 如果 mFirstTouchTarget 为空，那么有可能没有子 View 或者所有的子 View 都不处理该事件了</span></span><br><span class="line">        <span class="keyword">if</span> (mFirstTouchTarget == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// No touch targets so treat this as an ordinary view.</span></span><br><span class="line">            <span class="comment">// 交给自己处理，调用 ViewGroup 的 super.dispatchTouchEvent 方法</span></span><br><span class="line">            handled = dispatchTransformedTouchEvent(ev, canceled, <span class="keyword">null</span>,</span><br><span class="line">                    TouchTarget.ALL_POINTER_IDS);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//处理有 mFirstTouchTarget 并且除了 ACTION_DOWN 以外的事件</span></span><br><span class="line">            <span class="comment">// Dispatch to touch targets, excluding the new touch target if we already</span></span><br><span class="line">            <span class="comment">// dispatched to it.  Cancel touch targets if necessary.</span></span><br><span class="line">            TouchTarget predecessor = <span class="keyword">null</span>;</span><br><span class="line">            TouchTarget target = mFirstTouchTarget;</span><br><span class="line">            <span class="keyword">while</span> (target != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">final</span> TouchTarget next = target.next;</span><br><span class="line">                <span class="comment">// alreadyDispatchedToNewTouchTarget 为 true 就说明了 mFirstTouchTarget 被赋值了</span></span><br><span class="line">                <span class="comment">// 所以事件已经交给子 View 处理了，这里就返回 true </span></span><br><span class="line">                <span class="keyword">if</span> (alreadyDispatchedToNewTouchTarget &amp;&amp; target == newTouchTarget) &#123;</span><br><span class="line">                    handled = <span class="keyword">true</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// cancelChild 为 true 的话就说明接下来的事件被 ViewGroup 拦截了，需要传递 ACTION_CANCEL 事件</span></span><br><span class="line">                    <span class="keyword">final</span> <span class="keyword">boolean</span> cancelChild = resetCancelNextUpFlag(target.child)</span><br><span class="line">                            || intercepted;</span><br><span class="line">                    <span class="comment">// 传递 ACTION_CANCEL 事件给子 View</span></span><br><span class="line">                    <span class="keyword">if</span> (dispatchTransformedTouchEvent(ev, cancelChild,</span><br><span class="line">                            target.child, target.pointerIdBits)) &#123;</span><br><span class="line">                        handled = <span class="keyword">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">// 释放 mFirstTouchTarget ，之后事件就交给了 ViewGroup 自己处理了</span></span><br><span class="line">                    <span class="keyword">if</span> (cancelChild) &#123;</span><br><span class="line">                        <span class="keyword">if</span> (predecessor == <span class="keyword">null</span>) &#123;</span><br><span class="line">                            mFirstTouchTarget = next;</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            predecessor.next = next;</span><br><span class="line">                        &#125;</span><br><span class="line">                        target.recycle();</span><br><span class="line">                        target = next;</span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                predecessor = target;</span><br><span class="line">                target = next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Update list of touch targets for pointer up or cancel, if needed.</span></span><br><span class="line">        <span class="comment">// 当为 ACTION_CANCEL 和 ACTION_UP 等事件的一些重置状态</span></span><br><span class="line">        <span class="keyword">if</span> (canceled</span><br><span class="line">                || actionMasked == MotionEvent.ACTION_UP</span><br><span class="line">                || actionMasked == MotionEvent.ACTION_HOVER_MOVE) &#123;</span><br><span class="line">            resetTouchState();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (split &amp;&amp; actionMasked == MotionEvent.ACTION_POINTER_UP) &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> actionIndex = ev.getActionIndex();</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> idBitsToRemove = <span class="number">1</span> &lt;&lt; ev.getPointerId(actionIndex);</span><br><span class="line">            removePointersFromTouchTargets(idBitsToRemove);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!handled &amp;&amp; mInputEventConsistencyVerifier != <span class="keyword">null</span>) &#123;</span><br><span class="line">        mInputEventConsistencyVerifier.onUnhandledEvent(ev, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回是否处理的 boolean 值</span></span><br><span class="line">    <span class="keyword">return</span> handled;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一开头，判断了 <code>mFirstTouchTarget == null</code> 。如果是空的话，就代表着可能 ViewGroup 中没有子 View ，或者所有的子 View 都不打算处理这轮的事件。那么只能交给 ViewGroup 自己处理了。之后调用了 <code>dispatchTransformedTouchEvent(ev, canceled, null, TouchTarget.ALL_POINTER_IDS)</code> 方法。</p>
+<p>细心的同学已经发现，这个事件分发给子 View 调用的是同一个方法。不同的是，分发给子 View 的是 <code>dispatchTransformedTouchEvent(ev, canceled, child, TouchTarget.ALL_POINTER_IDS)</code> 。也就是说，第三个参数一个是 null ，而另一个是 child 。其实，在 <code>dispatchTransformedTouchEvent</code> 内部的逻辑大概是这样的，省略了其他代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (child == <span class="keyword">null</span>) &#123;</span><br><span class="line">    handled = <span class="keyword">super</span>.dispatchTouchEvent(event);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    handled = child.dispatchTouchEvent(event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以，当传入是 null 的话，调用的直接是 <code>super.dispatchTouchEvent(event)</code> ，也就是 View 类的 <code>dispatchTouchEvent</code> 方法了。</p>
+<p>再来看 <code>mFirstTouchTarget != null</code> 的情况。</p>
+<p>mFirstTouchTarget 不为空的话，代码里处理的都是除了 ACTION_DOWN 的事件，也就是 ACTION_MOVE 和 ACTION_UP 事件。若 alreadyDispatchedToNewTouchTarget 为 true ，那么这正是上面给 mFirstTouchTarget 赋值时留下来的“锅”，直接返回 handled = true 即可。</p>
+<p>否则就直接将事件分发给子 View 了。这里注意下，若 cancelChild 为 true 的话，就代表着事件被 ViewGroup 拦截了，所以分发给子 View 的是 ACTION_CANCEL 事件，之后又把 mFirstTouchTarget 置空了。并且随着 while 循环，target.child 被置为 null 后，调用的就是 ViewGroup 的 <code>super.dispatchTouchEvent(event)</code> ，就完成了把事件分发给 ViewGroup 了。</p>
+<p>这样，以后的事件就完全移交给 ViewGroup 了，没子 View 什么事了。</p>
+<p>最后就是对 ACTION_CANCEL 和 ACTION_UP 事件的一些状态重置。</p>
+<p>在这，基本上把 ViewGroup 这部分讲完了。</p>
+<h1 id="View"><a href="#View" class="headerlink" title="View"></a>View</h1><p>View 部分的事件分发就参考一下<a href="http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/">《Android onTouch事件传递机制解析》</a>，这里面讲的还是挺清楚的，很早以前写的，不多讲了。</p>
+<h1 id="Footer"><a href="#Footer" class="headerlink" title="Footer"></a>Footer</h1><p>今天的内容都讲的差不多了，也把事件分发的机制又整理了一遍。当然也有一些不完善的地方，比如事件是怎样传递给 Activity 的在本文中没有涉及到，想了解的同学可以看下这篇<a href="http://blog.csdn.net/singwhatiwanna/article/details/50775201" target="_blank" rel="external">《Android中MotionEvent的来源和ViewRootImpl》</a>，任大神的作品。</p>
+<p>好了，要说再见了。如果有问题的同学可以在下面留言。</p>
+<p>Goodbye …</p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a href="http://blog.csdn.net/singwhatiwanna/article/details/50775201" target="_blank" rel="external">Android中MotionEvent的来源和ViewRootImpl</a></li>
+<li><a href="http://blog.csdn.net/u013927241/article/details/77919424" target="_blank" rel="external">Android 事件分发机制源码攻略（二） —— ViewGroup篇</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。</p>
+<h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>Andr]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="事件分发" scheme="http://yuqirong.me/tags/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/"/>
+    
+      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+    
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Window源码解析(四)：Window的删除机制]]></title>
@@ -1581,277 +1667,6 @@ public void onStop() {
       <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android项目中集成React Native]]></title>
-    <link href="http://yuqirong.me/2016/12/04/Android%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90React%20Native/"/>
-    <id>http://yuqirong.me/2016/12/04/Android项目中集成React Native/</id>
-    <published>2016-12-04T13:04:35.000Z</published>
-    <updated>2016-12-14T14:52:19.621Z</updated>
-    <content type="html"><![CDATA[<h1 id="u96C6_u6210React_Native_u7684_u6B65_u9AA4"><a href="#u96C6_u6210React_Native_u7684_u6B65_u9AA4" class="headerlink" title="集成React Native的步骤"></a>集成React Native的步骤</h1><ol>
-<li><p>运行以下命令 ：</p>
-<pre><code>$ npm init
-</code></pre><p> 生成 <code>package.json</code> ，下面给出一份 Demo ：</p>
-<pre><code>{
-  &quot;name&quot;: &quot;HelloWorld&quot;,
-  &quot;version&quot;: &quot;0.0.1&quot;,
-  &quot;private&quot;: true,
-  &quot;main&quot;: &quot;index.android.js&quot;,
-  &quot;scripts&quot;: {
-    &quot;start&quot;: &quot;node node_modules/react-native/local-cli/cli.js start&quot;,
-    &quot;test&quot;: &quot;jest&quot;
-  },
-  &quot;dependencies&quot;: {
-    &quot;react&quot;: &quot;^15.4.1&quot;,
-    &quot;react-native&quot;: &quot;^0.39.0&quot;
-  }
-}
-</code></pre></li>
-<li><p>运行以下命令安装 React Native , Android 项目根目录就生成了 <code>node_modules/</code> 文件夹：</p>
-<pre><code>$ npm install --save react react-native
-</code></pre><p> 在 <code>.gitignore</code> 中添加：</p>
-<pre><code># node.js
-node_modules/
-npm-debug.log
-</code></pre><p> 执行 <code>react-native upgrade</code> 可以更新已有组件。</p>
-</li>
-<li><p>运行以下命令生成 <code>.flowconfig</code> 文件：</p>
-<pre><code>$ curl -o .flowconfig https://raw.githubusercontent.com/facebook/react-native/master/.flowconfig
-</code></pre></li>
-<li><p>修改 <code>package.json</code> 中 <code>scripts</code> 的 <code>start</code> 部分：</p>
-<pre><code>&quot;start&quot;: &quot;node node_modules/react-native/local-cli/cli.js start&quot;
-</code></pre></li>
-<li><p>在 Android 项目的根目录下新建 <code>index.android.js</code> ：</p>
-<pre><code>&apos;use strict&apos;;
-
-import React from &apos;react&apos;;
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from &apos;react-native&apos;;
-
-class HelloWorld extends React.Component {
-  render() {
-    return (
-      &lt;View&gt;
-        &lt;Text&gt;Hello, World&lt;/Text&gt;
-        &lt;Text&gt;Hello, React Native&lt;/Text&gt;
-      &lt;/View&gt;
-    )
-  }
-}
-
-AppRegistry.registerComponent(&apos;HelloWorld&apos;, () =&gt; HelloWorld);
-</code></pre></li>
-<li><p>在 <code>app/build.gradle</code> 中添加：</p>
-<pre><code>defaultConfig {
-    ...
-    ndk {
-        abiFilters &quot;armeabi-v7a&quot;, &quot;x86&quot;
-    }
-}
-
-dependencies {
-    ...
-    compile &quot;com.facebook.react:react-native:0.39.0&quot; // From node_modules.
-}
-</code></pre><p> react-native 依赖的版本和 <code>package.json</code> 中保持一致。</p>
-</li>
-<li><p>在 Android 项目根目录下的 <code>build.gradle</code> 文件添加如下内容：</p>
-<pre><code>allprojects {
-    repositories {
-        maven {
-            // All of React Native (JS, Android binaries) is installed from npm
-            url &quot;$rootDir/node_modules/react-native/android&quot;
-        }
-    }
-}
-</code></pre></li>
-<li><p>新建一个 <code>MyApplication</code> 继承自 <code>Application</code> ，在 <code>AndroidManifest.xml</code> 中修改成相应的 <code>MyApplication</code> ：</p>
-<pre><code>public class MyApplication extends Application implements ReactApplication {
-
-    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-        @Override
-        protected boolean getUseDeveloperSupport() {
-            return BuildConfig.DEBUG;
-        }
-
-        @Override
-        protected List&lt;ReactPackage&gt; getPackages() {
-            return Arrays.&lt;ReactPackage&gt;asList(
-                    new MainReactPackage()
-            );
-        }
-
-    };
-
-    @Override
-    public ReactNativeHost getReactNativeHost() {
-        return mReactNativeHost;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        SoLoader.init(this, /* native exopackage */ false);
-    }
-
-}
-</code></pre></li>
-<li><p>新建一个 <code>ReactNativeActivity</code> ，用来展示 React Native 的页面：</p>
-<pre><code>public class ReactNativeActivity extends ReactActivity {
-
-    @Override
-    protected String getMainComponentName() {
-        return &quot;HelloWorld&quot;;
-    }
-
-}
-</code></pre><p> 其中 <code>getMainComponentName()</code> 返回的字符串要和 index.android.js 中的 <code>AppRegistry.registerComponent</code> 中保持一致。</p>
-</li>
-<li><p>在 <code>AndroidManifest.xml</code> 里需要添加相关内容</p>
-<pre><code>&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
-&lt;uses-permission android:name=&quot;android.permission.SYSTEM_ALERT_WINDOW&quot; /&gt;
-
-&lt;activity android:name=&quot;.ReactNativeActivity&quot; /&gt;
-&lt;activity android:name=&quot;com.facebook.react.devsupport.DevSettingsActivity&quot; /&gt;
-</code></pre></li>
-<li><p>启动服务。debug 模式下需要在 <code>package.json</code> 所在目录下执行 </p>
-<pre><code>$ npm start
-</code></pre><p>之后按照正常的 Android 程序调试即可。</p>
-</li>
-<li><p>发布正式包</p>
-<p>JS Bundle 打包：</p>
-<p>在 <code>app/src/main/</code> 下创建 <code>assets/</code> 文件夹，执行以下命令将 JS Bundle 保存到资源目录下</p>
-<pre><code>$ react-native bundle --platform android --dev false --entry-file index.android.js --bundle-output app/src/main/assets/index.android.bundle --assets-dest app/src/main/res/
-</code></pre><p>在 <code>app/src/main/assets/</code> 下就会生成 <code>index.android.bundle</code> 文件。图片会生成在 <code>app/sec/main/res/drawable-mdpi/</code> 目录下。之后按照 Android 项目正常打包即可，但别忘了添加 React Native 的混淆：</p>
-<pre><code>-dontobfuscate
-
-# React Native
-
-# Keep our interfaces so they can be used by other ProGuard rules.
-# See http://sourceforge.net/p/proguard/bugs/466/
--keep,allowobfuscation @interface com.facebook.proguard.annotations.DoNotStrip
--keep,allowobfuscation @interface com.facebook.proguard.annotations.KeepGettersAndSetters
--keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
-
-# Do not strip any method/class that is annotated with @DoNotStrip
--keep @com.facebook.proguard.annotations.DoNotStrip class *
--keep @com.facebook.common.internal.DoNotStrip class *
--keepclassmembers class * {
-    @com.facebook.proguard.annotations.DoNotStrip *;
-    @com.facebook.common.internal.DoNotStrip *;
-}
-
--keepclassmembers @com.facebook.proguard.annotations.KeepGettersAndSetters class * {
-  void set*(***);
-  *** get*();
-}
-
--keep class * extends com.facebook.react.bridge.JavaScriptModule { *; }
--keep class * extends com.facebook.react.bridge.NativeModule { *; }
--keepclassmembers,includedescriptorclasses class * { native &lt;methods&gt;; }
--keepclassmembers class *  { @com.facebook.react.uimanager.UIProp &lt;fields&gt;; }
--keepclassmembers class *  { @com.facebook.react.uimanager.annotations.ReactProp &lt;methods&gt;; }
--keepclassmembers class *  { @com.facebook.react.uimanager.annotations.ReactPropGroup &lt;methods&gt;; }
-
--dontwarn com.facebook.react.**
-
-# okhttp
-
--keepattributes Signature
--keepattributes *Annotation*
--keep class okhttp3.** { *; }
--keep interface okhttp3.** { *; }
--dontwarn okhttp3.**
-
-# okio
-
--keep class sun.misc.Unsafe { *; }
--dontwarn java.nio.file.*
--dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
--dontwarn okio.**
-</code></pre></li>
-</ol>
-<h1 id="u5728_u96C6_u6210React_Native_u4E2D_u9047_u5230_u7684_u95EE_u9898"><a href="#u5728_u96C6_u6210React_Native_u4E2D_u9047_u5230_u7684_u95EE_u9898" class="headerlink" title="在集成React Native中遇到的问题"></a>在集成React Native中遇到的问题</h1><h2 id="Warning_3AConflict_with_dependency__u2018com-google-code-findbugs_3Ajsr305_u2019-_Resolved_versions_for_app__283-0-0_29_and_test_app__282-0-1_29_differ-_See_http_3A//g-co/androidstudio/app-test-app-conflict_for_details"><a href="#Warning_3AConflict_with_dependency__u2018com-google-code-findbugs_3Ajsr305_u2019-_Resolved_versions_for_app__283-0-0_29_and_test_app__282-0-1_29_differ-_See_http_3A//g-co/androidstudio/app-test-app-conflict_for_details" class="headerlink" title="Warning:Conflict with dependency ‘com.google.code.findbugs:jsr305’. Resolved versions for app (3.0.0) and test app (2.0.1) differ. See http://g.co/androidstudio/app-test-app-conflict for details."></a>Warning:Conflict with dependency ‘com.google.code.findbugs:jsr305’. Resolved versions for app (3.0.0) and test app (2.0.1) differ. See <a href="http://g.co/androidstudio/app-test-app-conflict" target="_blank" rel="external">http://g.co/androidstudio/app-test-app-conflict</a> for details.</h2><p>在 app/build.gradle 中添加如下：</p>
-<pre><code>android {
-    ...
-    configurations.all {
-        resolutionStrategy.force &apos;com.google.code.findbugs:jsr305:3.0.0&apos;
-    }
-}
-</code></pre><h2 id="Cannot_find_module__u2018invariant_u2019"><a href="#Cannot_find_module__u2018invariant_u2019" class="headerlink" title="Cannot find module ‘invariant’"></a>Cannot find module ‘invariant’</h2><p>在调用 <code>react-native init Test</code> 初始化某个项目时，抛出如下异常：</p>
-<pre><code>$ react-native init Test
-This may take some time...
-This will walk you through creating a new React Native project in C:\Users\Administrator\Desktop\Test
-Installing react-native package from npm...
-module.js:327
-    throw err;
-    ^
-
-Error: Cannot find module &apos;invariant&apos;
-    at Function.Module._resolveFilename (module.js:325:15)
-    at Function.Module._load (module.js:276:25)                
-    at Module.require (module.js:353:17)
-    at require (internal/module.js:12:17)
-    at Object.&lt;anonymous&gt; (C:/Users/Administrator/Desktop/Test/node_modules/react-native/packager/react-packager/src/node-haste/Module.js:18:19)
-    at Module._compile (module.js:409:26)
-    at loader (C:\Users\Administrator\Desktop\Test\node_modules\react-native\node_modules\babel-register\lib\node.js:144:5)
-    at Object.require.extensions.(anonymous function) [as .js] (C:\Users\Administrator\Desktop\Test\node_modules\react-native\node_modules\babel-register\lib\node.js:154:7)
-    at Module.load (module.js:343:32)
-    at Function.Module._load (module.js:300:12)
-</code></pre><p>解决方案：调用 <code>npm i --save-dev invariant</code> 命令，详见 <a href="https://github.com/facebook/react-native/issues/11327" target="_blank" rel="external">Cannot find module ‘invariant’ - react-native-cli</a></p>
-<h2 id="java-lang-IllegalAccessError_3A_Method__u2018void_android-support-v4-net-ConnectivityManagerCompat-_28_29_u2019_is_inaccessible_to_class__u2018com-facebook-react-modules-netinfo-NetInfoModule_u2019"><a href="#java-lang-IllegalAccessError_3A_Method__u2018void_android-support-v4-net-ConnectivityManagerCompat-_28_29_u2019_is_inaccessible_to_class__u2018com-facebook-react-modules-netinfo-NetInfoModule_u2019" class="headerlink" title="java.lang.IllegalAccessError: Method ‘void android.support.v4.net.ConnectivityManagerCompat.()’ is inaccessible to class ‘com.facebook.react.modules.netinfo.NetInfoModule’"></a>java.lang.IllegalAccessError: Method ‘void android.support.v4.net.ConnectivityManagerCompat.<init\>()’ is inaccessible to class ‘com.facebook.react.modules.netinfo.NetInfoModule’</init\></h2><p>在 React Native 程序运行时，报错：</p>
-<pre><code>E/AndroidRuntime: FATAL EXCEPTION: AsyncTask #1
-    Process: com.fanwei.reactnativeupdate, PID: 3139
-    java.lang.RuntimeException: An error occured while executing doInBackground()
-        at android.os.AsyncTask$3.done(AsyncTask.java:304)
-        at java.util.concurrent.FutureTask.finishCompletion(FutureTask.java:355)
-        at java.util.concurrent.FutureTask.setException(FutureTask.java:222)
-        at java.util.concurrent.FutureTask.run(FutureTask.java:242)
-        at android.os.AsyncTask$SerialExecutor$1.run(AsyncTask.java:231)
-        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1112)
-        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:587)
-        at java.lang.Thread.run(Thread.java:818)
-     Caused by: java.lang.IllegalAccessError: Method &apos;void android.support.v4.net.ConnectivityManagerCompat.&lt;init&gt;()&apos; is inaccessible to class &apos;com.facebook.react.modules.netinfo.NetInfoModule&apos; (declaration of &apos;com.facebook.react.modules.netinfo.NetInfoModule&apos; appears in /data/data/com.fanwei.reactnativeupdate/files/instant-run/dex/slice-com.facebook.react-react-native-0.20.1_3b7c8d9b91d5c989075fbd631ac74b192cee741b-classes.dex)
-        at com.facebook.react.modules.netinfo.NetInfoModule.&lt;init&gt;(NetInfoModule.java:55)
-        at com.facebook.react.shell.MainReactPackage.createNativeModules(MainReactPackage.java:67)
-        at com.facebook.react.ReactInstanceManagerImpl.processPackage(ReactInstanceManagerImpl.java:793)
-        at com.facebook.react.ReactInstanceManagerImpl.createReactContext(ReactInstanceManagerImpl.java:730)
-        at com.facebook.react.ReactInstanceManagerImpl.access$600(ReactInstanceManagerImpl.java:91)
-        at com.facebook.react.ReactInstanceManagerImpl$ReactContextInitAsyncTask.doInBackground(ReactInstanceManagerImpl.java:184)
-        at com.facebook.react.ReactInstanceManagerImpl$ReactContextInitAsyncTask.doInBackground(ReactInstanceManagerImpl.java:169)
-        at android.os.AsyncTask$2.call(AsyncTask.java:292)
-        at java.util.concurrent.FutureTask.run(FutureTask.java:237)
-        at android.os.AsyncTask$SerialExecutor$1.run(AsyncTask.java:231) 
-        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1112) 
-        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:587) 
-        at java.lang.Thread.run(Thread.java:818) 
-</code></pre><p>解决方案：修改依赖为 <code>com.android.support:appcompat-v7:23.0.1</code> ，详见 <a href="https://github.com/facebook/react-native/issues/6152" target="_blank" rel="external">Android java.lang.IllegalAccessError Method void android.support.v4.net.ConnectivityManagerCompat</a></p>
-<h2 id="ERROR_EPERM_3A_operation_not_permitted_2C_lstat__u2018C_3A_5CUsers_5CAdministrator_5CDesktop_5CReactNativeUpdate_5Capp_5Cbuild_5Cgenerated_5Cassets_5Cshaders_5Cdebug_u2019__7B_u201Cerrno_u201D_3A-4048_2C_u201Dcode_u201D_3A_u201DEPERM_u201D_2C_u201Dsyscall_u201D_3A_u201Dlstat_u201D_2C_u201Dpath_u201D_3A_u201DC_3A_5CUsers_5CAdministrator_5CDesktop_5CReactNativeUpdate_5Capp_5Cbuild_5Cgenerated_5Cassets_5Cshaders_5Cdebug_u201D_7DError_3A_EPERM_3A_operation_not_permitted_2C_lstat__u2018C_3A_5CUsers_5CAdministrator_5CDesktop_5CReactNativeUpdate_5Capp_5Cbuild_5Cgenerated_5Cassets_5Cshaders_5Cdebug_u2019_at_Error__28native_29"><a href="#ERROR_EPERM_3A_operation_not_permitted_2C_lstat__u2018C_3A_5CUsers_5CAdministrator_5CDesktop_5CReactNativeUpdate_5Capp_5Cbuild_5Cgenerated_5Cassets_5Cshaders_5Cdebug_u2019__7B_u201Cerrno_u201D_3A-4048_2C_u201Dcode_u201D_3A_u201DEPERM_u201D_2C_u201Dsyscall_u201D_3A_u201Dlstat_u201D_2C_u201Dpath_u201D_3A_u201DC_3A_5CUsers_5CAdministrator_5CDesktop_5CReactNativeUpdate_5Capp_5Cbuild_5Cgenerated_5Cassets_5Cshaders_5Cdebug_u201D_7DError_3A_EPERM_3A_operation_not_permitted_2C_lstat__u2018C_3A_5CUsers_5CAdministrator_5CDesktop_5CReactNativeUpdate_5Capp_5Cbuild_5Cgenerated_5Cassets_5Cshaders_5Cdebug_u2019_at_Error__28native_29" class="headerlink" title="ERROR EPERM: operation not permitted, lstat ‘C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug’ {“errno”:-4048,”code”:”EPERM”,”syscall”:”lstat”,”path”:”C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug”}Error: EPERM: operation not permitted, lstat ‘C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug’ at Error (native)"></a>ERROR EPERM: operation not permitted, lstat ‘C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug’ {“errno”:-4048,”code”:”EPERM”,”syscall”:”lstat”,”path”:”C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug”}Error: EPERM: operation not permitted, lstat ‘C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug’ at Error (native)</h2><p>在调用命令 <code>npm start</code> 时，出现以下错误：</p>
-<pre><code>ERROR  EPERM: operation not permitted, lstat &apos;C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug&apos;
-{&quot;errno&quot;:-4048,&quot;code&quot;:&quot;EPERM&quot;,&quot;syscall&quot;:&quot;lstat&quot;,&quot;path&quot;:&quot;C:\\Users\\Administrator\\Desktop\\ReactNativeUpdate\\app\\build\\generated\\assets\\shaders\\debug&quot;}
-Error: EPERM: operation not permitted, lstat &apos;C:\Users\Administrator\Desktop\ReactNativeUpdate\app\build\generated\assets\shaders\debug&apos;
-    at Error (native)
-</code></pre><p>解决方案：打开项目中 <code>node_modules/react-native/local-cli/server/server.js</code> 找到  <code>process.on(&#39;uncaughtException&#39;, error =&gt; {</code> 这个方法，把最后一句 <code>process.exit(11);</code> 注释掉。</p>
-<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
-<li><a href="http://facebook.github.io/react-native/docs/integration-with-existing-apps.html" target="_blank" rel="external">Integration With Existing Apps</a></li>
-<li><a href="http://www.lcode.org/react-native%e7%a7%bb%e6%a4%8d%e5%8e%9f%e7%94%9fandroid%e9%a1%b9%e7%9b%ae-%e5%b7%b2%e6%9b%b4%e6%96%b0%e7%89%88%e6%9c%ac/" target="_blank" rel="external">React Native移植原生Android项目-已更新版本</a></li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="u96C6_u6210React_Native_u7684_u6B65_u9AA4"><a href="#u96C6_u6210React_Native_u7684_u6B65_u9AA4" class="headerlink" title="集成React Na]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="React Native" scheme="http://yuqirong.me/tags/React-Native/"/>
-    
-      <category term="React Native Blog" scheme="http://yuqirong.me/categories/React-Native-Blog/"/>
     
   </entry>
   
