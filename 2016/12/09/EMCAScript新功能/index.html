@@ -1,0 +1,1148 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JavaScript," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qirong Yu's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="let 为块作用域
+ eg.
+ 1234if(true)&amp;#123;    let apple = &apos;apple&apos;;&amp;#125;console.log(apple);
+ 以上代码会报错： apple 没有定义
+
+const 恒量，一旦声明就不能再改变它的值
+ eg.
+ 12const apple = &apos;apple&apos;;apple = &apos;orange&apos;;
+ 以上代码会报错： apple 只能是 rea">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECMAScript新功能">
+<meta property="og:url" content="http://yuqirong.me/2016/12/09/EMCAScript新功能/index.html">
+<meta property="og:site_name" content="Qirong Yu's Blog">
+<meta property="og:description" content="let 为块作用域
+ eg.
+ 1234if(true)&amp;#123;    let apple = &apos;apple&apos;;&amp;#125;console.log(apple);
+ 以上代码会报错： apple 没有定义
+
+const 恒量，一旦声明就不能再改变它的值
+ eg.
+ 12const apple = &apos;apple&apos;;apple = &apos;orange&apos;;
+ 以上代码会报错： apple 只能是 rea">
+<meta property="og:updated_time" content="2017-11-04T06:32:22.146Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ECMAScript新功能">
+<meta name="twitter:description" content="let 为块作用域
+ eg.
+ 1234if(true)&amp;#123;    let apple = &apos;apple&apos;;&amp;#125;console.log(apple);
+ 以上代码会报错： apple 没有定义
+
+const 恒量，一旦声明就不能再改变它的值
+ eg.
+ 12const apple = &apos;apple&apos;;apple = &apos;orange&apos;;
+ 以上代码会报错： apple 只能是 rea">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yuqirong.me/2016/12/09/EMCAScript新功能/"/>
+
+
+
+
+
+  <title> ECMAScript新功能 | Qirong Yu's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=62363449";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1257390016&web_id=1257390016" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Qirong Yu's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comment"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/12/09/EMCAScript新功能/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="俞其荣">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Qirong Yu's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                ECMAScript新功能
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-09T23:39:09+08:00">
+                2016-12-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript Blog</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/12/09/EMCAScript新功能/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2016/12/09/EMCAScript新功能/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ol>
+<li><p><strong>let 为块作用域</strong></p>
+<p> eg.</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">    <span class="keyword">let</span> apple = <span class="string">'apple'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(apple);</span><br></pre></td></tr></table></figure>
+<p> 以上代码会报错： apple 没有定义</p>
+</li>
+<li><p><strong>const 恒量，一旦声明就不能再改变它的值</strong></p>
+<p> eg.</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> apple = <span class="string">'apple'</span>;</span><br><span class="line">apple = <span class="string">'orange'</span>;</span><br></pre></td></tr></table></figure>
+<p> 以上代码会报错： apple 只能是 read-only</p>
+</li>
+<li><p><strong>解构数组</strong></p>
+<p> eg.</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">breakfast</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> [<span class="string">'cake'</span>, <span class="string">'cookie'</span>, <span class="string">'milk'</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> [tmp1, tmp2, tmp3] = breakfast();</span><br><span class="line"><span class="built_in">console</span>.log(tmp1, tmp2, tmp3);</span><br></pre></td></tr></table></figure>
+<p> 运行结果：cake，cookie，milk</p>
+</li>
+<li><p><strong>解构对象</strong></p>
+<p> eg.</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">breakfast</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> &#123;cake:<span class="string">'cake'</span>, cookie:<span class="string">'cookie'</span>, milk:<span class="string">'milk'</span>&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> &#123;tmp1:cake, tmp2:cookie, tmp3:milk&#125; = breakfast();</span><br><span class="line"><span class="built_in">console</span>.log(tmp1, tmp2, tmp3);</span><br></pre></td></tr></table></figure>
+<p> 运行结果：cake，cookie，milk</p>
+</li>
+<li><p><strong>模版字符串</strong></p>
+<p> eg.</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> cake = <span class="string">'cake'</span>,</span><br><span class="line">	coffee = <span class="string">'coffee'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> temp = <span class="string">`I want drink <span class="subst">$&#123;coffee&#125;</span> and eat <span class="subst">$&#123;cake&#125;</span>`</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(temp);</span><br></pre></td></tr></table></figure>
+<p> 运行结果：I want drink coffee and eat cake</p>
+</li>
+<li><p><strong>带标签的模版字符串</strong></p>
+<p> eg.</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> cake = <span class="string">'cake'</span>,</span><br><span class="line">	coffee = <span class="string">'coffee'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> temp = kitchen<span class="string">`I want drink <span class="subst">$&#123;coffee&#125;</span> and eat <span class="subst">$&#123;cake&#125;</span>`</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">kitchen</span>(<span class="params">strings, ...values</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(strings);</span><br><span class="line">	<span class="built_in">console</span>.log(values);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 运行结果：[I want drink , and eat ]</p>
+<pre><code>[cake,coffee]
+</code></pre></li>
+<li><p><strong>判断字符串里是否包含其他字符串</strong></p>
+<p> eg.</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> cake = <span class="string">'cake'</span>,</span><br><span class="line">	coffee = <span class="string">'coffee'</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(cake.startsWith(<span class="string">'ca'</span>));</span><br><span class="line"><span class="built_in">console</span>.log(coffee.endsWith(<span class="string">'ee'</span>));</span><br><span class="line"><span class="built_in">console</span>.log(coffee.includes(<span class="string">'off'</span>));</span><br></pre></td></tr></table></figure>
+<p> 运行结果：true, true, true</p>
+</li>
+<li><p><strong>默认参数</strong></p>
+<p> eg.</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">breakfast</span>(<span class="params">cake='cake', coffee='coffee'</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">`<span class="subst">$&#123;cake&#125;</span> <span class="subst">$&#123;coffee&#125;</span>`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(breakfast());</span><br></pre></td></tr></table></figure>
+<p> 运行结果：cake coffee</p>
+</li>
+<li><p><strong>展开操作符-Spread</strong></p>
+<p> eg.</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> breakfast = [<span class="string">'cake'</span>, <span class="string">'coffee'</span>];</span><br><span class="line"><span class="keyword">let</span> breakfast2 = [<span class="string">'milk'</span>, ...breakfast];</span><br><span class="line"><span class="built_in">console</span>.log(breakfast);</span><br><span class="line"><span class="built_in">console</span>.log(...breakfast);</span><br></pre></td></tr></table></figure>
+<p> 运行结果：[‘cake’, ‘coffee’]</p>
+<pre><code>cake coffee
+milk cake coffee
+</code></pre></li>
+<li><p><strong>剩余操作符-Rest</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">breakfast</span>(<span class="params">cake, coffee, ...other</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(cake, coffee, other);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">breakfast(<span class="string">'cake'</span>, <span class="string">'coffee'</span>, <span class="string">'milk'</span>, <span class="string">'candy'</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<pre><code>运行结果：cake coffee [&apos;milk&apos;, &apos;candy&apos;]
+</code></pre><ol>
+<li><p><strong>解构参数</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">breakfast</span>(<span class="params">cake, coffee, &#123;location, restaurant&#125;=&#123;&#125;</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(cake, coffee, location, restaurant);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">breakfast(<span class="string">'cake'</span>, <span class="string">'coffee'</span>, &#123;location:<span class="string">'hangzhou'</span>, restaurant:<span class="string">'xinbailu'</span>);</span><br></pre></td></tr></table></figure>
+<p>运行结果：cake coffee hangzhou xinbailu</p>
+</li>
+<li><p><strong>函数的名字-name属性</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">breakfast</span>(<span class="params">cake, coffee, &#123;location, restaurant&#125;=&#123;&#125;</span>)</span>&#123;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(breakfast.name);</span><br></pre></td></tr></table></figure>
+<p>运行结果：breakfast</p>
+</li>
+<li><p><strong>箭头函数-Arrow Fuctions</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> breakfast = coffee =&gt; coffee;</span><br></pre></td></tr></table></figure>
+<p>即</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> breakfast = <span class="function"><span class="keyword">function</span> <span class="title">breakfast</span>(<span class="params">coffee</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> coffee;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>=&gt; 的左边是函数的参数，右边是返回值，若无参数则可以写成</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> breakfast = () =&gt; <span class="string">'coffee'</span>;</span><br></pre></td></tr></table></figure>
+<p>若没有返回值，则可以写成</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> breakfast = coffee =&gt; &#123;</span><br><span class="line">	<span class="built_in">console</span>.log(coffee);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>对象表达式</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> coffee = <span class="string">'coffee'</span>,</span><br><span class="line">	cake = <span class="string">'cake'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> food = &#123;</span><br><span class="line">	coffee,</span><br><span class="line">	cake</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 food 对象中的 coffee 和 cake 直接引用的就是上面的 coffee 和 cake</p>
+</li>
+<li><p><strong>对象属性名</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> coffee = &#123;&#125;；</span><br><span class="line">coffee.color = <span class="string">'brown'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(coffee);</span><br></pre></td></tr></table></figure>
+<p>运行结果：Object {color:”brown”}</p>
+</li>
+<li><p><strong>对比两个值是否相等-Object.is()</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(Nan == Nan);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.is(Nan, Nan));</span><br></pre></td></tr></table></figure>
+<p>运行结果：false，true</p>
+</li>
+<li><p><strong>把对象的值复制到另一个对象里 - Object.assign()</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> breakfast = &#123;&#125;;</span><br><span class="line"><span class="built_in">Object</span>.assign(breakfast,&#123;coffee:<span class="string">'coffee'</span>&#125;);</span><br><span class="line"><span class="built_in">console</span>.log(breakfast);</span><br></pre></td></tr></table></figure>
+<p>运行结果：Object {coffee:’coffee’}</p>
+</li>
+<li><p><strong>设置对象的 prototype - Object.setPrototypeOf()</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> breakfast = &#123;</span><br><span class="line">	getDrink()&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">'coffee'</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> dinner = &#123;</span><br><span class="line">	getDrink()&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">'milk'</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> tmp1 = <span class="built_in">Object</span>.create(breakfast);</span><br><span class="line"><span class="built_in">console</span>.log(tmp1.getDrink());</span><br><span class="line"><span class="built_in">Object</span>.setPrototypeOf(tmp1, dinner);</span><br><span class="line"><span class="built_in">console</span>.log(tmp1.getDrink());</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<pre><code>`Object.setPrototypeOf()` 第一个参数为要设置的对象，第二个参数为对应的属性或方法
+
+运行结果：coffee, milk
+</code></pre><ol>
+<li><p><strong><strong>proto</strong></strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> breakfast = &#123;</span><br><span class="line">	getDrink()&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">'coffee'</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> dinner = &#123;</span><br><span class="line">	getDrink()&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">'milk'</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> tmp1 = &#123;</span><br><span class="line">	__proto__ = breakfast;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(tmp1.getDrink());</span><br><span class="line">tmp1.__proto__ = dinner;</span><br><span class="line"><span class="built_in">console</span>.log(tmp1.getDrink());</span><br></pre></td></tr></table></figure>
+<p>运行结果：coffee, milk</p>
+</li>
+<li><p><strong>super</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> breakfast = &#123;</span><br><span class="line">	getDrink()&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">'coffee'</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> tmp1 = &#123;</span><br><span class="line">	__proto__ = breakfast,</span><br><span class="line">	getDrink()&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">super</span>.getDrink() + <span class="string">'milk'</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(tmp1.getDrink());</span><br></pre></td></tr></table></figure>
+<p>运行结果：coffeemilk</p>
+</li>
+<li><p><strong>迭代器 - Iterators</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cook</span>(<span class="params">foods</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">let</span> i = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">return</span>&#123;</span><br><span class="line">		next()&#123;</span><br><span class="line">			<span class="keyword">let</span> done = i &gt;=foods.length;</span><br><span class="line">			<span class="keyword">let</span> value = done?<span class="literal">undefined</span>:foods[i++];</span><br><span class="line">			<span class="keyword">return</span> &#123;</span><br><span class="line">				done:done,</span><br><span class="line">				value:value</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> chaohao = cook([<span class="string">'apple'</span>, <span class="string">'banana'</span>]);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(chaohao.next());</span><br><span class="line"><span class="built_in">console</span>.log(chaohao.next());</span><br><span class="line"><span class="built_in">console</span>.log(chaohao.next());</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<pre><code>Iterators 中有两个属性，value 代表着当前迭代的值，done 表示迭代是否完成了。
+
+运行结果：Object{value:&apos;apple&apos;, done:false}
+        Object{value:&apos;banana&apos;, done:false}
+        Object{value:&apos;undefined&apos;, done:true}
+</code></pre><ol>
+<li><p><strong>生成器 - Generators</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">chef</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">yield</span> <span class="string">'coffee'</span>;</span><br><span class="line">	<span class="keyword">yield</span> <span class="string">'milk'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> tmp = chef();</span><br><span class="line"><span class="built_in">console</span>.log(tmp.next());</span><br><span class="line"><span class="built_in">console</span>.log(tmp.next());</span><br></pre></td></tr></table></figure>
+<p>Generators 表达式就是 function* xxx(){…}</p>
+</li>
+<li><p><strong>Classes - 类</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Chef</span> </span>&#123;</span><br><span class="line">	constructor(food)&#123;</span><br><span class="line">		<span class="keyword">this</span>.food = food;</span><br><span class="line">	&#125;</span><br><span class="line">	cook()&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>.food);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> tmp = <span class="keyword">new</span> Chef(<span class="string">'coffee'</span>);</span><br><span class="line">tmp.cook();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>get 与 set</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Chef</span> </span>&#123;</span><br><span class="line">	constructor(food, dish)&#123;</span><br><span class="line">		<span class="keyword">this</span>.food = food;</span><br><span class="line">		<span class="keyword">this</span>.dish = [];</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	get menu()&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.dish;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	set menu(dish)&#123;</span><br><span class="line">		<span class="keyword">this</span>.dish.push(dish);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	cook()&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>.food);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> tmp = <span class="keyword">new</span> Chef(<span class="string">'coffee'</span>);</span><br><span class="line">tmp.menu = <span class="string">'milk'</span>;</span><br><span class="line">tmp.menu = <span class="string">'juice'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(tmp.menu);</span><br></pre></td></tr></table></figure>
+<p>运行结果：milk,juice</p>
+</li>
+<li><p><strong>静态方法-static</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Chef</span> </span>&#123;</span><br><span class="line">	constructor(food, dish)&#123;</span><br><span class="line">		<span class="keyword">this</span>.food = food;</span><br><span class="line">		<span class="keyword">this</span>.dish = [];</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	static cook(food)&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>.food);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(Chef.cook(<span class="string">'coffee'</span>));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>继承-extends</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">Chef</span> </span>&#123;</span><br><span class="line">		constructor(food, dish)&#123;</span><br><span class="line">			<span class="keyword">this</span>.food = food;</span><br><span class="line">			<span class="keyword">this</span>.dish = dish;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		cook()&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="string">`<span class="subst">$&#123;food&#125;</span>，<span class="subst">$&#123;dish&#125;</span>`</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">Chef2</span> <span class="keyword">extends</span> <span class="title">Chef</span> </span>&#123;</span><br><span class="line">		constructor(food, dish)&#123;</span><br><span class="line">			<span class="keyword">super</span>(food,dish);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">let</span> tmp = <span class="keyword">new</span> Chef2(<span class="string">'coffee'</span>,<span class="string">'milk'</span>);</span><br><span class="line">	<span class="built_in">console</span>.log(Chef2.cook());</span><br><span class="line">	<span class="string">``</span><span class="string">`	</span><br><span class="line">	</span><br><span class="line">	运行结果：coffee，milk</span><br><span class="line"></span><br><span class="line">27. **Set**</span><br><span class="line"></span><br><span class="line">	eg.</span><br><span class="line"></span><br><span class="line">	`</span><span class="string">``</span> javascript</span><br><span class="line">	<span class="keyword">let</span> desserts = <span class="keyword">new</span> <span class="built_in">Set</span>(<span class="string">'cake'</span>,<span class="string">'cookie'</span>);</span><br><span class="line">	desserts.size(); <span class="comment">// 一共有多少节点</span></span><br><span class="line">	desserts.add(<span class="string">'milk'</span>); <span class="comment">// 添加节点</span></span><br><span class="line">	desserts.has(<span class="string">'cake'</span>); <span class="comment">// 判断节点是否被包含</span></span><br><span class="line">	desserts.delete(<span class="string">'cookie'</span>); <span class="comment">// 删除节点</span></span><br><span class="line">	desserts.forEach(dessert =&gt; &#123;</span><br><span class="line">		<span class="built_in">console</span>.log(dessert); <span class="comment">// 遍历节点</span></span><br><span class="line">	&#125;)</span><br><span class="line">	desserts.clear(); <span class="comment">// 清空节点</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Map</strong></p>
+<p>eg.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> desserts = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line">desserts.set(<span class="string">'drink'</span>,<span class="string">'milk'</span>); <span class="comment">// 添加节点</span></span><br><span class="line">desserts.set(<span class="string">'food'</span>,<span class="string">'cake'</span>);</span><br><span class="line">desserts.size(); <span class="comment">// 一共有多少节点</span></span><br><span class="line">desserts.has(<span class="string">'cake'</span>); <span class="comment">// 判断节点是否被包含</span></span><br><span class="line">desserts.delete(<span class="string">'cookie'</span>); <span class="comment">// 删除节点</span></span><br><span class="line">desserts.forEach((key,value) =&gt; &#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;key&#125;</span> = <span class="subst">$&#123;value&#125;</span>`</span>); <span class="comment">// 遍历节点</span></span><br><span class="line">&#125;)</span><br><span class="line">desserts.clear(); <span class="comment">// 清空节点</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Module</strong></p>
+<p>eg.</p>
+<p>chef.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">let</span> fruit = <span class="string">'apple'</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">let</span> drink = <span class="string">'coffee'</span>;</span><br></pre></td></tr></table></figure>
+<p>index.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;fruit, drink&#125; <span class="keyword">from</span> <span class="string">'./modules/chef'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(fruit, drink);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>重命名导出与导入的东西</code></p>
+<p>eg.</p>
+<p>chef.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> fruit = <span class="string">'apple'</span>;</span><br><span class="line"><span class="keyword">let</span> drink = <span class="string">'coffee'</span>;</span><br><span class="line"><span class="keyword">export</span> &#123;fruit, drink <span class="keyword">as</span> water&#125;</span><br></pre></td></tr></table></figure>
+<p>index.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;fruit, water <span class="keyword">as</span> drink&#125; <span class="keyword">from</span> <span class="string">'./modules/chef'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(fruit, drink);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>导出与导入默认</strong></p>
+<p>eg.</p>
+<p>chef.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> fruit = <span class="string">'apple'</span>;</span><br><span class="line"><span class="keyword">let</span> drink = <span class="string">'coffee'</span>;</span><br><span class="line"><span class="keyword">export</span> &#123;fruit, drink <span class="keyword">as</span> <span class="keyword">default</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>index.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> drink, &#123;fruit&#125; <span class="keyword">from</span> <span class="string">'./modules/chef'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(fruit, drink);</span><br></pre></td></tr></table></figure>
+<p>每个模块默认导出的只有一个，即只有一个 export default ，但是 export 导出的可以有多个。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号来获取我的动态！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      俞其荣
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://yuqirong.me/2016/12/09/EMCAScript新功能/" title="ECMAScript新功能">http://yuqirong.me/2016/12/09/EMCAScript新功能/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/04/Android项目中集成React Native/" rel="next" title="Android项目中集成React Native">
+                <i class="fa fa-chevron-left"></i> Android项目中集成React Native
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/18/ButterKnife源码解析/" rel="prev" title="ButterKnife源码分析">
+                ButterKnife源码分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+               alt="俞其荣" />
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">76</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank" title="Google+">
+                  
+                    <i class="fa fa-fw fa-google-plus"></i>
+                  
+                  Google+
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/1291f6690ea0" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/yyyuqirong" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yqr271228943@gmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+<p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 94126, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 94126, xid: "2016/12/09/EMCAScript新功能/"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/94126/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+</body>
+</html>
