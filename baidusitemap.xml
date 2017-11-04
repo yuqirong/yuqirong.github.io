@@ -4,8 +4,58 @@
 
     
   <url>
+    <loc>http://yuqirong.me/2017/09/28/Window%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%80)%EF%BC%9A%E4%B8%8EDecorView%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/</loc>
+    <lastmod>2017-11-04T06:02:33.674Z</lastmod>
+    <data>
+        <display>
+        <title>Window源码解析(一)：与DecorView的那些事</title>
+        <pubTime>2017-09-28T06:39:03.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>View</tag>
+         
+        <tag>Window</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2017/09/18/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2017-11-04T06:02:06.047Z</lastmod>
+    <data>
+        <display>
+        <title>View的工作原理</title>
+        <pubTime>2017-09-18T14:35:00.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>View</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yuqirong.me/2017/10/31/View%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2017-11-03T14:07:44.246Z</lastmod>
+    <lastmod>2017-11-04T06:02:00.872Z</lastmod>
     <data>
         <display>
         <title>View事件分发机制源码解析</title>
@@ -13,7 +63,31 @@
         
         <tag>Android</tag>
          
-        <tag>事件分发</tag>
+        <tag>View</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2017-11-04T06:01:10.582Z</lastmod>
+    <data>
+        <display>
+        <title>Android onTouch事件传递机制解析</title>
+        <pubTime>2015-10-29T14:56:09.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>View</tag>
          
         <tag>源码解析</tag>
          
@@ -76,30 +150,6 @@
 
     
   <url>
-    <loc>http://yuqirong.me/2017/09/28/Window%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%80)%EF%BC%9A%E4%B8%8EDecorView%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/</loc>
-    <lastmod>2017-10-11T13:02:54.903Z</lastmod>
-    <data>
-        <display>
-        <title>Window源码解析(一)：与DecorView的那些事</title>
-        <pubTime>2017-09-28T06:39:03.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>Window</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://yuqirong.me/2017/10/08/Window%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%BA%8C)%EF%BC%9AWindow%E7%9A%84%E6%B7%BB%E5%8A%A0%E6%9C%BA%E5%88%B6/</loc>
     <lastmod>2017-10-10T12:50:29.660Z</lastmod>
     <data>
@@ -110,28 +160,6 @@
         <tag>Android</tag>
          
         <tag>Window</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2017/09/18/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</loc>
-    <lastmod>2017-09-21T13:38:35.602Z</lastmod>
-    <data>
-        <display>
-        <title>View的工作原理</title>
-        <pubTime>2017-09-18T14:35:00.000Z</pubTime>
-        
-        <tag>Android</tag>
          
         <tag>源码解析</tag>
          
@@ -1328,28 +1356,6 @@
         <tag>Android</tag>
          
         <tag>自定义View</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2016-11-01T13:45:47.575Z</lastmod>
-    <data>
-        <display>
-        <title>Android onTouch事件传递机制解析</title>
-        <pubTime>2015-10-29T14:56:09.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>源码解析</tag>
          
          
            

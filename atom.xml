@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2017-11-03T14:07:44.246Z</updated>
+  <updated>2017-11-04T06:02:00.872Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://yuqirong.me/2017/10/31/View%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     <id>http://yuqirong.me/2017/10/31/View事件分发机制源码解析/</id>
     <published>2017-10-31T13:06:30.000Z</published>
-    <updated>2017-11-03T14:07:44.246Z</updated>
+    <updated>2017-11-04T06:02:00.872Z</updated>
     <content type="html"><![CDATA[<p>注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。</p>
 <h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>Android View 事件分发的机制可以说是 Android 开发者必知点之一，一般在面试的过程中肯定也有涉及。之前重新梳理了一下 View 事件的分发，所以为了有所记录，下定决心要写一篇关于 View 事件分发的博客。</p>
 <p>虽然很早之前也写了一篇关于事件分发的博客<a href="http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/">《Android onTouch事件传递机制解析》</a>，但是在这篇中分析不够全面，Activity 和 ViewGroup 没有涉及到。那么就来“再续前缘”吧。</p>
@@ -72,7 +72,7 @@
 <p>所以，当传入是 null 的话，调用的直接是 <code>super.dispatchTouchEvent(event)</code> ，也就是 View 类的 <code>dispatchTouchEvent</code> 方法了。</p>
 <p>再来看 <code>mFirstTouchTarget != null</code> 的情况。</p>
 <p>mFirstTouchTarget 不为空的话，代码里处理的都是除了 ACTION_DOWN 的事件，也就是 ACTION_MOVE 和 ACTION_UP 事件。若 alreadyDispatchedToNewTouchTarget 为 true ，那么这正是上面给 mFirstTouchTarget 赋值时留下来的“锅”，直接返回 handled = true 即可。</p>
-<p>否则就直接将事件分发给子 View 了。这里注意下，若 cancelChild 为 true 的话，就代表着事件被 ViewGroup 拦截了，所以分发给子 View 的是 ACTION_CANCEL 事件，之后又把 mFirstTouchTarget 置空了。并且随着 while 循环，target.child 被置为 null 后，调用的就是 ViewGroup 的 <code>super.dispatchTouchEvent(event)</code> ，就完成了把事件分发给 ViewGroup 了。</p>
+<p>否则就直接将事件分发给子 View 了。这里注意下，若 cancelChild 为 true 的话，就代表着事件被 ViewGroup 拦截了，所以分发给子 View 的将是 ACTION_CANCEL 事件，之后把 mFirstTouchTarget 置空了。那么之后事件再过来，调用的就是 ViewGroup 的 <code>super.dispatchTouchEvent(event)</code> ，就完成了把事件分发给 ViewGroup 了。</p>
 <p>这样，以后的事件就完全移交给 ViewGroup 了，没子 View 什么事了。</p>
 <p>最后就是对 ACTION_CANCEL 和 ACTION_UP 事件的一些状态重置。</p>
 <p>在这，基本上把 ViewGroup 这部分讲完了。</p>
@@ -92,7 +92,7 @@
     
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
     
-      <category term="事件分发" scheme="http://yuqirong.me/tags/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/"/>
+      <category term="View" scheme="http://yuqirong.me/tags/View/"/>
     
       <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
@@ -288,7 +288,7 @@
     <link href="http://yuqirong.me/2017/09/28/Window%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%80)%EF%BC%9A%E4%B8%8EDecorView%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/"/>
     <id>http://yuqirong.me/2017/09/28/Window源码解析(一)：与DecorView的那些事/</id>
     <published>2017-09-28T06:39:03.000Z</published>
-    <updated>2017-10-11T13:02:54.903Z</updated>
+    <updated>2017-11-04T06:02:33.674Z</updated>
     <content type="html"><![CDATA[<p>注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。</p>
 <h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>今天我们来讲讲 Window ，Window 代表着一个窗口。</p>
 <p>比如在 Activity 中，我们可以设置自定义的视图 View ，其实 View 并不是直接附着在 Activity 上，而是 View 附着在 Window 上，Activity 又持有一个 Window 对象。可见，Window 是一个重要的角色，主要用来负责管理 View 的。而 Window 和 View 又是通过 ViewRootImpl 来建立联系的，这在之前的<a href="/2017/09/18/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">《View的工作原理》</a>中介绍过。</p>
@@ -364,6 +364,8 @@
     
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
     
+      <category term="View" scheme="http://yuqirong.me/tags/View/"/>
+    
       <category term="Window" scheme="http://yuqirong.me/tags/Window/"/>
     
       <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
@@ -377,7 +379,7 @@
     <link href="http://yuqirong.me/2017/09/18/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/"/>
     <id>http://yuqirong.me/2017/09/18/View的工作原理/</id>
     <published>2017-09-18T14:35:00.000Z</published>
-    <updated>2017-09-21T13:38:35.602Z</updated>
+    <updated>2017-11-04T06:02:06.047Z</updated>
     <content type="html"><![CDATA[<p>注：本文分析的源码基于 Android API 25</p>
 <h1 id="View_u7ED8_u5236_u7684_u8D77_u70B9"><a href="#View_u7ED8_u5236_u7684_u8D77_u70B9" class="headerlink" title="View绘制的起点"></a>View绘制的起点</h1><h2 id="WindowManagerGlobal"><a href="#WindowManagerGlobal" class="headerlink" title="WindowManagerGlobal"></a>WindowManagerGlobal</h2><h3 id="addView_28View_view_2C_ViewGroup-LayoutParams_params_2C_Display_display_2C_Window_parentWindow_29"><a href="#addView_28View_view_2C_ViewGroup-LayoutParams_params_2C_Display_display_2C_Window_parentWindow_29" class="headerlink" title="addView(View view, ViewGroup.LayoutParams params, Display display, Window parentWindow)"></a>addView(View view, ViewGroup.LayoutParams params, Display display, Window parentWindow)</h3><p>在 <code>WindowManagerGlobal</code> 的 <code>addView(View view, ViewGroup.LayoutParams params, Display display, Window parentWindow)</code> 方法中，创建了 <code>ViewRootImpl</code> 对象，将 <code>ViewRootImpl</code> 和 <code>DecorView</code> 相关联：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root = <span class="keyword">new</span> ViewRootImpl(view.getContext(), display);</span><br><span class="line">...</span><br><span class="line"><span class="comment">// view 是 PhoneWindow 的 DecorView</span></span><br><span class="line">root.setView(view, wparams, panelParentView);</span><br></pre></td></tr></table></figure>
@@ -550,6 +552,8 @@
     </summary>
     
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="View" scheme="http://yuqirong.me/tags/View/"/>
     
       <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     

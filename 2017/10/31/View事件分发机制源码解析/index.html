@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Android,事件分发,源码解析," />
+  <meta name="keywords" content="Android,View,源码解析," />
 
 
 
@@ -99,7 +99,7 @@ HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点�
 <meta property="og:description" content="注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。
 HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点之一，一般在面试的过程中肯定也有涉及。之前重新梳理了一下 View 事件的分发，所以为了有所记录，下定决心要写一篇关于 View 事件分发的博客。
 虽然很早之前也写了一篇关于事件分发的博客《Android onTouch事件">
-<meta property="og:updated_time" content="2017-11-03T14:07:44.246Z">
+<meta property="og:updated_time" content="2017-11-04T06:02:00.872Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="View事件分发机制源码解析">
 <meta name="twitter:description" content="注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。
@@ -470,7 +470,7 @@ HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点�
 <p>所以，当传入是 null 的话，调用的直接是 <code>super.dispatchTouchEvent(event)</code> ，也就是 View 类的 <code>dispatchTouchEvent</code> 方法了。</p>
 <p>再来看 <code>mFirstTouchTarget != null</code> 的情况。</p>
 <p>mFirstTouchTarget 不为空的话，代码里处理的都是除了 ACTION_DOWN 的事件，也就是 ACTION_MOVE 和 ACTION_UP 事件。若 alreadyDispatchedToNewTouchTarget 为 true ，那么这正是上面给 mFirstTouchTarget 赋值时留下来的“锅”，直接返回 handled = true 即可。</p>
-<p>否则就直接将事件分发给子 View 了。这里注意下，若 cancelChild 为 true 的话，就代表着事件被 ViewGroup 拦截了，所以分发给子 View 的是 ACTION_CANCEL 事件，之后又把 mFirstTouchTarget 置空了。并且随着 while 循环，target.child 被置为 null 后，调用的就是 ViewGroup 的 <code>super.dispatchTouchEvent(event)</code> ，就完成了把事件分发给 ViewGroup 了。</p>
+<p>否则就直接将事件分发给子 View 了。这里注意下，若 cancelChild 为 true 的话，就代表着事件被 ViewGroup 拦截了，所以分发给子 View 的将是 ACTION_CANCEL 事件，之后把 mFirstTouchTarget 置空了。那么之后事件再过来，调用的就是 ViewGroup 的 <code>super.dispatchTouchEvent(event)</code> ，就完成了把事件分发给 ViewGroup 了。</p>
 <p>这样，以后的事件就完全移交给 ViewGroup 了，没子 View 什么事了。</p>
 <p>最后就是对 ACTION_CANCEL 和 ACTION_UP 事件的一些状态重置。</p>
 <p>在这，基本上把 ViewGroup 这部分讲完了。</p>
@@ -554,7 +554,7 @@ HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点�
           
             <a href="/tags/Android/" rel="tag"># Android</a>
           
-            <a href="/tags/事件分发/" rel="tag"># 事件分发</a>
+            <a href="/tags/View/" rel="tag"># View</a>
           
             <a href="/tags/源码解析/" rel="tag"># 源码解析</a>
           
