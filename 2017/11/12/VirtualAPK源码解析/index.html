@@ -1,0 +1,1528 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,开源框架,插件化,源码解析," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qirong Yu's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="HeaderVirtualAPK 是滴滴开源的一款 Android 插件化的框架。
+现在市面上，成熟的插件化框架已经挺多了，那为什么还要重新开发一款轮子呢？
+
+大部分开源框架所支持的功能还不够全面
+兼容性问题严重，大部分开源方案不够健壮
+已有的开源方案不适合滴滴的业务场景
+
+在加载耦合插件方面，VirtualAPK是开源方案的首选。
+以上是滴滴给出的官方解释。
+对于我们开发者来说，这种当然是好事。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VirtualAPK源码解析">
+<meta property="og:url" content="http://yuqirong.me/2017/11/12/VirtualAPK源码解析/index.html">
+<meta property="og:site_name" content="Qirong Yu's Blog">
+<meta property="og:description" content="HeaderVirtualAPK 是滴滴开源的一款 Android 插件化的框架。
+现在市面上，成熟的插件化框架已经挺多了，那为什么还要重新开发一款轮子呢？
+
+大部分开源框架所支持的功能还不够全面
+兼容性问题严重，大部分开源方案不够健壮
+已有的开源方案不适合滴滴的业务场景
+
+在加载耦合插件方面，VirtualAPK是开源方案的首选。
+以上是滴滴给出的官方解释。
+对于我们开发者来说，这种当然是好事。">
+<meta property="og:updated_time" content="2017-11-12T15:34:52.817Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="VirtualAPK源码解析">
+<meta name="twitter:description" content="HeaderVirtualAPK 是滴滴开源的一款 Android 插件化的框架。
+现在市面上，成熟的插件化框架已经挺多了，那为什么还要重新开发一款轮子呢？
+
+大部分开源框架所支持的功能还不够全面
+兼容性问题严重，大部分开源方案不够健壮
+已有的开源方案不适合滴滴的业务场景
+
+在加载耦合插件方面，VirtualAPK是开源方案的首选。
+以上是滴滴给出的官方解释。
+对于我们开发者来说，这种当然是好事。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yuqirong.me/2017/11/12/VirtualAPK源码解析/"/>
+
+
+
+
+
+  <title> VirtualAPK源码解析 | Qirong Yu's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=62363449";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1257390016&web_id=1257390016" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Qirong Yu's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comment"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2017/11/12/VirtualAPK源码解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="俞其荣">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Qirong Yu's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                VirtualAPK源码解析
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-12T22:03:58+08:00">
+                2017-11-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Android Blog</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/11/12/VirtualAPK源码解析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/11/12/VirtualAPK源码解析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>VirtualAPK 是滴滴开源的一款 Android 插件化的框架。</p>
+<p>现在市面上，成熟的插件化框架已经挺多了，那为什么还要重新开发一款轮子呢？</p>
+<ol>
+<li>大部分开源框架所支持的功能还不够全面</li>
+<li>兼容性问题严重，大部分开源方案不够健壮</li>
+<li>已有的开源方案不适合滴滴的业务场景</li>
+</ol>
+<p>在加载耦合插件方面，VirtualAPK是开源方案的首选。</p>
+<p>以上是滴滴给出的官方解释。</p>
+<p>对于我们开发者来说，这种当然是好事。第一，我们选择插件化框架的余地变多了；第二，我们也可以多学习学习框架内部实现的原理，一举两得。</p>
+<p>那就不说废话了，一起来看。</p>
+<h1 id="u4F7F_u7528_u65B9_u6CD5"><a href="#u4F7F_u7528_u65B9_u6CD5" class="headerlink" title="使用方法"></a>使用方法</h1><p>使用方法直接抄 GitHub 上的，就将就着看吧。</p>
+<ul>
+<li><p>第一步： 初始化插件引擎</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">attachBaseContext</span><span class="params">(Context base)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.attachBaseContext(base);</span><br><span class="line">    PluginManager.getInstance(base).init();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二步：加载插件</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PluginManager</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">loadPlugin</span><span class="params">(File apk)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  当插件入口被调用后，插件的后续逻辑均不需要宿主干预，均走原生的Android流程。 比如，在插件内部，如下代码将正确执行：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    setContentView(R.layout.activity_book_manager);</span><br><span class="line">    LinearLayout holder = (LinearLayout)findViewById(R.id.holder);</span><br><span class="line">    TextView imei = (TextView)findViewById(R.id.imei);</span><br><span class="line">    imei.setText(IDUtil.getUUID(<span class="keyword">this</span>));</span><br><span class="line">     </span><br><span class="line">    <span class="comment">// bind service in plugin</span></span><br><span class="line">    Intent service = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, BookManagerService.class);</span><br><span class="line">    bindService(service, mConnection, Context.BIND_AUTO_CREATE);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// start activity in plugin</span></span><br><span class="line">    Intent intent = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, TCPClientActivity.class);</span><br><span class="line">    startActivity(intent);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="u6E90_u7801_u89E3_u6790"><a href="#u6E90_u7801_u89E3_u6790" class="headerlink" title="源码解析"></a>源码解析</h1><p>使用方法很简单，下面就顺着上面的代码一步步去探究实现原理。</p>
+<h2 id="u521D_u59CB_u5316_u63D2_u4EF6_u6846_u67B6"><a href="#u521D_u59CB_u5316_u63D2_u4EF6_u6846_u67B6" class="headerlink" title="初始化插件框架"></a>初始化插件框架</h2><p>第一步就是初始化框架：<code>PluginManager.getInstance(base).init();</code></p>
+<h3 id="PluginManager-getInstance_28Context_base_29"><a href="#PluginManager-getInstance_28Context_base_29" class="headerlink" title="PluginManager.getInstance(Context base)"></a>PluginManager.getInstance(Context base)</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> PluginManager <span class="title">getInstance</span><span class="params">(Context base)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (sInstance == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (PluginManager.class) &#123;</span><br><span class="line">            <span class="keyword">if</span> (sInstance == <span class="keyword">null</span>)</span><br><span class="line">                sInstance = <span class="keyword">new</span> PluginManager(base);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sInstance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">PluginManager</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    Context app = context.getApplicationContext();</span><br><span class="line">    <span class="keyword">if</span> (app == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>.mContext = context;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.mContext = ((Application)app).getBaseContext();</span><br><span class="line">    &#125;</span><br><span class="line">    prepare();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>PluginManager 设计为了单例模式，负责管理插件的一些操作。</p>
+<p>在初始化的时候，得到全局 Context ，以防出现内存泄漏的情况。</p>
+<p>之后调用了 <code>prepare()</code> 方法，做一些预备操作。</p>
+<h3 id="prepare_28_29"><a href="#prepare_28_29" class="headerlink" title="prepare()"></a>prepare()</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">prepare</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="comment">// host base context</span></span><br><span class="line">      Systems.sHostContext = getHostContext();</span><br><span class="line"><span class="comment">// hook instrumentation</span></span><br><span class="line">      <span class="keyword">this</span>.hookInstrumentationAndHandler();</span><br><span class="line">      <span class="keyword">this</span>.hookSystemServices();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>prepare()</code> 中，将宿主 Context 赋值给了 Systems.sHostContext 。这样，在之后的代码中可以方便地访问到宿主 Context 。</p>
+<p>然后分为了两步操作，hookInstrumentationAndHandler 和 hookSystemServices 。为运行插件做一些必要的 hook 操作。</p>
+<h3 id="hookInstrumentationAndHandler_28_29"><a href="#hookInstrumentationAndHandler_28_29" class="headerlink" title="hookInstrumentationAndHandler()"></a>hookInstrumentationAndHandler()</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">hookInstrumentationAndHandler</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Instrumentation baseInstrumentation = ReflectUtil.getInstrumentation(<span class="keyword">this</span>.mContext);</span><br><span class="line">        <span class="keyword">if</span> (baseInstrumentation.getClass().getName().contains(<span class="string">"lbe"</span>)) &#123;</span><br><span class="line">            <span class="comment">// reject executing in paralell space, for example, lbe.</span></span><br><span class="line">            System.exit(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 创建插件的 instrumentation</span></span><br><span class="line">        <span class="keyword">final</span> VAInstrumentation instrumentation = <span class="keyword">new</span> VAInstrumentation(<span class="keyword">this</span>, baseInstrumentation);</span><br><span class="line">        Object activityThread = ReflectUtil.getActivityThread(<span class="keyword">this</span>.mContext);</span><br><span class="line">        <span class="comment">// 将插件的 instrumentation 设置到当前的 activityThread 中</span></span><br><span class="line">        ReflectUtil.setInstrumentation(activityThread, instrumentation);</span><br><span class="line">        <span class="comment">// 给 mainThreadHandler 设置 callback</span></span><br><span class="line">        ReflectUtil.setHandlerCallback(<span class="keyword">this</span>.mContext, instrumentation);</span><br><span class="line">        <span class="keyword">this</span>.mInstrumentation = instrumentation;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="hookSystemServices_28_29"><a href="#hookSystemServices_28_29" class="headerlink" title="hookSystemServices()"></a>hookSystemServices()</h2><pre><code>private void hookSystemServices() {
+    try {
+        // 得到当前系统中的 ActivityManager 单例
+        Singleton&lt;IActivityManager&gt; defaultSingleton = (Singleton&lt;IActivityManager&gt;) ReflectUtil.getField(ActivityManagerNative.class, null, &quot;gDefault&quot;);
+        // 创建 ActivityManager 的动态代理 
+        IActivityManager activityManagerProxy = ActivityManagerProxy.newInstance(this, defaultSingleton.get());
+
+        // Hook IActivityManager from ActivityManagerNative  利用反射将系统的 ActivityManager 单例替换为 activityManagerProxy 
+        ReflectUtil.setField(defaultSingleton.getClass().getSuperclass(), defaultSingleton, &quot;mInstance&quot;, activityManagerProxy);
+
+        if (defaultSingleton.get() == activityManagerProxy) {
+            this.mActivityManager = activityManagerProxy;
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+</code></pre><h2 id="init_28_29"><a href="#init_28_29" class="headerlink" title="init()"></a>init()</h2><pre><code>public void init() {
+    // ComponentsHandler 感觉像是插件中四大组件的管理者
+    mComponentsHandler = new ComponentsHandler(this);
+    // 用的是 asynctask 的线程池
+    RunUtil.getThreadPool().execute(new Runnable() {
+        @Override
+        public void run() {
+            // 空方法，给之后的东西，万一有什么需要初始化的
+            doInWorkThread();
+        }
+    });
+}
+
+private void doInWorkThread() {
+}
+</code></pre><h1 id="u52A0_u8F7D_u63D2_u4EF6"><a href="#u52A0_u8F7D_u63D2_u4EF6" class="headerlink" title="加载插件"></a>加载插件</h1><p>load plugin apk ：</p>
+<pre><code>PluginManager.getInstance(base).loadPlugin(apk);
+</code></pre><h2 id="loadPlugin_28File_apk_29"><a href="#loadPlugin_28File_apk_29" class="headerlink" title="loadPlugin(File apk)"></a>loadPlugin(File apk)</h2><pre><code>public void loadPlugin(File apk) throws Exception {
+    if (null == apk) {
+        throw new IllegalArgumentException(&quot;error : apk is null.&quot;);
+    }
+
+    if (!apk.exists()) {
+        throw new FileNotFoundException(apk.getAbsolutePath());
+    }
+
+    LoadedPlugin plugin = LoadedPlugin.create(this, this.mContext, apk);
+    if (null != plugin) {
+        this.mPlugins.put(plugin.getPackageName(), plugin);
+        // 创建插件中的 application
+        plugin.invokeApplication();
+    } else {
+        throw  new RuntimeException(&quot;Can&apos;t load plugin which is invalid: &quot; + apk.getAbsolutePath());
+    }
+}
+</code></pre><h2 id="LoadedPlugin"><a href="#LoadedPlugin" class="headerlink" title="LoadedPlugin"></a>LoadedPlugin</h2><h3 id="PackageParserCompat-parsePackage"><a href="#PackageParserCompat-parsePackage" class="headerlink" title="PackageParserCompat.parsePackage"></a>PackageParserCompat.parsePackage</h3><pre><code>public static final PackageParser.Package parsePackage(final Context context, final File apk, final int flags) throws PackageParser.PackageParserException {
+    if (Build.VERSION.SDK_INT &gt;= 24) {
+        return PackageParserV24.parsePackage(context, apk, flags);
+    } else if (Build.VERSION.SDK_INT &gt;= 21) {
+        return PackageParserLollipop.parsePackage(context, apk, flags);
+    } else {
+        return PackageParserLegacy.parsePackage(context, apk, flags);
+    }
+}
+</code></pre><h3 id="new_PackageInfo_28_29"><a href="#new_PackageInfo_28_29" class="headerlink" title="new PackageInfo()"></a>new PackageInfo()</h3><pre><code>this.mPackageInfo = new PackageInfo();
+this.mPackageInfo.applicationInfo = this.mPackage.applicationInfo;
+this.mPackageInfo.applicationInfo.sourceDir = apk.getAbsolutePath();
+this.mPackageInfo.signatures = this.mPackage.mSignatures;
+this.mPackageInfo.packageName = this.mPackage.packageName;
+if (pluginManager.getLoadedPlugin(mPackageInfo.packageName) != null) {
+    throw new RuntimeException(&quot;plugin has already been loaded : &quot; + mPackageInfo.packageName);
+}
+this.mPackageInfo.versionCode = this.mPackage.mVersionCode;
+this.mPackageInfo.versionName = this.mPackage.mVersionName;
+this.mPackageInfo.permissions = new PermissionInfo[0];
+</code></pre><h3 id="createResources_28context_2C_apk_29"><a href="#createResources_28context_2C_apk_29" class="headerlink" title="createResources(context, apk)"></a>createResources(context, apk)</h3><pre><code>@WorkerThread
+private static Resources createResources(Context context, File apk) {
+    if (Constants.COMBINE_RESOURCES) {
+        //如果插件资源合并到宿主里面去的情况，插件可以访问宿主的资源
+        Resources resources = new ResourcesManager().createResources(context, apk.getAbsolutePath());
+        // hook resource
+        ResourcesManager.hookResources(context, resources);
+        return resources;
+    } else {
+        //插件使用独立的Resources，不与宿主有关系，无法访问到宿主的资源
+        Resources hostResources = context.getResources();
+        // 利用 addAssetPath 来创建 assetManager
+        AssetManager assetManager = createAssetManager(context, apk);
+        // 创建 Resources
+        return new Resources(assetManager, hostResources.getDisplayMetrics(), hostResources.getConfiguration());
+    }
+}
+</code></pre><h2 id="createResources_28Context_hostContext_2C_String_apk_29"><a href="#createResources_28Context_hostContext_2C_String_apk_29" class="headerlink" title="createResources(Context hostContext, String apk)"></a>createResources(Context hostContext, String apk)</h2><pre><code>public static synchronized Resources createResources(Context hostContext, String apk) {
+    Resources hostResources = hostContext.getResources();
+    Resources newResources = null;
+    AssetManager assetManager;
+    try {
+        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.LOLLIPOP) {
+            // 在Android 5.0 之前，addAssetPath 只是把 apk 路径加入到资源路径列表里
+            // 但是资源的解析其实是在很早的时候就已经执行完了
+            // 所以重新构造一个新的 AssetManager，再 hook resource 替换系统的 mResource
+            assetManager = AssetManager.class.newInstance();
+            ReflectUtil.invoke(AssetManager.class, assetManager, &quot;addAssetPath&quot;, hostContext.getApplicationInfo().sourceDir);
+        } else {
+            // Android 5.0 资源做过分区，直接获取宿主的 assetManager
+            assetManager = hostResources.getAssets();
+        }
+        // 将当前插件的资源路径加入到 assetManager 中
+        ReflectUtil.invoke(AssetManager.class, assetManager, &quot;addAssetPath&quot;, apk);
+        // 获取之前加载完毕的插件，得到它们的 apk 路径再重新添加到 assetManager 中
+        // 是否在 Android 5.0 及以上不需要此步骤？
+        List&lt;LoadedPlugin&gt; pluginList = PluginManager.getInstance(hostContext).getAllLoadedPlugins();
+        for (LoadedPlugin plugin : pluginList) {
+            ReflectUtil.invoke(AssetManager.class, assetManager, &quot;addAssetPath&quot;, plugin.getLocation());
+        }
+        // 对一些安卓厂商做兼容性处理，Resources 的类名各不同
+        // 创建 resource
+        if (isMiUi(hostResources)) {
+            newResources = MiUiResourcesCompat.createResources(hostResources, assetManager);
+        } else if (isVivo(hostResources)) {
+            newResources = VivoResourcesCompat.createResources(hostContext, hostResources, assetManager);
+        } else if (isNubia(hostResources)) {
+            newResources = NubiaResourcesCompat.createResources(hostResources, assetManager);
+        } else if (isNotRawResources(hostResources)) {
+            newResources = AdaptationResourcesCompat.createResources(hostResources, assetManager);
+        } else {
+            // is raw android resources
+            newResources = new Resources(assetManager, hostResources.getDisplayMetrics(), hostResources.getConfiguration());
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return newResources;
+}
+</code></pre><h2 id="hookResources_28Context_base_2C_Resources_resources_29"><a href="#hookResources_28Context_base_2C_Resources_resources_29" class="headerlink" title="hookResources(Context base, Resources resources)"></a>hookResources(Context base, Resources resources)</h2><pre><code>public static void hookResources(Context base, Resources resources) {
+    if (Build.VERSION.SDK_INT &gt;= 24) {
+        return;
+    }
+
+    try {
+        // 替换 hostContext 中的 mResources
+        ReflectUtil.setField(base.getClass(), base, &quot;mResources&quot;, resources);
+        // 替换 packageInfo 中的 mResources
+        Object loadedApk = ReflectUtil.getPackageInfo(base);
+        ReflectUtil.setField(loadedApk.getClass(), loadedApk, &quot;mResources&quot;, resources);
+        // 将 resource 放入 mActiveResources 中
+        Object activityThread = ReflectUtil.getActivityThread(base);
+        Object resManager = ReflectUtil.getField(activityThread.getClass(), activityThread, &quot;mResourcesManager&quot;);
+        Map&lt;Object, WeakReference&lt;Resources&gt;&gt; map = (Map&lt;Object, WeakReference&lt;Resources&gt;&gt;) ReflectUtil.getField(resManager.getClass(), resManager, &quot;mActiveResources&quot;);
+        Object key = map.keySet().iterator().next();
+        map.put(key, new WeakReference&lt;&gt;(resources));
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+</code></pre><h3 id="createClassLoader_28Context_context_2C_File_apk_2C_File_libsDir_2C_ClassLoader_parent_29"><a href="#createClassLoader_28Context_context_2C_File_apk_2C_File_libsDir_2C_ClassLoader_parent_29" class="headerlink" title="createClassLoader(Context context, File apk, File libsDir, ClassLoader parent)"></a>createClassLoader(Context context, File apk, File libsDir, ClassLoader parent)</h3><pre><code>private static ClassLoader createClassLoader(Context context, File apk, File libsDir, ClassLoader parent) {
+    // create classloader
+    File dexOutputDir = context.getDir(Constants.OPTIMIZE_DIR, Context.MODE_PRIVATE);
+    String dexOutputPath = dexOutputDir.getAbsolutePath();
+    DexClassLoader loader = new DexClassLoader(apk.getAbsolutePath(), dexOutputPath, libsDir.getAbsolutePath(), parent);
+    // 如果合并，就会把宿主的 classloader 中的 dex 加入到插件中的 classloader
+    if (Constants.COMBINE_CLASSLOADER) {
+        try {
+            DexUtil.insertDex(loader);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    return loader;
+}
+</code></pre><h3 id="tryToCopyNativeLib_28apk_29_3B"><a href="#tryToCopyNativeLib_28apk_29_3B" class="headerlink" title="tryToCopyNativeLib(apk);"></a>tryToCopyNativeLib(apk);</h3><p>复制 .so 文件</p>
+<h3 id="Cache_instrumentations"><a href="#Cache_instrumentations" class="headerlink" title="Cache instrumentations"></a>Cache instrumentations</h3><pre><code>Map&lt;ComponentName, InstrumentationInfo&gt; instrumentations = new HashMap&lt;ComponentName, InstrumentationInfo&gt;();
+for (PackageParser.Instrumentation instrumentation : this.mPackage.instrumentation) {
+    instrumentations.put(instrumentation.getComponentName(), instrumentation.info);
+}
+this.mInstrumentationInfos = Collections.unmodifiableMap(instrumentations);
+this.mPackageInfo.instrumentation = instrumentations.values().toArray(new InstrumentationInfo[instrumentations.size()]);
+</code></pre><h3 id="Cache_activities"><a href="#Cache_activities" class="headerlink" title="Cache activities"></a>Cache activities</h3><pre><code>Map&lt;ComponentName, ActivityInfo&gt; activityInfos = new HashMap&lt;ComponentName, ActivityInfo&gt;();
+for (PackageParser.Activity activity : this.mPackage.activities) {
+    activityInfos.put(activity.getComponentName(), activity.info);
+}
+this.mActivityInfos = Collections.unmodifiableMap(activityInfos);
+this.mPackageInfo.activities = activityInfos.values().toArray(new ActivityInfo[activityInfos.size()]);
+</code></pre><h3 id="Cache_providers"><a href="#Cache_providers" class="headerlink" title="Cache providers"></a>Cache providers</h3><pre><code>Map&lt;String, ProviderInfo&gt; providers = new HashMap&lt;String, ProviderInfo&gt;();
+Map&lt;ComponentName, ProviderInfo&gt; providerInfos = new HashMap&lt;ComponentName, ProviderInfo&gt;();
+for (PackageParser.Provider provider : this.mPackage.providers) {
+    providers.put(provider.info.authority, provider.info);
+    providerInfos.put(provider.getComponentName(), provider.info);
+}
+this.mProviders = Collections.unmodifiableMap(providers);
+this.mProviderInfos = Collections.unmodifiableMap(providerInfos);
+this.mPackageInfo.providers = providerInfos.values().toArray(new ProviderInfo[providerInfos.size()]);
+</code></pre><h3 id="Register_broadcast_receivers_dynamically"><a href="#Register_broadcast_receivers_dynamically" class="headerlink" title="Register broadcast receivers dynamically"></a>Register broadcast receivers dynamically</h3><pre><code>Map&lt;ComponentName, ActivityInfo&gt; receivers = new HashMap&lt;ComponentName, ActivityInfo&gt;();
+for (PackageParser.Activity receiver : this.mPackage.receivers) {
+    receivers.put(receiver.getComponentName(), receiver.info);
+
+    try {
+        // 得到插件中的 BroadcastReceiver 的实例
+        BroadcastReceiver br = BroadcastReceiver.class.cast(getClassLoader().loadClass(receiver.getComponentName().getClassName()).newInstance());
+        // 注册广播
+        for (PackageParser.ActivityIntentInfo aii : receiver.intents) {
+            this.mHostContext.registerReceiver(br, aii);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+this.mReceiverInfos = Collections.unmodifiableMap(receivers);
+this.mPackageInfo.receivers = receivers.values().toArray(new ActivityInfo[receivers.size()]);
+</code></pre><h1 id="u63D2_u4EF6Activity_u52A0_u8F7D_u8FC7_u7A0B"><a href="#u63D2_u4EF6Activity_u52A0_u8F7D_u8FC7_u7A0B" class="headerlink" title="插件Activity加载过程"></a>插件Activity加载过程</h1><h1 id="VAInstrumentation"><a href="#VAInstrumentation" class="headerlink" title="VAInstrumentation"></a>VAInstrumentation</h1><h2 id="execStartActivity"><a href="#execStartActivity" class="headerlink" title="execStartActivity"></a>execStartActivity</h2><pre><code>public ActivityResult execStartActivity(
+        Context who, IBinder contextThread, IBinder token, Activity target,
+        Intent intent, int requestCode, Bundle options) {
+    // 这个主要是当component为null时，根据启动Activity时，配置的action，data,category等去已加载的plugin中匹配到确定的Activity的。
+    mPluginManager.getComponentsHandler().transformIntentToExplicitAsNeeded(intent);
+    // null component is an implicitly intent
+    if (intent.getComponent() != null) {
+        Log.i(TAG, String.format(&quot;execStartActivity[%s : %s]&quot;, intent.getComponent().getPackageName(),
+                intent.getComponent().getClassName()));
+        // 先将 intent 中的 packagename 和 classname 替换为 Stub Activity
+        this.mPluginManager.getComponentsHandler().markIntentIfNeeded(intent);
+    }
+    // 利用反射去执行原来的 execStartActivity 方法
+    ActivityResult result = realExecStartActivity(who, contextThread, token, target,
+                intent, requestCode, options);
+
+    return result;
+
+}
+</code></pre><h2 id="ComponentsHandler"><a href="#ComponentsHandler" class="headerlink" title="ComponentsHandler"></a>ComponentsHandler</h2><h2 id="transformIntentToExplicitAsNeeded"><a href="#transformIntentToExplicitAsNeeded" class="headerlink" title="transformIntentToExplicitAsNeeded"></a>transformIntentToExplicitAsNeeded</h2><pre><code>public Intent transformIntentToExplicitAsNeeded(Intent intent) {
+    ComponentName component = intent.getComponent();
+    if (component == null) {
+        ResolveInfo info = mPluginManager.resolveActivity(intent);
+        if (info != null &amp;&amp; info.activityInfo != null) {
+            component = new ComponentName(info.activityInfo.packageName, info.activityInfo.name);
+            intent.setComponent(component);
+        }
+    }
+
+    return intent;
+}
+</code></pre><h2 id="markIntentIfNeeded"><a href="#markIntentIfNeeded" class="headerlink" title="markIntentIfNeeded"></a>markIntentIfNeeded</h2><pre><code>public void markIntentIfNeeded(Intent intent) {
+    if (intent.getComponent() == null) {
+        return;
+    }
+    String targetPackageName = intent.getComponent().getPackageName();
+    String targetClassName = intent.getComponent().getClassName();
+    // search map and return specific launchmode stub activity
+    // 先将目标的 packagename 和 classname 保存好，之后以便恢复的
+    if (!targetPackageName.equals(mContext.getPackageName()) &amp;&amp; mPluginManager.getLoadedPlugin(targetPackageName) != null) {
+        intent.putExtra(Constants.KEY_IS_PLUGIN, true);
+        intent.putExtra(Constants.KEY_TARGET_PACKAGE, targetPackageName);
+        intent.putExtra(Constants.KEY_TARGET_ACTIVITY, targetClassName);
+        // 根据 launchMode 、theme 查找对应类型的 stub activity
+        // 并将 intent 中的目标 activity 替换为 stub activity
+        dispatchStubActivity(intent);
+    }
+}
+</code></pre><h1 id="VAInstrumentation-1"><a href="#VAInstrumentation-1" class="headerlink" title="VAInstrumentation"></a>VAInstrumentation</h1><h2 id="newActivity"><a href="#newActivity" class="headerlink" title="newActivity"></a>newActivity</h2><pre><code>@Override
+public Activity newActivity(ClassLoader cl, String className, Intent intent) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    try {
+        cl.loadClass(className);
+    } catch (ClassNotFoundException e) {
+        // 若出错则说明要启动的是插件里面的classname
+        LoadedPlugin plugin = this.mPluginManager.getLoadedPlugin(intent);
+        String targetClassName = PluginUtil.getTargetActivity(intent);
+
+        Log.i(TAG, String.format(&quot;newActivity[%s : %s]&quot;, className, targetClassName));
+
+        if (targetClassName != null) {
+            Activity activity = mBase.newActivity(plugin.getClassLoader(), targetClassName, intent);
+            activity.setIntent(intent);
+
+            try {
+                // for 4.1+  设置好 resource
+                ReflectUtil.setField(ContextThemeWrapper.class, activity, &quot;mResources&quot;, plugin.getResources());
+            } catch (Exception ignored) {
+                // ignored.
+            }
+
+            return activity;
+        }
+    }
+    // 启动的不是插件中的activity就使用原来的
+    return mBase.newActivity(cl, className, intent);
+}
+</code></pre><h2 id="callActivityOnCreate"><a href="#callActivityOnCreate" class="headerlink" title="callActivityOnCreate"></a>callActivityOnCreate</h2><pre><code>@Override
+public void callActivityOnCreate(Activity activity, Bundle icicle) {
+    final Intent intent = activity.getIntent();
+    // 根据 KEY_IS_PLUGIN 来判断是否是启动插件 activity
+    if (PluginUtil.isIntentFromPlugin(intent)) {
+        Context base = activity.getBaseContext();
+        try {
+            // 将创建出来的插件 activity 中 mResources mBase mApplication 进行替换
+            LoadedPlugin plugin = this.mPluginManager.getLoadedPlugin(intent);
+            ReflectUtil.setField(base.getClass(), base, &quot;mResources&quot;, plugin.getResources());
+            ReflectUtil.setField(ContextWrapper.class, activity, &quot;mBase&quot;, plugin.getPluginContext());
+            ReflectUtil.setField(Activity.class, activity, &quot;mApplication&quot;, plugin.getApplication());
+            ReflectUtil.setFieldNoException(ContextThemeWrapper.class, activity, &quot;mBase&quot;, plugin.getPluginContext());
+
+            // set screenOrientation 设置屏幕方向
+            ActivityInfo activityInfo = plugin.getActivityInfo(PluginUtil.getComponent(intent));
+            if (activityInfo.screenOrientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
+                activity.setRequestedOrientation(activityInfo.screenOrientation);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    mBase.callActivityOnCreate(activity, icicle);
+}
+</code></pre><h1 id="u63D2_u4EF6Service_u52A0_u8F7D_u8FC7_u7A0B"><a href="#u63D2_u4EF6Service_u52A0_u8F7D_u8FC7_u7A0B" class="headerlink" title="插件Service加载过程"></a>插件Service加载过程</h1><h1 id="ActivityManagerProxy"><a href="#ActivityManagerProxy" class="headerlink" title="ActivityManagerProxy"></a>ActivityManagerProxy</h1><h2 id="invoke"><a href="#invoke" class="headerlink" title="invoke"></a>invoke</h2><pre><code>@Override
+public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    if (&quot;startService&quot;.equals(method.getName())) {
+        try {
+            return startService(proxy, method, args);
+        } catch (Throwable e) {
+            Log.e(TAG, &quot;Start service error&quot;, e);
+        }
+    } 
+    ...
+}
+</code></pre><h2 id="startService"><a href="#startService" class="headerlink" title="startService"></a>startService</h2><pre><code>private Object startService(Object proxy, Method method, Object[] args) throws Throwable {
+    IApplicationThread appThread = (IApplicationThread) args[0];
+    Intent target = (Intent) args[1];
+    ResolveInfo resolveInfo = this.mPluginManager.resolveService(target, 0);
+    if (null == resolveInfo || null == resolveInfo.serviceInfo) {
+        // 如果为空的话，不是启动的插件service
+        return method.invoke(this.mActivityManager, args);
+    }
+    // 
+    return startDelegateServiceForTarget(target, resolveInfo.serviceInfo, null, RemoteService.EXTRA_COMMAND_START_SERVICE);
+}
+</code></pre><h2 id="startDelegateServiceForTarget"><a href="#startDelegateServiceForTarget" class="headerlink" title="startDelegateServiceForTarget"></a>startDelegateServiceForTarget</h2><pre><code>private ComponentName startDelegateServiceForTarget(Intent target, ServiceInfo serviceInfo, Bundle extras, int command) {
+    Intent wrapperIntent = wrapperTargetIntent(target, serviceInfo, extras, command);
+    return mPluginManager.getHostContext().startService(wrapperIntent);
+}
+</code></pre><h2 id="wrapperTargetIntent"><a href="#wrapperTargetIntent" class="headerlink" title="wrapperTargetIntent"></a>wrapperTargetIntent</h2><pre><code>private Intent wrapperTargetIntent(Intent target, ServiceInfo serviceInfo, Bundle extras, int command) {
+    // fill in service with ComponentName
+    target.setComponent(new ComponentName(serviceInfo.packageName, serviceInfo.name));
+    String pluginLocation = mPluginManager.getLoadedPlugin(target.getComponent()).getLocation();
+
+    // start delegate service to run plugin service inside
+    // 检查插件 service 是否是本地还是远程，再选择相对应的 delegate service
+    boolean local = PluginUtil.isLocalService(serviceInfo);
+    Class&lt;? extends Service&gt; delegate = local ? LocalService.class : RemoteService.class;
+    // 创建新的 intent ，用来启动 delegate service。intent 中会保存插件 service 的相关信息
+    Intent intent = new Intent();
+    // 设置 class 为对应的 delegate service classname
+    intent.setClass(mPluginManager.getHostContext(), delegate);
+    intent.putExtra(RemoteService.EXTRA_TARGET, target);
+    intent.putExtra(RemoteService.EXTRA_COMMAND, command);
+    intent.putExtra(RemoteService.EXTRA_PLUGIN_LOCATION, pluginLocation);
+    if (extras != null) {
+        intent.putExtras(extras);
+    }
+
+    return intent;
+}
+</code></pre><h1 id="LocalService"><a href="#LocalService" class="headerlink" title="LocalService"></a>LocalService</h1><h2 id="onStartCommand"><a href="#onStartCommand" class="headerlink" title="onStartCommand"></a>onStartCommand</h2><pre><code>@Override
+public int onStartCommand(Intent intent, int flags, int startId) {
+    if (null == intent || !intent.hasExtra(EXTRA_TARGET) || !intent.hasExtra(EXTRA_COMMAND)) {
+        return START_STICKY;
+    }
+
+    Intent target = intent.getParcelableExtra(EXTRA_TARGET);
+    int command = intent.getIntExtra(EXTRA_COMMAND, 0);
+    if (null == target || command &lt;= 0) {
+        return START_STICKY;
+    }
+
+    ComponentName component = target.getComponent();
+    LoadedPlugin plugin = mPluginManager.getLoadedPlugin(component);
+
+    switch (command) {
+        case EXTRA_COMMAND_START_SERVICE: {
+            ActivityThread mainThread = (ActivityThread) ReflectUtil.getActivityThread(getBaseContext());
+            IApplicationThread appThread = mainThread.getApplicationThread();
+            Service service;
+            // 判断该插件的 service 是否已经创建过
+            if (this.mPluginManager.getComponentsHandler().isServiceAvailable(component)) {
+                // 直接从已启动服务 map 中取出该插件的 service
+                service = this.mPluginManager.getComponentsHandler().getService(component);
+            } else {
+                try {
+                    // 创建插件 service 对象
+                    service = (Service) plugin.getClassLoader().loadClass(component.getClassName()).newInstance();
+
+                    // 需要调用 attach
+                    Application app = plugin.getApplication();
+                    IBinder token = appThread.asBinder();
+                    Method attach = service.getClass().getMethod(&quot;attach&quot;, Context.class, ActivityThread.class, String.class, IBinder.class, Application.class, Object.class);
+                    IActivityManager am = mPluginManager.getActivityManager();
+                    attach.invoke(service, plugin.getPluginContext(), mainThread, component.getClassName(), token, app, am);
+                    // oncreate
+                    service.onCreate();
+                    // 放入已启动服务 map 中
+                    this.mPluginManager.getComponentsHandler().rememberService(component, service);
+                } catch (Throwable t) {
+                    return START_STICKY;
+                }
+            }
+            // 调用 onStartCommand
+            service.onStartCommand(target, 0, this.mPluginManager.getComponentsHandler().getServiceCounter(service).getAndIncrement());
+            break;
+        }
+    ...
+}
+</code></pre><h1 id="u63D2_u4EF6BroadcastReceiver_u52A0_u8F7D_u8FC7_u7A0B"><a href="#u63D2_u4EF6BroadcastReceiver_u52A0_u8F7D_u8FC7_u7A0B" class="headerlink" title="插件BroadcastReceiver加载过程"></a>插件BroadcastReceiver加载过程</h1><h1 id="LoadedPlugin-1"><a href="#LoadedPlugin-1" class="headerlink" title="LoadedPlugin"></a>LoadedPlugin</h1><pre><code>Map&lt;ComponentName, ActivityInfo&gt; receivers = new HashMap&lt;ComponentName, ActivityInfo&gt;();
+for (PackageParser.Activity receiver : this.mPackage.receivers) {
+    receivers.put(receiver.getComponentName(), receiver.info);
+
+    try {
+        // 得到插件中的 BroadcastReceiver 的实例
+        BroadcastReceiver br = BroadcastReceiver.class.cast(getClassLoader().loadClass(receiver.getComponentName().getClassName()).newInstance());
+        // 注册广播
+        for (PackageParser.ActivityIntentInfo aii : receiver.intents) {
+            this.mHostContext.registerReceiver(br, aii);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+</code></pre><h1 id="u63D2_u4EF6ContentProvider_u52A0_u8F7D_u8FC7_u7A0B"><a href="#u63D2_u4EF6ContentProvider_u52A0_u8F7D_u8FC7_u7A0B" class="headerlink" title="插件ContentProvider加载过程"></a>插件ContentProvider加载过程</h1><h1 id="PluginContext"><a href="#PluginContext" class="headerlink" title="PluginContext"></a>PluginContext</h1><pre><code>@Override
+public ContentResolver getContentResolver() {
+    return new PluginContentResolver(getHostContext());
+}
+</code></pre><h1 id="PluginContentResolver"><a href="#PluginContentResolver" class="headerlink" title="PluginContentResolver"></a>PluginContentResolver</h1><pre><code>public PluginContentResolver(Context context) {
+    super(context);
+    mBase = context.getContentResolver();
+    mPluginManager = PluginManager.getInstance(context);
+}
+</code></pre><h2 id="acquireProvider"><a href="#acquireProvider" class="headerlink" title="acquireProvider"></a>acquireProvider</h2><pre><code>protected IContentProvider acquireProvider(Context context, String auth) {
+    try {
+        if (mPluginManager.resolveContentProvider(auth, 0) != null) {
+            return mPluginManager.getIContentProvider();
+        }
+
+        return (IContentProvider) sAcquireProvider.invoke(mBase, context, auth);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return null;
+}
+</code></pre><h1 id="PluginManager"><a href="#PluginManager" class="headerlink" title="PluginManager"></a>PluginManager</h1><h2 id="getIContentProvider"><a href="#getIContentProvider" class="headerlink" title="getIContentProvider"></a>getIContentProvider</h2><pre><code>public synchronized IContentProvider getIContentProvider() {
+    if (mIContentProvider == null) {
+        hookIContentProviderAsNeeded();
+    }
+
+    return mIContentProvider;
+}
+</code></pre><h2 id="hookIContentProviderAsNeeded"><a href="#hookIContentProviderAsNeeded" class="headerlink" title="hookIContentProviderAsNeeded"></a>hookIContentProviderAsNeeded</h2><pre><code>private void hookIContentProviderAsNeeded() {
+    Uri uri = Uri.parse(PluginContentResolver.getUri(mContext));
+    mContext.getContentResolver().call(uri, &quot;wakeup&quot;, null, null);
+    try {
+        Field authority = null;
+        Field mProvider = null;
+        ActivityThread activityThread = (ActivityThread) ReflectUtil.getActivityThread(mContext);
+        Map mProviderMap = (Map) ReflectUtil.getField(activityThread.getClass(), activityThread, &quot;mProviderMap&quot;);
+        Iterator iter = mProviderMap.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            Object key = entry.getKey();
+            Object val = entry.getValue();
+            String auth;
+            if (key instanceof String) {
+                auth = (String) key;
+            } else {
+                if (authority == null) {
+                    authority = key.getClass().getDeclaredField(&quot;authority&quot;);
+                    authority.setAccessible(true);
+                }
+                auth = (String) authority.get(key);
+            }
+            if (auth.equals(PluginContentResolver.getAuthority(mContext))) {
+                if (mProvider == null) {
+                    mProvider = val.getClass().getDeclaredField(&quot;mProvider&quot;);
+                    mProvider.setAccessible(true);
+                }
+                IContentProvider rawProvider = (IContentProvider) mProvider.get(val);
+                IContentProvider proxy = IContentProviderProxy.newInstance(mContext, rawProvider);
+                mIContentProvider = proxy;
+                Log.d(TAG, &quot;hookIContentProvider succeed : &quot; + mIContentProvider);
+                break;
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+</code></pre>
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号来获取我的动态！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      俞其荣
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://yuqirong.me/2017/11/12/VirtualAPK源码解析/" title="VirtualAPK源码解析">http://yuqirong.me/2017/11/12/VirtualAPK源码解析/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/开源框架/" rel="tag"># 开源框架</a>
+          
+            <a href="/tags/插件化/" rel="tag"># 插件化</a>
+          
+            <a href="/tags/源码解析/" rel="tag"># 源码解析</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/31/View事件分发机制源码解析/" rel="next" title="View事件分发机制源码解析">
+                <i class="fa fa-chevron-left"></i> View事件分发机制源码解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/01/Vue.js安装教程/" rel="prev" title="Vue.js安装教程">
+                Vue.js安装教程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+               alt="俞其荣" />
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">78</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank" title="Google+">
+                  
+                    <i class="fa fa-fw fa-google-plus"></i>
+                  
+                  Google+
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/1291f6690ea0" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/yyyuqirong" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yqr271228943@gmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Header"><span class="nav-number">1.</span> <span class="nav-text">Header</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u4F7F_u7528_u65B9_u6CD5"><span class="nav-number">2.</span> <span class="nav-text">使用方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u6E90_u7801_u89E3_u6790"><span class="nav-number">3.</span> <span class="nav-text">源码解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u521D_u59CB_u5316_u63D2_u4EF6_u6846_u67B6"><span class="nav-number">3.1.</span> <span class="nav-text">初始化插件框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PluginManager-getInstance_28Context_base_29"><span class="nav-number">3.1.1.</span> <span class="nav-text">PluginManager.getInstance(Context base)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#prepare_28_29"><span class="nav-number">3.1.2.</span> <span class="nav-text">prepare()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hookInstrumentationAndHandler_28_29"><span class="nav-number">3.1.3.</span> <span class="nav-text">hookInstrumentationAndHandler()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hookSystemServices_28_29"><span class="nav-number">3.2.</span> <span class="nav-text">hookSystemServices()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#init_28_29"><span class="nav-number">3.3.</span> <span class="nav-text">init()</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u52A0_u8F7D_u63D2_u4EF6"><span class="nav-number">4.</span> <span class="nav-text">加载插件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#loadPlugin_28File_apk_29"><span class="nav-number">4.1.</span> <span class="nav-text">loadPlugin(File apk)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LoadedPlugin"><span class="nav-number">4.2.</span> <span class="nav-text">LoadedPlugin</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PackageParserCompat-parsePackage"><span class="nav-number">4.2.1.</span> <span class="nav-text">PackageParserCompat.parsePackage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#new_PackageInfo_28_29"><span class="nav-number">4.2.2.</span> <span class="nav-text">new PackageInfo()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#createResources_28context_2C_apk_29"><span class="nav-number">4.2.3.</span> <span class="nav-text">createResources(context, apk)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#createResources_28Context_hostContext_2C_String_apk_29"><span class="nav-number">4.3.</span> <span class="nav-text">createResources(Context hostContext, String apk)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hookResources_28Context_base_2C_Resources_resources_29"><span class="nav-number">4.4.</span> <span class="nav-text">hookResources(Context base, Resources resources)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#createClassLoader_28Context_context_2C_File_apk_2C_File_libsDir_2C_ClassLoader_parent_29"><span class="nav-number">4.4.1.</span> <span class="nav-text">createClassLoader(Context context, File apk, File libsDir, ClassLoader parent)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tryToCopyNativeLib_28apk_29_3B"><span class="nav-number">4.4.2.</span> <span class="nav-text">tryToCopyNativeLib(apk);</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cache_instrumentations"><span class="nav-number">4.4.3.</span> <span class="nav-text">Cache instrumentations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cache_activities"><span class="nav-number">4.4.4.</span> <span class="nav-text">Cache activities</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cache_providers"><span class="nav-number">4.4.5.</span> <span class="nav-text">Cache providers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Register_broadcast_receivers_dynamically"><span class="nav-number">4.4.6.</span> <span class="nav-text">Register broadcast receivers dynamically</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u63D2_u4EF6Activity_u52A0_u8F7D_u8FC7_u7A0B"><span class="nav-number">5.</span> <span class="nav-text">插件Activity加载过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VAInstrumentation"><span class="nav-number">6.</span> <span class="nav-text">VAInstrumentation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#execStartActivity"><span class="nav-number">6.1.</span> <span class="nav-text">execStartActivity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ComponentsHandler"><span class="nav-number">6.2.</span> <span class="nav-text">ComponentsHandler</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transformIntentToExplicitAsNeeded"><span class="nav-number">6.3.</span> <span class="nav-text">transformIntentToExplicitAsNeeded</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#markIntentIfNeeded"><span class="nav-number">6.4.</span> <span class="nav-text">markIntentIfNeeded</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VAInstrumentation-1"><span class="nav-number">7.</span> <span class="nav-text">VAInstrumentation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#newActivity"><span class="nav-number">7.1.</span> <span class="nav-text">newActivity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#callActivityOnCreate"><span class="nav-number">7.2.</span> <span class="nav-text">callActivityOnCreate</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u63D2_u4EF6Service_u52A0_u8F7D_u8FC7_u7A0B"><span class="nav-number">8.</span> <span class="nav-text">插件Service加载过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ActivityManagerProxy"><span class="nav-number">9.</span> <span class="nav-text">ActivityManagerProxy</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#invoke"><span class="nav-number">9.1.</span> <span class="nav-text">invoke</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#startService"><span class="nav-number">9.2.</span> <span class="nav-text">startService</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#startDelegateServiceForTarget"><span class="nav-number">9.3.</span> <span class="nav-text">startDelegateServiceForTarget</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wrapperTargetIntent"><span class="nav-number">9.4.</span> <span class="nav-text">wrapperTargetIntent</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LocalService"><span class="nav-number">10.</span> <span class="nav-text">LocalService</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#onStartCommand"><span class="nav-number">10.1.</span> <span class="nav-text">onStartCommand</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u63D2_u4EF6BroadcastReceiver_u52A0_u8F7D_u8FC7_u7A0B"><span class="nav-number">11.</span> <span class="nav-text">插件BroadcastReceiver加载过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LoadedPlugin-1"><span class="nav-number">12.</span> <span class="nav-text">LoadedPlugin</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u63D2_u4EF6ContentProvider_u52A0_u8F7D_u8FC7_u7A0B"><span class="nav-number">13.</span> <span class="nav-text">插件ContentProvider加载过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PluginContext"><span class="nav-number">14.</span> <span class="nav-text">PluginContext</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PluginContentResolver"><span class="nav-number">15.</span> <span class="nav-text">PluginContentResolver</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#acquireProvider"><span class="nav-number">15.1.</span> <span class="nav-text">acquireProvider</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PluginManager"><span class="nav-number">16.</span> <span class="nav-text">PluginManager</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#getIContentProvider"><span class="nav-number">16.1.</span> <span class="nav-text">getIContentProvider</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hookIContentProviderAsNeeded"><span class="nav-number">16.2.</span> <span class="nav-text">hookIContentProviderAsNeeded</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+<p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 94126, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 94126, xid: "2017/11/12/VirtualAPK源码解析/"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/94126/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+</body>
+</html>
