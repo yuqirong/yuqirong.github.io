@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Android,开源框架," />
+  <meta name="keywords" content="Vue.js," />
 
 
 
@@ -89,17 +89,43 @@
 
 
 
-<meta name="description" content="在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&amp;gt;﹏&amp;lt;)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、Ac">
+<meta name="description" content="v-html将 html 的代码输出
+&amp;lt;div id=&amp;quot;app&amp;quot;&amp;gt;
+    &amp;lt;div v-html=&amp;quot;message&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+
+&amp;lt;script&amp;gt;
+new Vue({
+  el: &amp;apos;#app&amp;apos;,
+  data: {
+    message: &amp;apos;&amp;lt">
 <meta property="og:type" content="article">
-<meta property="og:title" content="初探Android ORM框架之greenDAO">
-<meta property="og:url" content="http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/index.html">
+<meta property="og:title" content="Vue.js模板方法">
+<meta property="og:url" content="http://yuqirong.me/2017/12/02/Vue.js模板方法/index.html">
 <meta property="og:site_name" content="Qirong Yu's Blog">
-<meta property="og:description" content="在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&amp;gt;﹏&amp;lt;)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、Ac">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20151124/20151124235609.png">
-<meta property="og:updated_time" content="2017-01-07T14:57:42.417Z">
+<meta property="og:description" content="v-html将 html 的代码输出
+&amp;lt;div id=&amp;quot;app&amp;quot;&amp;gt;
+    &amp;lt;div v-html=&amp;quot;message&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+
+&amp;lt;script&amp;gt;
+new Vue({
+  el: &amp;apos;#app&amp;apos;,
+  data: {
+    message: &amp;apos;&amp;lt">
+<meta property="og:updated_time" content="2017-12-02T12:47:33.047Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="初探Android ORM框架之greenDAO">
-<meta name="twitter:description" content="在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&amp;gt;﹏&amp;lt;)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、Ac">
+<meta name="twitter:title" content="Vue.js模板方法">
+<meta name="twitter:description" content="v-html将 html 的代码输出
+&amp;lt;div id=&amp;quot;app&amp;quot;&amp;gt;
+    &amp;lt;div v-html=&amp;quot;message&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+
+&amp;lt;script&amp;gt;
+new Vue({
+  el: &amp;apos;#app&amp;apos;,
+  data: {
+    message: &amp;apos;&amp;lt">
 
 
 
@@ -127,13 +153,13 @@
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/"/>
+  <link rel="canonical" href="http://yuqirong.me/2017/12/02/Vue.js模板方法/"/>
 
 
 
 
 
-  <title> 初探Android ORM框架之greenDAO | Qirong Yu's Blog </title>
+  <title> Vue.js模板方法 | Qirong Yu's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -307,7 +333,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2017/12/02/Vue.js模板方法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -328,7 +354,7 @@
             
             
               
-                初探Android ORM框架之greenDAO
+                Vue.js模板方法
               
             
           </h2>
@@ -343,8 +369,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-11-24T21:14:30+08:00">
-                2015-11-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-02T20:36:02+08:00">
+                2017-12-02
               </time>
             
 
@@ -366,8 +392,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
+                  <a href="/categories/Vue-js/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue.js</span>
                   </a>
                 </span>
 
@@ -385,8 +411,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2015/11/24/初探Android ORM框架之greenDAO/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2015/11/24/初探Android ORM框架之greenDAO/" itemprop="commentsCount"></span>
+                <a href="/2017/12/02/Vue.js模板方法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/12/02/Vue.js模板方法/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -413,81 +439,176 @@
       
 
       
-        <p>在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&gt;﹏&lt;)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、ActiveAndroid、ormlite等。说到ORM，相信有过J2EE开发经验的童鞋对此并不陌生，在web开发中就有Hibernate、MyBatis等框架提供使用。那么今天就来介绍一下主角：greenDAO。</p>
-<p>根据 <a href="http://greenrobot.org/" target="_blank" rel="external">greenrobot</a> 官方的介绍，greenDAO是一款轻量，快速，适用于Android数据库的ORM框架。具有很高的性能以及消耗很少的内存。其他的优点和特性就不在这里一一介绍了，想要了解的同学可以去访问它的项目地址：<a href="https://github.com/greenrobot/greenDAO" target="_blank" rel="external">https://github.com/greenrobot/greenDAO</a>。</p>
-<p>说了这么多，下面就开始我们的正题吧。</p>
-<p>在使用greenDAO之前，我们有一件事情不得不做，那就是用代码生成器生成数据模型以及xxxDao等</p>
-<p>新建一个java module，取名greendaogeneration(名字随意取，不要在意细节↖(^ω^)↗)，然后在build.gradle(Module:greendaogeneration)中添加依赖：</p>
-<p><code>compile &#39;de.greenrobot:greendao-generator:2.0.0&#39;</code></p>
-<p>在 src/main 目录下新建一个与 java 同层级的 java-gen 目录，然后配置 Android 工程的 build.gradle(Module:app)，分别添加如下sourceSets。</p>
-<pre><code>android {
-    compileSdkVersion 23
-    buildToolsVersion &quot;23.0.2&quot;
+        <h2 id="v-html"><a href="#v-html" class="headerlink" title="v-html"></a>v-html</h2><p>将 html 的代码输出</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+    &lt;div v-html=&quot;message&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
 
-    defaultConfig {
-        applicationId &quot;com.yuqirong.greendaodemo&quot;
-        minSdkVersion 14
-        targetSdkVersion 23
-        versionCode 1
-        versionName &quot;1.0&quot;
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;
-        }
-    }
-    sourceSets {
-        main {
-            java.srcDirs = [&apos;src/main/java&apos;, &apos;src/main/java-gen&apos;]
-        }
-    }
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    message: &apos;&lt;h1&gt;Hello World&lt;/h1&gt;&lt;img src=&quot;https://www.baidu.com/img/bd_logo1.png&quot; /&gt;&apos;
+  }
+})
+&lt;/script&gt;
+</code></pre><h2 id="v-bind"><a href="#v-bind" class="headerlink" title="v-bind"></a>v-bind</h2><p>使用 v-bind 指令赋值给 HTML 属性</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+    &lt;img v-bind:src=&quot;imgurl&quot; /&gt;
+    &lt;h1 v-bind:class=&quot;{&apos;img_class&apos;: useClass}&quot;&gt;Hello&lt;/h1&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    imgurl: &apos;https://www.baidu.com/img/bd_logo1.png&apos;,
+    useClass: true
+  }
+})
+&lt;/script&gt;
+
+&lt;style&gt;
+.img_class {
+  background: #444;
 }
-</code></pre><p>然后在greendaogeneration中创建一个GreenDaoGeneration类，用于生成代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GreenDaoGeneration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] arg0)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Schema schema = <span class="keyword">new</span> Schema(<span class="number">1</span>, <span class="string">"com.yuqirong.greendao"</span>);</span><br><span class="line">            addLocation(schema);</span><br><span class="line">            <span class="keyword">new</span> DaoGenerator().generateAll(schema, <span class="string">"C:/Users/yuqirong/Desktop/GreenDaoDemo/app/src/main/java-gen"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">addLocation</span><span class="params">(Schema schema)</span></span>&#123;</span><br><span class="line">        Entity location= schema.addEntity(<span class="string">"Location"</span>);</span><br><span class="line">        location.addIdProperty();</span><br><span class="line">        location.addDoubleProperty(<span class="string">"lon"</span>);</span><br><span class="line">        location.addIntProperty(<span class="string">"level"</span>);</span><br><span class="line">        location.addStringProperty(<span class="string">"address"</span>);</span><br><span class="line">        location.addStringProperty(<span class="string">"city_name"</span>);</span><br><span class="line">        location.addIntProperty(<span class="string">"alevel"</span>);</span><br><span class="line">        location.addDoubleProperty(<span class="string">"lat"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>其中在创建Schema对象的参数中，第一个表示数据库的版本号，我们传入了“1”，第二个参数是生成代码的包名，我们传入了”com.yuqirong.greendao”，那么生成的代码就自动在”com.yuqirong.greendao”包下了。</p>
-<p>在addLocatiion方法中，我们打算把“Location”这个类(其实到现在为止，Location实体类还未生成)保存在数据库中，<code>schema.addEntity(&quot;Location&quot;)</code>传入的Location，那么该表的表名就叫Location，然后我们又定义了在Location表中会有lon、lat、city_name三个字段。所以如果你想创建多张表，那么就要像addLocation()这样的方法多写几个。好了，该做的差不多都做了，最后再<code>new DaoGenerator().generateAll(schema, &quot;C:/Users/yuqirong/Desktop/GreenDaoDemo/app/src/main/java-gen&quot;);</code>把之前的schema传入，第二个参数传的是之前创建的java-gen的路径(建议传入绝对路径，之前在这里被坑了好久↖(~^~)↗)。代码运行之后再到”com.yuqirong.greendao”路径下去看，发现会有许多类生成：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20151124/20151124235609.png" alt="这里写图片描述"></p>
-<p>至于这些类的作用，我们到下面再说。</p>
-<p>第二步在Android Studio的build.gradle(Module:app)中添加以下依赖：</p>
-<p><code>compile &#39;de.greenrobot:greendao:2.0.0&#39;</code>  </p>
-<p>这样我们就可以在项目中使用greenDAO了。</p>
-<p>在正式使用greenDAO前我们需要了解几个greenDAO中的类(也就是上面代码生成的几个类)：</p>
-<ul>
-<li><p>DaoMaster ：一看这个类名我们就知道这个类肯定是大总管级别的，DaoMaster继承自AbstractDaoMaster。在AbstractDaoMaster中保存了sqlitedatebase对象以及以Map的形式保存了各种操作DAO。DaoMaster还提供了一些创建和删除table的静态方法。另外在DaoMaster类里面有一个静态内部类DevOpenHelper，DevOpenHelper间接继承了SQLiteOpenHelper，通常我们会用<code>new DaoMaster.DevOpenHelper(this, &quot;notes-db&quot;, null)</code>来得到一个DevOpenHelper对象，第一个参数是Context，第二个参数是数据库名，第三个参数是CursorFactory，通常我们传入null。就上面这样简单的一句话你就实际上创建了一个SQLiteOpenHelper对象，而不需要输入<code>&quot;CREATE TABLE...&quot;</code> SQL语句，greenDAO已经帮你做好了一切。</p>
-</li>
-<li><p>DaoSession：会话层。主要功能就是操作具体的DAO对象，比如各种getXXXDao()方法。</p>
-</li>
-<li><p>XXXDao：实际生成的DAO类(即生成的LocationDao)，主要对应于某张表的CRUD，比如说LocationDao，那相对应就是对Location表的操作。</p>
-</li>
-<li><p>XXXEntity：主要是各个实体类(也就是上面生成的Location)，里面的属性与表中的字段相对应。比如上面的LocationDao，那么实体类就是Location，Location实体类中有lon，lat，city_name,alevel,level,address六个属性，那么在Location表中就有lon，lat，city_name,alevel,level,address六个字段。</p>
-</li>
-</ul>
-<p>通过上面几个类作用的介绍，相信大家对greenDAO有了一个初步的印象，下面我们就要真枪实弹了，一起来看一个简单的Demo吧：</p>
-<pre><code>DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(context, &quot;location&quot;, null);
-SQLiteDatabase writableDB = devOpenHelper.getWritableDatabase();
-DaoMaster daoMaster = new DaoMaster(writableDB);
-DaoSession daoSession = daoMaster.newSession();
-</code></pre><p>上面的代码很简单，我们创建了一个名叫“location”的数据库，然后通过daoMaster得到了daoSession，有了daoSession，我们就可以得到各种xxxDao，之后的CRUD都是通过xxxDao来操作。</p>
-<pre><code>LocationDao locationDao = daoSession.getLocationDao();
-Location local = new Location(null,120.15507,2,&quot;&quot;,&quot;杭州市&quot;,4,30.27408);
-locationDao.insert(local);
-</code></pre><p>我们创建了一个Location的对象，然后调用<code>locationDao.insert()</code>方法就把local的数据插入到location的表中，是不是简单到难以让人置信?!只需要三行代码，而不再需要原生的ContentValues了。不得不感叹greenDAO太方便了。</p>
-<p>除了添加数据的，greenDAO还提供删除数据的方法：<code>locationDao.deleteByKey(id);</code>id为当前要删除的那行的主键。</p>
-<p>更新数据的方法：<code>locationDao.update(local);</code>local为新的数据。</p>
-<p>查询数据的方法： </p>
-<ul>
-<li><code>locationDao.queryRaw(String where, String...selectionArg)</code>,可以看到greenDAO支持sql语句查询。</li>
-<li><p>greenDAO还支持一种更为简单的查询方式，不再需要你去写sql语句(查询Location的lon大于120度和lat大于30度)： </p>
-<pre><code>List&lt;Location&gt; list = locationDao.queryBuilder()
-                        .where(LocationDao.Properties.Lat.gt(30d), LocationDao.Properties.Lon.gt(120d))
-                        .build()
-                        .list();
+&lt;/style&gt;
+</code></pre><h2 id="v-if"><a href="#v-if" class="headerlink" title="v-if"></a>v-if</h2><p>用于判断条件</p>
+<pre><code>&lt;img id=&quot;app&quot; src=&quot;https://www.baidu.com/img/bd_logo1.png&quot; v-if=&quot;visible&quot;/&gt;
+
+&lt;script&gt;
+new Vue({
+    el: &apos;#app&apos;,
+    data: {
+        visible: true
+    }
+})
+&lt;/script&gt;
+</code></pre><h2 id="v-else-if/v-else"><a href="#v-else-if/v-else" class="headerlink" title="v-else-if/v-else"></a>v-else-if/v-else</h2><p>用于判断条件</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+    &lt;div v-if=&quot;type === &apos;A&apos;&quot;&gt;
+      A
+    &lt;/div&gt;
+    &lt;div v-else-if=&quot;type === &apos;B&apos;&quot;&gt;
+      B
+    &lt;/div&gt;
+    &lt;div v-else-if=&quot;type === &apos;C&apos;&quot;&gt;
+      C
+    &lt;/div&gt;
+    &lt;div v-else&gt;
+      Not A/B/C
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  type: &apos;C&apos;
+})
+&lt;/script&gt;
+</code></pre><h2 id="v-show"><a href="#v-show" class="headerlink" title="v-show"></a>v-show</h2><p>可以使用 v-show 指令来根据条件展示元素，</p>
+<p>用法上和 v-if 差不多，但是 v-if 是动态的向 DOM 树内添加或者删除 DOM 元素。 而 v-show 是通过设置 DOM 元素的 display 样式属性控制显隐。</p>
+<p>关于 v-show 和 v-if 的区别，详见 <a href="http://blog.csdn.net/ning0_o/article/details/56006528" target="_blank" rel="external">v-if 和 v-show的区别</a> 。</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+    &lt;h1 v-show=&quot;ok&quot;&gt;Hello!&lt;/h1&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    ok: true
+  }
+})
+&lt;/script&gt;
+</code></pre><h2 id="v-model"><a href="#v-model" class="headerlink" title="v-model"></a>v-model</h2><p>v-model 指令来实现双向数据绑定。</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+    &lt;p&gt;&lt;/p&gt;
+    &lt;input v-model=&quot;message&quot;&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    message: &apos;Hello World&apos;
+  }
+})
+&lt;/script&gt;
+</code></pre><h2 id="v-on"><a href="#v-on" class="headerlink" title="v-on"></a>v-on</h2><p>使用 v-on 监听事件</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+    &lt;button v-on:click=&quot;onclick&quot;&gt;&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    message: &apos;Click Me&apos;
+  },
+  methods: {
+    onclick: function(){
+        alert(&quot;Hello&quot;)
+    }
+  }
+})
+&lt;/script&gt;
+</code></pre><h2 id="v-for"><a href="#v-for" class="headerlink" title="v-for"></a>v-for</h2><p>循环遍历</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+  &lt;ol&gt;
+    &lt;li v-for=&quot;site in sites&quot;&gt;
+      
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    sites: [
+      { name: &apos;Apple&apos; },
+      { name: &apos;Google&apos; },
+      { name: &apos;Taobao&apos; }
+    ]
+  }
+})
+&lt;/script&gt;
+</code></pre><p>或者</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+  &lt;ul&gt;
+    &lt;li v-for=&quot;(key,value, index) in object&quot;&gt;
+     .  : 
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    object: {
+      name: &apos;Hello&apos;,
+      url: &apos;World&apos;,
+      slogan: &apos;Vue.js&apos;
+    }
+  }
+})
+&lt;/script&gt;
+</code></pre><h2 id="u7F29_u5199"><a href="#u7F29_u5199" class="headerlink" title="缩写"></a>缩写</h2><ul>
+<li><p>v-bind 缩写</p>
+<pre><code>&lt;!-- 完整语法 --&gt;
+&lt;a v-bind:href=&quot;url&quot;&gt;&lt;/a&gt;
+&lt;!-- 缩写 --&gt;
+&lt;a :href=&quot;url&quot;&gt;&lt;/a&gt;
+</code></pre></li>
+<li><p>v-on 缩写</p>
+<pre><code>&lt;!-- 完整语法 --&gt;
+&lt;a v-on:click=&quot;doSomething&quot;&gt;&lt;/a&gt;
+&lt;!-- 缩写 --&gt;
+&lt;a @click=&quot;doSomething&quot;&gt;&lt;/a&gt;
 </code></pre></li>
 </ul>
-<p>好了，关于greenDAO的简单使用就先到这里，至于深入使用我们有机会再讲吧！</p>
-<p>依据惯例，下面提供本Demo的源码:</p>
-<p><a href="http://ofytl4mzu.bkt.clouddn.com/20151124/GreenDaoDemo.rar" target="_blank" rel="external">GreenDaoDemo.rar</a></p>
 
       
     </div>
@@ -542,7 +663,7 @@ locationDao.insert(local);
     </li>
     <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/" title="初探Android ORM框架之greenDAO">http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/</a>
+      <a href="http://yuqirong.me/2017/12/02/Vue.js模板方法/" title="Vue.js模板方法">http://yuqirong.me/2017/12/02/Vue.js模板方法/</a>
     </li>
     <li class="post-copyright-license">
       <strong>版权声明： </strong>
@@ -558,9 +679,7 @@ locationDao.insert(local);
       
         <div class="post-tags">
           
-            <a href="/tags/Android/" rel="tag"># Android</a>
-          
-            <a href="/tags/开源框架/" rel="tag"># 开源框架</a>
+            <a href="/tags/Vue-js/" rel="tag"># Vue.js</a>
           
         </div>
       
@@ -573,8 +692,8 @@ locationDao.insert(local);
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/12/简单实现满屏表情下落的动画效果，你也可以/" rel="next" title="简单实现满屏表情下落的动画效果，你也可以">
-                <i class="fa fa-chevron-left"></i> 简单实现满屏表情下落的动画效果，你也可以
+              <a href="/2017/12/01/Vue.js安装教程/" rel="next" title="Vue.js安装教程">
+                <i class="fa fa-chevron-left"></i> Vue.js安装教程
               </a>
             
           </div>
@@ -582,10 +701,6 @@ locationDao.insert(local);
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/12/05/实现炫酷的CheckBox，就这么简单/" rel="prev" title="实现炫酷的CheckBox，就这么简单">
-                实现炫酷的CheckBox，就这么简单 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -672,8 +787,17 @@ locationDao.insert(local);
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
@@ -832,6 +956,22 @@ locationDao.insert(local);
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#v-html"><span class="nav-number">1.</span> <span class="nav-text">v-html</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#v-bind"><span class="nav-number">2.</span> <span class="nav-text">v-bind</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#v-if"><span class="nav-number">3.</span> <span class="nav-text">v-if</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#v-else-if/v-else"><span class="nav-number">4.</span> <span class="nav-text">v-else-if/v-else</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#v-show"><span class="nav-number">5.</span> <span class="nav-text">v-show</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#v-model"><span class="nav-number">6.</span> <span class="nav-text">v-model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#v-on"><span class="nav-number">7.</span> <span class="nav-text">v-on</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#v-for"><span class="nav-number">8.</span> <span class="nav-text">v-for</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7F29_u5199"><span class="nav-number">9.</span> <span class="nav-text">缩写</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -967,7 +1107,7 @@ locationDao.insert(local);
 		_hcwp.push({widget:"Bloggerstream", widget_id: 94126, selector:".hc-comment-count", label: "{\%COUNT%\}" });
 
 		
-		_hcwp.push({widget:"Stream", widget_id: 94126, xid: "2015/11/24/初探Android ORM框架之greenDAO/"});
+		_hcwp.push({widget:"Stream", widget_id: 94126, xid: "2017/12/02/Vue.js模板方法/"});
 		
 
 		(function() {

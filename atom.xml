@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2017-12-01T14:50:36.801Z</updated>
+  <updated>2017-12-02T12:47:33.047Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -13,6 +13,194 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Vue.js模板方法]]></title>
+    <link href="http://yuqirong.me/2017/12/02/Vue.js%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95/"/>
+    <id>http://yuqirong.me/2017/12/02/Vue.js模板方法/</id>
+    <published>2017-12-02T12:36:02.000Z</published>
+    <updated>2017-12-02T12:47:33.047Z</updated>
+    <content type="html"><![CDATA[<h2 id="v-html"><a href="#v-html" class="headerlink" title="v-html"></a>v-html</h2><p>将 html 的代码输出</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+    &lt;div v-html=&quot;message&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    message: &apos;&lt;h1&gt;Hello World&lt;/h1&gt;&lt;img src=&quot;https://www.baidu.com/img/bd_logo1.png&quot; /&gt;&apos;
+  }
+})
+&lt;/script&gt;
+</code></pre><h2 id="v-bind"><a href="#v-bind" class="headerlink" title="v-bind"></a>v-bind</h2><p>使用 v-bind 指令赋值给 HTML 属性</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+    &lt;img v-bind:src=&quot;imgurl&quot; /&gt;
+    &lt;h1 v-bind:class=&quot;{&apos;img_class&apos;: useClass}&quot;&gt;Hello&lt;/h1&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    imgurl: &apos;https://www.baidu.com/img/bd_logo1.png&apos;,
+    useClass: true
+  }
+})
+&lt;/script&gt;
+
+&lt;style&gt;
+.img_class {
+  background: #444;
+}
+&lt;/style&gt;
+</code></pre><h2 id="v-if"><a href="#v-if" class="headerlink" title="v-if"></a>v-if</h2><p>用于判断条件</p>
+<pre><code>&lt;img id=&quot;app&quot; src=&quot;https://www.baidu.com/img/bd_logo1.png&quot; v-if=&quot;visible&quot;/&gt;
+
+&lt;script&gt;
+new Vue({
+    el: &apos;#app&apos;,
+    data: {
+        visible: true
+    }
+})
+&lt;/script&gt;
+</code></pre><h2 id="v-else-if/v-else"><a href="#v-else-if/v-else" class="headerlink" title="v-else-if/v-else"></a>v-else-if/v-else</h2><p>用于判断条件</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+    &lt;div v-if=&quot;type === &apos;A&apos;&quot;&gt;
+      A
+    &lt;/div&gt;
+    &lt;div v-else-if=&quot;type === &apos;B&apos;&quot;&gt;
+      B
+    &lt;/div&gt;
+    &lt;div v-else-if=&quot;type === &apos;C&apos;&quot;&gt;
+      C
+    &lt;/div&gt;
+    &lt;div v-else&gt;
+      Not A/B/C
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  type: &apos;C&apos;
+})
+&lt;/script&gt;
+</code></pre><h2 id="v-show"><a href="#v-show" class="headerlink" title="v-show"></a>v-show</h2><p>可以使用 v-show 指令来根据条件展示元素，</p>
+<p>用法上和 v-if 差不多，但是 v-if 是动态的向 DOM 树内添加或者删除 DOM 元素。 而 v-show 是通过设置 DOM 元素的 display 样式属性控制显隐。</p>
+<p>关于 v-show 和 v-if 的区别，详见 <a href="http://blog.csdn.net/ning0_o/article/details/56006528" target="_blank" rel="external">v-if 和 v-show的区别</a> 。</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+    &lt;h1 v-show=&quot;ok&quot;&gt;Hello!&lt;/h1&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    ok: true
+  }
+})
+&lt;/script&gt;
+</code></pre><h2 id="v-model"><a href="#v-model" class="headerlink" title="v-model"></a>v-model</h2><p>v-model 指令来实现双向数据绑定。</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+    &lt;p&gt;&lt;/p&gt;
+    &lt;input v-model=&quot;message&quot;&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    message: &apos;Hello World&apos;
+  }
+})
+&lt;/script&gt;
+</code></pre><h2 id="v-on"><a href="#v-on" class="headerlink" title="v-on"></a>v-on</h2><p>使用 v-on 监听事件</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+    &lt;button v-on:click=&quot;onclick&quot;&gt;&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    message: &apos;Click Me&apos;
+  },
+  methods: {
+    onclick: function(){
+        alert(&quot;Hello&quot;)
+    }
+  }
+})
+&lt;/script&gt;
+</code></pre><h2 id="v-for"><a href="#v-for" class="headerlink" title="v-for"></a>v-for</h2><p>循环遍历</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+  &lt;ol&gt;
+    &lt;li v-for=&quot;site in sites&quot;&gt;
+      
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    sites: [
+      { name: &apos;Apple&apos; },
+      { name: &apos;Google&apos; },
+      { name: &apos;Taobao&apos; }
+    ]
+  }
+})
+&lt;/script&gt;
+</code></pre><p>或者</p>
+<pre><code>&lt;div id=&quot;app&quot;&gt;
+  &lt;ul&gt;
+    &lt;li v-for=&quot;(key,value, index) in object&quot;&gt;
+     .  : 
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    object: {
+      name: &apos;Hello&apos;,
+      url: &apos;World&apos;,
+      slogan: &apos;Vue.js&apos;
+    }
+  }
+})
+&lt;/script&gt;
+</code></pre><h2 id="u7F29_u5199"><a href="#u7F29_u5199" class="headerlink" title="缩写"></a>缩写</h2><ul>
+<li><p>v-bind 缩写</p>
+<pre><code>&lt;!-- 完整语法 --&gt;
+&lt;a v-bind:href=&quot;url&quot;&gt;&lt;/a&gt;
+&lt;!-- 缩写 --&gt;
+&lt;a :href=&quot;url&quot;&gt;&lt;/a&gt;
+</code></pre></li>
+<li><p>v-on 缩写</p>
+<pre><code>&lt;!-- 完整语法 --&gt;
+&lt;a v-on:click=&quot;doSomething&quot;&gt;&lt;/a&gt;
+&lt;!-- 缩写 --&gt;
+&lt;a @click=&quot;doSomething&quot;&gt;&lt;/a&gt;
+</code></pre></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="v-html"><a href="#v-html" class="headerlink" title="v-html"></a>v-html</h2><p>将 html 的代码输出</p>
+<pre><code>&lt;div id=&quot;app&quot;]]>
+    </summary>
+    
+      <category term="Vue.js" scheme="http://yuqirong.me/tags/Vue-js/"/>
+    
+      <category term="Vue.js" scheme="http://yuqirong.me/categories/Vue-js/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Vue.js安装教程]]></title>
@@ -2037,38 +2225,6 @@ apply plugin: &apos;kotlin-android-extensions&apos;
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Say Hello To 2017]]></title>
-    <link href="http://yuqirong.me/2017/01/14/Say%20Hello%20To%202017/"/>
-    <id>http://yuqirong.me/2017/01/14/Say Hello To 2017/</id>
-    <published>2017-01-14T07:53:56.000Z</published>
-    <updated>2017-01-14T08:47:28.646Z</updated>
-    <content type="html"><![CDATA[<p>时隔半个月才想起要写一篇年度总结（主要是太懒懒懒了\(╯-╰)/），这么快 2016 年又过去，而 2017 年却已经来临了。</p>
-<h1 id="2016"><a href="#2016" class="headerlink" title="2016"></a>2016</h1><p>现在回望 2016 年，发现过得也是浑浑噩噩，时间总是在不知不觉中流逝。自从 2016 年的 6 月份毕业开始，算是真正地踏上社会了。尽管万般不情愿，但还是离开了温暖的校园生活，这也意味着自己需要承担更多的责任和义务，加油！</p>
-<p>在工作上也并不是一帆风顺，经历过之前八月份的贸然离职后，也懂得了做任何事都需要理性思考，而不是凭着自己的“任性”，不然迟早会付出惨痛的代价。这也教导我要学会珍惜现在，才能放眼于未来。</p>
-<p>在过去的 2016 一年里，自己对于 Android 的学习也从“表面”进入到“里面”。不再满足于常规、机械地使用 API ，而是乐于探究其中内在的原理，这也是 Android 进阶开发的必经之路。对于每一位做技术的人员而言，更多地要求自己寻求积累和沉淀，而不应该是盲目地处于一种“会用就好”的状态。</p>
-<h1 id="2017"><a href="#2017" class="headerlink" title="2017"></a>2017</h1><p>新的 2017 年，做一个更好的自己。</p>
-<p>学习计划：</p>
-<ol>
-<li>继续深入学习 Android ，理解其中的原理以及解析热门的第三方框架源码，书籍《深入理解 Android 》系列、《 Android 系统源代码情景分析》等；</li>
-<li>学习 React JS ，学会利用 React Native 框架开发 APP 。并适当地深入理解其中的原理；</li>
-<li>重温 Java ，书籍：《Java编程思想》 、《Effective Java》等；</li>
-<li>学习设计模式以及数据结构和算法等，书籍《 Head First 设计模式》等。</li>
-<li>更多。。。</li>
-</ol>
-<p>不念过去，不畏将来。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>时隔半个月才想起要写一篇年度总结（主要是太懒懒懒了\(╯-╰)/），这么快 2016 年又过去，而 2017 年却已经来临了。</p>
-<h1 id="2016"><a href="#2016" class="headerlink" title="2016"></a>201]]>
-    </summary>
-    
-      <category term="岁月如歌" scheme="http://yuqirong.me/tags/%E5%B2%81%E6%9C%88%E5%A6%82%E6%AD%8C/"/>
-    
-      <category term="岁月如歌" scheme="http://yuqirong.me/categories/%E5%B2%81%E6%9C%88%E5%A6%82%E6%AD%8C/"/>
     
   </entry>
   
