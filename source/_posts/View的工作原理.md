@@ -1,7 +1,7 @@
 title: View的工作原理
 date: 2017-09-18 22:35:00
 categories: Android Blog
-tags: [Android,源码解析]
+tags: [Android,View,源码解析]
 ---
 注：本文分析的源码基于 Android API 25
 
@@ -18,6 +18,10 @@ WindowManagerGlobal
 	// view 是 PhoneWindow 的 DecorView
 	root.setView(view, wparams, panelParentView);
 ```
+
+`ViewRootImpl` 是用来连接 WindowManager 和 DecorView 的桥梁。通俗地来讲，Window 和 View 就是通过 `ViewRootImpl` 来建立联系的。
+
+而 DecorView 是顶级的 View ，从它开始向下传递 measure 、 layout 和 draw 三个流程。
 
 创建好了 `root` 之后，调用了 `ViewRootImpl` 的 `setView(View view, WindowManager.LayoutParams attrs, View panelParentView)` 方法。
 

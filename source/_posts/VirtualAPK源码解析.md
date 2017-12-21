@@ -1,21 +1,80 @@
 title: VirtualAPK源码解析
-date: 2017-08-09 22:03:58
+date: 2017-11-12 22:03:58
 categories: Android Blog
 tags: [Android,开源框架,源码解析,插件化]
 ---
+Header
+======
+VirtualAPK 是滴滴开源的一款 Android 插件化的框架。
+
+现在市面上，成熟的插件化框架已经挺多了，那为什么还要重新开发一款轮子呢？
+
+1. 大部分开源框架所支持的功能还不够全面
+2. 兼容性问题严重，大部分开源方案不够健壮
+3. 已有的开源方案不适合滴滴的业务场景
+
+在加载耦合插件方面，VirtualAPK是开源方案的首选。
+
+以上是滴滴给出的官方解释。
+
+对于我们开发者来说，这种当然是好事。第一，我们选择插件化框架的余地变多了；第二，我们也可以多学习学习框架内部实现的原理，一举两得。
+
+那就不说废话了，一起来看。
+
+使用方法
+=======
+使用方法直接抄 GitHub 上的，就将就着看吧。
+
+* 第一步： 初始化插件引擎
+
+	``` java
+	@Override
+	protected void attachBaseContext(Context base) {
+	    super.attachBaseContext(base);
+	    PluginManager.getInstance(base).init();
+	}
+	```
+
+* 第二步：加载插件
+
+	``` java
+	public class PluginManager {
+	    public void loadPlugin(File apk);
+	}
+	```
+
+	当插件入口被调用后，插件的后续逻辑均不需要宿主干预，均走原生的Android流程。 比如，在插件内部，如下代码将正确执行：
+
+	``` java
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+	    super.onCreate(savedInstanceState);
+	    setContentView(R.layout.activity_book_manager);
+	    LinearLayout holder = (LinearLayout)findViewById(R.id.holder);
+	    TextView imei = (TextView)findViewById(R.id.imei);
+	    imei.setText(IDUtil.getUUID(this));
+	     
+	    // bind service in plugin
+	    Intent service = new Intent(this, BookManagerService.class);
+	    bindService(service, mConnection, Context.BIND_AUTO_CREATE);
+	    
+	    // start activity in plugin
+	    Intent intent = new Intent(this, TCPClientActivity.class);
+	    startActivity(intent);
+	}
+	```
+
+源码解析
+=======
+使用方法很简单，下面就顺着上面的代码一步步去探究实现原理。
 
 初始化插件框架
-============
-init plugin :
+------------
+第一步就是初始化框架：`PluginManager.getInstance(base).init();`
 
-	PluginManager.getInstance(base).init();
+### PluginManager.getInstance(Context base)
 
-PluginManager
-=============
-
-getInstance(Context base)
--------------------------
-
+``` java
     public static PluginManager getInstance(Context base) {
         if (sInstance == null) {
             synchronized (PluginManager.class) {
@@ -36,10 +95,17 @@ getInstance(Context base)
         }
         prepare();
     }
+```
 
-prepare()
-----------
+PluginManager 设计为了单例模式，负责管理插件的一些操作。
 
+在初始化的时候，得到全局 Context ，以防出现内存泄漏的情况。
+
+之后调用了 `prepare()` 方法，做一些预备操作。
+
+### prepare()
+
+``` java
     private void prepare() {
 		// host base context
         Systems.sHostContext = getHostContext();
@@ -47,10 +113,15 @@ prepare()
         this.hookInstrumentationAndHandler();
         this.hookSystemServices();
     }
+```
 
-hookInstrumentationAndHandler()
-------------------------------
+在 `prepare()` 中，将宿主 Context 赋值给了 Systems.sHostContext 。这样，在之后的代码中可以方便地访问到宿主 Context 。
 
+然后分为了两步操作，hookInstrumentationAndHandler 和 hookSystemServices 。为运行插件做一些必要的 hook 操作。
+
+### hookInstrumentationAndHandler()
+
+``` java
     private void hookInstrumentationAndHandler() {
         try {
             Instrumentation baseInstrumentation = ReflectUtil.getInstrumentation(this.mContext);
@@ -70,6 +141,7 @@ hookInstrumentationAndHandler()
             e.printStackTrace();
         }
     }
+```
 
 hookSystemServices()
 --------------------
