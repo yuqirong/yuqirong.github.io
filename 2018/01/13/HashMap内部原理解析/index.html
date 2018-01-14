@@ -1,0 +1,1035 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java,数据结构,源码解析," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qirong Yu's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="注：本文解析的 HashMap 源代码基于 Java 1.7 。
+HeaderHashMap 在平时 Java/Android 开发中，是绝大多数开发者都普遍使用的集合类。
+它内部是基于哈希表实现的键值对存储，继承 AbstractMap 并且实现了 Map 接口。
+而对于它的 get/put 使用方法相信大家都已经到了炉火纯青的地步。虽然都会用，却可能没有好好深入探讨过 HashMap 内部的实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HashMap内部原理解析">
+<meta property="og:url" content="http://yuqirong.me/2018/01/13/HashMap内部原理解析/index.html">
+<meta property="og:site_name" content="Qirong Yu's Blog">
+<meta property="og:description" content="注：本文解析的 HashMap 源代码基于 Java 1.7 。
+HeaderHashMap 在平时 Java/Android 开发中，是绝大多数开发者都普遍使用的集合类。
+它内部是基于哈希表实现的键值对存储，继承 AbstractMap 并且实现了 Map 接口。
+而对于它的 get/put 使用方法相信大家都已经到了炉火纯青的地步。虽然都会用，却可能没有好好深入探讨过 HashMap 内部的实">
+<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20180114/20180114111559.png">
+<meta property="og:updated_time" content="2018-01-14T05:27:11.632Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HashMap内部原理解析">
+<meta name="twitter:description" content="注：本文解析的 HashMap 源代码基于 Java 1.7 。
+HeaderHashMap 在平时 Java/Android 开发中，是绝大多数开发者都普遍使用的集合类。
+它内部是基于哈希表实现的键值对存储，继承 AbstractMap 并且实现了 Map 接口。
+而对于它的 get/put 使用方法相信大家都已经到了炉火纯青的地步。虽然都会用，却可能没有好好深入探讨过 HashMap 内部的实">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yuqirong.me/2018/01/13/HashMap内部原理解析/"/>
+
+
+
+
+
+  <title> HashMap内部原理解析 | Qirong Yu's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=62363449";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1257390016&web_id=1257390016" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Qirong Yu's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comment"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2018/01/13/HashMap内部原理解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="俞其荣">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Qirong Yu's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                HashMap内部原理解析
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-13T18:14:31+08:00">
+                2018-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">Java Blog</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/13/HashMap内部原理解析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2018/01/13/HashMap内部原理解析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>注：本文解析的 HashMap 源代码基于 Java 1.7 。</p>
+<h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>HashMap 在平时 Java/Android 开发中，是绝大多数开发者都普遍使用的集合类。</p>
+<p>它内部是基于哈希表实现的键值对存储，继承 AbstractMap 并且实现了 Map 接口。</p>
+<p>而对于它的 get/put 使用方法相信大家都已经到了炉火纯青的地步。虽然都会用，却可能没有好好深入探讨过 HashMap 内部的实现原理。正好趁着有时间，今天就给大家一步步地解析 HashMap 的内部实现原理。</p>
+<p>在这就基于了 Java 1.7 的源代码来讲解了，Java 1.8 的 HashMap 源码相比 Java 1.7 做了一些改动。具体的改动等到我们最后再说。</p>
+<h1 id="HashMap__u5FC5_u77E5"><a href="#HashMap__u5FC5_u77E5" class="headerlink" title="HashMap 必知"></a>HashMap 必知</h1><p>以下是 HashMap 源码里面的一些关键成员变量以及知识点。在后面的源码解析中会遇到，所以我们有必要先了解下。</p>
+<ol>
+<li>initialCapacity：初始容量。指的是 HashMap 集合初始化的时候自身的容量。可以在构造方法中指定；如果不指定的话，总容量默认值是 16 。需要注意的是初始容量必须是 2 的幂次方。</li>
+<li>size：当前 HashMap 中已经存储着的键值对数量，即 <code>HashMap.size()</code> 。</li>
+<li>loadFactor：加载因子。所谓的加载因子就是 HashMap (当前的容量/总容量) 到达一定值的时候，HashMap 会实施扩容。加载因子也可以通过构造方法中指定，默认的值是 0.75 。举个例子，假设有一个 HashMap 的初始容量为 16 ，那么扩容的阀值就是 0.75 * 16 = 12 。也就是说，在你打算存入第 13 个值的时候，HashMap 会先执行扩容。</li>
+<li>threshold：扩容阀值。即 扩容阀值 = HashMap 总容量 * 加载因子。当前 HashMap 的容量大于或等于扩容阀值的时候就会去执行扩容。扩容的容量为当前 HashMap 总容量的两倍。比如，当前 HashMap 的总容量为 16 ，那么扩容之后为 32 。</li>
+<li>table：Entry 数组。我们都知道 HashMap 内部存储 key/value 是通过 Entry 这个介质来实现的。而 table 就是 Entry 数组。</li>
+<li>在 Java 1.7 中，HashMap 的实现方法是数组 + 链表的形式。上面的 table 就是数组，而数组中的每个元素，都是链表的第一个结点。即如下图所示：<br> <img src="http://ofyt9w4c2.bkt.clouddn.com/20180114/20180114111559.png" alt="20180114111559"></li>
+</ol>
+<h1 id="u6E90_u7801_u5206_u6790"><a href="#u6E90_u7801_u5206_u6790" class="headerlink" title="源码分析"></a>源码分析</h1><h2 id="u6784_u9020_u65B9_u6CD5"><a href="#u6784_u9020_u65B9_u6CD5" class="headerlink" title="构造方法"></a>构造方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 默认的构造方法使用的都是默认的初始容量和加载因子</span></span><br><span class="line"><span class="comment">// DEFAULT_INITIAL_CAPACITY = 16，DEFAULT_LOAD_FACTOR = 0.75</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HashMap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以指定初始容量，并且使用默认的加载因子</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HashMap</span><span class="params">(<span class="keyword">int</span> initialCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(initialCapacity, DEFAULT_LOAD_FACTOR);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HashMap</span><span class="params">(<span class="keyword">int</span> initialCapacity, <span class="keyword">float</span> loadFactor)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 对初始容量的值判断</span></span><br><span class="line">    <span class="keyword">if</span> (initialCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Illegal initial capacity: "</span> +</span><br><span class="line">                                           initialCapacity);</span><br><span class="line">    <span class="keyword">if</span> (initialCapacity &gt; MAXIMUM_CAPACITY)</span><br><span class="line">        initialCapacity = MAXIMUM_CAPACITY;</span><br><span class="line">    <span class="keyword">if</span> (loadFactor &lt;= <span class="number">0</span> || Float.isNaN(loadFactor))</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Illegal load factor: "</span> +</span><br><span class="line">                                           loadFactor);</span><br><span class="line">    <span class="comment">// 设置加载因子</span></span><br><span class="line">    <span class="keyword">this</span>.loadFactor = loadFactor;</span><br><span class="line">    threshold = initialCapacity;</span><br><span class="line">    <span class="comment">// 空方法</span></span><br><span class="line">    init();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>HashMap 的所有构造方法最后都会去调用 <code>HashMap(int initialCapacity, float loadFactor)</code> 。在其内部去设置初始容量和加载因子。而最后的 <code>init()</code> 是空方法。</p>
+<h2 id="put__u65B9_u6CD5"><a href="#put__u65B9_u6CD5" class="headerlink" title="put 方法"></a>put 方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果 table 数组为空时先创建数组，并且设置扩容阀值</span></span><br><span class="line">    <span class="keyword">if</span> (table == EMPTY_TABLE) &#123;</span><br><span class="line">        inflateTable(threshold);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果 key 为空时，调用 putForNullKey 方法特殊处理</span></span><br><span class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">return</span> putForNullKey(value);</span><br><span class="line">    <span class="comment">// 计算 key 的哈希值</span></span><br><span class="line">    <span class="keyword">int</span> hash = hash(key);</span><br><span class="line">    <span class="comment">// 根据计算出来的哈希值和当前数组的长度计算在数组中的索引</span></span><br><span class="line">    <span class="keyword">int</span> i = indexFor(hash, table.length);</span><br><span class="line">    <span class="comment">// 先遍历该数组索引下的整条链表</span></span><br><span class="line">    <span class="comment">// 如果该 key 之前已经在 HashMap 中存储了的话，直接替换对应的 value 值即可</span></span><br><span class="line">    <span class="keyword">for</span> (Entry&lt;K,V&gt; e = table[i]; e != <span class="keyword">null</span>; e = e.next) &#123;</span><br><span class="line">        Object k;</span><br><span class="line">        <span class="keyword">if</span> (e.hash == hash &amp;&amp; ((k = e.key) == key || key.equals(k))) &#123;</span><br><span class="line">            V oldValue = e.value;</span><br><span class="line">            e.value = value;</span><br><span class="line">            e.recordAccess(<span class="keyword">this</span>);</span><br><span class="line">            <span class="keyword">return</span> oldValue;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="comment">// 如果该 key 之前没有被存储过，那么就进入 addEntry 方法</span></span><br><span class="line">    addEntry(hash, key, value, i);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看了上面 put 方法的代码，大致分为了以下几个步骤：</p>
+<ol>
+<li>如果 table 数组为空时先创建数组，并且设置扩容阀值；</li>
+<li>如果 key 为空时，调用 putForNullKey 方法特殊处理；</li>
+<li>计算 key 的哈希值；</li>
+<li>根据第三步计算出来的哈希值和当前数组的长度来计算得到该 key 在数组中的索引，其实索引最后的值就等于 <code>hash%table.length</code> ；</li>
+<li>遍历该数组索引下的整条链表，如果之前已经有一样的 key ，那么直接覆盖 value ；</li>
+<li>如果该 key 之前没有，那么就进入 addEntry 方法。</li>
+</ol>
+<p>下面就来看一下 addEntry 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">addEntry</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">int</span> bucketIndex)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 当前容量大于或等于扩容阀值的时候，会执行扩容</span></span><br><span class="line">    <span class="keyword">if</span> ((size &gt;= threshold) &amp;&amp; (<span class="keyword">null</span> != table[bucketIndex])) &#123;</span><br><span class="line">        <span class="comment">// 扩容为原来容量的两倍</span></span><br><span class="line">        resize(<span class="number">2</span> * table.length);</span><br><span class="line">        <span class="comment">// 重新计算哈希值</span></span><br><span class="line">        hash = (<span class="keyword">null</span> != key) ? hash(key) : <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 重新得到在新数组中的索引</span></span><br><span class="line">        bucketIndex = indexFor(hash, table.length);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 创建节点</span></span><br><span class="line">    createEntry(hash, key, value, bucketIndex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 addEntry 方法中，有两个注意点需要我们去看：</p>
+<ol>
+<li>如果当前 HashMap 的存储容量到达阀值的时候，会去进行 <code>resize(int newCapacity)</code> 扩容；</li>
+<li>在 createEntry 方法中增加新的节点。</li>
+</ol>
+<p>我们先去 resize 方法中看看是怎么扩容的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">resize</span><span class="params">(<span class="keyword">int</span> newCapacity)</span> </span>&#123;</span><br><span class="line">    Entry[] oldTable = table;</span><br><span class="line">    <span class="keyword">int</span> oldCapacity = oldTable.length;</span><br><span class="line">    <span class="keyword">if</span> (oldCapacity == MAXIMUM_CAPACITY) &#123;</span><br><span class="line">        threshold = Integer.MAX_VALUE;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 创建新的 entry 数组</span></span><br><span class="line">    Entry[] newTable = <span class="keyword">new</span> Entry[newCapacity];</span><br><span class="line">    <span class="comment">// 将旧 entry 数组中的数据复制到新 entry 数组中</span></span><br><span class="line">    transfer(newTable, initHashSeedAsNeeded(newCapacity));</span><br><span class="line">    <span class="comment">// 将新数组的引用赋给 table</span></span><br><span class="line">    table = newTable;</span><br><span class="line">    <span class="comment">// 计算新的扩容阀值</span></span><br><span class="line">    threshold = (<span class="keyword">int</span>)Math.min(newCapacity * loadFactor, MAXIMUM_CAPACITY + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据代码可以知道，扩容就是创建了一个新的数组，然后把数据全部复制过去，再把新数组的引用赋给 table 。</p>
+<p>剩下的还有一个 createEntry 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">createEntry</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">int</span> bucketIndex)</span> </span>&#123;</span><br><span class="line">    Entry&lt;K,V&gt; e = table[bucketIndex];</span><br><span class="line">    table[bucketIndex] = <span class="keyword">new</span> Entry&lt;&gt;(hash, key, value, e);</span><br><span class="line">    <span class="comment">// 当前 HashMap 的容量加 1</span></span><br><span class="line">    size++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>创建节点的方法中，如果发现 e 是空的，之前没有存值，那么直接把值存进去就行了；如果是之前 e 有值的，即发生 hash 碰撞的情况，就以单链表头插入的方式存储。</p>
+<h2 id="get__u65B9_u6CD5"><a href="#get__u65B9_u6CD5" class="headerlink" title="get 方法"></a>get 方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">get</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果 key 是空的，就调用 getForNullKey 方法特殊处理</span></span><br><span class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">return</span> getForNullKey();</span><br><span class="line">    <span class="comment">// 获取 key 相对应的 entry </span></span><br><span class="line">    Entry&lt;K,V&gt; entry = getEntry(key);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span> == entry ? <span class="keyword">null</span> : entry.getValue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 get 方法中，获取 value 主要步骤是 <code>getEntry(key)</code> 。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> Entry&lt;K,V&gt; getEntry(Object key) &#123;</span><br><span class="line">    <span class="keyword">if</span> (size == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 计算 key 的哈希值</span></span><br><span class="line">    <span class="keyword">int</span> hash = (key == <span class="keyword">null</span>) ? <span class="number">0</span> : hash(key);</span><br><span class="line">    <span class="comment">// 得到数组的索引，然后遍历链表，查看是否有相同 key 的 Entry</span></span><br><span class="line">    <span class="keyword">for</span> (Entry&lt;K,V&gt; e = table[indexFor(hash, table.length)];</span><br><span class="line">         e != <span class="keyword">null</span>;</span><br><span class="line">         e = e.next) &#123;</span><br><span class="line">        Object k;</span><br><span class="line">        <span class="keyword">if</span> (e.hash == hash &amp;&amp;</span><br><span class="line">            ((k = e.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">            <span class="keyword">return</span> e;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 没有的话，返回 null</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>getEntry(Object key)</code> 方法很简单，就是找到对应 key 的数组索引，然后遍历链表查找即可。</p>
+<h1 id="Java_1-8__u4E2D_HashMap__u7684_u4E0D_u540C"><a href="#Java_1-8__u4E2D_HashMap__u7684_u4E0D_u540C" class="headerlink" title="Java 1.8 中 HashMap 的不同"></a>Java 1.8 中 HashMap 的不同</h1><ol>
+<li>在 Java 1.8 中，如果链表的长度超过了 8 ，那么链表将转化为红黑树；</li>
+<li>发生 hash 碰撞时，Java 1.7 会在链表头部插入，而 Java 1.8 会在链表尾部插入；</li>
+<li>在 Java 1.8 中，Entry 被 Node 代替（换了一个马甲）。</li>
+</ol>
+<h1 id="Footer"><a href="#Footer" class="headerlink" title="Footer"></a>Footer</h1><p>讲完了，现在对 HashMap 应该有更深一步的了解了吧，建议大家回去再研究下。</p>
+<p>如果哪里有问题或者不懂，可以留言。</p>
+<p>bye bye</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号来获取我的动态！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      俞其荣
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://yuqirong.me/2018/01/13/HashMap内部原理解析/" title="HashMap内部原理解析">http://yuqirong.me/2018/01/13/HashMap内部原理解析/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+          
+            <a href="/tags/源码解析/" rel="tag"># 源码解析</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/21/Android通过URI获取文件路径/" rel="next" title="Android通过URI获取文件路径">
+                <i class="fa fa-chevron-left"></i> Android通过URI获取文件路径
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+               alt="俞其荣" />
+          <p class="site-author-name" itemprop="name">俞其荣</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">81</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuqirong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yyyuqirong" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yyyuqirong" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/116756215081118586533" target="_blank" title="Google+">
+                  
+                    <i class="fa fa-fw fa-google-plus"></i>
+                  
+                  Google+
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/1291f6690ea0" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/yyyuqirong" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yuqirong" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yqr271228943@gmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Header"><span class="nav-number">1.</span> <span class="nav-text">Header</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HashMap__u5FC5_u77E5"><span class="nav-number">2.</span> <span class="nav-text">HashMap 必知</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u6E90_u7801_u5206_u6790"><span class="nav-number">3.</span> <span class="nav-text">源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u6784_u9020_u65B9_u6CD5"><span class="nav-number">3.1.</span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#put__u65B9_u6CD5"><span class="nav-number">3.2.</span> <span class="nav-text">put 方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#get__u65B9_u6CD5"><span class="nav-number">3.3.</span> <span class="nav-text">get 方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java_1-8__u4E2D_HashMap__u7684_u4E0D_u540C"><span class="nav-number">4.</span> <span class="nav-text">Java 1.8 中 HashMap 的不同</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Footer"><span class="nav-number">5.</span> <span class="nav-text">Footer</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+<p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 94126, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 94126, xid: "2018/01/13/HashMap内部原理解析/"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/94126/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+</body>
+</html>
