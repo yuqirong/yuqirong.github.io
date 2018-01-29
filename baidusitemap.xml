@@ -4,6 +4,30 @@
 
     
   <url>
+    <loc>http://yuqirong.me/2018/01/28/HashSet%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2018-01-29T15:20:21.299Z</lastmod>
+    <data>
+        <display>
+        <title>HashSet内部原理解析</title>
+        <pubTime>2018-01-28T12:07:55.000Z</pubTime>
+        
+        <tag>Java</tag>
+         
+        <tag>数据结构</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Java Blog" url="http://yuqirong.me/categories/Java-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yuqirong.me/2018/01/21/ArrayList%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/</loc>
     <lastmod>2018-01-27T09:06:25.903Z</lastmod>
     <data>
