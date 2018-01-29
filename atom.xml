@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2018-01-29T15:20:21.299Z</updated>
+  <updated>2018-01-29T15:26:03.561Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://yuqirong.me/2018/01/28/HashSet%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/"/>
     <id>http://yuqirong.me/2018/01/28/HashSet内部原理解析/</id>
     <published>2018-01-28T12:07:55.000Z</published>
-    <updated>2018-01-29T15:20:21.299Z</updated>
+    <updated>2018-01-29T15:26:03.561Z</updated>
     <content type="html"><![CDATA[<p>注：本文解析的 HashSet 源代码基于 Java 1.8 。</p>
 <h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>HashSet是用来存储没有重复元素的集合类，并且它是无序的。</p>
 <p>HashSet 内部实现是基于 HashMap ，实现了 Set 接口。</p>
@@ -31,6 +31,9 @@
 <p>相应的，remove 就是从 map 中移除 key 。</p>
 <h2 id="contains"><a href="#contains" class="headerlink" title="contains"></a>contains</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.containsKey(o);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这些代码应该很明白，不需要讲了。</p>
+<h2 id="iterator"><a href="#iterator" class="headerlink" title="iterator"></a>iterator</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.keySet().iterator();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>内部调用的就是 HashMap 中 keySet 的 iterator 方法。</p>
+<h2 id="size"><a href="#size" class="headerlink" title="size"></a>size</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.size();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>剩下的 HashSet 方法也不多，内部也都是通过 HashMap 实现的。就不贴出来了，大家回去看一下都会明白的。</p>
 <h1 id="Footer"><a href="#Footer" class="headerlink" title="Footer"></a>Footer</h1><p>从上看下来，HashSet 的源码是挺简单的，内部都是用 HashMap 来实现的。利用了 HashMap 的 key 不能重复这个原理来实现 HashSet 。</p>
 <p>内容很简短，都讲完了，再见。</p>
