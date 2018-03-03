@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2018-02-03T09:58:26.492Z</updated>
+  <updated>2018-03-03T12:14:52.100Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -13,6 +13,81 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[HTTPS加密原理]]></title>
+    <link href="http://yuqirong.me/2018/03/03/HTTPS%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86/"/>
+    <id>http://yuqirong.me/2018/03/03/HTTPS加密原理/</id>
+    <published>2018-03-03T07:54:24.000Z</published>
+    <updated>2018-03-03T12:14:52.100Z</updated>
+    <content type="html"><![CDATA[<h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>HTTP、HTTPS在我们日常开发中是经常会接触到的。</p>
+<p>我们也都知道，一般 Android 应用开发，在请求 API 网络接口的时候，很多使用的都是 HTTP 协议；使用浏览器打开网页，也是利用 HTTP 协议。看来 HTTP 真是使用广泛啊，但是，HTTP 是不安全的。利用网络抓包工具就可以知道传输中的内容，一览无余。比如我经常会使用 Fiddler 来抓包，搜集一些有趣的 API 接口。</p>
+<p>那么问题来了，如何保证 HTTP 的安全性呢？基本上所有的人都会脱口而出：使用 HTTPS 协议。99.9% 的人都知道 HTTPS 会将传输的内容进行加密，但是接着问具体加密的过程和步骤，很多人就哑口无言了。</p>
+<p>为了防止出现这种尴尬的局面，所以今天你就要好好看看这篇的内容了。以后就可以装个逼，哈哈！</p>
+<h1 id="Body"><a href="#Body" class="headerlink" title="Body"></a>Body</h1><h2 id="u52A0_u5BC6_u7C7B_u578B"><a href="#u52A0_u5BC6_u7C7B_u578B" class="headerlink" title="加密类型"></a>加密类型</h2><p>先科普一下，加密算法的类型基本上分为了两种：</p>
+<ul>
+<li>对称加密，比较有代表性的就是 AES 加密算法；</li>
+<li>非对称加密，经常使用到的 RSA 加密算法就是非对称加密的；</li>
+</ul>
+<p>对称加密的意思就是说双方都有一个共同的密钥，然后通过这个密钥完成加密和解密，这种加密方式速度快，但是安全性不如非对称加密好。</p>
+<p>举个例子，现在学霸小明这里有一道数学题的答案：123 。他想把答案传给自己一直暗恋的小红。所以他们双方在考试开考前，约定了一把密钥：456 。那么小明就把答案内容经过密钥加密，即 123 + 456 =  579 ，将 579 写在小纸条上扔给小红。如果此时别人捡到了小纸条，不知道他们是加密传输的，看到上面的 579 ，会误以为答案就是 579 ；如果是小红捡到了，她拿出密钥解密，579 - 456 = 123 ，得到了正确的答案。</p>
+<p>这就是所谓的对称加密，加解密效率高，速度快，但是双方任何一方不小心泄露了密钥，那么任何人都可以知道传输内容了。</p>
+<p>讲完了对称加密，我们看看啥是非对称加密。</p>
+<p>非对称加密就是有两把密钥，公钥和私钥。私钥自己藏着，不告诉任何人；而公钥可以公开给别人。</p>
+<p>经过了上次作弊后，小红发现了对称加密如果密钥泄露是一件可怕的事情。所以她和小明决定使用非对称加密。小红生成了一对公钥和私钥，然后把公钥公开，小明就得到了公钥。小明拿到公钥后，把答案经过公钥加密，然后传输给小红，小红再利用自己的私钥进行解密，得到答案结果。如果在这个过程中，其他人得到传输的内容，而他们只有小红公钥，是没有办法进行解密的，所以也就得不到答案，只有小红一个人可以解密。</p>
+<p>因此，相比较对称加密而言，非对称加密安全性更高，但是加解密耗费的时间更长，速度慢。</p>
+<p>对称加密和非对称加密的具体应用我还是深有体会的，因为所在的公司是做金融支付方面的，所以加解密基本上算是天天见了。</p>
+<h2 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h2><p>说完加密类型后，我们再来看看 HTTPS 。</p>
+<p>我们先来看一个公式：</p>
+<p>HTTPS = HTTP + SSL </p>
+<p>从这个公式中可以看出，HTTPS 和 HTTP 就差在了 SSL 上。所以我们可以猜到，HTTPS 的加密就是在 SSL 中完成的。</p>
+<p>所以我们的目的就是要搞懂在 SSL 中究竟干了什么见不得人的事了？</p>
+<p>这就要从 CA 证书讲起了。CA 证书其实就是数字证书，是由 CA 机构颁发的。至于 CA 机构的权威性，那么是毋庸置疑的，所有人都是信任它的。CA 证书内一般会包含以下内容：</p>
+<ul>
+<li>证书的颁发机构、版本</li>
+<li>证书的使用者</li>
+<li>证书的公钥</li>
+<li>证书的有效时间</li>
+<li>证书的数字签名 Hash 值和签名 Hash 算法</li>
+<li>…</li>
+</ul>
+<p>正好我们把客户端如何校验 CA 证书的步骤说下吧。</p>
+<p>CA 证书中的 Hash 值，其实是用证书的私钥进行加密后的值（证书的私钥不在 CA 证书中）。然后客户端得到证书后，利用证书中的公钥去解密该 Hash 值，得到 Hash-a ；然后再利用证书内的签名 Hash 算法去生成一个 Hash-b 。最后比较 Hash-a 和 Hash-b 这两个的值。如果相等，那么证明了该证书是对的，服务端是可以被信任的；如果不相等，那么就说明该证书是错误的，可能被篡改了，浏览器会给出相关提示，无法建立起 HTTPS 连接。除此之外，还会校验 CA 证书的有效时间和域名匹配等。</p>
+<p>接下来我们就来详细讲一下 HTTPS 中的 SSL 握手建立过程，假设现在有客户端 A 和服务器 B ：</p>
+<ol>
+<li>首先，客户端 A 访问服务器 B ，比如我们用浏览器打开一个网页 <a href="https://www.baidu.com" target="_blank" rel="external">https://www.baidu.com</a> ，这时，浏览器就是客户端 A ，百度的服务器就是服务器 B 了。这时候客户端 A 会生成一个随机数1，把随机数1 、自己支持的 SSL 版本号以及加密算法等这些信息告诉服务器 B 。</li>
+<li>服务器 B 知道这些信息后，然后确认一下双方的加密算法，然后服务端也生成一个随机数 B ，并将随机数 B 和 CA 颁发给自己的证书一同返回给客户端 A 。</li>
+<li>客户端 A 得到 CA 证书后，会去校验该 CA 证书的有效性，校验方法在上面已经说过了。校验通过后，客户端生成一个随机数3 ，然后用证书中的公钥加密随机数3 并传输给服务端 B 。</li>
+<li>服务端 B 得到加密后的随机数3，然后利用私钥进行解密，得到真正的随机数3。</li>
+<li>最后，客户端 A 和服务端 B 都有随机数1、随机数2、随机数3，然后双方利用这三个随机数生成一个对话密钥。之后传输内容就是利用对话密钥来进行加解密了。这时就是利用了对称加密，一般用的都是 AES 算法。</li>
+<li>客户端 A 通知服务端 B ，指明后面的通讯用对话密钥来完成，同时通知服务器 B 客户端 A 的握手过程结束。</li>
+<li>服务端 B 通知客户端 A，指明后面的通讯用对话密钥来完成，同时通知客户端 A 服务器 B 的握手过程结束。</li>
+<li>SSL 的握手部分结束，SSL 安全通道的数据通讯开始，客户端 A 和服务器 B 开始使用相同的对话密钥进行数据通讯。</li>
+</ol>
+<p>到此，SSL 握手过程就讲完了。可能上面的流程太过于复杂，我们简单地来讲：</p>
+<ol>
+<li>客户端和服务端建立 SSL 握手，客户端通过 CA 证书来确认服务端的身份；</li>
+<li>互相传递三个随机数，之后通过这随机数来生成一个密钥；</li>
+<li>互相确认密钥，然后握手结束；</li>
+<li>数据通讯开始，都使用同一个对话密钥来加解密；</li>
+</ol>
+<p>我们可以发现，在 HTTPS 加密原理的过程中把对称加密和非对称加密都利用了起来。即利用了非对称加密安全性高的特点，又利用了对称加密速度快，效率高的好处。真的是设计得非常精妙，令人赞不绝口。</p>
+<h1 id="Footer"><a href="#Footer" class="headerlink" title="Footer"></a>Footer</h1><p>好了，HTTPS 加密原理到这就讲的差不多了，不知道电脑前的你有没有看懂呢？</p>
+<p>如果有哪里不明白的地方，可以在底下留言交流。</p>
+<p>bye ~~</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>HTTP、HTTPS在我们日常开发中是经常会接触到的。</p>
+<p>我们也都知道，一般 Android 应]]>
+    </summary>
+    
+      <category term="算法" scheme="http://yuqirong.me/tags/%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="网络" scheme="http://yuqirong.me/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+      <category term="算法" scheme="http://yuqirong.me/categories/%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[LinkedList内部原理解析]]></title>
@@ -2090,79 +2165,6 @@ public ContentResolver getContentResolver() {
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="u627E_u4E0D_u540C"><a href="#u627E_u4E0D_u540C" class="headerlink" title="找不同"></a>找不同</h1><p>之前在 <a href="/2017/06/07/Kotlin入入入门(一)]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="Kotlin" scheme="http://yuqirong.me/tags/Kotlin/"/>
-    
-      <category term="Kotlin Blog" scheme="http://yuqirong.me/categories/Kotlin-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Kotlin入入入门(一)]]></title>
-    <link href="http://yuqirong.me/2017/06/07/Kotlin%E5%85%A5%E5%85%A5%E5%85%A5%E9%97%A8(%E4%B8%80)/"/>
-    <id>http://yuqirong.me/2017/06/07/Kotlin入入入门(一)/</id>
-    <published>2017-06-07T12:10:22.000Z</published>
-    <updated>2017-06-14T14:15:16.962Z</updated>
-    <content type="html"><![CDATA[<h1 id="Android_Studio__u914D_u7F6E"><a href="#Android_Studio__u914D_u7F6E" class="headerlink" title="Android Studio 配置"></a>Android Studio 配置</h1><p>Android Studio 3.0 版本已经默认添加了对 Kotlin 的支持，所以以下 Android Studio 配置是针对于 3.0 版本以下的。</p>
-<ol>
-<li><p>安装 Kotlin 插件</p>
-<p> <img src="http://ofyt9w4c2.bkt.clouddn.com/20170607/20170607210549.png" alt="Kotlin Plugin"></p>
-</li>
-<li><p>将 Java 代码转化为 Kotlin 代码</p>
-<p> <img src="http://ofyt9w4c2.bkt.clouddn.com/20170607/20170607221409.png" alt="Converting Java code to Kotlin"></p>
-<p> 之后代码就变成了如下：</p>
- <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="typename">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="typename">Bundle?</span>)</span> &#123;</span></span><br><span class="line">        super.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>将文件编辑之后，会跳出一个配置 Kotlin 的提示：</p>
-<p> <img src="http://ofyt9w4c2.bkt.clouddn.com//20170607/20170607222519.png" alt="Kotlin Configure"></p>
-<p> 点击配置后，出现如下弹窗，点击 OK 即可</p>
-<p> <img src="http://ofyt9w4c2.bkt.clouddn.com//20170607/20170607222730.png" alt="Kotlin Configure Dialog"></p>
-</li>
-<li><p>配置完成后，可以看到项目的 build.gradle 多了一些：</p>
-<pre><code>buildscript {
-    ext.kotlin_version = &apos;1.1.2-4&apos;
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath &apos;com.android.tools.build:gradle:2.2.2&apos;
-        classpath &quot;org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version&quot;
-    }
-}
-</code></pre><p> app/build.gradle 的配置：</p>
-<pre><code>apply plugin: &apos;com.android.application&apos;
-apply plugin: &apos;kotlin-android&apos;
-
-...
-
-dependencies {
-    ...
-    compile &quot;org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version&quot;
-}
-</code></pre></li>
-</ol>
-<h1 id="Hello_World"><a href="#Hello_World" class="headerlink" title="Hello World"></a>Hello World</h1><p>学习一门编程语言的首要任务就是写出 “Hello World” ，那就让我们迈下第一步吧。</p>
-<p>activity_main.xml :</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">    <span class="attribute">android:id</span>=<span class="value">"@+id/activity_main"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:paddingBottom</span>=<span class="value">"@dimen/activity_vertical_margin"</span></span><br><span class="line">    <span class="attribute">android:paddingLeft</span>=<span class="value">"@dimen/activity_horizontal_margin"</span></span><br><span class="line">    <span class="attribute">android:paddingRight</span>=<span class="value">"@dimen/activity_horizontal_margin"</span></span><br><span class="line">    <span class="attribute">android:paddingTop</span>=<span class="value">"@dimen/activity_vertical_margin"</span></span><br><span class="line">    <span class="attribute">tools:context</span>=<span class="value">"me.yuqirong.kotlindemo.MainActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/textView"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>然后在 <code>onCreate(savedInstanceState: Bundle?)</code> 去得到 <code>textView</code> 。这里就体现出 Kotlin 的好处了，不再需要 <code>findViewById</code> 。而是先需要在 app/build.gradle 中添加如下配置：</p>
-<pre><code>apply plugin: &apos;com.android.application&apos;
-apply plugin: &apos;kotlin-android&apos;
-// 添加以下这行
-apply plugin: &apos;kotlin-android-extensions&apos;
-
-...
-</code></pre><p>配置好后，在代码中就可以直接使用了，是不是很方便呢！</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> me.yuqirong.kotlindemo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity</span><br><span class="line"><span class="keyword">import</span> kotlinx.android.synthetic.main.activity_main.*</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="typename">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="typename">Bundle?</span>)</span> &#123;</span></span><br><span class="line">        super.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">        textView.text = <span class="string">"Hello World"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>运行一下，demo的效果图就是这样滴，不加特效！</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20170607/20170607231545.png" alt="Demo效果图"></p>
-<p>Goodbye ~ ~</p>
-<p>Demo下载：<a href="http://ofytl4mzu.bkt.clouddn.com/20170607/KotlinDemo.rar" target="_blank" rel="external">KotlinDemo</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="Android_Studio__u914D_u7F6E"><a href="#Android_Studio__u914D_u7F6E" class="headerlink" title="Android Studio 配置"></a>Android Studio ]]>
     </summary>
     
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
