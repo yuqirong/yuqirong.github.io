@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2018-03-03T12:14:52.100Z</updated>
+  <updated>2018-03-03T12:29:57.518Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://yuqirong.me/2018/03/03/HTTPS%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86/"/>
     <id>http://yuqirong.me/2018/03/03/HTTPS加密原理/</id>
     <published>2018-03-03T07:54:24.000Z</published>
-    <updated>2018-03-03T12:14:52.100Z</updated>
+    <updated>2018-03-03T12:29:57.518Z</updated>
     <content type="html"><![CDATA[<h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>HTTP、HTTPS在我们日常开发中是经常会接触到的。</p>
 <p>我们也都知道，一般 Android 应用开发，在请求 API 网络接口的时候，很多使用的都是 HTTP 协议；使用浏览器打开网页，也是利用 HTTP 协议。看来 HTTP 真是使用广泛啊，但是，HTTP 是不安全的。利用网络抓包工具就可以知道传输中的内容，一览无余。比如我经常会使用 Fiddler 来抓包，搜集一些有趣的 API 接口。</p>
 <p>那么问题来了，如何保证 HTTP 的安全性呢？基本上所有的人都会脱口而出：使用 HTTPS 协议。99.9% 的人都知道 HTTPS 会将传输的内容进行加密，但是接着问具体加密的过程和步骤，很多人就哑口无言了。</p>
@@ -75,6 +75,9 @@
 <h1 id="Footer"><a href="#Footer" class="headerlink" title="Footer"></a>Footer</h1><p>好了，HTTPS 加密原理到这就讲的差不多了，不知道电脑前的你有没有看懂呢？</p>
 <p>如果有哪里不明白的地方，可以在底下留言交流。</p>
 <p>bye ~~</p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a href="http://blog.damonare.cn/2017/12/29/SSL%E5%8D%8F%E8%AE%AE%E4%B9%8B%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3/" target="_blank" rel="external">SSL协议之数据加密过程详解</a></li>
+</ul>
 ]]></content>
     <summary type="html">
     <![CDATA[<h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>HTTP、HTTPS在我们日常开发中是经常会接触到的。</p>
