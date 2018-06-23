@@ -1,9 +1,27 @@
 Java SE
 =====
+基础
+----
+内部类和静态内部类和匿名内部类，以及项目中的应用
 
 集合
 ------
-* ConcurrentHashMap 和HashTable的区别
+* HashMap 和 HashTable 的区别
+* ArrayList 和 LinkedList 的区别，以及应用场景
+* HashMap 的实现原理，Hash 冲突过多时会怎么处理，何时进行处理；为什么 HashMap 是线程不安全的？
+	* 答案：在多线程的环境下，存在同时其他的元素也在进行put操作，如果hash值相同，可能出现同时在同一数组下用链表表示，造成闭环，导致在get时会出现死循环，所以HashMap是线程不安全的。
+* LinkedHashMap 的实现原理
+* ConcurrentHashMap 的实现原理
+* CopyOnWriteArrayList 的实现原理及适用场景
+* 
+
+多线程
+------
+* static synchronized 方法的多线程访问和作用，同一个类里面两个synchronized方法，两个线程同时访问的问题
+* synchronize用法，volatile用法，两者的区别和场景
+* ThreadLocal 原理
+* 多线程断点续传原理
+* sleep() 和 wait() 的区别
 
 JVM
 ----
@@ -63,3 +81,5 @@ JVM
 * 简述 java 垃圾回收机制 ?
 
 	答：在 java 中，程序员是不需要显示的去释放一个对象的内存的，而是由虚拟机自行执行。在 JVM 中，有一个垃圾回收线程，它是低优先级的，在正常情况下是不会执行的，只有在虚拟机空闲或者当前堆内存不足时，才会触发执行，扫面那些没有被任何引用的对象，并将它们添加到要回收的集合中，进行回收。
+
+* jvm相关和GC回收算法的区别

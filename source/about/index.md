@@ -6,7 +6,7 @@ comments: false
 ## 个人介绍
 * 俞其荣 / 男 / 1993
 * 杭州 / 中国计量大学
-* Android / Java / Kotlin / React
+* Android / Java / Kotlin / React / Vue
 * 电影迷 / Google粉 / Apple粉
 * 爱篮球 / 爱跑车 / 爱旅行
 * 二逼青年 / 偶尔文艺 / 外表冷 / 内心骚
