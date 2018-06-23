@@ -1,15 +1,34 @@
-<!doctype html>
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
 
 
 
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-CN">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
 
 
 
@@ -30,9 +49,6 @@
 
 
 
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -68,34 +84,25 @@
 
 <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
 
 
 
 
 
 
-  <link rel="alternate" href="/atom.xml" title="Qirong Yu's Blog" type="application/atom+xml" />
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
-
-
-
-
-
-
-<meta name="description" content="向前跑 迎着冷眼和嘲笑">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Qirong Yu's Blog">
-<meta property="og:url" content="http://yuqirong.me/page/4/index.html">
-<meta property="og:site_name" content="Qirong Yu's Blog">
-<meta property="og:description" content="向前跑 迎着冷眼和嘲笑">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Qirong Yu's Blog">
-<meta name="twitter:description" content="向前跑 迎着冷眼和嘲笑">
 
 
 
@@ -104,13 +111,13 @@
   var CONFIG = {
     root: '/',
     scheme: 'Muse',
-    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
-    fancybox: true,
-    motion: true,
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     algolia: {
       applicationID: '',
       apiKey: '',
@@ -122,19 +129,41 @@
 </script>
 
 
+  
+
+
+
+
+  <meta name="description" content="向前跑 迎着冷眼和嘲笑">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Qirong Yu's Blog">
+<meta property="og:url" content="http://yuqirong.me/page/4/index.html">
+<meta property="og:site_name" content="Qirong Yu's Blog">
+<meta property="og:description" content="向前跑 迎着冷眼和嘲笑">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Qirong Yu's Blog">
+<meta name="twitter:description" content="向前跑 迎着冷眼和嘲笑">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qirong Yu's Blog" type="application/atom+xml" />
+
+
+
 
   <link rel="canonical" href="http://yuqirong.me/page/4/"/>
 
 
 
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
 
-
-  <title> Qirong Yu's Blog </title>
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
+  <title>Qirong Yu's Blog</title>
   
+
 
 
 
@@ -152,27 +181,37 @@
 
 
 
-  <script type="text/javascript">
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "//tajs.qq.com/stats?sId=62363449";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
 
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
 
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
 
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
 
+</head>
 
-  <div style="display: none;">
-    <script src="//s95.cnzz.com/z_stat.php?id=1257390016&web_id=1257390016" language="JavaScript"></script>
-  </div>
-
-
-
-
-
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
 
   
   
@@ -180,8 +219,7 @@
   
 
   <div class="container sidebar-position-left 
-   page-home 
- ">
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -190,19 +228,21 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" rel="start" class="brand">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Qirong Yu's Blog</span>
+        <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
+        <!--<img src="http://ofyt9w4c2.bkt.clouddn.com/avatar/1529736707_477636.png" style="background:#222222"/>-->
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
       
-        <h1 class="site-subtitle" itemprop="description"></h1>
+        <h1 class="site-subtitle" itemprop="description">我需要，最狂的风，和最静的海。</h1>
+        <h1 class="site-subtitle" itemprop="description" style="margin-top:0px;">——顾城《第八个早晨》</h1>
       
   </div>
 
   <div class="site-nav-toggle">
-    <button>
+    <button aria-label="切换导航栏">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -210,75 +250,69 @@
   </div>
 </div>
 
-<nav class="site-nav">
-  
 
+
+<nav class="site-nav">
   
     <ul id="menu" class="menu">
       
         
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-categories">
-          <a href="/categories" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-archives">
-          <a href="/archives" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
         
-        <li class="menu-item menu-item-tags">
-          <a href="/tags" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-guestbook">
-          <a href="/guestbook" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-comment"></i> <br />
-            
-            留言
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-about">
-          <a href="/about" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            关于
-          </a>
-        </li>
-      
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-guestbook">
+    <a href="/guestbook/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-comment"></i> <br />留言</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
 
       
+      
     </ul>
+  
+
+  
+    
+
   
 
   
@@ -286,12 +320,31 @@
 
 
 
- </div>
+  
+
+
+
+</div>
     </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/yuqirong" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
 
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
+          
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
@@ -304,12 +357,18 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/12/18/ButterKnife源码解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
       <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
     </span>
 
@@ -323,9 +382,6 @@
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
                 <a class="post-title-link" href="/2016/12/18/ButterKnife源码解析/" itemprop="url">
                   ButterKnife源码分析
@@ -337,6 +393,11 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -344,13 +405,30 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-18T23:19:02+08:00">
-                2016-12-18
-              </time>
+
+              
+                
+              
+
+              <time title="创建时间：2016-12-18 23:19:02" itemprop="dateCreated datePublished" datetime="2016-12-18T23:19:02+08:00">2016-12-18</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2016-12-19 00:58:46" itemprop="dateModified" datetime="2016-12-19T00:58:46+08:00">2016-12-19</time>
+              
             
           </span>
 
@@ -366,11 +444,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
 
                 
                 
@@ -387,7 +461,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2016/12/18/ButterKnife源码解析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2016/12/18/ButterKnife源码解析/" itemprop="commentsCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count hc-comment-count" data-xid="2016/12/18/ButterKnife源码解析/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -407,7 +481,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -422,7 +498,7 @@
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/12/18/ButterKnife源码解析/#далее" rel="contents">
+            <a class="btn" href="/2016/12/18/ButterKnife源码解析/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -431,17 +507,17 @@
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
       
@@ -455,6 +531,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -467,12 +547,18 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/12/09/EMCAScript新功能/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
       <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
     </span>
 
@@ -486,9 +572,6 @@
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
                 <a class="post-title-link" href="/2016/12/09/EMCAScript新功能/" itemprop="url">
                   ECMAScript新功能
@@ -500,6 +583,11 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -507,13 +595,30 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-09T23:39:09+08:00">
-                2016-12-09
-              </time>
+
+              
+                
+              
+
+              <time title="创建时间：2016-12-09 23:39:09" itemprop="dateCreated datePublished" datetime="2016-12-09T23:39:09+08:00">2016-12-09</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2017-11-04 14:32:22" itemprop="dateModified" datetime="2017-11-04T14:32:22+08:00">2017-11-04</time>
+              
             
           </span>
 
@@ -529,11 +634,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript Blog</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JavaScript-Blog/" itemprop="url" rel="index"><span itemprop="name">JavaScript Blog</span></a></span>
 
                 
                 
@@ -550,7 +651,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2016/12/09/EMCAScript新功能/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2016/12/09/EMCAScript新功能/" itemprop="commentsCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count hc-comment-count" data-xid="2016/12/09/EMCAScript新功能/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -570,7 +671,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -596,7 +699,7 @@ const 恒量，一旦声明就不能再改变它的值
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/12/09/EMCAScript新功能/#далее" rel="contents">
+            <a class="btn" href="/2016/12/09/EMCAScript新功能/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -605,17 +708,17 @@ const 恒量，一旦声明就不能再改变它的值
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
       
@@ -629,6 +732,10 @@ const 恒量，一旦声明就不能再改变它的值
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -641,12 +748,18 @@ const 恒量，一旦声明就不能再改变它的值
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/12/04/Android项目中集成React Native/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
       <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
     </span>
 
@@ -660,9 +773,6 @@ const 恒量，一旦声明就不能再改变它的值
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
                 <a class="post-title-link" href="/2016/12/04/Android项目中集成React Native/" itemprop="url">
                   Android项目中集成React Native
@@ -674,6 +784,11 @@ const 恒量，一旦声明就不能再改变它的值
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -681,13 +796,30 @@ const 恒量，一旦声明就不能再改变它的值
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-04T21:04:35+08:00">
-                2016-12-04
-              </time>
+
+              
+                
+              
+
+              <time title="创建时间：2016-12-04 21:04:35" itemprop="dateCreated datePublished" datetime="2016-12-04T21:04:35+08:00">2016-12-04</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2016-12-14 22:52:19" itemprop="dateModified" datetime="2016-12-14T22:52:19+08:00">2016-12-14</time>
+              
             
           </span>
 
@@ -703,11 +835,7 @@ const 恒量，一旦声明就不能再改变它的值
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/React-Native-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">React Native Blog</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/React-Native-Blog/" itemprop="url" rel="index"><span itemprop="name">React Native Blog</span></a></span>
 
                 
                 
@@ -724,7 +852,7 @@ const 恒量，一旦声明就不能再改变它的值
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2016/12/04/Android项目中集成React Native/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2016/12/04/Android项目中集成React Native/" itemprop="commentsCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count hc-comment-count" data-xid="2016/12/04/Android项目中集成React Native/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -744,7 +872,9 @@ const 恒量，一旦声明就不能再改变它的值
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -767,7 +897,7 @@ $ npm init
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/12/04/Android项目中集成React Native/#далее" rel="contents">
+            <a class="btn" href="/2016/12/04/Android项目中集成React Native/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -776,17 +906,17 @@ $ npm init
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
       
@@ -800,6 +930,10 @@ $ npm init
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -812,12 +946,18 @@ $ npm init
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/11/19/Volley框架源码解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
       <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
     </span>
 
@@ -831,9 +971,6 @@ $ npm init
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
                 <a class="post-title-link" href="/2016/11/19/Volley框架源码解析/" itemprop="url">
                   Volley框架源码解析
@@ -845,6 +982,11 @@ $ npm init
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -852,13 +994,30 @@ $ npm init
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-19T21:19:17+08:00">
-                2016-11-19
-              </time>
+
+              
+                
+              
+
+              <time title="创建时间：2016-11-19 21:19:17" itemprop="dateCreated datePublished" datetime="2016-11-19T21:19:17+08:00">2016-11-19</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2016-11-30 22:46:18" itemprop="dateModified" datetime="2016-11-30T22:46:18+08:00">2016-11-30</time>
+              
             
           </span>
 
@@ -874,11 +1033,7 @@ $ npm init
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
 
                 
                 
@@ -895,7 +1050,7 @@ $ npm init
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2016/11/19/Volley框架源码解析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2016/11/19/Volley框架源码解析/" itemprop="commentsCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count hc-comment-count" data-xid="2016/11/19/Volley框架源码解析/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -915,7 +1070,9 @@ $ npm init
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -928,7 +1085,7 @@ $ npm init
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/11/19/Volley框架源码解析/#далее" rel="contents">
+            <a class="btn" href="/2016/11/19/Volley框架源码解析/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -937,17 +1094,17 @@ $ npm init
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
       
@@ -961,6 +1118,10 @@ $ npm init
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -973,12 +1134,18 @@ $ npm init
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/11/06/热修复框架HotFix源码解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
       <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
     </span>
 
@@ -992,9 +1159,6 @@ $ npm init
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
                 <a class="post-title-link" href="/2016/11/06/热修复框架HotFix源码解析/" itemprop="url">
                   热修复框架HotFix源码解析
@@ -1006,6 +1170,11 @@ $ npm init
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1013,13 +1182,18 @@ $ npm init
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-06T13:15:59+08:00">
-                2016-11-06
-              </time>
+
+              
+                
+              
+
+              <time title="创建时间：2016-11-06 13:15:59 / 修改时间：19:19:23" itemprop="dateCreated datePublished" datetime="2016-11-06T13:15:59+08:00">2016-11-06</time>
             
 
             
+              
 
+              
             
           </span>
 
@@ -1035,11 +1209,7 @@ $ npm init
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
 
                 
                 
@@ -1056,7 +1226,7 @@ $ npm init
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2016/11/06/热修复框架HotFix源码解析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2016/11/06/热修复框架HotFix源码解析/" itemprop="commentsCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count hc-comment-count" data-xid="2016/11/06/热修复框架HotFix源码解析/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -1076,7 +1246,9 @@ $ npm init
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1094,7 +1266,7 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/11/06/热修复框架HotFix源码解析/#далее" rel="contents">
+            <a class="btn" href="/2016/11/06/热修复框架HotFix源码解析/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1103,17 +1275,17 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1127,6 +1299,10 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1139,12 +1315,18 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/11/03/React Native热更新集成Code Push/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
       <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
     </span>
 
@@ -1158,9 +1340,6 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
                 <a class="post-title-link" href="/2016/11/03/React Native热更新集成Code Push/" itemprop="url">
                   React Native热更新集成Code Push
@@ -1172,6 +1351,11 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1179,13 +1363,30 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-03T09:30:59+08:00">
-                2016-11-03
-              </time>
+
+              
+                
+              
+
+              <time title="创建时间：2016-11-03 09:30:59" itemprop="dateCreated datePublished" datetime="2016-11-03T09:30:59+08:00">2016-11-03</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2016-12-14 20:55:50" itemprop="dateModified" datetime="2016-12-14T20:55:50+08:00">2016-12-14</time>
+              
             
           </span>
 
@@ -1201,11 +1402,7 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/React-Native-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">React Native Blog</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/React-Native-Blog/" itemprop="url" rel="index"><span itemprop="name">React Native Blog</span></a></span>
 
                 
                 
@@ -1222,7 +1419,7 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2016/11/03/React Native热更新集成Code Push/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2016/11/03/React Native热更新集成Code Push/" itemprop="commentsCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count hc-comment-count" data-xid="2016/11/03/React Native热更新集成Code Push/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -1242,7 +1439,9 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1268,7 +1467,7 @@ code-push deployment ls your_app_name -k
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/11/03/React Native热更新集成Code Push/#далее" rel="contents">
+            <a class="btn" href="/2016/11/03/React Native热更新集成Code Push/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1277,17 +1476,17 @@ code-push deployment ls your_app_name -k
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1301,6 +1500,10 @@ code-push deployment ls your_app_name -k
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1313,12 +1516,18 @@ code-push deployment ls your_app_name -k
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/10/29/Dynamic-Load-Apk源码解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
       <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
     </span>
 
@@ -1332,9 +1541,6 @@ code-push deployment ls your_app_name -k
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
                 <a class="post-title-link" href="/2016/10/29/Dynamic-Load-Apk源码解析/" itemprop="url">
                   Dynamic-Load-Apk源码解析
@@ -1346,6 +1552,11 @@ code-push deployment ls your_app_name -k
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1353,13 +1564,30 @@ code-push deployment ls your_app_name -k
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-29T21:57:12+08:00">
-                2016-10-29
-              </time>
+
+              
+                
+              
+
+              <time title="创建时间：2016-10-29 21:57:12" itemprop="dateCreated datePublished" datetime="2016-10-29T21:57:12+08:00">2016-10-29</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2016-11-01 23:12:44" itemprop="dateModified" datetime="2016-11-01T23:12:44+08:00">2016-11-01</time>
+              
             
           </span>
 
@@ -1375,11 +1603,7 @@ code-push deployment ls your_app_name -k
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
 
                 
                 
@@ -1396,7 +1620,7 @@ code-push deployment ls your_app_name -k
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2016/10/29/Dynamic-Load-Apk源码解析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2016/10/29/Dynamic-Load-Apk源码解析/" itemprop="commentsCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count hc-comment-count" data-xid="2016/10/29/Dynamic-Load-Apk源码解析/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -1416,7 +1640,9 @@ code-push deployment ls your_app_name -k
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1430,7 +1656,7 @@ code-push deployment ls your_app_name -k
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/29/Dynamic-Load-Apk源码解析/#далее" rel="contents">
+            <a class="btn" href="/2016/10/29/Dynamic-Load-Apk源码解析/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1439,17 +1665,17 @@ code-push deployment ls your_app_name -k
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1463,6 +1689,10 @@ code-push deployment ls your_app_name -k
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1475,12 +1705,18 @@ code-push deployment ls your_app_name -k
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/10/23/关于Gradle配置的小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
       <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
     </span>
 
@@ -1494,9 +1730,6 @@ code-push deployment ls your_app_name -k
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
                 <a class="post-title-link" href="/2016/10/23/关于Gradle配置的小结/" itemprop="url">
                   关于Gradle配置的小结
@@ -1508,6 +1741,11 @@ code-push deployment ls your_app_name -k
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1515,13 +1753,30 @@ code-push deployment ls your_app_name -k
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-23T15:34:50+08:00">
-                2016-10-23
-              </time>
+
+              
+                
+              
+
+              <time title="创建时间：2016-10-23 15:34:50" itemprop="dateCreated datePublished" datetime="2016-10-23T15:34:50+08:00">2016-10-23</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2016-11-01 23:12:04" itemprop="dateModified" datetime="2016-11-01T23:12:04+08:00">2016-11-01</time>
+              
             
           </span>
 
@@ -1537,11 +1792,7 @@ code-push deployment ls your_app_name -k
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
 
                 
                 
@@ -1558,7 +1809,7 @@ code-push deployment ls your_app_name -k
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2016/10/23/关于Gradle配置的小结/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2016/10/23/关于Gradle配置的小结/" itemprop="commentsCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count hc-comment-count" data-xid="2016/10/23/关于Gradle配置的小结/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -1578,7 +1829,9 @@ code-push deployment ls your_app_name -k
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1592,7 +1845,7 @@ Gradle
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/23/关于Gradle配置的小结/#далее" rel="contents">
+            <a class="btn" href="/2016/10/23/关于Gradle配置的小结/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1601,17 +1854,17 @@ Gradle
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1625,6 +1878,10 @@ Gradle
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1637,12 +1894,18 @@ Gradle
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/10/15/React Native环境安装流程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
       <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
     </span>
 
@@ -1656,9 +1919,6 @@ Gradle
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
                 <a class="post-title-link" href="/2016/10/15/React Native环境安装流程/" itemprop="url">
                   React Native环境安装流程
@@ -1670,6 +1930,11 @@ Gradle
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1677,13 +1942,30 @@ Gradle
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-15T08:52:40+08:00">
-                2016-10-15
-              </time>
+
+              
+                
+              
+
+              <time title="创建时间：2016-10-15 08:52:40" itemprop="dateCreated datePublished" datetime="2016-10-15T08:52:40+08:00">2016-10-15</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2016-12-14 21:00:25" itemprop="dateModified" datetime="2016-12-14T21:00:25+08:00">2016-12-14</time>
+              
             
           </span>
 
@@ -1699,11 +1981,7 @@ Gradle
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/React-Native-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">React Native Blog</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/React-Native-Blog/" itemprop="url" rel="index"><span itemprop="name">React Native Blog</span></a></span>
 
                 
                 
@@ -1720,7 +1998,7 @@ Gradle
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2016/10/15/React Native环境安装流程/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2016/10/15/React Native环境安装流程/" itemprop="commentsCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count hc-comment-count" data-xid="2016/10/15/React Native环境安装流程/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -1740,7 +2018,9 @@ Gradle
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1764,7 +2044,7 @@ Gradle
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/15/React Native环境安装流程/#далее" rel="contents">
+            <a class="btn" href="/2016/10/15/React Native环境安装流程/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1773,17 +2053,17 @@ Gradle
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1797,6 +2077,10 @@ Gradle
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1809,12 +2093,18 @@ Gradle
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/10/02/插件化框架android-pluginmgr全解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
       <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
     </span>
 
@@ -1828,9 +2118,6 @@ Gradle
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
                 <a class="post-title-link" href="/2016/10/02/插件化框架android-pluginmgr全解析/" itemprop="url">
                   插件化框架android-pluginmgr全解析
@@ -1842,6 +2129,11 @@ Gradle
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1849,13 +2141,30 @@ Gradle
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-02T10:03:34+08:00">
-                2016-10-02
-              </time>
+
+              
+                
+              
+
+              <time title="创建时间：2016-10-02 10:03:34" itemprop="dateCreated datePublished" datetime="2016-10-02T10:03:34+08:00">2016-10-02</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2016-11-01 23:10:33" itemprop="dateModified" datetime="2016-11-01T23:10:33+08:00">2016-11-01</time>
+              
             
           </span>
 
@@ -1871,11 +2180,7 @@ Gradle
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Blog</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
 
                 
                 
@@ -1892,7 +2197,7 @@ Gradle
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2016/10/02/插件化框架android-pluginmgr全解析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2016/10/02/插件化框架android-pluginmgr全解析/" itemprop="commentsCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count hc-comment-count" data-xid="2016/10/02/插件化框架android-pluginmgr全解析/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -1912,7 +2217,9 @@ Gradle
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1927,7 +2234,7 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/02/插件化框架android-pluginmgr全解析/#далее" rel="contents">
+            <a class="btn" href="/2016/10/02/插件化框架android-pluginmgr全解析/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1936,17 +2243,17 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1960,6 +2267,10 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1968,15 +2279,12 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
 
           </div>
-          
-
-
           
 
         </div>
@@ -1992,168 +2300,230 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
   </div>
 
   <aside id="sidebar" class="sidebar">
+    
     <div class="sidebar-inner">
 
       
 
       
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
-               alt="俞其荣" />
-          <p class="site-author-name" itemprop="name">俞其荣</p>
-           
-              <p class="site-description motion-element" itemprop="description"></p>
-           
-        </div>
-        <nav class="site-state motion-element">
-
-          
-            <div class="site-state-item site-state-posts">
-              <a href="/archives">
-                <span class="site-state-item-count">87</span>
-                <span class="site-state-item-name">日志</span>
-              </a>
-            </div>
-          
-
-          
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
+              <img class="site-author-image" itemprop="image"
+                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+                alt="俞其荣" />
             
-            <div class="site-state-item site-state-categories">
-              <a href="/categories/index.html">
-                <span class="site-state-item-count">12</span>
-                <span class="site-state-item-name">分类</span>
-              </a>
-            </div>
-          
-
-          
-            
-            
-            <div class="site-state-item site-state-tags">
-              <a href="/tags/index.html">
-                <span class="site-state-item-count">31</span>
-                <span class="site-state-item-name">标签</span>
-              </a>
-            </div>
-          
-
-        </nav>
-
-        
-          <div class="feed-link motion-element">
-            <a href="/atom.xml" rel="alternate">
-              <i class="fa fa-rss"></i>
-              RSS
-            </a>
+              <p class="site-author-name" itemprop="name">俞其荣</p>
+              <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
           </div>
-        
 
-        <div class="links-of-author motion-element">
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">87</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/yuqirong" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/yyyuqirong" target="_blank" title="Twitter" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Twitter</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.instagram.com/yyyuqirong" target="_blank" title="Instagram" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Instagram</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://plus.google.com/116756215081118586533" target="_blank" title="Google+" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Google+</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://cn.linkedin.com/in/yuqirong" target="_blank" title="LinkedIn" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>LinkedIn</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://www.jianshu.com/users/1291f6690ea0" target="_blank" title="简书" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/yyyuqirong" target="_blank" title="Weibo" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/yuqirong" target="_blank" title="知乎" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:yqr271228943@gmail.com" target="_blank" title="Email" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Email</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank" rel="external nofollow">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+
           
             
-              <span class="links-of-author-item">
-                <a href="https://github.com/yuqirong" target="_blank" title="GitHub">
-                  
-                    <i class="fa fa-fw fa-github"></i>
-                  
-                  GitHub
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="https://twitter.com/yyyuqirong" target="_blank" title="Twitter">
-                  
-                    <i class="fa fa-fw fa-twitter"></i>
-                  
-                  Twitter
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="https://www.instagram.com/yyyuqirong" target="_blank" title="Instagram">
-                  
-                    <i class="fa fa-fw fa-instagram"></i>
-                  
-                  Instagram
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="https://plus.google.com/116756215081118586533" target="_blank" title="Google+">
-                  
-                    <i class="fa fa-fw fa-google-plus"></i>
-                  
-                  Google+
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="https://cn.linkedin.com/in/yuqirong" target="_blank" title="LinkedIn">
-                  
-                    <i class="fa fa-fw fa-linkedin"></i>
-                  
-                  LinkedIn
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://www.jianshu.com/users/1291f6690ea0" target="_blank" title="简书">
-                  
-                    <i class="fa fa-fw fa-globe"></i>
-                  
-                  简书
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://weibo.com/yyyuqirong" target="_blank" title="Weibo">
-                  
-                    <i class="fa fa-fw fa-weibo"></i>
-                  
-                  Weibo
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="https://www.zhihu.com/people/yuqirong" target="_blank" title="知乎">
-                  
-                    <i class="fa fa-fw fa-globe"></i>
-                  
-                  知乎
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="mailto:yqr271228943@gmail.com" target="_blank" title="Email">
-                  
-                    <i class="fa fa-fw fa-envelope"></i>
-                  
-                  Email
-                </a>
-              </span>
-            
           
+          
+
         </div>
-
-        
-        
-          <div class="cc-license motion-element" itemprop="license">
-            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
-              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
-            </a>
-          </div>
-        
-
-        
-        
-
-        
-
-
       </section>
 
       
@@ -2170,31 +2540,45 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
-  
-  &copy;  2015 - 
-  <span itemprop="copyrightYear">2018</span>
-  <span class="with-love">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">俞其荣</span>
+
+  
+
+  
 </div>
 
 
-<div class="powered-by">
-  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
-</div>
+  
 
-<div class="theme-info">
-  主题 -
-  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Muse
-  </a>
-</div>
-<p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" rel="external nofollow" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" rel="external nofollow" href="https://github.com/theme-next/hexo-theme-next">NexT.Muse</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" rel="external nofollow" href="https://pages.coding.me"><b>Coding Pages</b></a></div>
 
 
         
+
+
+
+
+
+
+
 
         
       </div>
@@ -2205,6 +2589,8 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
         <i class="fa fa-arrow-up"></i>
         
       </div>
+    
+
     
 
   </div>
@@ -2225,58 +2611,61 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
 
 
 
-  
 
 
 
 
 
 
-  
-  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-
-  
-  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
 
 
-  
 
 
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
 
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
 
 
 
   
   
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
 
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
   
 
   
 
+  
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
 
 
 
   
-
-
-  
-
 
 
 
@@ -2313,11 +2702,15 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
 
 
 
+
+
   
 
 
 
 
+
+  
 
   
 
@@ -2337,6 +2730,17 @@ Android 插件化的发展到目前为止也有一段时间了，从一开始任
 })();
 </script>
 
+
+  
+
+  
+  
+
+  
+
+  
+
+  
 
   
 
