@@ -3,6 +3,29 @@
 
 
     
+    
+  <url>
+    <loc>http://yuqirong.me/2018/06/20/Android%20Architecture%20Component%E4%B9%8BLiveData%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2018-06-23T16:11:41.474Z</lastmod>
+    <data>
+        <display>
+        <title>Android Architecture Component之LiveData解析</title>
+        <pubTime>2018-06-20T14:07:08.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
     <loc>http://yuqirong.me/2016/03/17/%E5%A4%9C%E5%8D%8A%E4%B8%80%E5%BF%86/</loc>
     <lastmod>2018-06-23T07:41:16.154Z</lastmod>
@@ -595,7 +618,6 @@
     </data>
     </url>
 
-    
     
     
     
