@@ -4,14 +4,16 @@
 
     
   <url>
-    <loc>http://yuqirong.me/2018/07/09/Android%20Architecture%20Component%E4%B9%8BViewModel%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2018-07-09T16:18:23.063Z</lastmod>
+    <loc>http://yuqirong.me/2018/07/15/Android%20Architecture%20Component%E4%B9%8BLifecycle%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2018-07-15T11:06:54.096Z</lastmod>
     <data>
         <display>
-        <title>Android Architecture Component之ViewModel解析</title>
-        <pubTime>2018-07-09T14:52:33.000Z</pubTime>
+        <title>Android Architecture Component之Lifecycle解析</title>
+        <pubTime>2018-07-14T16:29:11.000Z</pubTime>
         
         <tag>Android</tag>
+         
+        <tag>Android Architecture Component</tag>
          
         <tag>开源框架</tag>
          
@@ -29,13 +31,41 @@
     
   <url>
     <loc>http://yuqirong.me/2018/06/20/Android%20Architecture%20Component%E4%B9%8BLiveData%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2018-07-08T14:56:09.357Z</lastmod>
+    <lastmod>2018-07-14T16:30:33.283Z</lastmod>
     <data>
         <display>
         <title>Android Architecture Component之LiveData解析</title>
         <pubTime>2018-06-20T14:07:08.000Z</pubTime>
         
         <tag>Android</tag>
+         
+        <tag>Android Architecture Component</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2018/07/09/Android%20Architecture%20Component%E4%B9%8BViewModel%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2018-07-14T16:30:01.001Z</lastmod>
+    <data>
+        <display>
+        <title>Android Architecture Component之ViewModel解析</title>
+        <pubTime>2018-07-09T14:52:33.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Android Architecture Component</tag>
          
         <tag>开源框架</tag>
          
