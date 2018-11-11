@@ -140,8 +140,8 @@
 <meta property="og:url" content="http://yuqirong.me/2016/07/28/一步步深入解析AIDL/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="前言在 Android 系统中，进程间通信 (IPC) 是一种很重要的机制。IPC 产生的原因是某些情况下需要在两个进程之间进行一些数据的交换。而在深入学习 Android 的过程中难免会遇到 IPC 的相关问题，比如常见的有在自己的应用程序中读取手机联系人的信息，这就涉及到 IPC 了。因为自己的应用程序是一个进程，通讯录也是一个进程，只不过获取通讯录的数据信息是通过 Content Provi">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160728/20160728201234.png">
-<meta property="og:updated_time" content="2016-11-01T14:58:49.729Z">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160728/20160728201234.png">
+<meta property="og:updated_time" content="2018-11-11T12:07:24.480Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一步步深入解析AIDL">
 <meta name="twitter:description" content="前言在 Android 系统中，进程间通信 (IPC) 是一种很重要的机制。IPC 产生的原因是某些情况下需要在两个进程之间进行一些数据的交换。而在深入学习 Android 的过程中难免会遇到 IPC 的相关问题，比如常见的有在自己的应用程序中读取手机联系人的信息，这就涉及到 IPC 了。因为自己的应用程序是一个进程，通讯录也是一个进程，只不过获取通讯录的数据信息是通过 Content Provi">
@@ -232,7 +232,7 @@
       <a href="/" rel="start" class="brand">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
-        <!--<img src="http://ofyt9w4c2.bkt.clouddn.com/avatar/1529736707_477636.png" style="background:#222222"/>-->
+        <!--<img src="/uploads/avatar/1529736707_477636.png" style="background:#222222"/>-->
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -370,7 +370,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
       <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -424,7 +424,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2016-11-01 22:58:49" itemprop="dateModified" datetime="2016-11-01T22:58:49+08:00">2016-11-01</time>
+                <time title="修改时间：2018-11-11 20:07:24" itemprop="dateModified" datetime="2018-11-11T20:07:24+08:00">2018-11-11</time>
               
             
           </span>
@@ -466,14 +466,6 @@
           
           
 
-          
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
           
 
           
@@ -548,10 +540,10 @@
 <p>看完上面方法的介绍，我们回过头来看看 AIDL 例子中实现的流程。在客户端中通过 Intent 去绑定一个服务端的 Service 。在 <code>onServiceConnected(ComponentName name, IBinder service)</code> 方法中通过返回的 service 可以得到对应的 AIDL 接口的实例。这是调用了 <code>asInterface(android.os.IBinder obj)</code> 方法来完成的。</p>
 <p>客户端在 <code>onServiceConnected(ComponentName name, IBinder service)</code> 中得到的 service 正是服务端中的 mBinder 。当客户端调用 AIDL 接口时，AIDL 通过 Proxy 类中的 <code>addPerson</code> 来调用 <code>transact</code> 方法，<code>transact</code> 方法又会去调用服务端的 <code>onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags)</code> 方法。 <code>onTransact</code> 方法是运行在服务端的 Binder 线程池中的。在 <code>onTransact</code> 中根据 code 执行相关 AIDL 接口的方法，方法的参数从 data 中获取。执行完毕之后把结果装入 reply 中返回给客户端。 AIDL 的流程基本上就是这样子了。</p>
 <p>到了这里，大家就会发现 AIDL 底层的实现就是依靠 Binder 来完成的。为了方便大家的理解，这里给出一张 AIDL 机制的原理图( PS :该图来自于《Android开发艺术探索》，感谢任主席)：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160728/20160728201234.png" alt="AIDL机制原理图"></p>
+<p><img src="/uploads/20160728/20160728201234.png" alt="AIDL机制原理图"></p>
 <h1 id="u7ED3_u5C3E"><a href="#u7ED3_u5C3E" class="headerlink" title="结尾"></a>结尾</h1><p>写到这里本篇博文就临近末尾了。 AIDL 在 Android IPC 机制中算得上是很重要的一部分，AIDL 主要是通过 Binder 来实现进程通信的。其实另一种 IPC 的方式 Messenger 底层也是通过 AIDL 来实现的。所以 AIDL 的重要性就不言而喻了。如果有兴趣的同学可以在理解 AIDL 的基础上去看看 Messenger 的源码。当然在上面的 AIDL 例子中的代码是很简单的，没有涉及到死亡代理、权限验证等功能，童鞋们可以自己去把这些相关的去学习下。</p>
 <p>好了，最后附上 AIDL 例子的源码：</p>
-<p><a href="http://ofytl4mzu.bkt.clouddn.com/20160728/AIDLDemo.rar" target="_blank" rel="external">AIDLDemo.rar</a></p>
+<p><a href="/uploads/20160728/AIDLDemo.rar">AIDLDemo.rar</a></p>
 <p>Goodbye !</p>
 <h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><p><a href="/2016/03/31/《Android开发艺术探索》笔记(上)/">《Android开发艺术探索》笔记(上) —— 第二章：IPC机制</a></p>
 
@@ -567,7 +559,7 @@
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <img id="wechat_subscriber_qcode" src="/uploads/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
     <div>欢迎订阅我的微信公众号来获取我的动态！</div>
 </div>
 
@@ -585,14 +577,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
         <p>支付宝</p>
       </div>
     
@@ -757,7 +749,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+                src="/uploads/avatar/27073358153.jpg"
                 alt="俞其荣" />
             
               <p class="site-author-name" itemprop="name">俞其荣</p>
@@ -771,7 +763,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">90</span>
+                    <span class="site-state-item-count">91</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1035,24 +1027,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv" title="总访客量">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="site-pv" title="总访问量">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

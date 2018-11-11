@@ -140,9 +140,9 @@
 <meta property="og:url" content="http://yuqirong.me/2016/12/18/ButterKnife源码解析/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="0x01 前言在程序开发的过程中，总会有一些场景需要去写重复冗余的代码。而程序员一般都是懒惰了（懒惰促使人进步 ^ο^ ），所以就出现了很多可以减少重复工作的框架或者工具。比如今天要分析的主角—— ButterKnife ，如果你做 Android 开发却没有听说过 ButterKnife 那就 Out 啦。ButterKnife 使用依赖注入的方式来减少程序员去编写一堆 findViewById">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20161218/20161208143552.png">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20161218/20161210153211.png">
-<meta property="og:updated_time" content="2016-12-18T16:58:46.684Z">
+<meta property="og:image" content="http://yuqirong.me/uploads/20161218/20161208143552.png">
+<meta property="og:image" content="http://yuqirong.me/uploads/20161218/20161210153211.png">
+<meta property="og:updated_time" content="2018-11-11T12:07:09.750Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ButterKnife源码分析">
 <meta name="twitter:description" content="0x01 前言在程序开发的过程中，总会有一些场景需要去写重复冗余的代码。而程序员一般都是懒惰了（懒惰促使人进步 ^ο^ ），所以就出现了很多可以减少重复工作的框架或者工具。比如今天要分析的主角—— ButterKnife ，如果你做 Android 开发却没有听说过 ButterKnife 那就 Out 啦。ButterKnife 使用依赖注入的方式来减少程序员去编写一堆 findViewById">
@@ -233,7 +233,7 @@
       <a href="/" rel="start" class="brand">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
-        <!--<img src="http://ofyt9w4c2.bkt.clouddn.com/avatar/1529736707_477636.png" style="background:#222222"/>-->
+        <!--<img src="/uploads/avatar/1529736707_477636.png" style="background:#222222"/>-->
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -371,7 +371,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
       <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -425,7 +425,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2016-12-19 00:58:46" itemprop="dateModified" datetime="2016-12-19T00:58:46+08:00">2016-12-19</time>
+                <time title="修改时间：2018-11-11 20:07:09" itemprop="dateModified" datetime="2018-11-11T20:07:09+08:00">2018-11-11</time>
               
             
           </span>
@@ -468,14 +468,6 @@
           
 
           
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
-          
 
           
 
@@ -495,7 +487,7 @@
 
       
         <h1 id="0x01__u524D_u8A00"><a href="#0x01__u524D_u8A00" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>在程序开发的过程中，总会有一些场景需要去写重复冗余的代码。而程序员一般都是懒惰了（懒惰促使人进步 ^ο^ ），所以就出现了很多可以减少重复工作的框架或者工具。比如今天要分析的主角—— <a href="https://github.com/JakeWharton/butterknife" target="_blank" rel="external">ButterKnife</a> ，如果你做 Android 开发却没有听说过 <a href="https://github.com/JakeWharton/butterknife" target="_blank" rel="external">ButterKnife</a> 那就 Out 啦。<a href="https://github.com/JakeWharton/butterknife" target="_blank" rel="external">ButterKnife</a> 使用依赖注入的方式来减少程序员去编写一堆 <code>findViewById</code> 的代码，使用起来很方便。那么接下来就一步步地带你深入理解 <a href="https://github.com/JakeWharton/butterknife" target="_blank" rel="external">ButterKnife</a> 框架。PS：最近写的博客篇幅都有点长，请耐心阅读！Logo 图镇楼！</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20161218/20161208143552.png" alt="butterknife_logo"></p>
+<p><img src="/uploads/20161218/20161208143552.png" alt="butterknife_logo"></p>
 <h1 id="0x02_ButterKnife__u7684_u4F7F_u7528_u65B9_u6CD5"><a href="#0x02_ButterKnife__u7684_u4F7F_u7528_u65B9_u6CD5" class="headerlink" title="0x02 ButterKnife 的使用方法"></a>0x02 ButterKnife 的使用方法</h1><p>我们先讲下 <a href="https://github.com/JakeWharton/butterknife" target="_blank" rel="external">ButterKnife</a> 的使用方法：</p>
 <ol>
 <li><p>在 <code>app/build.gradle</code> 中添加依赖：</p>
@@ -512,7 +504,7 @@
 <p>今天我们主要分析下 <a href="https://github.com/JakeWharton/butterknife" target="_blank" rel="external">ButterKnife</a> 的三个部分：Annotation 、ButterKnifeProcessor 和 ButterKnife 。这三个部分就把整个 View 依赖注入的原理串联起来了。</p>
 <p>准备好了吗？下面我们就一探究竟。（PS：本文分析的 <a href="https://github.com/JakeWharton/butterknife" target="_blank" rel="external">ButterKnife</a> 源码为 8.4.0 版本）</p>
 <h1 id="0x03_Annotation"><a href="#0x03_Annotation" class="headerlink" title="0x03 Annotation"></a>0x03 Annotation</h1><p>我们先来看一下其中的注解部分。<a href="https://github.com/JakeWharton/butterknife" target="_blank" rel="external">ButterKnife</a> 的注解都在 butterknife-annotations 模块下：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20161218/20161210153211.png" alt="butterknife注解"></p>
+<p><img src="/uploads/20161218/20161210153211.png" alt="butterknife注解"></p>
 <p>发现我们平时常用的 <code>@BindView</code> 、<code>@OnClick</code> 和 <code>@OnItemClick</code> 都在里面。我们就挑 <code>@BindView</code> (路径：butterknife-annotations/butterknife/BindView.java) 来看一下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Retention</span>(CLASS)</span><br><span class="line"><span class="annotation">@Target</span>(FIELD)</span><br><span class="line"><span class="keyword">public</span> <span class="annotation">@interface</span> BindView &#123;</span><br><span class="line">  <span class="comment">/** View ID to which the field will be bound. */</span></span><br><span class="line">  <span class="annotation">@IdRes</span> <span class="function"><span class="keyword">int</span> <span class="title">value</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>注解都是用 <code>@interface</code> 来表示。在 BindView 注解的上面还有 <code>@Retention</code> 和 <code>@Target</code> 。</p>
@@ -581,7 +573,7 @@
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <img id="wechat_subscriber_qcode" src="/uploads/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
     <div>欢迎订阅我的微信公众号来获取我的动态！</div>
 </div>
 
@@ -599,14 +591,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
         <p>支付宝</p>
       </div>
     
@@ -773,7 +765,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+                src="/uploads/avatar/27073358153.jpg"
                 alt="俞其荣" />
             
               <p class="site-author-name" itemprop="name">俞其荣</p>
@@ -787,7 +779,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">90</span>
+                    <span class="site-state-item-count">91</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1051,24 +1043,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv" title="总访客量">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="site-pv" title="总访问量">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

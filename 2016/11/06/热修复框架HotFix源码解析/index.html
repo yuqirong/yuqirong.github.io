@@ -150,11 +150,11 @@ Native Ho">
 基于 Java Dex 分包：改变 dex 加载顺序，比如有 HotFix 、Nuwa 、Amigo 等；
 
 Native Ho">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106151939.png">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106163934.png">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106163627.png">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106164537.png">
-<meta property="og:updated_time" content="2016-11-06T11:19:23.626Z">
+<meta property="og:image" content="http://yuqirong.me/uploads/20161106/20161106151939.png">
+<meta property="og:image" content="http://yuqirong.me/uploads/20161106/20161106163934.png">
+<meta property="og:image" content="http://yuqirong.me/uploads/20161106/20161106163627.png">
+<meta property="og:image" content="http://yuqirong.me/uploads/20161106/20161106164537.png">
+<meta property="og:updated_time" content="2018-11-11T12:07:41.498Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="热修复框架HotFix源码解析">
 <meta name="twitter:description" content="0x00讲起 Android 的热修复，相信大家对其都略知一二。热修复可以说是继插件化之后，又一项新的技术。目前的 Android 热修复框架主要分为了两类：
@@ -250,7 +250,7 @@ Native Ho">
       <a href="/" rel="start" class="brand">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
-        <!--<img src="http://ofyt9w4c2.bkt.clouddn.com/avatar/1529736707_477636.png" style="background:#222222"/>-->
+        <!--<img src="/uploads/avatar/1529736707_477636.png" style="background:#222222"/>-->
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -388,7 +388,7 @@ Native Ho">
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
       <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -425,12 +425,24 @@ Native Ho">
                 
               
 
-              <time title="创建时间：2016-11-06 13:15:59 / 修改时间：19:19:23" itemprop="dateCreated datePublished" datetime="2016-11-06T13:15:59+08:00">2016-11-06</time>
+              <time title="创建时间：2016-11-06 13:15:59" itemprop="dateCreated datePublished" datetime="2016-11-06T13:15:59+08:00">2016-11-06</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-11 20:07:41" itemprop="dateModified" datetime="2018-11-11T20:07:41+08:00">2018-11-11</time>
               
             
           </span>
@@ -473,14 +485,6 @@ Native Ho">
           
 
           
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
-          
 
           
 
@@ -507,7 +511,7 @@ Native Ho">
 <p>Native Hook 方案有一定的兼容性问题，并且其热修复是基于方法的；而 Java Dex 分包的方案具有很好的兼容性，被大众所接受。其实早在去年年末，<a href="https://github.com/dodola/HotFix" target="_blank" rel="external">HotFix</a> 、 <a href="https://github.com/jasonross/Nuwa" target="_blank" rel="external">Nuwa</a> 就已经出现了，并且它们的原理是相同的，都是基于 QQ 空间终端开发团队发布的<a href="http://mp.weixin.qq.com/s?__biz=MzI1MTA1MzM2Nw==&amp;mid=400118620&amp;idx=1&amp;sn=b4fdd5055731290eef12ad0d17f39d4a&amp;scene=1&amp;srcid=1031x2ljgSF4xJGlH1xMCJxO&amp;uin=MjAyNzY1NTU%3D&amp;key=04dce534b3b035ef58d8714d714d36bcc6cc7e136bbd64850522b491d143aafceb62c46421c5965e18876433791d16ec&amp;devicetype=iMac+MacBookPro12%2C1+OSX+OSX+10.10.5+build(14F27)&amp;version=11020201&amp;lang=zh_CN&amp;pass_ticket=7O%2FVfztuLjqu23ED2WEkvy1SJstQD4eLRqX%2B%2BbCY3uE%3D" target="_blank" rel="external">《安卓App热补丁动态修复技术介绍》</a>文中介绍的思路来实现的。如果没有看过这篇文章的童鞋，强烈建议先阅读一遍。</p>
 <p>虽然现在 <a href="https://github.com/dodola/HotFix" target="_blank" rel="external">HotFix</a> 框架已经被作者 <a href="https://github.com/dodola" target="_blank" rel="external">dodola</a> 标注了 Deprecated ，但是这并不妨碍我们解析其源码。那么下面我们就开始进入正题。</p>
 <h1 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h1><p>首先来看一下 <a href="https://github.com/dodola/HotFix" target="_blank" rel="external">HotFix</a> 项目的结构：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106151939.png" alt="HotFix项目结构"></p>
+<p><img src="/uploads/20161106/20161106151939.png" alt="HotFix项目结构"></p>
 <p>可以看到项目中主要分为四个 module ：</p>
 <ul>
 <li>app : 里面有一个 HotFix 用法的 Demo ；</li>
@@ -533,12 +537,12 @@ Native Ho">
 <p>得到当前 <code>context</code> 内部的 <code>pathClassLoader</code> ，然后调用 <code>combineArray(getDexElements(getPathList(pathClassLoader)), getDexElements(getPathList(new DexClassLoader(str, context.getDir(&quot;dex&quot;, 0).getAbsolutePath(), str, context.getClassLoader()))))</code> 。这个 <code>combineArray</code> 方法中嵌套了很多层方法，我们一个一个来看。首先是 <code>getPathList</code> 方法：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title">getPathList</span><span class="params">(Object obj)</span> <span class="keyword">throws</span> ClassNotFoundException, NoSuchFieldException,</span><br><span class="line">    IllegalAccessException </span>&#123;</span><br><span class="line">	<span class="comment">// 得到当前 PathClassLoader 中的 pathList 属性</span></span><br><span class="line">    <span class="keyword">return</span> getField(obj, Class.forName(<span class="string">"dalvik.system.BaseDexClassLoader"</span>), <span class="string">"pathList"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title">getField</span><span class="params">(Object obj, Class cls, String str)</span></span><br><span class="line">    <span class="keyword">throws</span> NoSuchFieldException, IllegalAccessException </span>&#123;</span><br><span class="line">    Field declaredField = cls.getDeclaredField(str);</span><br><span class="line">    declaredField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">    <span class="keyword">return</span> declaredField.get(obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>从上面的源码中知道，其实 getPathList 就是获取 BaseDexClassLoader 类的对象中的 pathList 属性。</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106163934.png" alt="BaseDexClassLoader源码"></p>
+<p><img src="/uploads/20161106/20161106163934.png" alt="BaseDexClassLoader源码"></p>
 <p>PathClassLoader 类继承自 BaseDexClassLoader：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106163627.png" alt="PathClassLoader源码"></p>
+<p><img src="/uploads/20161106/20161106163627.png" alt="PathClassLoader源码"></p>
 <p>得到了 pathList 之后，调用了 <code>getDexElements</code> 。顾名思义，就是获得了 pathList 中的 dexElements 属性。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title">getDexElements</span><span class="params">(Object obj)</span> <span class="keyword">throws</span> NoSuchFieldException, IllegalAccessException </span>&#123;</span><br><span class="line">	<span class="comment">// 得到当前 pathList 中的 dexElements 属性</span></span><br><span class="line">    <span class="keyword">return</span> getField(obj, obj.getClass(), <span class="string">"dexElements"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106164537.png" alt="DexPathList源码"></p>
+<p><img src="/uploads/20161106/20161106164537.png" alt="DexPathList源码"></p>
 <p>所以在 <code>combineArray</code> 方法中传入的参数都是 Elements[] 。一个是当前应用程序中的 dexElements，另一个是 hackdex_dex.jar 中的 dexElements 。</p>
 <p>下面来看看 <code>combineArray</code> 中的源码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title">combineArray</span><span class="params">(Object obj, Object obj2)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 得到 DexElements[] 数组的 class</span></span><br><span class="line">    Class componentType = obj2.getClass().getComponentType();</span><br><span class="line">    <span class="comment">// 得到补丁包中 DexElements[] 数组的长度</span></span><br><span class="line">    <span class="keyword">int</span> length = Array.getLength(obj2);</span><br><span class="line">    <span class="comment">// 全长</span></span><br><span class="line">    <span class="keyword">int</span> length2 = Array.getLength(obj) + length;</span><br><span class="line">    Object newInstance = Array.newInstance(componentType, length2);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; length2; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i &lt; length) &#123;</span><br><span class="line">			<span class="comment">// obj2 中的 Element 顺序在 obj 前面</span></span><br><span class="line">            Array.set(newInstance, i, Array.get(obj2, i));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Array.set(newInstance, i, Array.get(obj, i - length));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> newInstance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -581,7 +585,7 @@ pathClassLoader.loadClass(str2);
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <img id="wechat_subscriber_qcode" src="/uploads/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
     <div>欢迎订阅我的微信公众号来获取我的动态！</div>
 </div>
 
@@ -599,14 +603,14 @@ pathClassLoader.loadClass(str2);
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
         <p>支付宝</p>
       </div>
     
@@ -775,7 +779,7 @@ pathClassLoader.loadClass(str2);
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+                src="/uploads/avatar/27073358153.jpg"
                 alt="俞其荣" />
             
               <p class="site-author-name" itemprop="name">俞其荣</p>
@@ -789,7 +793,7 @@ pathClassLoader.loadClass(str2);
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">90</span>
+                    <span class="site-state-item-count">91</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1053,24 +1057,6 @@ pathClassLoader.loadClass(str2);
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv" title="总访客量">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="site-pv" title="总访问量">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

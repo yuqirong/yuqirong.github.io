@@ -140,8 +140,8 @@
 <meta property="og:url" content="http://yuqirong.me/2017/02/09/NotificationListenerService的那些事儿/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="最近在公司时接到一个需求：需要实时监听设备的通知栏消息，并可以捕获到通知的内容，然后进行对应的操作。刚看到这个需求的时候，脑子里第一反应就是使用 AccessibilityService 。 AccessibilityService 支持的事件监听类型中有 TYPE_NOTIFICATION_STATE_CHANGED ，该事件类型就是用来监听通知栏消息状态改变的，众多的抢红包插件利用的就是这个原">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20170209/20170209220914.png">
-<meta property="og:updated_time" content="2017-02-11T03:19:31.471Z">
+<meta property="og:image" content="http://yuqirong.me/uploads/20170209/20170209220914.png">
+<meta property="og:updated_time" content="2018-11-11T12:07:16.188Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NotificationListenerService的那些事儿">
 <meta name="twitter:description" content="最近在公司时接到一个需求：需要实时监听设备的通知栏消息，并可以捕获到通知的内容，然后进行对应的操作。刚看到这个需求的时候，脑子里第一反应就是使用 AccessibilityService 。 AccessibilityService 支持的事件监听类型中有 TYPE_NOTIFICATION_STATE_CHANGED ，该事件类型就是用来监听通知栏消息状态改变的，众多的抢红包插件利用的就是这个原">
@@ -232,7 +232,7 @@
       <a href="/" rel="start" class="brand">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
-        <!--<img src="http://ofyt9w4c2.bkt.clouddn.com/avatar/1529736707_477636.png" style="background:#222222"/>-->
+        <!--<img src="/uploads/avatar/1529736707_477636.png" style="background:#222222"/>-->
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -370,7 +370,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
       <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -424,7 +424,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2017-02-11 11:19:31" itemprop="dateModified" datetime="2017-02-11T11:19:31+08:00">2017-02-11</time>
+                <time title="修改时间：2018-11-11 20:07:16" itemprop="dateModified" datetime="2018-11-11T20:07:16+08:00">2018-11-11</time>
               
             
           </span>
@@ -467,14 +467,6 @@
           
 
           
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
-          
 
           
 
@@ -495,7 +487,7 @@
       
         <p>最近在公司时接到一个需求：需要实时监听设备的通知栏消息，并可以捕获到通知的内容，然后进行对应的操作。刚看到这个需求的时候，脑子里第一反应就是使用 <code>AccessibilityService</code> 。 <code>AccessibilityService</code> 支持的事件监听类型中有 <code>TYPE_NOTIFICATION_STATE_CHANGED</code> ，该事件类型就是用来监听通知栏消息状态改变的，众多的抢红包插件利用的就是这个原理。</p>
 <p>之后在 Github 上看到了 <a href="https://github.com/lendylongli/qianghongbao" target="_blank" rel="external">qianghongbao</a> 这个抢红包的项目，发现代码里面有一个 <a href="https://github.com/lendylongli/qianghongbao/blob/master/app/src/main/java/com/codeboy/qianghongbao/QHBNotificationService.java" target="_blank" rel="external">QHBNotificationService</a> 继承了 <code>NotificationListenerService</code> ，这个 <code>NotificationListenerService</code> 极大地引起了我的兴趣。查了一下资料，发现 <code>NotificationListenerService</code> 是在 Android 4.3 （API 18）时被加入的，作用就是用来监听通知栏消息。并且官方建议在 Android 4.3 及以上使用 <code>NotificationListenerService</code> 来监听通知栏消息，以此取代 <code>AccessibilityService</code> 。</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20170209/20170209220914.png" alt="Notification Listener"></p>
+<p><img src="/uploads/20170209/20170209220914.png" alt="Notification Listener"></p>
 <p><code>NotificationListenerService</code> 的使用范围也挺广的，比如我们熟知的抢红包，智能手表同步通知，通知栏去广告工具等，都是利用它来完成的。所以，我也想赶时髦地好好利用这把“利器”。最后方案也就出来了：在 Android 4.3 以下（API &lt; 18）使用 <code>AccessibilityService</code> 来读取新通知，在 Android 4.3 及以上（API &gt;= 18）使用 <code>NotificationListenerService</code> 来满足需求。</p>
 <p>这也正是本篇博客诞生的“起源”。</p>
 <h1 id="NotificationListenerService"><a href="#NotificationListenerService" class="headerlink" title="NotificationListenerService"></a>NotificationListenerService</h1><p>在这里，我们就做一个小需求：实时检测微信的新通知，如果该通知是微信红包的话，就进入微信聊天页面。</p>
@@ -544,7 +536,7 @@
 <h1 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h1><p>除了监听通知之外，<code>AccessibilityService</code> 还可以进行模拟点击、检测界面变化等功能。具体的可以在 GitHub 上搜索抢红包有关的 Repo 进行深入学习。</p>
 <p>而 <code>NotificationListenerService</code> 的监听通知功能更加强大，也更加专业。在一些设备上，如果 <code>NotificationListenerService</code> 被授予了权限，那么可以做到该监听进程不死的效果，也算是另类的进程保活。</p>
 <p>今天就到这儿了，拜拜！！</p>
-<p>源码下载：<a href="http://ofytl4mzu.bkt.clouddn.com/20170209/ListenWeChatNotification.rar" target="_blank" rel="external">ListenWeChatNotification.rar</a></p>
+<p>源码下载：<a href="/uploads/20170209/ListenWeChatNotification.rar">ListenWeChatNotification.rar</a></p>
 <h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
 <li><a href="https://developer.android.google.cn/about/versions/android-4.3.html#NotificationListener" target="_blank" rel="external">Android 4.3 APIs</a></li>
 <li><a href="https://developer.android.google.cn/reference/android/service/notification/NotificationListenerService.html" target="_blank" rel="external">NotificationListenerService</a></li>
@@ -563,7 +555,7 @@
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <img id="wechat_subscriber_qcode" src="/uploads/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
     <div>欢迎订阅我的微信公众号来获取我的动态！</div>
 </div>
 
@@ -581,14 +573,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
         <p>支付宝</p>
       </div>
     
@@ -751,7 +743,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+                src="/uploads/avatar/27073358153.jpg"
                 alt="俞其荣" />
             
               <p class="site-author-name" itemprop="name">俞其荣</p>
@@ -765,7 +757,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">90</span>
+                    <span class="site-state-item-count">91</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1029,24 +1021,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv" title="总访客量">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="site-pv" title="总访问量">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

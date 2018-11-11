@@ -144,9 +144,9 @@
 <meta property="og:description" content="Native App 和 JS 交互今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。
 
 之后在脑海中回想到 WebView 中的 JS 可以和 app 产生交互，于是搜索了一下，果然网上有类似的实现">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160307/20160307200816.png">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160307/20160307225743.gif">
-<meta property="og:updated_time" content="2016-11-14T15:56:22.326Z">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160307/20160307200816.png">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160307/20160307225743.gif">
+<meta property="og:updated_time" content="2018-11-11T12:07:32.569Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="实现WebView中JS和App之间的交互">
 <meta name="twitter:description" content="Native App 和 JS 交互今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。
@@ -239,7 +239,7 @@
       <a href="/" rel="start" class="brand">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
-        <!--<img src="http://ofyt9w4c2.bkt.clouddn.com/avatar/1529736707_477636.png" style="background:#222222"/>-->
+        <!--<img src="/uploads/avatar/1529736707_477636.png" style="background:#222222"/>-->
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -377,7 +377,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
       <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -431,7 +431,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2016-11-14 23:56:22" itemprop="dateModified" datetime="2016-11-14T23:56:22+08:00">2016-11-14</time>
+                <time title="修改时间：2018-11-11 20:07:32" itemprop="dateModified" datetime="2018-11-11T20:07:32+08:00">2018-11-11</time>
               
             
           </span>
@@ -474,14 +474,6 @@
           
 
           
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
-          
 
           
 
@@ -501,7 +493,7 @@
 
       
         <h1 id="Native_App__u548C_JS__u4EA4_u4E92"><a href="#Native_App__u548C_JS__u4EA4_u4E92" class="headerlink" title="Native App 和 JS 交互"></a>Native App 和 JS 交互</h1><p>今天被问到了一个问题：在 WebView 中加载了一个网页，点击网页中的按钮，如何跳转到指定 Activity ？当时听到后脸上就写了大大的“懵逼”两个字，一时词穷，没回答上来。之前对 WebView 也没有更深入地了解，只是简单地用来加载网页而已。</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160307/20160307200816.png" alt="这里写图片的描述"></p>
+<p><img src="/uploads/20160307/20160307200816.png" alt="这里写图片的描述"></p>
 <p>之后在脑海中回想到 WebView 中的 JS 可以和 app 产生交互，于是搜索了一下，果然网上有类似的实现效果。看了一下，在这里就做一个简单的笔记了以便之后查看。</p>
 <p>在 WebView 中想要 JS 和 app 产生交互，就不得不提一个方法，那就是<code>addJavascriptInterface(Object object, String name)</code>：</p>
 <ul>
@@ -521,7 +513,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AndroidJSInterface</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Context context;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AndroidJSInterface</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.context = context;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@JavascriptInterface</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">goActivity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        context.startActivity(<span class="keyword">new</span> Intent(context, SecondActivity.class));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@JavascriptInterface</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showToast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Toast.makeText(context, <span class="string">"hello js"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们可以看到上面的 <code>showToast()</code> 和 <code>goActivity()</code> 方法名和 html 里面的一定要一样，不然无法触发了。然后在方法的内部实现你想要的逻辑。这里需要注意一下，JS 回调方法是在子线程中运行的，所以不能有 UI 操作。</p>
 <p>经过上面的步骤，就可以实现和JS交互了，一起来看看效果吧：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160307/20160307225743.gif" alt="这里写图片的描述"></p>
+<p><img src="/uploads/20160307/20160307225743.gif" alt="这里写图片的描述"></p>
 <h1 id="JS__u4EA4_u4E92_u5C01_u88C5"><a href="#JS__u4EA4_u4E92_u5C01_u88C5" class="headerlink" title="JS 交互封装"></a>JS 交互封装</h1><p>假如现在的情景是有很多个 JSInterface 需要和 App 交互，那么我们应该怎么样去设计 JSInterface 呢？难道要一个一个去写 <code>@JavascriptInterface</code> 吗。</p>
 <p>聪明的程序猿就会想到把 JSInterface 封装一下，封装成一个易于拓展的工具类。接下来就带大家去改变一下 JSInterface 。</p>
 <p>首先创建一个 BaseJavaScriptInterface 基类，之后所有的 JSInterface 都要继承于它：</p>
@@ -542,7 +534,7 @@
 <p>当然上面封装的 <code>WebViewJSBridge</code> 缺乏了自定义性。需要各位根据自身情况来修改 JSON 具体数据的格式，还有 JS 交互的方法名可以和前端工程师约定一下，剩下的基本上都现成提供了。</p>
 <p>好了，差不多讲完了，那么今天就这样了。看完了本篇文章后可千万不要说不会 JS 和 Native App 交互哦。</p>
 <p>源码下载：</p>
-<p><a href="http://ofytl4mzu.bkt.clouddn.com/20160307/WebViewDemo.rar" target="_blank" rel="external">WebViewDemo.rar</a></p>
+<p><a href="/uploads/20160307/WebViewDemo.rar">WebViewDemo.rar</a></p>
 
       
     </div>
@@ -556,7 +548,7 @@
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <img id="wechat_subscriber_qcode" src="/uploads/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
     <div>欢迎订阅我的微信公众号来获取我的动态！</div>
 </div>
 
@@ -574,14 +566,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
         <p>支付宝</p>
       </div>
     
@@ -746,7 +738,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+                src="/uploads/avatar/27073358153.jpg"
                 alt="俞其荣" />
             
               <p class="site-author-name" itemprop="name">俞其荣</p>
@@ -760,7 +752,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">90</span>
+                    <span class="site-state-item-count">91</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1024,24 +1016,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv" title="总访客量">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="site-pv" title="总访问量">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

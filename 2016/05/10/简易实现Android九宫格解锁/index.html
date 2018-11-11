@@ -142,8 +142,8 @@
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="前言在平常使用手机的过程中，九宫格解锁是我们经常接触到的。常见的比如有锁屏中的九宫格，还有支付宝中的九宫格等。因为九宫格可以保护用户的隐私，所以它的应用面很广泛。那么今天我们就来自定义一个属于自己的九宫格吧！
 首先我们来分析一下实现九宫格解锁的思路：当用户的手指触摸到某一个点时，先判断该点是否在九宫格的某一格范围之内，若在范围内，则该格变成选中的状态；之后用户手指滑动的时候，以该格的圆心为中心，用">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160510/20160510151253.gif">
-<meta property="og:updated_time" content="2016-11-01T14:53:08.127Z">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160510/20160510151253.gif">
+<meta property="og:updated_time" content="2018-11-11T12:07:44.820Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简易实现Android九宫格解锁">
 <meta name="twitter:description" content="前言在平常使用手机的过程中，九宫格解锁是我们经常接触到的。常见的比如有锁屏中的九宫格，还有支付宝中的九宫格等。因为九宫格可以保护用户的隐私，所以它的应用面很广泛。那么今天我们就来自定义一个属于自己的九宫格吧！
@@ -235,7 +235,7 @@
       <a href="/" rel="start" class="brand">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
-        <!--<img src="http://ofyt9w4c2.bkt.clouddn.com/avatar/1529736707_477636.png" style="background:#222222"/>-->
+        <!--<img src="/uploads/avatar/1529736707_477636.png" style="background:#222222"/>-->
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -373,7 +373,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
       <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -427,7 +427,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2016-11-01 22:53:08" itemprop="dateModified" datetime="2016-11-01T22:53:08+08:00">2016-11-01</time>
+                <time title="修改时间：2018-11-11 20:07:44" itemprop="dateModified" datetime="2018-11-11T20:07:44+08:00">2018-11-11</time>
               
             
           </span>
@@ -469,14 +469,6 @@
           
           
 
-          
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
           
 
           
@@ -530,10 +522,10 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 画直线</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">drawLine</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将pressedPoint中的所有格子依次遍历，互相连线</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pressedPoint.size() - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        <span class="comment">// 得到当前格子</span></span><br><span class="line">        Point point = pressedPoint.get(i);</span><br><span class="line">        <span class="comment">// 得到下一个格子</span></span><br><span class="line">        Point nextPoint = pressedPoint.get(i + <span class="number">1</span>);</span><br><span class="line">        <span class="comment">// 旋转画布</span></span><br><span class="line">        canvas.rotate(RotateDegrees.getDegrees(point, nextPoint), point.getX(), point.getY());</span><br><span class="line"></span><br><span class="line">        matrix.reset();</span><br><span class="line">        <span class="comment">// 根据距离设置拉伸的长度</span></span><br><span class="line">        matrix.setScale(getDistance(point, nextPoint) / linePressedBitmap.getWidth(), <span class="number">1f</span>);</span><br><span class="line">        <span class="comment">// 进行平移</span></span><br><span class="line">        matrix.postTranslate(point.getX(), point.getY() - linePressedBitmap.getWidth() / <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (point.getState() == Point.PRESSED_MODE) &#123;</span><br><span class="line">            canvas.drawBitmap(linePressedBitmap, matrix, <span class="keyword">null</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            canvas.drawBitmap(lineErrorBitmap, matrix, <span class="keyword">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 把画布旋转回来</span></span><br><span class="line">        canvas.rotate(-RotateDegrees.getDegrees(point, nextPoint), point.getX(), point.getY());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果是手指在移动的情况</span></span><br><span class="line">    <span class="keyword">if</span> (isMove) &#123;</span><br><span class="line">        Point lastPoint = pressedPoint.get(pressedPoint.size() - <span class="number">1</span>);</span><br><span class="line">        canvas.rotate(RotateDegrees.getDegrees(lastPoint, moveX, moveY), lastPoint.getX(), lastPoint.getY());</span><br><span class="line"></span><br><span class="line">        matrix.reset();</span><br><span class="line">        Log.i(TAG, <span class="string">"the distance : "</span> + getDistance(lastPoint, moveX, moveY) / linePressedBitmap.getWidth());</span><br><span class="line">        matrix.setScale(getDistance(lastPoint, moveX, moveY) / linePressedBitmap.getWidth(), <span class="number">1f</span>);</span><br><span class="line">        matrix.postTranslate(lastPoint.getX(), lastPoint.getY() - linePressedBitmap.getWidth() / <span class="number">2</span>);</span><br><span class="line">        canvas.drawBitmap(linePressedBitmap, matrix, <span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">        canvas.rotate(-RotateDegrees.getDegrees(lastPoint, moveX, moveY), lastPoint.getX(), lastPoint.getY());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 根据point和坐标点计算出之间的距离</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">float</span> <span class="title">getDistance</span><span class="params">(Point point, <span class="keyword">float</span> moveX, <span class="keyword">float</span> moveY)</span> </span>&#123;</span><br><span class="line">    Point b = <span class="keyword">new</span> Point(moveX,moveY,<span class="keyword">null</span>);</span><br><span class="line">    <span class="keyword">return</span> getDistance(point,b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 根据两个point计算出之间的距离</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">float</span> <span class="title">getDistance</span><span class="params">(Point point, Point nextPoint)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">float</span>) Math.sqrt(Math.pow(nextPoint.getX() - point.getX(), <span class="number">2f</span>) + Math.pow(nextPoint.getY() - point.getY(), <span class="number">2f</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>drawLine(Canvas canvas)</code> 整体的逻辑并不复杂，首先将 <code>pressedPoint</code> 中的所有格子依次遍历，将它们连线。之后若是用户的手指还有滑动的话，把最后一个格子和用户手指触摸的点连线。</p>
 <h1 id="u6587_u672B"><a href="#u6587_u672B" class="headerlink" title="文末"></a>文末</h1><p><code>ScreenLockView</code> 中的代码差不多就是这些了，既然讲解完了那就一起来看看效果吧：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160510/20160510151253.gif" alt="ScreenShot"></p>
+<p><img src="/uploads/20160510/20160510151253.gif" alt="ScreenShot"></p>
 <p>效果还算不错吧，当然你也可以自己设置喜欢的九宫格图片，只要替换一下就可以了。如果对本篇文章有问题，可以留言。</p>
 <p>老规矩，附上源码下载链接：</p>
-<p><a href="http://ofytl4mzu.bkt.clouddn.com/20160510/ScreenLockView.rar" target="_blank" rel="external">ScreenLockView.rar</a></p>
+<p><a href="/uploads/20160510/ScreenLockView.rar">ScreenLockView.rar</a></p>
 <p>Goodbye ~~</p>
 
       
@@ -548,7 +540,7 @@
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <img id="wechat_subscriber_qcode" src="/uploads/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
     <div>欢迎订阅我的微信公众号来获取我的动态！</div>
 </div>
 
@@ -566,14 +558,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
         <p>支付宝</p>
       </div>
     
@@ -738,7 +730,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+                src="/uploads/avatar/27073358153.jpg"
                 alt="俞其荣" />
             
               <p class="site-author-name" itemprop="name">俞其荣</p>
@@ -752,7 +744,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">90</span>
+                    <span class="site-state-item-count">91</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1016,24 +1008,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv" title="总访客量">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="site-pv" title="总访问量">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

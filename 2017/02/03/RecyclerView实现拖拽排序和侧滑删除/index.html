@@ -144,9 +144,9 @@
 <meta property="og:description" content="在平时开发应用的时候，经常会遇到列表排序、滑动删除的需求。如果列表效果采用的是 ListView 的话，需要经过自定义 View 才能实现效果；但是如果采用的是 RecyclerView 的话，系统 API 就已经为我们提供了相应的功能。
 接下来，我们就来看一下怎么用系统 API 来实现排序和删除的效果。
 创建 ItemTouchHelper创建一个 ItemTouchHelper 对象，然后其调">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20170206/20170206222813.gif">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20170206/20170203223341.gif">
-<meta property="og:updated_time" content="2017-02-06T15:00:50.673Z">
+<meta property="og:image" content="http://yuqirong.me/uploads/20170206/20170206222813.gif">
+<meta property="og:image" content="http://yuqirong.me/uploads/20170206/20170203223341.gif">
+<meta property="og:updated_time" content="2018-11-11T12:07:17.677Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RecyclerView实现拖拽排序和侧滑删除">
 <meta name="twitter:description" content="在平时开发应用的时候，经常会遇到列表排序、滑动删除的需求。如果列表效果采用的是 ListView 的话，需要经过自定义 View 才能实现效果；但是如果采用的是 RecyclerView 的话，系统 API 就已经为我们提供了相应的功能。
@@ -239,7 +239,7 @@
       <a href="/" rel="start" class="brand">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
-        <!--<img src="http://ofyt9w4c2.bkt.clouddn.com/avatar/1529736707_477636.png" style="background:#222222"/>-->
+        <!--<img src="/uploads/avatar/1529736707_477636.png" style="background:#222222"/>-->
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -377,7 +377,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
       <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -431,7 +431,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2017-02-06 23:00:50" itemprop="dateModified" datetime="2017-02-06T23:00:50+08:00">2017-02-06</time>
+                <time title="修改时间：2018-11-11 20:07:17" itemprop="dateModified" datetime="2018-11-11T20:07:17+08:00">2018-11-11</time>
               
             
           </span>
@@ -473,14 +473,6 @@
           
           
 
-          
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
           
 
           
@@ -528,15 +520,15 @@
 <figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line"><span class="keyword">public</span> void onSwiped(RecyclerView.ViewHolder viewHolder, <span class="built_in">int</span> direction) &#123;</span><br><span class="line">    <span class="built_in">int</span> <span class="keyword">position</span> = viewHolder.getAdapterPosition();</span><br><span class="line">    <span class="keyword">if</span> (direction == ItemTouchHelper.<span class="keyword">END</span>) &#123;</span><br><span class="line">        adapter.getDataList().remove(<span class="keyword">position</span>);</span><br><span class="line">        adapter.notifyItemRemoved(<span class="keyword">position</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这个方法在用户进行侧滑删除操作的时候会回调，其中的逻辑就是得到当前用户进行侧滑删除操作的 item ，然后将其删除。</p>
 <p>到了这里，大功告成了。那么来看看效果吧：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20170206/20170206222813.gif" alt="效果图"></p>
+<p><img src="/uploads/20170206/20170206222813.gif" alt="效果图"></p>
 <h2 id="u6539_u5584_u7528_u6237_u4F53_u9A8C"><a href="#u6539_u5584_u7528_u6237_u4F53_u9A8C" class="headerlink" title="改善用户体验"></a>改善用户体验</h2><p>我们发现还有一些不完美的地方：比如当用户在拖拽排序的时候，可以改变当前拖拽 item 的透明度，这样就可以和其他 item 区分开来了。那么，我们需要去重写 <code>onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState)</code> 方法：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSelectedChanged</span><span class="params">(RecyclerView.ViewHolder viewHolder, <span class="keyword">int</span> actionState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onSelectedChanged(viewHolder, actionState);</span><br><span class="line">    <span class="keyword">if</span> (actionState == ItemTouchHelper.ACTION_STATE_DRAG) &#123;</span><br><span class="line">        viewHolder.itemView.setBackgroundColor(Color.BLUE);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>相对应地，当用户手指从拖拽 item 中抬起的时候，我们需要把 item 的透明度复原。需要我们重写 <code>clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)</code> 方法：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clearView</span><span class="params">(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.clearView(recyclerView, viewHolder);</span><br><span class="line">    viewHolder.itemView.setBackgroundColor(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>好了，来看看改进之后的效果：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20170206/20170203223341.gif" alt="改进效果图"></p>
+<p><img src="/uploads/20170206/20170203223341.gif" alt="改进效果图"></p>
 <p>今天就这样吧，拜拜啦！！</p>
-<p>源码下载：<a href="http://ofytl4mzu.bkt.clouddn.com/20170206/TestRV.rar" target="_blank" rel="external">TestRV.rar</a></p>
+<p>源码下载：<a href="/uploads/20170206/TestRV.rar">TestRV.rar</a></p>
 
       
     </div>
@@ -550,7 +542,7 @@
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <img id="wechat_subscriber_qcode" src="/uploads/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
     <div>欢迎订阅我的微信公众号来获取我的动态！</div>
 </div>
 
@@ -568,14 +560,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
         <p>支付宝</p>
       </div>
     
@@ -740,7 +732,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+                src="/uploads/avatar/27073358153.jpg"
                 alt="俞其荣" />
             
               <p class="site-author-name" itemprop="name">俞其荣</p>
@@ -754,7 +746,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">90</span>
+                    <span class="site-state-item-count">91</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1018,24 +1010,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv" title="总访客量">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="site-pv" title="总访问量">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

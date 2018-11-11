@@ -144,8 +144,8 @@ Header今天我们来讲讲 Window ，Window 代表着一个窗口。
 <meta property="og:description" content="注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。
 Header今天我们来讲讲 Window ，Window 代表着一个窗口。
 比如在 Activity 中，我们可以设置自定义的视图 View ，其实 View 并不是直接附着在 Activity 上，而是 View 附着在 Window 上，Activity 又持有一个 Window 对象。可见，Window 是">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20170928/20170928102356.jpg">
-<meta property="og:updated_time" content="2017-11-04T06:02:33.675Z">
+<meta property="og:image" content="http://yuqirong.me/uploads/20170928/20170928102356.jpg">
+<meta property="og:updated_time" content="2018-11-11T12:07:20.672Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Window源码解析(一)：与DecorView的那些事">
 <meta name="twitter:description" content="注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。
@@ -238,7 +238,7 @@ Header今天我们来讲讲 Window ，Window 代表着一个窗口。
       <a href="/" rel="start" class="brand">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
-        <!--<img src="http://ofyt9w4c2.bkt.clouddn.com/avatar/1529736707_477636.png" style="background:#222222"/>-->
+        <!--<img src="/uploads/avatar/1529736707_477636.png" style="background:#222222"/>-->
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -376,7 +376,7 @@ Header今天我们来讲讲 Window ，Window 代表着一个窗口。
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
       <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -430,7 +430,7 @@ Header今天我们来讲讲 Window ，Window 代表着一个窗口。
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2017-11-04 14:02:33" itemprop="dateModified" datetime="2017-11-04T14:02:33+08:00">2017-11-04</time>
+                <time title="修改时间：2018-11-11 20:07:20" itemprop="dateModified" datetime="2018-11-11T20:07:20+08:00">2018-11-11</time>
               
             
           </span>
@@ -472,14 +472,6 @@ Header今天我们来讲讲 Window ，Window 代表着一个窗口。
           
           
 
-          
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
           
 
           
@@ -550,7 +542,7 @@ Header今天我们来讲讲 Window ，Window 代表着一个窗口。
 <p>具体的代码可以深入 DecorView 的 <code>onResourcesLoaded(LayoutInflater inflater, int layoutResource)</code> 中去看：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">onResourcesLoaded</span><span class="params">(LayoutInflater inflater, <span class="keyword">int</span> layoutResource)</span> </span>&#123;</span><br><span class="line">    mStackId = getStackId();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (mBackdropFrameRenderer != <span class="keyword">null</span>) &#123;</span><br><span class="line">        loadBackgroundDrawablesIfNeeded();</span><br><span class="line">        mBackdropFrameRenderer.onResourcesLoaded(</span><br><span class="line">                <span class="keyword">this</span>, mResizingBackgroundDrawable, mCaptionBackgroundDrawable,</span><br><span class="line">                mUserCaptionBackgroundDrawable, getCurrentColor(mStatusColorViewState),</span><br><span class="line">                getCurrentColor(mNavigationColorViewState));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mDecorCaptionView = createDecorCaptionView(inflater);</span><br><span class="line">    <span class="comment">// 解析之前选择出来的 layoutResource ，该 root 也就是 DecorView 的直接子 View</span></span><br><span class="line">    <span class="keyword">final</span> View root = inflater.inflate(layoutResource, <span class="keyword">null</span>);</span><br><span class="line">    <span class="keyword">if</span> (mDecorCaptionView != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mDecorCaptionView.getParent() == <span class="keyword">null</span>) &#123;</span><br><span class="line">            addView(mDecorCaptionView,</span><br><span class="line">                    <span class="keyword">new</span> ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));</span><br><span class="line">        &#125;</span><br><span class="line">        mDecorCaptionView.addView(root,</span><br><span class="line">                <span class="keyword">new</span> ViewGroup.MarginLayoutParams(MATCH_PARENT, MATCH_PARENT));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Put it below the color views.</span></span><br><span class="line">        <span class="comment">// 将 root 视图添加到 DecorView 中</span></span><br><span class="line">        addView(root, <span class="number">0</span>, <span class="keyword">new</span> ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 可以看出成员变量 mContentRoot 就是 DecorView 的直接子 View</span></span><br><span class="line">    <span class="comment">// 也就是 mContentParent 的父视图</span></span><br><span class="line">    mContentRoot = (ViewGroup) root;</span><br><span class="line">    initializeElevation();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>看到这，我们可以画一张图出来了，把 PhoneWindow 、DecorView 和 mContentParent 都理清楚：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20170928/20170928102356.jpg" alt="View层级"> </p>
+<p><img src="/uploads/20170928/20170928102356.jpg" alt="View层级"> </p>
 <p>然后进行标题设置之类的工作。最后得到并返回 mContentParent 。</p>
 <p>到了这里，基本上把 Window 、DecorView 和 Activity 三者之间的关系整理清楚了，但是事情并没有结束。这时候的 DecorView 并没有真正添加到 Window 上去，只是创建出对象了并解析了视图而已。DecorView 还没有被 WindowManager 识别，Window 也还无法接受外界的输入信息。</p>
 <p>那么，到底 DecorView 是什么时候附着到 Window 上去的？</p>
@@ -579,7 +571,7 @@ Header今天我们来讲讲 Window ，Window 代表着一个窗口。
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <img id="wechat_subscriber_qcode" src="/uploads/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
     <div>欢迎订阅我的微信公众号来获取我的动态！</div>
 </div>
 
@@ -597,14 +589,14 @@ Header今天我们来讲讲 Window ，Window 代表着一个窗口。
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
         <p>支付宝</p>
       </div>
     
@@ -773,7 +765,7 @@ Header今天我们来讲讲 Window ，Window 代表着一个窗口。
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+                src="/uploads/avatar/27073358153.jpg"
                 alt="俞其荣" />
             
               <p class="site-author-name" itemprop="name">俞其荣</p>
@@ -787,7 +779,7 @@ Header今天我们来讲讲 Window ，Window 代表着一个窗口。
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">90</span>
+                    <span class="site-state-item-count">91</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1051,24 +1043,6 @@ Header今天我们来讲讲 Window ，Window 代表着一个窗口。
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv" title="总访客量">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="site-pv" title="总访问量">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

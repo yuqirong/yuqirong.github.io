@@ -148,9 +148,9 @@
 值得一提的是，这是旧版本的特效，新版本的喵街已经去掉了这种效果。
 看完了效果，接下来就是动手的时间了。
 我们先来分析一下思路：我们先给RecyclerView添加一个OnScrollListener，然后分别去获得firstVisiblePosition和first">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160226/20160226205314.gif">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160226/20160226210235.gif">
-<meta property="og:updated_time" content="2017-03-05T14:47:30.932Z">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160226/20160226205314.gif">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160226/20160226210235.gif">
+<meta property="og:updated_time" content="2018-11-11T12:07:25.477Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用RecyclerView实现仿喵街效果">
 <meta name="twitter:description" content="又到更新博客的时间了，本次给大家带来的是在RecyclerView的基础上实现喵街的效果。那么喵街是什么效果呢？下面就贴出效果图：
@@ -245,7 +245,7 @@
       <a href="/" rel="start" class="brand">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
-        <!--<img src="http://ofyt9w4c2.bkt.clouddn.com/avatar/1529736707_477636.png" style="background:#222222"/>-->
+        <!--<img src="/uploads/avatar/1529736707_477636.png" style="background:#222222"/>-->
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -383,7 +383,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
       <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -437,7 +437,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2017-03-05 22:47:30" itemprop="dateModified" datetime="2017-03-05T22:47:30+08:00">2017-03-05</time>
+                <time title="修改时间：2018-11-11 20:07:25" itemprop="dateModified" datetime="2018-11-11T20:07:25+08:00">2018-11-11</time>
               
             
           </span>
@@ -480,14 +480,6 @@
           
 
           
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
-          
 
           
 
@@ -507,7 +499,7 @@
 
       
         <p>又到更新博客的时间了，本次给大家带来的是在RecyclerView的基础上实现喵街的效果。那么喵街是什么效果呢？下面就贴出效果图：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160226/20160226205314.gif" alt="这里写图片描述"></p>
+<p><img src="/uploads/20160226/20160226205314.gif" alt="这里写图片描述"></p>
 <p>值得一提的是，这是旧版本的特效，新版本的喵街已经去掉了这种效果。</p>
 <p>看完了效果，接下来就是动手的时间了。</p>
 <p>我们先来分析一下思路：我们先给RecyclerView添加一个OnScrollListener，然后分别去获得firstVisiblePosition和firstCompletelyVisiblePosition。这里要注意一下，firstVisiblePosition是第一个在屏幕中<strong>可见</strong>的itemView对应的position，而firstCompletelyVisiblePosition是是第一个在屏幕中<strong>完全可见</strong>的itemView对应的position。之后在滚动中去动态地设置itemView的高度。整体的思路就这样了，下面我们直接来看代码。</p>
@@ -518,9 +510,9 @@
 <p>上面的搞定了之后，别忘了要在Adapter里去初始化设置Item的高度。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 设置适配器</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> adapter</span><br><span class="line"> */</span></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAdapter</span><span class="params">(Adapter adapter)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.setAdapter(adapter);</span><br><span class="line">    <span class="keyword">if</span> (adapter <span class="keyword">instanceof</span> ExpandRecyclerViewAdapter) &#123;</span><br><span class="line">        ExpandRecyclerViewAdapter mAdapter = (ExpandRecyclerViewAdapter) adapter;</span><br><span class="line">        <span class="comment">//设置最大的item高度</span></span><br><span class="line">        mAdapter.setMaxItemHeight(maxItemHeight);</span><br><span class="line">        <span class="comment">//设置普通的item高度</span></span><br><span class="line">        mAdapter.setNormalItemHeight(normalItemHeight);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>ExpandRecyclerViewAdapter的代码，重写<code>onBindViewHolder(RecyclerView.ViewHolder holder, int position)</code>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindViewHolder</span><span class="params">(RecyclerView.ViewHolder holder, <span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(position == <span class="number">0</span>)&#123;</span><br><span class="line">            holder.itemView.setLayoutParams(<span class="keyword">new</span> RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (<span class="keyword">int</span>) maxItemHeight));</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            holder.itemView.setLayoutParams(<span class="keyword">new</span> RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (<span class="keyword">int</span>) normalItemHeight));</span><br><span class="line">        &#125;</span><br><span class="line">        bindCustomViewHolder(holder, position);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">bindCustomViewHolder</span><span class="params">(RecyclerView.ViewHolder holder, <span class="keyword">int</span> position)</span></span>;</span><br></pre></td></tr></table></figure></p>
 <p>好了，整体的代码就这些了，下面贴出运行效果：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160226/20160226210235.gif" alt="这里写图片描述"></p>
+<p><img src="/uploads/20160226/20160226210235.gif" alt="这里写图片描述"></p>
 <p>源码下载：</p>
-<p><a href="http://ofytl4mzu.bkt.clouddn.com/20160226/ExpandRecyclerView.rar" target="_blank" rel="external">ExpandRecyclerView.rar</a></p>
+<p><a href="/uploads/20160226/ExpandRecyclerView.rar">ExpandRecyclerView.rar</a></p>
 <h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="http://www.jianshu.com/p/a2c3c21e3b99" target="_blank" rel="external">android版高仿喵街主页滑动效果</a></p>
 <h1 id="Thanks"><a href="#Thanks" class="headerlink" title="Thanks"></a>Thanks</h1><ul>
 <li><a href="https://github.com/dongjunkun/miaojiedemo" target="_blank" rel="external">miaojiedemo</a> created by <a href="https://github.com/dongjunkun" target="_blank" rel="external">dongjunkun</a></li>
@@ -538,7 +530,7 @@
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <img id="wechat_subscriber_qcode" src="/uploads/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
     <div>欢迎订阅我的微信公众号来获取我的动态！</div>
 </div>
 
@@ -556,14 +548,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
         <p>支付宝</p>
       </div>
     
@@ -730,7 +722,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+                src="/uploads/avatar/27073358153.jpg"
                 alt="俞其荣" />
             
               <p class="site-author-name" itemprop="name">俞其荣</p>
@@ -744,7 +736,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">90</span>
+                    <span class="site-state-item-count">91</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1008,24 +1000,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv" title="总访客量">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="site-pv" title="总访问量">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

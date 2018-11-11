@@ -140,8 +140,8 @@
 <meta property="og:url" content="http://yuqirong.me/2016/10/29/Dynamic-Load-Apk源码解析/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="0x00趁着今天是周末，无所事事，来讲讲 Dynamic-Load-Apk 框架。Dynamic-Load-Apk 是任主席主导开发的一款插件化框架，其中心思想主要就是两个字——代理。和我之前分析的 android-pluginmgr 插件化框架不同的是，Dynamic-Load-Apk 框架完全基于在应用层上实现，并不依靠 ActivityThread 、Instrumentation 等。另外">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20161029/20161029223619.png">
-<meta property="og:updated_time" content="2016-11-01T15:12:44.829Z">
+<meta property="og:image" content="http://yuqirong.me/uploads/20161029/20161029223619.png">
+<meta property="og:updated_time" content="2018-11-11T12:07:10.951Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dynamic-Load-Apk源码解析">
 <meta name="twitter:description" content="0x00趁着今天是周末，无所事事，来讲讲 Dynamic-Load-Apk 框架。Dynamic-Load-Apk 是任主席主导开发的一款插件化框架，其中心思想主要就是两个字——代理。和我之前分析的 android-pluginmgr 插件化框架不同的是，Dynamic-Load-Apk 框架完全基于在应用层上实现，并不依靠 ActivityThread 、Instrumentation 等。另外">
@@ -232,7 +232,7 @@
       <a href="/" rel="start" class="brand">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
-        <!--<img src="http://ofyt9w4c2.bkt.clouddn.com/avatar/1529736707_477636.png" style="background:#222222"/>-->
+        <!--<img src="/uploads/avatar/1529736707_477636.png" style="background:#222222"/>-->
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -370,7 +370,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
       <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -424,7 +424,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2016-11-01 23:12:44" itemprop="dateModified" datetime="2016-11-01T23:12:44+08:00">2016-11-01</time>
+                <time title="修改时间：2018-11-11 20:07:10" itemprop="dateModified" datetime="2018-11-11T20:07:10+08:00">2018-11-11</time>
               
             
           </span>
@@ -467,14 +467,6 @@
           
 
           
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
-          
 
           
 
@@ -497,7 +489,7 @@
 <h1 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h1><p>注：本文分析的 <a href="https://github.com/singwhatiwanna/dynamic-load-apk" target="_blank" rel="external">Dynamic-Load-Apk</a> 为 master 分支，版本为1.0.0；</p>
 <p>其实 <a href="https://github.com/singwhatiwanna/dynamic-load-apk" target="_blank" rel="external">Dynamic-Load-Apk</a> 框架的思想很巧妙，大致的思路如下：在宿主中首先申明了一些 ProxyActivity 以及 ProxyService ，插件中的 PluginActivity 要继承指定的 DLBasePluginActivity 。然后启动插件中的 Activity 时，实际上启动的是 ProxyActivity , 之后利用接口回调调用了 PluginActivity 中的生命周期方法。也就是说，PluginActivity 并不是实质上的 Activity ，其实只是一个普通的 Java 类。</p>
 <p>在分析源码之前，先在这里简单地说一下 <a href="https://github.com/singwhatiwanna/dynamic-load-apk" target="_blank" rel="external">Dynamic-Load-Apk</a> 框架的结构：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20161029/20161029223619.png" alt="dynamic-load-apk的类结构"></p>
+<p><img src="/uploads/20161029/20161029223619.png" alt="dynamic-load-apk的类结构"></p>
 <p>从上面的图中大致可以看出来，整个框架中的 Java 类基本可以分为五种类型：</p>
 <ul>
 <li><strong>DLPluginManager</strong> ：顾名思义，是整个插件的管理类。主要作用就是加载以及管理插件，启动插件中的Activity、Service等；</li>
@@ -559,7 +551,7 @@
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <img id="wechat_subscriber_qcode" src="/uploads/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
     <div>欢迎订阅我的微信公众号来获取我的动态！</div>
 </div>
 
@@ -577,14 +569,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
         <p>支付宝</p>
       </div>
     
@@ -753,7 +745,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+                src="/uploads/avatar/27073358153.jpg"
                 alt="俞其荣" />
             
               <p class="site-author-name" itemprop="name">俞其荣</p>
@@ -767,7 +759,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">90</span>
+                    <span class="site-state-item-count">91</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1031,24 +1023,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv" title="总访客量">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="site-pv" title="总访问量">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

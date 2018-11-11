@@ -144,8 +144,8 @@ ViewMod">
 <meta property="og:description" content="Header之前给大家分析过了 LiveData ，今天就来看看 ViewModel 。
 ViewModel 的作用就相当于 MVP 中的 Presenter ，是用来衔接 Model 和 View 的。通常把一些与 View 无关的业务逻辑写在 ViewModel 里面。ViewModel 内部创建出 LiveData 对象，利用 LiveData 对象来传递数据给 View 。
 ViewMod">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20180710/20180709221953.png">
-<meta property="og:updated_time" content="2018-07-14T16:30:01.001Z">
+<meta property="og:image" content="http://yuqirong.me/uploads/20180709/20180709221953.png">
+<meta property="og:updated_time" content="2018-11-11T12:22:46.628Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android Architecture Component之ViewModel解析">
 <meta name="twitter:description" content="Header之前给大家分析过了 LiveData ，今天就来看看 ViewModel 。
@@ -238,7 +238,7 @@ ViewMod">
       <a href="/" rel="start" class="brand">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
-        <!--<img src="http://ofyt9w4c2.bkt.clouddn.com/avatar/1529736707_477636.png" style="background:#222222"/>-->
+        <!--<img src="/uploads/avatar/1529736707_477636.png" style="background:#222222"/>-->
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -376,7 +376,7 @@ ViewMod">
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
       <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -430,7 +430,7 @@ ViewMod">
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-07-15 00:30:01" itemprop="dateModified" datetime="2018-07-15T00:30:01+08:00">2018-07-15</time>
+                <time title="修改时间：2018-11-11 20:22:46" itemprop="dateModified" datetime="2018-11-11T20:22:46+08:00">2018-11-11</time>
               
             
           </span>
@@ -473,14 +473,6 @@ ViewMod">
           
 
           
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
-          
 
           
 
@@ -508,7 +500,7 @@ ViewMod">
 <li>ViewModel 可以做到在同一个 Activity 的情况下，多个 Fragment 共享数据；</li>
 </ol>
 <p>下面是官方给出的 ViewModel 生命周期图，大家随意感受一下：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20180710/20180709221953.png" alt="ViewModel Lifecycle"></p>
+<p><img src="/uploads/20180709/20180709221953.png" alt="ViewModel Lifecycle"></p>
 <p>那么就开始进入正题吧。</p>
 <p>本次解析的 ViewModel 源码基于 <code>android.arch.lifecycle:extensions:1.1.1</code></p>
 <h1 id="ViewModel"><a href="#ViewModel" class="headerlink" title="ViewModel"></a>ViewModel</h1><p>先来看看 ViewModel 是怎么被创建出来的：</p>
@@ -577,7 +569,7 @@ ViewMod">
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <img id="wechat_subscriber_qcode" src="/uploads/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
     <div>欢迎订阅我的微信公众号来获取我的动态！</div>
 </div>
 
@@ -595,14 +587,14 @@ ViewMod">
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
         <p>支付宝</p>
       </div>
     
@@ -771,7 +763,7 @@ ViewMod">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+                src="/uploads/avatar/27073358153.jpg"
                 alt="俞其荣" />
             
               <p class="site-author-name" itemprop="name">俞其荣</p>
@@ -785,7 +777,7 @@ ViewMod">
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">90</span>
+                    <span class="site-state-item-count">91</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1049,24 +1041,6 @@ ViewMod">
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv" title="总访客量">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="site-pv" title="总访问量">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

@@ -2066,7 +2066,7 @@ img:hover {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #0950ff;
+  background: #697aed;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2831,7 +2831,7 @@ embed {
   display: inline-block;
 }
 #header {
-  background: url("http://ofyt9w4c2.bkt.clouddn.com/avatar/694830ebgy1fh3pyd05klj21kw0f2dy12.jpg") no-repeat;
+  background: url("/uploads/avatar/694830ebgy1fh3pyd05klj21kw0f2dy12.jpg") no-repeat;
   background-position: top right;
   background-size: cover;
 }

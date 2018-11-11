@@ -146,9 +146,9 @@
 
 我们可以大致地分析一下：首先根据下拉改变的 paddingTop 来动态地缩放“绿色椭圆物”,然后当 headerView 的 paddingTop 大于0时，播放美团小人出现的帧动画，最后就是手指松开时播放刷新中的帧动画了。
 基本上思路就是上">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160418/20160418160532.gif">
-<meta property="og:image" content="http://ofyt9w4c2.bkt.clouddn.com/20160418/20160418165251.gif">
-<meta property="og:updated_time" content="2016-11-01T14:47:01.582Z">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160418/20160418160532.gif">
+<meta property="og:image" content="http://yuqirong.me/uploads/20160418/20160418165251.gif">
+<meta property="og:updated_time" content="2018-11-11T12:07:37.349Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="带你实现仿美团的下拉刷新">
 <meta name="twitter:description" content="有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：
@@ -242,7 +242,7 @@
       <a href="/" rel="start" class="brand">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
-        <!--<img src="http://ofyt9w4c2.bkt.clouddn.com/avatar/1529736707_477636.png" style="background:#222222"/>-->
+        <!--<img src="/uploads/avatar/1529736707_477636.png" style="background:#222222"/>-->
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -380,7 +380,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
       <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -434,7 +434,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2016-11-01 22:47:01" itemprop="dateModified" datetime="2016-11-01T22:47:01+08:00">2016-11-01</time>
+                <time title="修改时间：2018-11-11 20:07:37" itemprop="dateModified" datetime="2018-11-11T20:07:37+08:00">2018-11-11</time>
               
             
           </span>
@@ -477,14 +477,6 @@
           
 
           
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             阅读次数： 
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
-          
 
           
 
@@ -504,7 +496,7 @@
 
       
         <p>有一段时间没更新博客了，近来都在做毕业设计，今天空出时间来更新一发。给大家带来的是仿美团的下拉刷新。相信美团大家都用过，下面就贴出了美团的下拉刷新效果：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160418/20160418160532.gif" alt="这里写图片描述"></p>
+<p><img src="/uploads/20160418/20160418160532.gif" alt="这里写图片描述"></p>
 <p>我们可以大致地分析一下：首先根据下拉改变的 paddingTop 来动态地缩放“绿色椭圆物”,然后当 headerView 的 paddingTop 大于0时，播放美团小人出现的帧动画，最后就是手指松开时播放刷新中的帧动画了。</p>
 <p>基本上思路就是上面分析的那样了，那么我们下面一步就是要获取帧动画的素材了。我们先下载好美团的 apk ，解压后在 res/drawable-xhdpi-v4 里，我们可以得到相关的图片了。如果嫌麻烦，文末有本 Demo 的下载链接，里面就有素材图片。</p>
 <p>有了图片后我们先写个帧动画的 drawable.xml ：</p>
@@ -528,10 +520,10 @@
 <p>当获取到最新数据后，可以调用<code>notifyRefreshFinished()</code>方法完成下拉刷新：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OnRefreshListener</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">refreshing</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setOnRefreshListener</span><span class="params">(OnRefreshListener listener)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.listener = listener;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 刷新完成后调用</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">notifyRefreshFinished</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    mode = NONE_MODE;</span><br><span class="line">    headerRefreshView.setPadding(<span class="number">0</span>, -refreshViewHeight, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    aniImageView.setVisibility(GONE);</span><br><span class="line">    mtOvalView.setVisibility(VISIBLE);</span><br><span class="line">    isStart = <span class="keyword">false</span>;</span><br><span class="line">    canRefresh = <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>最后就是附上效果图了：</p>
-<p><img src="http://ofyt9w4c2.bkt.clouddn.com/20160418/20160418165251.gif" alt="这里写图片描述"></p>
+<p><img src="/uploads/20160418/20160418165251.gif" alt="这里写图片描述"></p>
 <p>到这里整体就讲解得差不多了，至于 MeiTuanListView 的使用示例以及 MeiTuanOvalView 的源码可以在 Demo 里查看。</p>
 <p>Demo下载链接：</p>
-<p><a href="http://ofytl4mzu.bkt.clouddn.com/20160418/MeiTuanListView.rar" target="_blank" rel="external">MeiTuanListView.rar</a></p>
+<p><a href="/uploads/20160418/MeiTuanListView.rar">MeiTuanListView.rar</a></p>
 <p>good bye!</p>
 
       
@@ -546,7 +538,7 @@
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <img id="wechat_subscriber_qcode" src="/uploads/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
     <div>欢迎订阅我的微信公众号来获取我的动态！</div>
 </div>
 
@@ -564,14 +556,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
         <p>支付宝</p>
       </div>
     
@@ -727,7 +719,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg"
+                src="/uploads/avatar/27073358153.jpg"
                 alt="俞其荣" />
             
               <p class="site-author-name" itemprop="name">俞其荣</p>
@@ -741,7 +733,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">90</span>
+                    <span class="site-state-item-count">91</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -989,24 +981,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv" title="总访客量">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="site-pv" title="总访问量">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 
