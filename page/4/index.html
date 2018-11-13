@@ -342,6 +342,193 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2017/02/09/NotificationListenerService的那些事儿/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="俞其荣">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="俞其荣的博客 | Qirong Yu's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/02/09/NotificationListenerService的那些事儿/" itemprop="url">
+                  NotificationListenerService的那些事儿
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-02-09 21:00:04" itemprop="dateCreated datePublished" datetime="2017-02-09T21:00:04+08:00">2017-02-09</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-11 20:07:16" itemprop="dateModified" datetime="2018-11-11T20:07:16+08:00">2018-11-11</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/02/09/NotificationListenerService的那些事儿/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/02/09/NotificationListenerService的那些事儿/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          最近在公司时接到一个需求：需要实时监听设备的通知栏消息，并可以捕获到通知的内容，然后进行对应的操作。刚看到这个需求的时候，脑子里第一反应就是使用 AccessibilityService 。 AccessibilityService 支持的事件监听类型中有 TYPE_NOTIFICATION_STATE_CHANGED ，该事件类型就是用来监听通知栏消息状态改变的，众多的抢红包插件利用的就是这个原理。
+之后在 Github 上看到了 qianghongbao 这个抢红包的项目，发现代码里面有一个 QHBNotificationService 继承了 NotificationListenerSe
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/02/09/NotificationListenerService的那些事儿/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2017/02/03/RecyclerView实现拖拽排序和侧滑删除/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2032,205 +2219,6 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/11/03/React Native热更新集成Code Push/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="俞其荣的博客 | Qirong Yu's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/11/03/React Native热更新集成Code Push/" itemprop="url">
-                  React Native热更新集成Code Push
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2016-11-03 09:30:59" itemprop="dateCreated datePublished" datetime="2016-11-03T09:30:59+08:00">2016-11-03</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2016-12-14 20:55:50" itemprop="dateModified" datetime="2016-12-14T20:55:50+08:00">2016-12-14</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/React-Native-Blog/" itemprop="url" rel="index"><span itemprop="name">React Native Blog</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2016/11/03/React Native热更新集成Code Push/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016/11/03/React Native热更新集成Code Push/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Code Push GitHub 地址: https://github.com/Microsoft/react-native-code-push
-基本安装
-安装 code push cli
-npm install -g code-push-cli
-
-注册，成功后得到 key 后输入
-code-push register
-
-在 Code Push 服务器注册 app
-code-push app add your_app_name 
- 查找密钥，有 deployment key 和 staging key 两种
-code-push deployment ls your_app_name -k
-
-在
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/11/03/React Native热更新集成Code Push/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2282,7 +2270,7 @@ code-push deployment ls your_app_name -k
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">91</span>
+                    <span class="site-state-item-count">92</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
