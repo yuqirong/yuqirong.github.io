@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="arouter-compiler version : 1.2.2
+前言之前对 arouter-api 做了整个流程的分析，今天来看看 arouter-compiler 。
+arouter-compiler 主要是利用 apt 在编译期自动生成代码的。之前我们看到的 ARouter$$Root$$app 、 ARouter$$Group$$test 和 Test1Activity$$ARouter$">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ARouter源码解析（四）">
+<meta property="og:url" content="http://yuqirong.me/2019/01/03/ARouter源码解析（四）/index.html">
+<meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
+<meta property="og:description" content="arouter-compiler version : 1.2.2
+前言之前对 arouter-api 做了整个流程的分析，今天来看看 arouter-compiler 。
+arouter-compiler 主要是利用 apt 在编译期自动生成代码的。之前我们看到的 ARouter$$Root$$app 、 ARouter$$Group$$test 和 Test1Activity$$ARouter$">
+<meta property="og:updated_time" content="2019-01-05T17:08:49.919Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ARouter源码解析（四）">
+<meta name="twitter:description" content="arouter-compiler version : 1.2.2
+前言之前对 arouter-api 做了整个流程的分析，今天来看看 arouter-compiler 。
+arouter-compiler 主要是利用 apt 在编译期自动生成代码的。之前我们看到的 ARouter$$Root$$app 、 ARouter$$Group$$test 和 Test1Activity$$ARouter$">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="俞其荣的博客 | Qirong Yu's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yuqirong.me/2019/01/03/ARouter源码解析（四）/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>ARouter源码解析（四） | 俞其荣的博客 | Qirong Yu's Blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" rel="start" class="brand">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
+        <!--<img src="/uploads/avatar/1529736707_477636.png" style="background:#222222"/>-->
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">我需要，最狂的风，和最静的海。</h1>
+        <h1 class="site-subtitle" itemprop="description" style="margin-top:0px;">——顾城《第八个早晨》</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-guestbook">
+    <a href="/guestbook/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-comment"></i> <br />留言</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/yuqirong" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2019/01/03/ARouter源码解析（四）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="俞其荣">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="俞其荣的博客 | Qirong Yu's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">ARouter源码解析（四）
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-01-03 21:46:43" itemprop="dateCreated datePublished" datetime="2019-01-03T21:46:43+08:00">2019-01-03</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-01-06 01:08:49" itemprop="dateModified" datetime="2019-01-06T01:08:49+08:00">2019-01-06</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/01/03/ARouter源码解析（四）/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/01/03/ARouter源码解析（四）/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>arouter-compiler version : 1.2.2</p>
+<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>之前对 arouter-api 做了整个流程的分析，今天来看看 arouter-compiler 。</p>
+<p>arouter-compiler 主要是利用 apt 在编译期自动生成代码的。之前我们看到的 <code>ARouter$$Root$$app</code> 、 <code>ARouter$$Group$$test</code> 和 <code>Test1Activity$$ARouter$$Autowired</code> 等都是 arouter-compiler 生成的。</p>
+<p>那接下来就分析分析 arouter-compiler 是怎么生成这些源码的。</p>
+<h1 id="arouter-compiler"><a href="#arouter-compiler" class="headerlink" title="arouter-compiler"></a>arouter-compiler</h1><p>arouter-compiler 中 processor 有三种：</p>
+<ul>
+<li>AutowiredProcessor : 用来生成像 <code>Test1Activity$$ARouter$$Autowired</code> 这种类型；</li>
+<li>InterceptorProcessor : 用来生成像 <code>ARouter$$Interceptors$$app</code> 这种类型；</li>
+<li>RouteProcessor : 用来生成像 <code>ARouter$$Root$$app</code> ，<code>ARouter$$Providers$$app</code> 和 <code>ARouter$$Group$$test</code> 这种类型；</li>
+</ul>
+<h2 id="RouteProcessor"><a href="#RouteProcessor" class="headerlink" title="RouteProcessor"></a>RouteProcessor</h2><p>在这里我们就只分析 RouteProcessor 了。</p>
+<p>RouteProcessor 相比其他两个 Processor 来说，代码更长，逻辑更加复杂。并且 RouteProcessor 主要处理的是路由映射这一块。其他两个 RouteProcessor 也是大同小异，有兴趣的同学可以自行阅读源码。</p>
+<p>先来看看 RouteProcessor 的定义：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@AutoService</span>(Processor.class)</span><br><span class="line"><span class="variable">@SupportedOptions</span>(&#123;KEY_MODULE_NAME, KEY_GENERATE_DOC_NAME&#125;)</span><br><span class="line"><span class="variable">@SupportedSourceVersion</span>(SourceVersion.RELEASE_7)</span><br><span class="line"><span class="variable">@SupportedAnnotationTypes</span>(&#123;ANNOTATION_TYPE_ROUTE, ANNOTATION_TYPE_AUTOWIRED&#125;)</span><br><span class="line">public class RouteProcessor extends AbstractProcessor &#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>RouteProcessor 类上面的注解很多，我们一个一个来看：</p>
+<ul>
+<li>@AutoService 会自动在 META-INF 文件夹下生成 Processor 配置信息文件，避免手动配置的麻烦;</li>
+<li>@SupportedOptions 指定 Processor 支持的选项参数名称，KEY_MODULE_NAME 就是 AROUTER_MODULE_NAME ，KEY_GENERATE_DOC_NAME 就是 AROUTER_GENERATE_DOC；没错，这两个就是我们一开始在 build.gradle 中配置的。</li>
+<li>@SupportedSourceVersion 指定 Processor 支持的 JDK 的版本；</li>
+<li>@SupportedAnnotationTypes 指定 Processor 处理的注解；</li>
+</ul>
+<p>接着，趁热打铁。来瞧瞧 RouteProcessor 的 init 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(ProcessingEnvironment processingEnv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.init(processingEnv);</span><br><span class="line"></span><br><span class="line">    mFiler = processingEnv.getFiler();                  <span class="comment">// Generate class.</span></span><br><span class="line">    types = processingEnv.getTypeUtils();            <span class="comment">// Get type utils.</span></span><br><span class="line">    elements = processingEnv.getElementUtils();      <span class="comment">// Get class meta.</span></span><br><span class="line"></span><br><span class="line">    typeUtils = <span class="keyword">new</span> TypeUtils(types, elements);</span><br><span class="line">    logger = <span class="keyword">new</span> Logger(processingEnv.getMessager());   <span class="comment">// Package the log utils.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Attempt to get user configuration [moduleName]</span></span><br><span class="line">    Map&lt;String, String&gt; options = processingEnv.getOptions();</span><br><span class="line">    <span class="keyword">if</span> (MapUtils.isNotEmpty(options)) &#123;</span><br><span class="line">        moduleName = options.get(KEY_MODULE_NAME);</span><br><span class="line">        generateDoc = VALUE_ENABLE.equals(options.get(KEY_GENERATE_DOC_NAME));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (StringUtils.isNotEmpty(moduleName)) &#123;</span><br><span class="line">        moduleName = moduleName.replaceAll(<span class="string">"[^0-9a-zA-Z_]+"</span>, <span class="string">""</span>);</span><br><span class="line"></span><br><span class="line">        logger.info(<span class="string">"The user has configuration the module name, it was ["</span> + moduleName + <span class="string">"]"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        logger.error(NO_MODULE_NAME_TIPS);</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"ARouter::Compiler &gt;&gt;&gt; No module name, for more information, look at gradle log."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果需要生成路由 doc</span></span><br><span class="line">    <span class="keyword">if</span> (generateDoc) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            docWriter = mFiler.createResource(</span><br><span class="line">                    StandardLocation.SOURCE_OUTPUT,</span><br><span class="line">                    PACKAGE_OF_GENERATE_DOCS,</span><br><span class="line">                    <span class="string">"arouter-map-of-"</span> + moduleName + <span class="string">".json"</span></span><br><span class="line">            ).openWriter();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            logger.error(<span class="string">"Create doc writer failed, because "</span> + e.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    iProvider = elements.getTypeElement(Consts.IPROVIDER).asType();</span><br><span class="line"></span><br><span class="line">    logger.info(<span class="string">"&gt;&gt;&gt; RouteProcessor init. &lt;&lt;&lt;"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 init 方法中，主要获取了 KEY_MODULE_NAME 和 KEY_GENERATE_DOC_NAME 这两个编译选项参数。然后判断一下是否需要生成路由文档。</p>
+<p>在 init 方法中获取参数后，接着就是 process 方法。</p>
+<p>process 方法就好像是 main 方法一样，在这里面都是 processer 处理注解自动生成代码的逻辑。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">process</span><span class="params">(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (CollectionUtils.isNotEmpty(annotations)) &#123;</span><br><span class="line">        <span class="comment">// 获取 @Route 注解的集合</span></span><br><span class="line">        Set&lt;? extends Element&gt; routeElements = roundEnv.getElementsAnnotatedWith(Route.class);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            logger.info(<span class="string">"&gt;&gt;&gt; Found routes, start... &lt;&lt;&lt;"</span>);</span><br><span class="line">            <span class="keyword">this</span>.parseRoutes(routeElements);</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            logger.error(e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 process 中调用了 parseRoutes ，parseRoutes 方法实在是太长了，在这里我们进行分段讲解吧。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">parseRoutes</span><span class="params">(Set&lt;? extends Element&gt; routeElements)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (CollectionUtils.isNotEmpty(routeElements)) &#123;</span><br><span class="line">        <span class="comment">// prepare the type an so on.</span></span><br><span class="line">	</span><br><span class="line">        logger.info(<span class="string">"&gt;&gt;&gt; Found routes, size is "</span> + routeElements.size() + <span class="string">" &lt;&lt;&lt;"</span>);</span><br><span class="line">	</span><br><span class="line">        rootMap.clear();</span><br><span class="line">        <span class="comment">// Activity 类型</span></span><br><span class="line">        TypeMirror type_Activity = elements.getTypeElement(ACTIVITY).asType();</span><br><span class="line">        <span class="comment">// Service 类型</span></span><br><span class="line">        TypeMirror type_Service = elements.getTypeElement(SERVICE).asType();</span><br><span class="line">        <span class="comment">// Fragment 类型</span></span><br><span class="line">        TypeMirror fragmentTm = elements.getTypeElement(FRAGMENT).asType();</span><br><span class="line">        <span class="comment">// v4 Fragment 类型</span></span><br><span class="line">        TypeMirror fragmentTmV4 = elements.getTypeElement(Consts.FRAGMENT_V4).asType();</span><br><span class="line">	</span><br><span class="line">        <span class="comment">// IRouteGroup 类型</span></span><br><span class="line">        TypeElement type_IRouteGroup = elements.getTypeElement(IROUTE_GROUP);</span><br><span class="line">        <span class="comment">// IProviderGroup 类型</span></span><br><span class="line">        TypeElement type_IProviderGroup = elements.getTypeElement(IPROVIDER_GROUP);</span><br><span class="line">        <span class="comment">// 获取 RouteMeta 和 RouteType 的类名</span></span><br><span class="line">        ClassName routeMetaCn = ClassName.get(RouteMeta.class);</span><br><span class="line">        ClassName routeTypeCn = ClassName.get(RouteType.class);</span><br><span class="line">	</span><br><span class="line">        <span class="comment">/*</span><br><span class="line">           构造 ARouter$$Root$$xxx 的 loadInto 方法入参类型</span><br><span class="line">           Build input type, format as :</span><br><span class="line">	</span><br><span class="line">           Map&lt;String, Class&lt;? extends IRouteGroup&gt;&gt;</span><br><span class="line">         */</span></span><br><span class="line">        ParameterizedTypeName inputMapTypeOfRoot = ParameterizedTypeName.get(</span><br><span class="line">                ClassName.get(Map.class),</span><br><span class="line">                ClassName.get(String.class),</span><br><span class="line">                ParameterizedTypeName.get(</span><br><span class="line">                        ClassName.get(Class.class),</span><br><span class="line">                        WildcardTypeName.subtypeOf(ClassName.get(type_IRouteGroup))</span><br><span class="line">                )</span><br><span class="line">        );</span><br><span class="line">	</span><br><span class="line">        <span class="comment">/*</span><br><span class="line">          构造 ARouter$$Group$$xxx 的 loadInto 方法入参类型</span><br><span class="line">          Map&lt;String, RouteMeta&gt;</span><br><span class="line">         */</span></span><br><span class="line">        ParameterizedTypeName inputMapTypeOfGroup = ParameterizedTypeName.get(</span><br><span class="line">                ClassName.get(Map.class),</span><br><span class="line">                ClassName.get(String.class),</span><br><span class="line">                ClassName.get(RouteMeta.class)</span><br><span class="line">        );</span><br><span class="line">	</span><br><span class="line">        <span class="comment">/*</span><br><span class="line">          构造方法入参参数名称</span><br><span class="line">          Build input param name.</span><br><span class="line">         */</span></span><br><span class="line">        ParameterSpec rootParamSpec = ParameterSpec.builder(inputMapTypeOfRoot, <span class="string">"routes"</span>).build();</span><br><span class="line">        ParameterSpec groupParamSpec = ParameterSpec.builder(inputMapTypeOfGroup, <span class="string">"atlas"</span>).build();</span><br><span class="line">        ParameterSpec providerParamSpec = ParameterSpec.builder(inputMapTypeOfGroup, <span class="string">"providers"</span>).build();  <span class="comment">// Ps. its param type same as groupParamSpec!</span></span><br><span class="line">	</span><br><span class="line">        <span class="comment">/*</span><br><span class="line">          构造 ARouter$$Root$$xxx 的 loadInto 方法</span><br><span class="line">          Build method : 'loadInto'</span><br><span class="line">         */</span></span><br><span class="line">        MethodSpec.Builder loadIntoMethodOfRootBuilder = MethodSpec.methodBuilder(METHOD_LOAD_INTO)</span><br><span class="line">                .addAnnotation(Override.class)</span><br><span class="line">                .addModifiers(PUBLIC)</span><br><span class="line">                .addParameter(rootParamSpec);</span><br><span class="line">	</span><br><span class="line">        ...</span><br><span class="line">        </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>parseRoutes 方法一开始，做足了准备。下面就到了放大招的时候了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  Follow a sequence, find out metas of group first, generate java file, then statistics them as root.</span></span><br><span class="line"><span class="keyword">for</span> (Element element : routeElements) &#123;</span><br><span class="line">    TypeMirror tm = element.asType();</span><br><span class="line">    Route route = element.getAnnotation(Route.class);</span><br><span class="line">    RouteMeta routeMeta;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果 element 修饰的类是 Activity 类型的</span></span><br><span class="line">    <span class="keyword">if</span> (types.isSubtype(tm, type_Activity)) &#123;                 <span class="comment">// Activity</span></span><br><span class="line">        logger.info(<span class="string">"&gt;&gt;&gt; Found activity route: "</span> + tm.toString() + <span class="string">" &lt;&lt;&lt;"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取 Activity 中 @Autowired 注解的属性，IProvider 类型的除外</span></span><br><span class="line">        Map&lt;String, Integer&gt; paramsType = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        Map&lt;String, Autowired&gt; injectConfig = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (Element field : element.getEnclosedElements()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (field.getKind().isField() &amp;&amp; field.getAnnotation(Autowired.class) != <span class="keyword">null</span> &amp;&amp; !types.isSubtype(field.asType(), iProvider)) &#123;</span><br><span class="line">                <span class="comment">// It must be field, then it has annotation, but it not be provider.</span></span><br><span class="line">                Autowired paramConfig = field.getAnnotation(Autowired.class);</span><br><span class="line">                String injectName = StringUtils.isEmpty(paramConfig.name()) ? field.getSimpleName().toString() : paramConfig.name();</span><br><span class="line">                paramsType.put(injectName, typeUtils.typeExchange(field));</span><br><span class="line">                injectConfig.put(injectName, paramConfig);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 构造 activity 类型的路由数据</span></span><br><span class="line">        routeMeta = <span class="keyword">new</span> RouteMeta(route, element, RouteType.ACTIVITY, paramsType);</span><br><span class="line">        routeMeta.setInjectConfig(injectConfig);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (types.isSubtype(tm, iProvider)) &#123;         <span class="comment">// IProvider 类型</span></span><br><span class="line">        logger.info(<span class="string">"&gt;&gt;&gt; Found provider route: "</span> + tm.toString() + <span class="string">" &lt;&lt;&lt;"</span>);</span><br><span class="line">        routeMeta = <span class="keyword">new</span> RouteMeta(route, element, RouteType.PROVIDER, <span class="keyword">null</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (types.isSubtype(tm, type_Service)) &#123;           <span class="comment">// Service 类型</span></span><br><span class="line">        logger.info(<span class="string">"&gt;&gt;&gt; Found service route: "</span> + tm.toString() + <span class="string">" &lt;&lt;&lt;"</span>);</span><br><span class="line">        routeMeta = <span class="keyword">new</span> RouteMeta(route, element, RouteType.parse(SERVICE), <span class="keyword">null</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (types.isSubtype(tm, fragmentTm) || types.isSubtype(tm, fragmentTmV4)) &#123; <span class="comment">// fragment 类型</span></span><br><span class="line">        logger.info(<span class="string">"&gt;&gt;&gt; Found fragment route: "</span> + tm.toString() + <span class="string">" &lt;&lt;&lt;"</span>);</span><br><span class="line">        routeMeta = <span class="keyword">new</span> RouteMeta(route, element, RouteType.parse(FRAGMENT), <span class="keyword">null</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"ARouter::Compiler &gt;&gt;&gt; Found unsupported class type, type = ["</span> + types.toString() + <span class="string">"]."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将生成好的 routeMeta 按组存放进入 groupMap 中</span></span><br><span class="line">    categories(routeMeta);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这段代码主要将每个 routeElement 进行了分类，将 @Route 修饰的类信息封装进 RouteMeta 中。再把 RouteMeta 按照组名分好组存进 groupMap 中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 构造 ARouter$$Providers$$xxx 的 loadInto 方法</span></span><br><span class="line">MethodSpec.Builder loadIntoMethodOfProviderBuilder = MethodSpec.methodBuilder(METHOD_LOAD_INTO)</span><br><span class="line">        .addAnnotation(Override.class)</span><br><span class="line">        .addModifiers(PUBLIC)</span><br><span class="line">        .addParameter(providerParamSpec);</span><br><span class="line"></span><br><span class="line">Map&lt;String, List&lt;RouteDoc&gt;&gt; docSource = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Start generate java source, structure is divided into upper and lower levels, used for demand initialization.</span></span><br><span class="line"><span class="keyword">for</span> (Map.Entry&lt;String, Set&lt;RouteMeta&gt;&gt; entry : groupMap.entrySet()) &#123;</span><br><span class="line">    <span class="comment">// 每组的组名</span></span><br><span class="line">    String groupName = entry.getKey();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造 ARouter$$Group$$xxx 的 loadInto 方法</span></span><br><span class="line">    MethodSpec.Builder loadIntoMethodOfGroupBuilder = MethodSpec.methodBuilder(METHOD_LOAD_INTO)</span><br><span class="line">            .addAnnotation(Override.class)</span><br><span class="line">            .addModifiers(PUBLIC)</span><br><span class="line">            .addParameter(groupParamSpec);</span><br><span class="line"></span><br><span class="line">    List&lt;RouteDoc&gt; routeDocList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Build group method body</span></span><br><span class="line">    Set&lt;RouteMeta&gt; groupData = entry.getValue();</span><br><span class="line">    <span class="keyword">for</span> (RouteMeta routeMeta : groupData) &#123;</span><br><span class="line">        RouteDoc routeDoc = extractDocInfo(routeMeta);</span><br><span class="line">        <span class="comment">// 类名。比如 com.alibaba.android.arouter.demo.testservice.HelloService</span></span><br><span class="line">        ClassName className = ClassName.get((TypeElement) routeMeta.getRawType());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">switch</span> (routeMeta.getType()) &#123;</span><br><span class="line">            <span class="keyword">case</span> PROVIDER:  <span class="comment">// Need cache provider's super class</span></span><br><span class="line">                <span class="comment">// 获取该节点下的接口</span></span><br><span class="line">                List&lt;? extends TypeMirror&gt; interfaces = ((TypeElement) routeMeta.getRawType()).getInterfaces();</span><br><span class="line">                <span class="comment">// 遍历接口</span></span><br><span class="line">                <span class="keyword">for</span> (TypeMirror tm : interfaces) &#123;</span><br><span class="line">                    routeDoc.addPrototype(tm.toString());</span><br><span class="line">                    <span class="comment">// 如果接口是 iProvider 类型</span></span><br><span class="line">                    <span class="keyword">if</span> (types.isSameType(tm, iProvider)) &#123;   <span class="comment">// Its implements iProvider interface himself.</span></span><br><span class="line">                        <span class="comment">// This interface extend the IProvider, so it can be used for mark provider</span></span><br><span class="line">                        loadIntoMethodOfProviderBuilder.addStatement(</span><br><span class="line">                                <span class="string">"providers.put($S, $T.build($T."</span> + routeMeta.getType() + <span class="string">", $T.class, $S, $S, null, "</span> + routeMeta.getPriority() + <span class="string">", "</span> + routeMeta.getExtra() + <span class="string">"))"</span>,</span><br><span class="line">                                (routeMeta.getRawType()).toString(),</span><br><span class="line">                                routeMetaCn,</span><br><span class="line">                                routeTypeCn,</span><br><span class="line">                                className,</span><br><span class="line">                                routeMeta.getPath(),</span><br><span class="line">                                routeMeta.getGroup());</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (types.isSubtype(tm, iProvider)) &#123; <span class="comment">// 如果是 iProvider 的子接口</span></span><br><span class="line">                        <span class="comment">// This interface extend the IProvider, so it can be used for mark provider</span></span><br><span class="line">                        loadIntoMethodOfProviderBuilder.addStatement(</span><br><span class="line">                                <span class="string">"providers.put($S, $T.build($T."</span> + routeMeta.getType() + <span class="string">", $T.class, $S, $S, null, "</span> + routeMeta.getPriority() + <span class="string">", "</span> + routeMeta.getExtra() + <span class="string">"))"</span>,</span><br><span class="line">                                tm.toString(),    <span class="comment">// So stupid, will duplicate only save class name.</span></span><br><span class="line">                                routeMetaCn,</span><br><span class="line">                                routeTypeCn,</span><br><span class="line">                                className,</span><br><span class="line">                                routeMeta.getPath(),</span><br><span class="line">                                routeMeta.getGroup());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码最终会生成 ARouter$$Providers$$xxx 的 loadInto 方法，比如像这样：</p>
+<pre><code>providers.put(&quot;com.alibaba.android.arouter.demo.testservice.HelloService&quot;, RouteMeta.build(RouteType.PROVIDER, HelloServiceImpl.class, &quot;/yourservicegroupname/hello&quot;, &quot;yourservicegroupname&quot;, null, -1, -2147483648));
+</code></pre><p>那我们接着看。</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">    // 构造 RouteMeta 的 paramType 参数</span><br><span class="line">    StringBuilder mapBodyBuilder = new StringBuilder();</span><br><span class="line">    Map<span class="variable">&lt;String, Integer&gt;</span> paramsType = routeMeta.getParamsType();</span><br><span class="line">    Map<span class="variable">&lt;String, Autowired&gt;</span> injectConfigs = routeMeta.getInjectConfig();</span><br><span class="line">    if (MapUtils.isNotEmpty(paramsType)) &#123;</span><br><span class="line">        List<span class="variable">&lt;RouteDoc.Param&gt;</span> paramList = new ArrayList<span class="variable">&lt;&gt;</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (Map.Entry<span class="variable">&lt;String, Integer&gt;</span> types : paramsType.entrySet()) &#123;</span><br><span class="line">            mapBodyBuilder.append(<span class="string">"put(\""</span>).append(types.getKey()).append(<span class="string">"\", "</span>).append(types.getValue()).append(<span class="string">"); "</span>);</span><br><span class="line"></span><br><span class="line">            RouteDoc.Param param = new RouteDoc.Param();</span><br><span class="line">            Autowired injectConfig = injectConfigs.get(types.getKey());</span><br><span class="line">            param.<span class="built_in">set</span>Key(types.getKey());</span><br><span class="line">            param.<span class="built_in">set</span>Type(TypeKind.values()[types.getValue()].name().<span class="keyword">to</span>LowerCase());</span><br><span class="line">            param.<span class="built_in">set</span>Description(injectConfig.desc());</span><br><span class="line">            param.<span class="built_in">set</span>Required(injectConfig.required());</span><br><span class="line"></span><br><span class="line">            paramList.add(param);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        routeDoc.<span class="built_in">set</span>Params(paramList);</span><br><span class="line">    &#125;</span><br><span class="line">    String mapBody = mapBodyBuilder.<span class="keyword">to</span>String();</span><br><span class="line"></span><br><span class="line">    // 以下代码生成这种模版 atlas.put(<span class="string">"/test/activity1"</span>, RouteMeta.build(RouteType.ACTIVITY, Test1Activity.class, <span class="string">"/test/activity1"</span>, <span class="string">"test"</span>, new java.util.HashMap<span class="variable">&lt;String, Integer&gt;</span>()&#123;&#123;put(<span class="string">"ser"</span>, <span class="number">9</span>); &#125;&#125;, -<span class="number">1</span>, -<span class="number">2147483648</span>));</span><br><span class="line"></span><br><span class="line">    <span class="built_in">load</span>IntoMethodOfGroupBuilder.addStatement(</span><br><span class="line">            <span class="string">"atlas.put($S, $T.build($T."</span> + routeMeta.getType() + <span class="string">", $T.class, $S, $S, "</span> + (StringUtils.isEmpty(mapBody) ? null : (<span class="string">"new java.util.HashMap&lt;String, Integer&gt;()&#123;&#123;"</span> + mapBodyBuilder.<span class="keyword">to</span>String() + <span class="string">"&#125;&#125;"</span>)) + <span class="string">", "</span> + routeMeta.getPriority() + <span class="string">", "</span> + routeMeta.getExtra() + <span class="string">"))"</span>,</span><br><span class="line">            routeMeta.getPath(),</span><br><span class="line">            routeMetaCn,</span><br><span class="line">            routeTypeCn,</span><br><span class="line">            className,</span><br><span class="line">            routeMeta.getPath().<span class="keyword">to</span>LowerCase(),</span><br><span class="line">            routeMeta.getGroup().<span class="keyword">to</span>LowerCase());</span><br><span class="line"></span><br><span class="line">    routeDoc.<span class="built_in">set</span>ClassName(className.<span class="keyword">to</span>String());</span><br><span class="line">    routeDocList.add(routeDoc);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 生成 ARouter$<span class="variable">$Group</span>$<span class="variable">$xxx</span> 类</span><br><span class="line">String <span class="keyword">group</span>FileName = NAME_OF_GROUP + <span class="keyword">group</span>Name;</span><br><span class="line">JavaFile.builder(PACKAGE_OF_GENERATE_FILE,</span><br><span class="line">        TypeSpec.classBuilder(<span class="keyword">group</span>FileName)</span><br><span class="line">                .addJavadoc(WARNING_TIPS)</span><br><span class="line">                .addSuperinterface(ClassName.get(type_IRouteGroup))</span><br><span class="line">                .addModifiers(PUBLIC)</span><br><span class="line">                .addMethod(<span class="built_in">load</span>IntoMethodOfGroupBuilder.build())</span><br><span class="line">                .build()</span><br><span class="line">).build().writeTo(mFiler);</span><br><span class="line"></span><br><span class="line">logger.info(<span class="string">"&gt;&gt;&gt; Generated group: "</span> + <span class="keyword">group</span>Name + <span class="string">"&lt;&lt;&lt;"</span>);</span><br><span class="line">rootMap.put(<span class="keyword">group</span>Name, <span class="keyword">group</span>FileName);</span><br><span class="line">docSource.put(<span class="keyword">group</span>Name, routeDocList);</span><br></pre></td></tr></table></figure>
+<p>上面代码主要做的事情就是遍历 groupmap 集合给 ARouter$$Group$$xxx 类中的 loadInto 添加方法体，并生成 java 文件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (MapUtils.isNotEmpty(rootMap)) &#123;</span><br><span class="line">    <span class="comment">// Generate root meta by group name, it must be generated before root, then I can find out the class of group.</span></span><br><span class="line">    <span class="comment">// 生成 ARouter$$Root$$app 的 loadInto 方法体</span></span><br><span class="line">    <span class="keyword">for</span> (Map.Entry&lt;String, String&gt; entry : rootMap.entrySet()) &#123;</span><br><span class="line">        loadIntoMethodOfRootBuilder.addStatement(<span class="string">"routes.put($S, $T.class)"</span>, entry.getKey(), ClassName.get(PACKAGE_OF_GENERATE_FILE, entry.getValue()));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Output route doc</span></span><br><span class="line"><span class="keyword">if</span> (generateDoc) &#123;</span><br><span class="line">    docWriter.append(JSON.toJSONString(docSource, SerializerFeature.PrettyFormat));</span><br><span class="line">    docWriter.flush();</span><br><span class="line">    docWriter.close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成 ARouter$$Providers$$app 类</span></span><br><span class="line">String providerMapFileName = NAME_OF_PROVIDER + SEPARATOR + moduleName;</span><br><span class="line">JavaFile.builder(PACKAGE_OF_GENERATE_FILE,</span><br><span class="line">        TypeSpec.classBuilder(providerMapFileName)</span><br><span class="line">                .addJavadoc(WARNING_TIPS)</span><br><span class="line">                .addSuperinterface(ClassName.get(type_IProviderGroup))</span><br><span class="line">                .addModifiers(PUBLIC)</span><br><span class="line">                .addMethod(loadIntoMethodOfProviderBuilder.build())</span><br><span class="line">                .build()</span><br><span class="line">).build().writeTo(mFiler);</span><br><span class="line"></span><br><span class="line">logger.info(<span class="string">"&gt;&gt;&gt; Generated provider map, name is "</span> + providerMapFileName + <span class="string">" &lt;&lt;&lt;"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成 ARouter$$Root$$app 类 </span></span><br><span class="line">String rootFileName = NAME_OF_ROOT + SEPARATOR + moduleName;</span><br><span class="line">JavaFile.builder(PACKAGE_OF_GENERATE_FILE,</span><br><span class="line">        TypeSpec.classBuilder(rootFileName)</span><br><span class="line">                .addJavadoc(WARNING_TIPS)</span><br><span class="line">                .addSuperinterface(ClassName.get(elements.getTypeElement(ITROUTE_ROOT)))</span><br><span class="line">                .addModifiers(PUBLIC)</span><br><span class="line">                .addMethod(loadIntoMethodOfRootBuilder.build())</span><br><span class="line">                .build()</span><br><span class="line">).build().writeTo(mFiler);</span><br><span class="line"></span><br><span class="line">logger.info(<span class="string">"&gt;&gt;&gt; Generated root, name is "</span> + rootFileName + <span class="string">" &lt;&lt;&lt;"</span>);</span><br></pre></td></tr></table></figure>
+<p>以上，就是整个 RouteProcessor 的流程。看完 RouteProcessor 之后，相信你对 ARouter 的的了解也更加深入了。</p>
+<p>之后，也会对 ARouter 的 arouter-register 模块做一个深入解析，敬请期待吧。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号来获取我的动态！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>俞其荣</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yuqirong.me/2019/01/03/ARouter源码解析（四）/" title="ARouter源码解析（四）">http://yuqirong.me/2019/01/03/ARouter源码解析（四）/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/开源框架/" rel="tag"># 开源框架</a>
+          
+            <a href="/tags/源码解析/" rel="tag"># 源码解析</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/03/ARouter源码解析（三）/" rel="next" title="ARouter源码解析（三）">
+                <i class="fa fa-chevron-left"></i> ARouter源码解析（三）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar/27073358153.jpg"
+                alt="俞其荣" />
+            
+              <p class="site-author-name" itemprop="name">俞其荣</p>
+              <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">97</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/yuqirong" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/yyyuqirong" target="_blank" title="Twitter" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Twitter</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.instagram.com/yyyuqirong" target="_blank" title="Instagram" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Instagram</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://plus.google.com/116756215081118586533" target="_blank" title="Google+" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Google+</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://cn.linkedin.com/in/yuqirong" target="_blank" title="LinkedIn" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>LinkedIn</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://www.jianshu.com/users/1291f6690ea0" target="_blank" title="简书" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/yyyuqirong" target="_blank" title="Weibo" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/yuqirong" target="_blank" title="知乎" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:yqr271228943@gmail.com" target="_blank" title="Email" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Email</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank" rel="external nofollow">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u524D_u8A00"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#arouter-compiler"><span class="nav-number">2.</span> <span class="nav-text">arouter-compiler</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RouteProcessor"><span class="nav-number">2.1.</span> <span class="nav-text">RouteProcessor</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" rel="external nofollow" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" rel="external nofollow" href="https://github.com/theme-next/hexo-theme-next">NexT.Muse</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" rel="external nofollow" href="https://pages.coding.me"><b>Coding Pages</b></a></div>
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: '1BEieMGlw7Jvs6XNGYKgEd1N-gzGzoHsz',
+        appKey: '8wsALSDVgUj1zAfN9m3hpYoU',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "box";
+      
+          flOptions.boxForm = "horizontal";
+      
+          flOptions.position = "middleRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

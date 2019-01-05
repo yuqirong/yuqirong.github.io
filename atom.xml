@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2019-01-03T15:24:07.112Z</updated>
+  <updated>2019-01-05T17:08:49.919Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -13,6 +13,69 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[ARouter源码解析（四）]]></title>
+    <link href="http://yuqirong.me/2019/01/03/ARouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E5%9B%9B%EF%BC%89/"/>
+    <id>http://yuqirong.me/2019/01/03/ARouter源码解析（四）/</id>
+    <published>2019-01-03T13:46:43.000Z</published>
+    <updated>2019-01-05T17:08:49.919Z</updated>
+    <content type="html"><![CDATA[<p>arouter-compiler version : 1.2.2</p>
+<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>之前对 arouter-api 做了整个流程的分析，今天来看看 arouter-compiler 。</p>
+<p>arouter-compiler 主要是利用 apt 在编译期自动生成代码的。之前我们看到的 <code>ARouter$$Root$$app</code> 、 <code>ARouter$$Group$$test</code> 和 <code>Test1Activity$$ARouter$$Autowired</code> 等都是 arouter-compiler 生成的。</p>
+<p>那接下来就分析分析 arouter-compiler 是怎么生成这些源码的。</p>
+<h1 id="arouter-compiler"><a href="#arouter-compiler" class="headerlink" title="arouter-compiler"></a>arouter-compiler</h1><p>arouter-compiler 中 processor 有三种：</p>
+<ul>
+<li>AutowiredProcessor : 用来生成像 <code>Test1Activity$$ARouter$$Autowired</code> 这种类型；</li>
+<li>InterceptorProcessor : 用来生成像 <code>ARouter$$Interceptors$$app</code> 这种类型；</li>
+<li>RouteProcessor : 用来生成像 <code>ARouter$$Root$$app</code> ，<code>ARouter$$Providers$$app</code> 和 <code>ARouter$$Group$$test</code> 这种类型；</li>
+</ul>
+<h2 id="RouteProcessor"><a href="#RouteProcessor" class="headerlink" title="RouteProcessor"></a>RouteProcessor</h2><p>在这里我们就只分析 RouteProcessor 了。</p>
+<p>RouteProcessor 相比其他两个 Processor 来说，代码更长，逻辑更加复杂。并且 RouteProcessor 主要处理的是路由映射这一块。其他两个 RouteProcessor 也是大同小异，有兴趣的同学可以自行阅读源码。</p>
+<p>先来看看 RouteProcessor 的定义：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@AutoService</span>(Processor.class)</span><br><span class="line"><span class="variable">@SupportedOptions</span>(&#123;KEY_MODULE_NAME, KEY_GENERATE_DOC_NAME&#125;)</span><br><span class="line"><span class="variable">@SupportedSourceVersion</span>(SourceVersion.RELEASE_7)</span><br><span class="line"><span class="variable">@SupportedAnnotationTypes</span>(&#123;ANNOTATION_TYPE_ROUTE, ANNOTATION_TYPE_AUTOWIRED&#125;)</span><br><span class="line">public class RouteProcessor extends AbstractProcessor &#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>RouteProcessor 类上面的注解很多，我们一个一个来看：</p>
+<ul>
+<li>@AutoService 会自动在 META-INF 文件夹下生成 Processor 配置信息文件，避免手动配置的麻烦;</li>
+<li>@SupportedOptions 指定 Processor 支持的选项参数名称，KEY_MODULE_NAME 就是 AROUTER_MODULE_NAME ，KEY_GENERATE_DOC_NAME 就是 AROUTER_GENERATE_DOC；没错，这两个就是我们一开始在 build.gradle 中配置的。</li>
+<li>@SupportedSourceVersion 指定 Processor 支持的 JDK 的版本；</li>
+<li>@SupportedAnnotationTypes 指定 Processor 处理的注解；</li>
+</ul>
+<p>接着，趁热打铁。来瞧瞧 RouteProcessor 的 init 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(ProcessingEnvironment processingEnv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.init(processingEnv);</span><br><span class="line"></span><br><span class="line">    mFiler = processingEnv.getFiler();                  <span class="comment">// Generate class.</span></span><br><span class="line">    types = processingEnv.getTypeUtils();            <span class="comment">// Get type utils.</span></span><br><span class="line">    elements = processingEnv.getElementUtils();      <span class="comment">// Get class meta.</span></span><br><span class="line"></span><br><span class="line">    typeUtils = <span class="keyword">new</span> TypeUtils(types, elements);</span><br><span class="line">    logger = <span class="keyword">new</span> Logger(processingEnv.getMessager());   <span class="comment">// Package the log utils.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Attempt to get user configuration [moduleName]</span></span><br><span class="line">    Map&lt;String, String&gt; options = processingEnv.getOptions();</span><br><span class="line">    <span class="keyword">if</span> (MapUtils.isNotEmpty(options)) &#123;</span><br><span class="line">        moduleName = options.get(KEY_MODULE_NAME);</span><br><span class="line">        generateDoc = VALUE_ENABLE.equals(options.get(KEY_GENERATE_DOC_NAME));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (StringUtils.isNotEmpty(moduleName)) &#123;</span><br><span class="line">        moduleName = moduleName.replaceAll(<span class="string">"[^0-9a-zA-Z_]+"</span>, <span class="string">""</span>);</span><br><span class="line"></span><br><span class="line">        logger.info(<span class="string">"The user has configuration the module name, it was ["</span> + moduleName + <span class="string">"]"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        logger.error(NO_MODULE_NAME_TIPS);</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"ARouter::Compiler &gt;&gt;&gt; No module name, for more information, look at gradle log."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果需要生成路由 doc</span></span><br><span class="line">    <span class="keyword">if</span> (generateDoc) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            docWriter = mFiler.createResource(</span><br><span class="line">                    StandardLocation.SOURCE_OUTPUT,</span><br><span class="line">                    PACKAGE_OF_GENERATE_DOCS,</span><br><span class="line">                    <span class="string">"arouter-map-of-"</span> + moduleName + <span class="string">".json"</span></span><br><span class="line">            ).openWriter();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            logger.error(<span class="string">"Create doc writer failed, because "</span> + e.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    iProvider = elements.getTypeElement(Consts.IPROVIDER).asType();</span><br><span class="line"></span><br><span class="line">    logger.info(<span class="string">"&gt;&gt;&gt; RouteProcessor init. &lt;&lt;&lt;"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 init 方法中，主要获取了 KEY_MODULE_NAME 和 KEY_GENERATE_DOC_NAME 这两个编译选项参数。然后判断一下是否需要生成路由文档。</p>
+<p>在 init 方法中获取参数后，接着就是 process 方法。</p>
+<p>process 方法就好像是 main 方法一样，在这里面都是 processer 处理注解自动生成代码的逻辑。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">process</span><span class="params">(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (CollectionUtils.isNotEmpty(annotations)) &#123;</span><br><span class="line">        <span class="comment">// 获取 @Route 注解的集合</span></span><br><span class="line">        Set&lt;? extends Element&gt; routeElements = roundEnv.getElementsAnnotatedWith(Route.class);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            logger.info(<span class="string">"&gt;&gt;&gt; Found routes, start... &lt;&lt;&lt;"</span>);</span><br><span class="line">            <span class="keyword">this</span>.parseRoutes(routeElements);</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            logger.error(e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 process 中调用了 parseRoutes ，parseRoutes 方法实在是太长了，在这里我们进行分段讲解吧。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">parseRoutes</span><span class="params">(Set&lt;? extends Element&gt; routeElements)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (CollectionUtils.isNotEmpty(routeElements)) &#123;</span><br><span class="line">        <span class="comment">// prepare the type an so on.</span></span><br><span class="line">	</span><br><span class="line">        logger.info(<span class="string">"&gt;&gt;&gt; Found routes, size is "</span> + routeElements.size() + <span class="string">" &lt;&lt;&lt;"</span>);</span><br><span class="line">	</span><br><span class="line">        rootMap.clear();</span><br><span class="line">        <span class="comment">// Activity 类型</span></span><br><span class="line">        TypeMirror type_Activity = elements.getTypeElement(ACTIVITY).asType();</span><br><span class="line">        <span class="comment">// Service 类型</span></span><br><span class="line">        TypeMirror type_Service = elements.getTypeElement(SERVICE).asType();</span><br><span class="line">        <span class="comment">// Fragment 类型</span></span><br><span class="line">        TypeMirror fragmentTm = elements.getTypeElement(FRAGMENT).asType();</span><br><span class="line">        <span class="comment">// v4 Fragment 类型</span></span><br><span class="line">        TypeMirror fragmentTmV4 = elements.getTypeElement(Consts.FRAGMENT_V4).asType();</span><br><span class="line">	</span><br><span class="line">        <span class="comment">// IRouteGroup 类型</span></span><br><span class="line">        TypeElement type_IRouteGroup = elements.getTypeElement(IROUTE_GROUP);</span><br><span class="line">        <span class="comment">// IProviderGroup 类型</span></span><br><span class="line">        TypeElement type_IProviderGroup = elements.getTypeElement(IPROVIDER_GROUP);</span><br><span class="line">        <span class="comment">// 获取 RouteMeta 和 RouteType 的类名</span></span><br><span class="line">        ClassName routeMetaCn = ClassName.get(RouteMeta.class);</span><br><span class="line">        ClassName routeTypeCn = ClassName.get(RouteType.class);</span><br><span class="line">	</span><br><span class="line">        <span class="comment">/*</span><br><span class="line">           构造 ARouter$$Root$$xxx 的 loadInto 方法入参类型</span><br><span class="line">           Build input type, format as :</span><br><span class="line">	</span><br><span class="line">           Map&lt;String, Class&lt;? extends IRouteGroup&gt;&gt;</span><br><span class="line">         */</span></span><br><span class="line">        ParameterizedTypeName inputMapTypeOfRoot = ParameterizedTypeName.get(</span><br><span class="line">                ClassName.get(Map.class),</span><br><span class="line">                ClassName.get(String.class),</span><br><span class="line">                ParameterizedTypeName.get(</span><br><span class="line">                        ClassName.get(Class.class),</span><br><span class="line">                        WildcardTypeName.subtypeOf(ClassName.get(type_IRouteGroup))</span><br><span class="line">                )</span><br><span class="line">        );</span><br><span class="line">	</span><br><span class="line">        <span class="comment">/*</span><br><span class="line">          构造 ARouter$$Group$$xxx 的 loadInto 方法入参类型</span><br><span class="line">          Map&lt;String, RouteMeta&gt;</span><br><span class="line">         */</span></span><br><span class="line">        ParameterizedTypeName inputMapTypeOfGroup = ParameterizedTypeName.get(</span><br><span class="line">                ClassName.get(Map.class),</span><br><span class="line">                ClassName.get(String.class),</span><br><span class="line">                ClassName.get(RouteMeta.class)</span><br><span class="line">        );</span><br><span class="line">	</span><br><span class="line">        <span class="comment">/*</span><br><span class="line">          构造方法入参参数名称</span><br><span class="line">          Build input param name.</span><br><span class="line">         */</span></span><br><span class="line">        ParameterSpec rootParamSpec = ParameterSpec.builder(inputMapTypeOfRoot, <span class="string">"routes"</span>).build();</span><br><span class="line">        ParameterSpec groupParamSpec = ParameterSpec.builder(inputMapTypeOfGroup, <span class="string">"atlas"</span>).build();</span><br><span class="line">        ParameterSpec providerParamSpec = ParameterSpec.builder(inputMapTypeOfGroup, <span class="string">"providers"</span>).build();  <span class="comment">// Ps. its param type same as groupParamSpec!</span></span><br><span class="line">	</span><br><span class="line">        <span class="comment">/*</span><br><span class="line">          构造 ARouter$$Root$$xxx 的 loadInto 方法</span><br><span class="line">          Build method : 'loadInto'</span><br><span class="line">         */</span></span><br><span class="line">        MethodSpec.Builder loadIntoMethodOfRootBuilder = MethodSpec.methodBuilder(METHOD_LOAD_INTO)</span><br><span class="line">                .addAnnotation(Override.class)</span><br><span class="line">                .addModifiers(PUBLIC)</span><br><span class="line">                .addParameter(rootParamSpec);</span><br><span class="line">	</span><br><span class="line">        ...</span><br><span class="line">        </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>parseRoutes 方法一开始，做足了准备。下面就到了放大招的时候了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  Follow a sequence, find out metas of group first, generate java file, then statistics them as root.</span></span><br><span class="line"><span class="keyword">for</span> (Element element : routeElements) &#123;</span><br><span class="line">    TypeMirror tm = element.asType();</span><br><span class="line">    Route route = element.getAnnotation(Route.class);</span><br><span class="line">    RouteMeta routeMeta;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果 element 修饰的类是 Activity 类型的</span></span><br><span class="line">    <span class="keyword">if</span> (types.isSubtype(tm, type_Activity)) &#123;                 <span class="comment">// Activity</span></span><br><span class="line">        logger.info(<span class="string">"&gt;&gt;&gt; Found activity route: "</span> + tm.toString() + <span class="string">" &lt;&lt;&lt;"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取 Activity 中 @Autowired 注解的属性，IProvider 类型的除外</span></span><br><span class="line">        Map&lt;String, Integer&gt; paramsType = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        Map&lt;String, Autowired&gt; injectConfig = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (Element field : element.getEnclosedElements()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (field.getKind().isField() &amp;&amp; field.getAnnotation(Autowired.class) != <span class="keyword">null</span> &amp;&amp; !types.isSubtype(field.asType(), iProvider)) &#123;</span><br><span class="line">                <span class="comment">// It must be field, then it has annotation, but it not be provider.</span></span><br><span class="line">                Autowired paramConfig = field.getAnnotation(Autowired.class);</span><br><span class="line">                String injectName = StringUtils.isEmpty(paramConfig.name()) ? field.getSimpleName().toString() : paramConfig.name();</span><br><span class="line">                paramsType.put(injectName, typeUtils.typeExchange(field));</span><br><span class="line">                injectConfig.put(injectName, paramConfig);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 构造 activity 类型的路由数据</span></span><br><span class="line">        routeMeta = <span class="keyword">new</span> RouteMeta(route, element, RouteType.ACTIVITY, paramsType);</span><br><span class="line">        routeMeta.setInjectConfig(injectConfig);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (types.isSubtype(tm, iProvider)) &#123;         <span class="comment">// IProvider 类型</span></span><br><span class="line">        logger.info(<span class="string">"&gt;&gt;&gt; Found provider route: "</span> + tm.toString() + <span class="string">" &lt;&lt;&lt;"</span>);</span><br><span class="line">        routeMeta = <span class="keyword">new</span> RouteMeta(route, element, RouteType.PROVIDER, <span class="keyword">null</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (types.isSubtype(tm, type_Service)) &#123;           <span class="comment">// Service 类型</span></span><br><span class="line">        logger.info(<span class="string">"&gt;&gt;&gt; Found service route: "</span> + tm.toString() + <span class="string">" &lt;&lt;&lt;"</span>);</span><br><span class="line">        routeMeta = <span class="keyword">new</span> RouteMeta(route, element, RouteType.parse(SERVICE), <span class="keyword">null</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (types.isSubtype(tm, fragmentTm) || types.isSubtype(tm, fragmentTmV4)) &#123; <span class="comment">// fragment 类型</span></span><br><span class="line">        logger.info(<span class="string">"&gt;&gt;&gt; Found fragment route: "</span> + tm.toString() + <span class="string">" &lt;&lt;&lt;"</span>);</span><br><span class="line">        routeMeta = <span class="keyword">new</span> RouteMeta(route, element, RouteType.parse(FRAGMENT), <span class="keyword">null</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"ARouter::Compiler &gt;&gt;&gt; Found unsupported class type, type = ["</span> + types.toString() + <span class="string">"]."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将生成好的 routeMeta 按组存放进入 groupMap 中</span></span><br><span class="line">    categories(routeMeta);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这段代码主要将每个 routeElement 进行了分类，将 @Route 修饰的类信息封装进 RouteMeta 中。再把 RouteMeta 按照组名分好组存进 groupMap 中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 构造 ARouter$$Providers$$xxx 的 loadInto 方法</span></span><br><span class="line">MethodSpec.Builder loadIntoMethodOfProviderBuilder = MethodSpec.methodBuilder(METHOD_LOAD_INTO)</span><br><span class="line">        .addAnnotation(Override.class)</span><br><span class="line">        .addModifiers(PUBLIC)</span><br><span class="line">        .addParameter(providerParamSpec);</span><br><span class="line"></span><br><span class="line">Map&lt;String, List&lt;RouteDoc&gt;&gt; docSource = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Start generate java source, structure is divided into upper and lower levels, used for demand initialization.</span></span><br><span class="line"><span class="keyword">for</span> (Map.Entry&lt;String, Set&lt;RouteMeta&gt;&gt; entry : groupMap.entrySet()) &#123;</span><br><span class="line">    <span class="comment">// 每组的组名</span></span><br><span class="line">    String groupName = entry.getKey();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造 ARouter$$Group$$xxx 的 loadInto 方法</span></span><br><span class="line">    MethodSpec.Builder loadIntoMethodOfGroupBuilder = MethodSpec.methodBuilder(METHOD_LOAD_INTO)</span><br><span class="line">            .addAnnotation(Override.class)</span><br><span class="line">            .addModifiers(PUBLIC)</span><br><span class="line">            .addParameter(groupParamSpec);</span><br><span class="line"></span><br><span class="line">    List&lt;RouteDoc&gt; routeDocList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Build group method body</span></span><br><span class="line">    Set&lt;RouteMeta&gt; groupData = entry.getValue();</span><br><span class="line">    <span class="keyword">for</span> (RouteMeta routeMeta : groupData) &#123;</span><br><span class="line">        RouteDoc routeDoc = extractDocInfo(routeMeta);</span><br><span class="line">        <span class="comment">// 类名。比如 com.alibaba.android.arouter.demo.testservice.HelloService</span></span><br><span class="line">        ClassName className = ClassName.get((TypeElement) routeMeta.getRawType());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">switch</span> (routeMeta.getType()) &#123;</span><br><span class="line">            <span class="keyword">case</span> PROVIDER:  <span class="comment">// Need cache provider's super class</span></span><br><span class="line">                <span class="comment">// 获取该节点下的接口</span></span><br><span class="line">                List&lt;? extends TypeMirror&gt; interfaces = ((TypeElement) routeMeta.getRawType()).getInterfaces();</span><br><span class="line">                <span class="comment">// 遍历接口</span></span><br><span class="line">                <span class="keyword">for</span> (TypeMirror tm : interfaces) &#123;</span><br><span class="line">                    routeDoc.addPrototype(tm.toString());</span><br><span class="line">                    <span class="comment">// 如果接口是 iProvider 类型</span></span><br><span class="line">                    <span class="keyword">if</span> (types.isSameType(tm, iProvider)) &#123;   <span class="comment">// Its implements iProvider interface himself.</span></span><br><span class="line">                        <span class="comment">// This interface extend the IProvider, so it can be used for mark provider</span></span><br><span class="line">                        loadIntoMethodOfProviderBuilder.addStatement(</span><br><span class="line">                                <span class="string">"providers.put($S, $T.build($T."</span> + routeMeta.getType() + <span class="string">", $T.class, $S, $S, null, "</span> + routeMeta.getPriority() + <span class="string">", "</span> + routeMeta.getExtra() + <span class="string">"))"</span>,</span><br><span class="line">                                (routeMeta.getRawType()).toString(),</span><br><span class="line">                                routeMetaCn,</span><br><span class="line">                                routeTypeCn,</span><br><span class="line">                                className,</span><br><span class="line">                                routeMeta.getPath(),</span><br><span class="line">                                routeMeta.getGroup());</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (types.isSubtype(tm, iProvider)) &#123; <span class="comment">// 如果是 iProvider 的子接口</span></span><br><span class="line">                        <span class="comment">// This interface extend the IProvider, so it can be used for mark provider</span></span><br><span class="line">                        loadIntoMethodOfProviderBuilder.addStatement(</span><br><span class="line">                                <span class="string">"providers.put($S, $T.build($T."</span> + routeMeta.getType() + <span class="string">", $T.class, $S, $S, null, "</span> + routeMeta.getPriority() + <span class="string">", "</span> + routeMeta.getExtra() + <span class="string">"))"</span>,</span><br><span class="line">                                tm.toString(),    <span class="comment">// So stupid, will duplicate only save class name.</span></span><br><span class="line">                                routeMetaCn,</span><br><span class="line">                                routeTypeCn,</span><br><span class="line">                                className,</span><br><span class="line">                                routeMeta.getPath(),</span><br><span class="line">                                routeMeta.getGroup());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码最终会生成 ARouter$$Providers$$xxx 的 loadInto 方法，比如像这样：</p>
+<pre><code>providers.put(&quot;com.alibaba.android.arouter.demo.testservice.HelloService&quot;, RouteMeta.build(RouteType.PROVIDER, HelloServiceImpl.class, &quot;/yourservicegroupname/hello&quot;, &quot;yourservicegroupname&quot;, null, -1, -2147483648));
+</code></pre><p>那我们接着看。</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">    // 构造 RouteMeta 的 paramType 参数</span><br><span class="line">    StringBuilder mapBodyBuilder = new StringBuilder();</span><br><span class="line">    Map<span class="variable">&lt;String, Integer&gt;</span> paramsType = routeMeta.getParamsType();</span><br><span class="line">    Map<span class="variable">&lt;String, Autowired&gt;</span> injectConfigs = routeMeta.getInjectConfig();</span><br><span class="line">    if (MapUtils.isNotEmpty(paramsType)) &#123;</span><br><span class="line">        List<span class="variable">&lt;RouteDoc.Param&gt;</span> paramList = new ArrayList<span class="variable">&lt;&gt;</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (Map.Entry<span class="variable">&lt;String, Integer&gt;</span> types : paramsType.entrySet()) &#123;</span><br><span class="line">            mapBodyBuilder.append(<span class="string">"put(\""</span>).append(types.getKey()).append(<span class="string">"\", "</span>).append(types.getValue()).append(<span class="string">"); "</span>);</span><br><span class="line"></span><br><span class="line">            RouteDoc.Param param = new RouteDoc.Param();</span><br><span class="line">            Autowired injectConfig = injectConfigs.get(types.getKey());</span><br><span class="line">            param.<span class="built_in">set</span>Key(types.getKey());</span><br><span class="line">            param.<span class="built_in">set</span>Type(TypeKind.values()[types.getValue()].name().<span class="keyword">to</span>LowerCase());</span><br><span class="line">            param.<span class="built_in">set</span>Description(injectConfig.desc());</span><br><span class="line">            param.<span class="built_in">set</span>Required(injectConfig.required());</span><br><span class="line"></span><br><span class="line">            paramList.add(param);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        routeDoc.<span class="built_in">set</span>Params(paramList);</span><br><span class="line">    &#125;</span><br><span class="line">    String mapBody = mapBodyBuilder.<span class="keyword">to</span>String();</span><br><span class="line"></span><br><span class="line">    // 以下代码生成这种模版 atlas.put(<span class="string">"/test/activity1"</span>, RouteMeta.build(RouteType.ACTIVITY, Test1Activity.class, <span class="string">"/test/activity1"</span>, <span class="string">"test"</span>, new java.util.HashMap<span class="variable">&lt;String, Integer&gt;</span>()&#123;&#123;put(<span class="string">"ser"</span>, <span class="number">9</span>); &#125;&#125;, -<span class="number">1</span>, -<span class="number">2147483648</span>));</span><br><span class="line"></span><br><span class="line">    <span class="built_in">load</span>IntoMethodOfGroupBuilder.addStatement(</span><br><span class="line">            <span class="string">"atlas.put($S, $T.build($T."</span> + routeMeta.getType() + <span class="string">", $T.class, $S, $S, "</span> + (StringUtils.isEmpty(mapBody) ? null : (<span class="string">"new java.util.HashMap&lt;String, Integer&gt;()&#123;&#123;"</span> + mapBodyBuilder.<span class="keyword">to</span>String() + <span class="string">"&#125;&#125;"</span>)) + <span class="string">", "</span> + routeMeta.getPriority() + <span class="string">", "</span> + routeMeta.getExtra() + <span class="string">"))"</span>,</span><br><span class="line">            routeMeta.getPath(),</span><br><span class="line">            routeMetaCn,</span><br><span class="line">            routeTypeCn,</span><br><span class="line">            className,</span><br><span class="line">            routeMeta.getPath().<span class="keyword">to</span>LowerCase(),</span><br><span class="line">            routeMeta.getGroup().<span class="keyword">to</span>LowerCase());</span><br><span class="line"></span><br><span class="line">    routeDoc.<span class="built_in">set</span>ClassName(className.<span class="keyword">to</span>String());</span><br><span class="line">    routeDocList.add(routeDoc);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 生成 ARouter$<span class="variable">$Group</span>$<span class="variable">$xxx</span> 类</span><br><span class="line">String <span class="keyword">group</span>FileName = NAME_OF_GROUP + <span class="keyword">group</span>Name;</span><br><span class="line">JavaFile.builder(PACKAGE_OF_GENERATE_FILE,</span><br><span class="line">        TypeSpec.classBuilder(<span class="keyword">group</span>FileName)</span><br><span class="line">                .addJavadoc(WARNING_TIPS)</span><br><span class="line">                .addSuperinterface(ClassName.get(type_IRouteGroup))</span><br><span class="line">                .addModifiers(PUBLIC)</span><br><span class="line">                .addMethod(<span class="built_in">load</span>IntoMethodOfGroupBuilder.build())</span><br><span class="line">                .build()</span><br><span class="line">).build().writeTo(mFiler);</span><br><span class="line"></span><br><span class="line">logger.info(<span class="string">"&gt;&gt;&gt; Generated group: "</span> + <span class="keyword">group</span>Name + <span class="string">"&lt;&lt;&lt;"</span>);</span><br><span class="line">rootMap.put(<span class="keyword">group</span>Name, <span class="keyword">group</span>FileName);</span><br><span class="line">docSource.put(<span class="keyword">group</span>Name, routeDocList);</span><br></pre></td></tr></table></figure>
+<p>上面代码主要做的事情就是遍历 groupmap 集合给 ARouter$$Group$$xxx 类中的 loadInto 添加方法体，并生成 java 文件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (MapUtils.isNotEmpty(rootMap)) &#123;</span><br><span class="line">    <span class="comment">// Generate root meta by group name, it must be generated before root, then I can find out the class of group.</span></span><br><span class="line">    <span class="comment">// 生成 ARouter$$Root$$app 的 loadInto 方法体</span></span><br><span class="line">    <span class="keyword">for</span> (Map.Entry&lt;String, String&gt; entry : rootMap.entrySet()) &#123;</span><br><span class="line">        loadIntoMethodOfRootBuilder.addStatement(<span class="string">"routes.put($S, $T.class)"</span>, entry.getKey(), ClassName.get(PACKAGE_OF_GENERATE_FILE, entry.getValue()));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Output route doc</span></span><br><span class="line"><span class="keyword">if</span> (generateDoc) &#123;</span><br><span class="line">    docWriter.append(JSON.toJSONString(docSource, SerializerFeature.PrettyFormat));</span><br><span class="line">    docWriter.flush();</span><br><span class="line">    docWriter.close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成 ARouter$$Providers$$app 类</span></span><br><span class="line">String providerMapFileName = NAME_OF_PROVIDER + SEPARATOR + moduleName;</span><br><span class="line">JavaFile.builder(PACKAGE_OF_GENERATE_FILE,</span><br><span class="line">        TypeSpec.classBuilder(providerMapFileName)</span><br><span class="line">                .addJavadoc(WARNING_TIPS)</span><br><span class="line">                .addSuperinterface(ClassName.get(type_IProviderGroup))</span><br><span class="line">                .addModifiers(PUBLIC)</span><br><span class="line">                .addMethod(loadIntoMethodOfProviderBuilder.build())</span><br><span class="line">                .build()</span><br><span class="line">).build().writeTo(mFiler);</span><br><span class="line"></span><br><span class="line">logger.info(<span class="string">"&gt;&gt;&gt; Generated provider map, name is "</span> + providerMapFileName + <span class="string">" &lt;&lt;&lt;"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成 ARouter$$Root$$app 类 </span></span><br><span class="line">String rootFileName = NAME_OF_ROOT + SEPARATOR + moduleName;</span><br><span class="line">JavaFile.builder(PACKAGE_OF_GENERATE_FILE,</span><br><span class="line">        TypeSpec.classBuilder(rootFileName)</span><br><span class="line">                .addJavadoc(WARNING_TIPS)</span><br><span class="line">                .addSuperinterface(ClassName.get(elements.getTypeElement(ITROUTE_ROOT)))</span><br><span class="line">                .addModifiers(PUBLIC)</span><br><span class="line">                .addMethod(loadIntoMethodOfRootBuilder.build())</span><br><span class="line">                .build()</span><br><span class="line">).build().writeTo(mFiler);</span><br><span class="line"></span><br><span class="line">logger.info(<span class="string">"&gt;&gt;&gt; Generated root, name is "</span> + rootFileName + <span class="string">" &lt;&lt;&lt;"</span>);</span><br></pre></td></tr></table></figure>
+<p>以上，就是整个 RouteProcessor 的流程。看完 RouteProcessor 之后，相信你对 ARouter 的的了解也更加深入了。</p>
+<p>之后，也会对 ARouter 的 arouter-register 模块做一个深入解析，敬请期待吧。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>arouter-compiler version : 1.2.2</p>
+<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>之前对 arouter-]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+    
+      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+    
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[ARouter源码解析（三）]]></title>
@@ -107,7 +170,7 @@
     <link href="http://yuqirong.me/2018/12/24/ARouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://yuqirong.me/2018/12/24/ARouter源码解析（一）/</id>
     <published>2018-12-24T13:13:20.000Z</published>
-    <updated>2019-01-03T13:44:30.485Z</updated>
+    <updated>2019-01-05T17:10:06.261Z</updated>
     <content type="html"><![CDATA[<p>arouter-api version : 1.4.1</p>
 <h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>之前对 ActivityRouter 的源码做了一次分析，相信大家对路由框架已经有一个大概的理解了。</p>
 <p>而今天给大家分析一下 ARouter 。大家在项目组件化的过程中，可能绝大多数的开发者都会使用 ARouter 来作为项目的路由框架。毕竟 ARouter 是阿里出品，优点自然不必多说了。</p>
@@ -117,6 +180,8 @@
 <li>对 IRouteRoot 页面跳转进行源码解析；</li>
 <li>对 IInterceptorGroup 拦截器进行源码解析；</li>
 <li>对 @Autowired 自动注入进行源码解析；</li>
+<li>对 ARouter 的 arouter-compiler 进行源码分析；</li>
+<li>对 ARouter 的 arouter-register 进行源码分析；</li>
 </ol>
 <p>本篇是 ARouter 系列的第一篇，下面就对 IRouteRoot 页面跳转进行详细解析。</p>
 <h1 id="ARouter__u6E90_u7801"><a href="#ARouter__u6E90_u7801" class="headerlink" title="ARouter 源码"></a>ARouter 源码</h1><p>使用 ARouter 的时候，都需要初始化</p>
@@ -210,7 +275,7 @@
 </code></pre><p>再然后我们就要对这个记录做一些处理，能让 Git 识别这些代码提交者</p>
 <pre><code>vi svn-history.txt
 </code></pre><p>把内容改成如下：</p>
-<p>xiaoming = xiaoming  <a href="&#109;&#97;&#x69;&#108;&#116;&#x6f;&#58;&#x78;&#105;&#97;&#111;&#109;&#105;&#110;&#103;&#64;&#49;&#54;&#x33;&#x2e;&#99;&#111;&#109;">&#x78;&#105;&#97;&#111;&#109;&#105;&#110;&#103;&#64;&#49;&#54;&#x33;&#x2e;&#99;&#111;&#109;</a><br>xiaowang = xiaowang  <a href="&#109;&#97;&#105;&#x6c;&#x74;&#111;&#x3a;&#120;&#x69;&#x61;&#x6f;&#119;&#x61;&#110;&#103;&#64;&#113;&#113;&#46;&#99;&#x6f;&#109;">&#120;&#x69;&#x61;&#x6f;&#119;&#x61;&#110;&#103;&#64;&#113;&#113;&#46;&#99;&#x6f;&#109;</a><br>xiaohong = xiaohong  <a href="&#109;&#x61;&#105;&#x6c;&#x74;&#111;&#58;&#x78;&#105;&#97;&#111;&#104;&#111;&#110;&#x67;&#x40;&#x71;&#x71;&#46;&#99;&#x6f;&#x6d;">&#x78;&#105;&#97;&#111;&#104;&#111;&#110;&#x67;&#x40;&#x71;&#x71;&#46;&#99;&#x6f;&#x6d;</a></p>
+<p>xiaoming = xiaoming  <a href="&#x6d;&#97;&#105;&#108;&#116;&#x6f;&#58;&#120;&#x69;&#x61;&#x6f;&#x6d;&#105;&#x6e;&#103;&#x40;&#49;&#54;&#51;&#x2e;&#x63;&#x6f;&#109;">&#120;&#x69;&#x61;&#x6f;&#x6d;&#105;&#x6e;&#103;&#x40;&#49;&#54;&#51;&#x2e;&#x63;&#x6f;&#109;</a><br>xiaowang = xiaowang  <a href="&#109;&#97;&#105;&#x6c;&#x74;&#x6f;&#x3a;&#120;&#105;&#97;&#x6f;&#x77;&#97;&#110;&#x67;&#x40;&#113;&#x71;&#x2e;&#99;&#111;&#x6d;">&#120;&#105;&#97;&#x6f;&#x77;&#97;&#110;&#x67;&#x40;&#113;&#x71;&#x2e;&#99;&#111;&#x6d;</a><br>xiaohong = xiaohong  <a href="&#109;&#97;&#105;&#108;&#x74;&#111;&#x3a;&#x78;&#105;&#x61;&#x6f;&#104;&#x6f;&#x6e;&#x67;&#x40;&#x71;&#x71;&#x2e;&#99;&#111;&#109;">&#x78;&#105;&#x61;&#x6f;&#104;&#x6f;&#x6e;&#x67;&#x40;&#x71;&#x71;&#x2e;&#99;&#111;&#109;</a></p>
 <p>保存好后，输入命令</p>
 <pre><code>git svn clone  svn://svn.yoursvnaddress.com/XXXX/  --no-metadata  --authors-file=svn-history.txt
 </code></pre><p>这条命令会在当前目录下新建一个 XXXX 项目，这个 XXXX 项目是用 Git 的。</p>
@@ -1515,551 +1580,6 @@ npm ERR!     C:\Users\h\AppData\Roaming\npm-cache\_logs\2017-11-25T07_25_19_228Z
       <category term="Vue.js" scheme="http://yuqirong.me/tags/Vue-js/"/>
     
       <category term="Vue.js" scheme="http://yuqirong.me/categories/Vue-js/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[VirtualAPK源码解析]]></title>
-    <link href="http://yuqirong.me/2017/11/12/VirtualAPK%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
-    <id>http://yuqirong.me/2017/11/12/VirtualAPK源码解析/</id>
-    <published>2017-11-12T14:03:58.000Z</published>
-    <updated>2017-11-12T15:34:52.817Z</updated>
-    <content type="html"><![CDATA[<h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>VirtualAPK 是滴滴开源的一款 Android 插件化的框架。</p>
-<p>现在市面上，成熟的插件化框架已经挺多了，那为什么还要重新开发一款轮子呢？</p>
-<ol>
-<li>大部分开源框架所支持的功能还不够全面</li>
-<li>兼容性问题严重，大部分开源方案不够健壮</li>
-<li>已有的开源方案不适合滴滴的业务场景</li>
-</ol>
-<p>在加载耦合插件方面，VirtualAPK是开源方案的首选。</p>
-<p>以上是滴滴给出的官方解释。</p>
-<p>对于我们开发者来说，这种当然是好事。第一，我们选择插件化框架的余地变多了；第二，我们也可以多学习学习框架内部实现的原理，一举两得。</p>
-<p>那就不说废话了，一起来看。</p>
-<h1 id="u4F7F_u7528_u65B9_u6CD5"><a href="#u4F7F_u7528_u65B9_u6CD5" class="headerlink" title="使用方法"></a>使用方法</h1><p>使用方法直接抄 GitHub 上的，就将就着看吧。</p>
-<ul>
-<li><p>第一步： 初始化插件引擎</p>
-  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">attachBaseContext</span><span class="params">(Context base)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.attachBaseContext(base);</span><br><span class="line">    PluginManager.getInstance(base).init();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>第二步：加载插件</p>
-  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PluginManager</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">loadPlugin</span><span class="params">(File apk)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>  当插件入口被调用后，插件的后续逻辑均不需要宿主干预，均走原生的Android流程。 比如，在插件内部，如下代码将正确执行：</p>
-  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    setContentView(R.layout.activity_book_manager);</span><br><span class="line">    LinearLayout holder = (LinearLayout)findViewById(R.id.holder);</span><br><span class="line">    TextView imei = (TextView)findViewById(R.id.imei);</span><br><span class="line">    imei.setText(IDUtil.getUUID(<span class="keyword">this</span>));</span><br><span class="line">     </span><br><span class="line">    <span class="comment">// bind service in plugin</span></span><br><span class="line">    Intent service = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, BookManagerService.class);</span><br><span class="line">    bindService(service, mConnection, Context.BIND_AUTO_CREATE);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// start activity in plugin</span></span><br><span class="line">    Intent intent = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, TCPClientActivity.class);</span><br><span class="line">    startActivity(intent);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h1 id="u6E90_u7801_u89E3_u6790"><a href="#u6E90_u7801_u89E3_u6790" class="headerlink" title="源码解析"></a>源码解析</h1><p>使用方法很简单，下面就顺着上面的代码一步步去探究实现原理。</p>
-<h2 id="u521D_u59CB_u5316_u63D2_u4EF6_u6846_u67B6"><a href="#u521D_u59CB_u5316_u63D2_u4EF6_u6846_u67B6" class="headerlink" title="初始化插件框架"></a>初始化插件框架</h2><p>第一步就是初始化框架：<code>PluginManager.getInstance(base).init();</code></p>
-<h3 id="PluginManager-getInstance_28Context_base_29"><a href="#PluginManager-getInstance_28Context_base_29" class="headerlink" title="PluginManager.getInstance(Context base)"></a>PluginManager.getInstance(Context base)</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> PluginManager <span class="title">getInstance</span><span class="params">(Context base)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (sInstance == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (PluginManager.class) &#123;</span><br><span class="line">            <span class="keyword">if</span> (sInstance == <span class="keyword">null</span>)</span><br><span class="line">                sInstance = <span class="keyword">new</span> PluginManager(base);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sInstance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">PluginManager</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    Context app = context.getApplicationContext();</span><br><span class="line">    <span class="keyword">if</span> (app == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>.mContext = context;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.mContext = ((Application)app).getBaseContext();</span><br><span class="line">    &#125;</span><br><span class="line">    prepare();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>PluginManager 设计为了单例模式，负责管理插件的一些操作。</p>
-<p>在初始化的时候，得到全局 Context ，以防出现内存泄漏的情况。</p>
-<p>之后调用了 <code>prepare()</code> 方法，做一些预备操作。</p>
-<h3 id="prepare_28_29"><a href="#prepare_28_29" class="headerlink" title="prepare()"></a>prepare()</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">prepare</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="comment">// host base context</span></span><br><span class="line">      Systems.sHostContext = getHostContext();</span><br><span class="line"><span class="comment">// hook instrumentation</span></span><br><span class="line">      <span class="keyword">this</span>.hookInstrumentationAndHandler();</span><br><span class="line">      <span class="keyword">this</span>.hookSystemServices();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-<p>在 <code>prepare()</code> 中，将宿主 Context 赋值给了 Systems.sHostContext 。这样，在之后的代码中可以方便地访问到宿主 Context 。</p>
-<p>然后分为了两步操作，hookInstrumentationAndHandler 和 hookSystemServices 。为运行插件做一些必要的 hook 操作。</p>
-<h3 id="hookInstrumentationAndHandler_28_29"><a href="#hookInstrumentationAndHandler_28_29" class="headerlink" title="hookInstrumentationAndHandler()"></a>hookInstrumentationAndHandler()</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">hookInstrumentationAndHandler</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Instrumentation baseInstrumentation = ReflectUtil.getInstrumentation(<span class="keyword">this</span>.mContext);</span><br><span class="line">        <span class="keyword">if</span> (baseInstrumentation.getClass().getName().contains(<span class="string">"lbe"</span>)) &#123;</span><br><span class="line">            <span class="comment">// reject executing in paralell space, for example, lbe.</span></span><br><span class="line">            System.exit(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 创建插件的 instrumentation</span></span><br><span class="line">        <span class="keyword">final</span> VAInstrumentation instrumentation = <span class="keyword">new</span> VAInstrumentation(<span class="keyword">this</span>, baseInstrumentation);</span><br><span class="line">        Object activityThread = ReflectUtil.getActivityThread(<span class="keyword">this</span>.mContext);</span><br><span class="line">        <span class="comment">// 将插件的 instrumentation 设置到当前的 activityThread 中</span></span><br><span class="line">        ReflectUtil.setInstrumentation(activityThread, instrumentation);</span><br><span class="line">        <span class="comment">// 给 mainThreadHandler 设置 callback</span></span><br><span class="line">        ReflectUtil.setHandlerCallback(<span class="keyword">this</span>.mContext, instrumentation);</span><br><span class="line">        <span class="keyword">this</span>.mInstrumentation = instrumentation;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="hookSystemServices_28_29"><a href="#hookSystemServices_28_29" class="headerlink" title="hookSystemServices()"></a>hookSystemServices()</h2><pre><code>private void hookSystemServices() {
-    try {
-        // 得到当前系统中的 ActivityManager 单例
-        Singleton&lt;IActivityManager&gt; defaultSingleton = (Singleton&lt;IActivityManager&gt;) ReflectUtil.getField(ActivityManagerNative.class, null, &quot;gDefault&quot;);
-        // 创建 ActivityManager 的动态代理 
-        IActivityManager activityManagerProxy = ActivityManagerProxy.newInstance(this, defaultSingleton.get());
-
-        // Hook IActivityManager from ActivityManagerNative  利用反射将系统的 ActivityManager 单例替换为 activityManagerProxy 
-        ReflectUtil.setField(defaultSingleton.getClass().getSuperclass(), defaultSingleton, &quot;mInstance&quot;, activityManagerProxy);
-
-        if (defaultSingleton.get() == activityManagerProxy) {
-            this.mActivityManager = activityManagerProxy;
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-</code></pre><h2 id="init_28_29"><a href="#init_28_29" class="headerlink" title="init()"></a>init()</h2><pre><code>public void init() {
-    // ComponentsHandler 感觉像是插件中四大组件的管理者
-    mComponentsHandler = new ComponentsHandler(this);
-    // 用的是 asynctask 的线程池
-    RunUtil.getThreadPool().execute(new Runnable() {
-        @Override
-        public void run() {
-            // 空方法，给之后的东西，万一有什么需要初始化的
-            doInWorkThread();
-        }
-    });
-}
-
-private void doInWorkThread() {
-}
-</code></pre><h1 id="u52A0_u8F7D_u63D2_u4EF6"><a href="#u52A0_u8F7D_u63D2_u4EF6" class="headerlink" title="加载插件"></a>加载插件</h1><p>load plugin apk ：</p>
-<pre><code>PluginManager.getInstance(base).loadPlugin(apk);
-</code></pre><h2 id="loadPlugin_28File_apk_29"><a href="#loadPlugin_28File_apk_29" class="headerlink" title="loadPlugin(File apk)"></a>loadPlugin(File apk)</h2><pre><code>public void loadPlugin(File apk) throws Exception {
-    if (null == apk) {
-        throw new IllegalArgumentException(&quot;error : apk is null.&quot;);
-    }
-
-    if (!apk.exists()) {
-        throw new FileNotFoundException(apk.getAbsolutePath());
-    }
-
-    LoadedPlugin plugin = LoadedPlugin.create(this, this.mContext, apk);
-    if (null != plugin) {
-        this.mPlugins.put(plugin.getPackageName(), plugin);
-        // 创建插件中的 application
-        plugin.invokeApplication();
-    } else {
-        throw  new RuntimeException(&quot;Can&apos;t load plugin which is invalid: &quot; + apk.getAbsolutePath());
-    }
-}
-</code></pre><h2 id="LoadedPlugin"><a href="#LoadedPlugin" class="headerlink" title="LoadedPlugin"></a>LoadedPlugin</h2><h3 id="PackageParserCompat-parsePackage"><a href="#PackageParserCompat-parsePackage" class="headerlink" title="PackageParserCompat.parsePackage"></a>PackageParserCompat.parsePackage</h3><pre><code>public static final PackageParser.Package parsePackage(final Context context, final File apk, final int flags) throws PackageParser.PackageParserException {
-    if (Build.VERSION.SDK_INT &gt;= 24) {
-        return PackageParserV24.parsePackage(context, apk, flags);
-    } else if (Build.VERSION.SDK_INT &gt;= 21) {
-        return PackageParserLollipop.parsePackage(context, apk, flags);
-    } else {
-        return PackageParserLegacy.parsePackage(context, apk, flags);
-    }
-}
-</code></pre><h3 id="new_PackageInfo_28_29"><a href="#new_PackageInfo_28_29" class="headerlink" title="new PackageInfo()"></a>new PackageInfo()</h3><pre><code>this.mPackageInfo = new PackageInfo();
-this.mPackageInfo.applicationInfo = this.mPackage.applicationInfo;
-this.mPackageInfo.applicationInfo.sourceDir = apk.getAbsolutePath();
-this.mPackageInfo.signatures = this.mPackage.mSignatures;
-this.mPackageInfo.packageName = this.mPackage.packageName;
-if (pluginManager.getLoadedPlugin(mPackageInfo.packageName) != null) {
-    throw new RuntimeException(&quot;plugin has already been loaded : &quot; + mPackageInfo.packageName);
-}
-this.mPackageInfo.versionCode = this.mPackage.mVersionCode;
-this.mPackageInfo.versionName = this.mPackage.mVersionName;
-this.mPackageInfo.permissions = new PermissionInfo[0];
-</code></pre><h3 id="createResources_28context_2C_apk_29"><a href="#createResources_28context_2C_apk_29" class="headerlink" title="createResources(context, apk)"></a>createResources(context, apk)</h3><pre><code>@WorkerThread
-private static Resources createResources(Context context, File apk) {
-    if (Constants.COMBINE_RESOURCES) {
-        //如果插件资源合并到宿主里面去的情况，插件可以访问宿主的资源
-        Resources resources = new ResourcesManager().createResources(context, apk.getAbsolutePath());
-        // hook resource
-        ResourcesManager.hookResources(context, resources);
-        return resources;
-    } else {
-        //插件使用独立的Resources，不与宿主有关系，无法访问到宿主的资源
-        Resources hostResources = context.getResources();
-        // 利用 addAssetPath 来创建 assetManager
-        AssetManager assetManager = createAssetManager(context, apk);
-        // 创建 Resources
-        return new Resources(assetManager, hostResources.getDisplayMetrics(), hostResources.getConfiguration());
-    }
-}
-</code></pre><h2 id="createResources_28Context_hostContext_2C_String_apk_29"><a href="#createResources_28Context_hostContext_2C_String_apk_29" class="headerlink" title="createResources(Context hostContext, String apk)"></a>createResources(Context hostContext, String apk)</h2><pre><code>public static synchronized Resources createResources(Context hostContext, String apk) {
-    Resources hostResources = hostContext.getResources();
-    Resources newResources = null;
-    AssetManager assetManager;
-    try {
-        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.LOLLIPOP) {
-            // 在Android 5.0 之前，addAssetPath 只是把 apk 路径加入到资源路径列表里
-            // 但是资源的解析其实是在很早的时候就已经执行完了
-            // 所以重新构造一个新的 AssetManager，再 hook resource 替换系统的 mResource
-            assetManager = AssetManager.class.newInstance();
-            ReflectUtil.invoke(AssetManager.class, assetManager, &quot;addAssetPath&quot;, hostContext.getApplicationInfo().sourceDir);
-        } else {
-            // Android 5.0 资源做过分区，直接获取宿主的 assetManager
-            assetManager = hostResources.getAssets();
-        }
-        // 将当前插件的资源路径加入到 assetManager 中
-        ReflectUtil.invoke(AssetManager.class, assetManager, &quot;addAssetPath&quot;, apk);
-        // 获取之前加载完毕的插件，得到它们的 apk 路径再重新添加到 assetManager 中
-        // 是否在 Android 5.0 及以上不需要此步骤？
-        List&lt;LoadedPlugin&gt; pluginList = PluginManager.getInstance(hostContext).getAllLoadedPlugins();
-        for (LoadedPlugin plugin : pluginList) {
-            ReflectUtil.invoke(AssetManager.class, assetManager, &quot;addAssetPath&quot;, plugin.getLocation());
-        }
-        // 对一些安卓厂商做兼容性处理，Resources 的类名各不同
-        // 创建 resource
-        if (isMiUi(hostResources)) {
-            newResources = MiUiResourcesCompat.createResources(hostResources, assetManager);
-        } else if (isVivo(hostResources)) {
-            newResources = VivoResourcesCompat.createResources(hostContext, hostResources, assetManager);
-        } else if (isNubia(hostResources)) {
-            newResources = NubiaResourcesCompat.createResources(hostResources, assetManager);
-        } else if (isNotRawResources(hostResources)) {
-            newResources = AdaptationResourcesCompat.createResources(hostResources, assetManager);
-        } else {
-            // is raw android resources
-            newResources = new Resources(assetManager, hostResources.getDisplayMetrics(), hostResources.getConfiguration());
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return newResources;
-}
-</code></pre><h2 id="hookResources_28Context_base_2C_Resources_resources_29"><a href="#hookResources_28Context_base_2C_Resources_resources_29" class="headerlink" title="hookResources(Context base, Resources resources)"></a>hookResources(Context base, Resources resources)</h2><pre><code>public static void hookResources(Context base, Resources resources) {
-    if (Build.VERSION.SDK_INT &gt;= 24) {
-        return;
-    }
-
-    try {
-        // 替换 hostContext 中的 mResources
-        ReflectUtil.setField(base.getClass(), base, &quot;mResources&quot;, resources);
-        // 替换 packageInfo 中的 mResources
-        Object loadedApk = ReflectUtil.getPackageInfo(base);
-        ReflectUtil.setField(loadedApk.getClass(), loadedApk, &quot;mResources&quot;, resources);
-        // 将 resource 放入 mActiveResources 中
-        Object activityThread = ReflectUtil.getActivityThread(base);
-        Object resManager = ReflectUtil.getField(activityThread.getClass(), activityThread, &quot;mResourcesManager&quot;);
-        Map&lt;Object, WeakReference&lt;Resources&gt;&gt; map = (Map&lt;Object, WeakReference&lt;Resources&gt;&gt;) ReflectUtil.getField(resManager.getClass(), resManager, &quot;mActiveResources&quot;);
-        Object key = map.keySet().iterator().next();
-        map.put(key, new WeakReference&lt;&gt;(resources));
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-</code></pre><h3 id="createClassLoader_28Context_context_2C_File_apk_2C_File_libsDir_2C_ClassLoader_parent_29"><a href="#createClassLoader_28Context_context_2C_File_apk_2C_File_libsDir_2C_ClassLoader_parent_29" class="headerlink" title="createClassLoader(Context context, File apk, File libsDir, ClassLoader parent)"></a>createClassLoader(Context context, File apk, File libsDir, ClassLoader parent)</h3><pre><code>private static ClassLoader createClassLoader(Context context, File apk, File libsDir, ClassLoader parent) {
-    // create classloader
-    File dexOutputDir = context.getDir(Constants.OPTIMIZE_DIR, Context.MODE_PRIVATE);
-    String dexOutputPath = dexOutputDir.getAbsolutePath();
-    DexClassLoader loader = new DexClassLoader(apk.getAbsolutePath(), dexOutputPath, libsDir.getAbsolutePath(), parent);
-    // 如果合并，就会把宿主的 classloader 中的 dex 加入到插件中的 classloader
-    if (Constants.COMBINE_CLASSLOADER) {
-        try {
-            DexUtil.insertDex(loader);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    return loader;
-}
-</code></pre><h3 id="tryToCopyNativeLib_28apk_29_3B"><a href="#tryToCopyNativeLib_28apk_29_3B" class="headerlink" title="tryToCopyNativeLib(apk);"></a>tryToCopyNativeLib(apk);</h3><p>复制 .so 文件</p>
-<h3 id="Cache_instrumentations"><a href="#Cache_instrumentations" class="headerlink" title="Cache instrumentations"></a>Cache instrumentations</h3><pre><code>Map&lt;ComponentName, InstrumentationInfo&gt; instrumentations = new HashMap&lt;ComponentName, InstrumentationInfo&gt;();
-for (PackageParser.Instrumentation instrumentation : this.mPackage.instrumentation) {
-    instrumentations.put(instrumentation.getComponentName(), instrumentation.info);
-}
-this.mInstrumentationInfos = Collections.unmodifiableMap(instrumentations);
-this.mPackageInfo.instrumentation = instrumentations.values().toArray(new InstrumentationInfo[instrumentations.size()]);
-</code></pre><h3 id="Cache_activities"><a href="#Cache_activities" class="headerlink" title="Cache activities"></a>Cache activities</h3><pre><code>Map&lt;ComponentName, ActivityInfo&gt; activityInfos = new HashMap&lt;ComponentName, ActivityInfo&gt;();
-for (PackageParser.Activity activity : this.mPackage.activities) {
-    activityInfos.put(activity.getComponentName(), activity.info);
-}
-this.mActivityInfos = Collections.unmodifiableMap(activityInfos);
-this.mPackageInfo.activities = activityInfos.values().toArray(new ActivityInfo[activityInfos.size()]);
-</code></pre><h3 id="Cache_providers"><a href="#Cache_providers" class="headerlink" title="Cache providers"></a>Cache providers</h3><pre><code>Map&lt;String, ProviderInfo&gt; providers = new HashMap&lt;String, ProviderInfo&gt;();
-Map&lt;ComponentName, ProviderInfo&gt; providerInfos = new HashMap&lt;ComponentName, ProviderInfo&gt;();
-for (PackageParser.Provider provider : this.mPackage.providers) {
-    providers.put(provider.info.authority, provider.info);
-    providerInfos.put(provider.getComponentName(), provider.info);
-}
-this.mProviders = Collections.unmodifiableMap(providers);
-this.mProviderInfos = Collections.unmodifiableMap(providerInfos);
-this.mPackageInfo.providers = providerInfos.values().toArray(new ProviderInfo[providerInfos.size()]);
-</code></pre><h3 id="Register_broadcast_receivers_dynamically"><a href="#Register_broadcast_receivers_dynamically" class="headerlink" title="Register broadcast receivers dynamically"></a>Register broadcast receivers dynamically</h3><pre><code>Map&lt;ComponentName, ActivityInfo&gt; receivers = new HashMap&lt;ComponentName, ActivityInfo&gt;();
-for (PackageParser.Activity receiver : this.mPackage.receivers) {
-    receivers.put(receiver.getComponentName(), receiver.info);
-
-    try {
-        // 得到插件中的 BroadcastReceiver 的实例
-        BroadcastReceiver br = BroadcastReceiver.class.cast(getClassLoader().loadClass(receiver.getComponentName().getClassName()).newInstance());
-        // 注册广播
-        for (PackageParser.ActivityIntentInfo aii : receiver.intents) {
-            this.mHostContext.registerReceiver(br, aii);
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-this.mReceiverInfos = Collections.unmodifiableMap(receivers);
-this.mPackageInfo.receivers = receivers.values().toArray(new ActivityInfo[receivers.size()]);
-</code></pre><h1 id="u63D2_u4EF6Activity_u52A0_u8F7D_u8FC7_u7A0B"><a href="#u63D2_u4EF6Activity_u52A0_u8F7D_u8FC7_u7A0B" class="headerlink" title="插件Activity加载过程"></a>插件Activity加载过程</h1><h1 id="VAInstrumentation"><a href="#VAInstrumentation" class="headerlink" title="VAInstrumentation"></a>VAInstrumentation</h1><h2 id="execStartActivity"><a href="#execStartActivity" class="headerlink" title="execStartActivity"></a>execStartActivity</h2><pre><code>public ActivityResult execStartActivity(
-        Context who, IBinder contextThread, IBinder token, Activity target,
-        Intent intent, int requestCode, Bundle options) {
-    // 这个主要是当component为null时，根据启动Activity时，配置的action，data,category等去已加载的plugin中匹配到确定的Activity的。
-    mPluginManager.getComponentsHandler().transformIntentToExplicitAsNeeded(intent);
-    // null component is an implicitly intent
-    if (intent.getComponent() != null) {
-        Log.i(TAG, String.format(&quot;execStartActivity[%s : %s]&quot;, intent.getComponent().getPackageName(),
-                intent.getComponent().getClassName()));
-        // 先将 intent 中的 packagename 和 classname 替换为 Stub Activity
-        this.mPluginManager.getComponentsHandler().markIntentIfNeeded(intent);
-    }
-    // 利用反射去执行原来的 execStartActivity 方法
-    ActivityResult result = realExecStartActivity(who, contextThread, token, target,
-                intent, requestCode, options);
-
-    return result;
-
-}
-</code></pre><h2 id="ComponentsHandler"><a href="#ComponentsHandler" class="headerlink" title="ComponentsHandler"></a>ComponentsHandler</h2><h2 id="transformIntentToExplicitAsNeeded"><a href="#transformIntentToExplicitAsNeeded" class="headerlink" title="transformIntentToExplicitAsNeeded"></a>transformIntentToExplicitAsNeeded</h2><pre><code>public Intent transformIntentToExplicitAsNeeded(Intent intent) {
-    ComponentName component = intent.getComponent();
-    if (component == null) {
-        ResolveInfo info = mPluginManager.resolveActivity(intent);
-        if (info != null &amp;&amp; info.activityInfo != null) {
-            component = new ComponentName(info.activityInfo.packageName, info.activityInfo.name);
-            intent.setComponent(component);
-        }
-    }
-
-    return intent;
-}
-</code></pre><h2 id="markIntentIfNeeded"><a href="#markIntentIfNeeded" class="headerlink" title="markIntentIfNeeded"></a>markIntentIfNeeded</h2><pre><code>public void markIntentIfNeeded(Intent intent) {
-    if (intent.getComponent() == null) {
-        return;
-    }
-    String targetPackageName = intent.getComponent().getPackageName();
-    String targetClassName = intent.getComponent().getClassName();
-    // search map and return specific launchmode stub activity
-    // 先将目标的 packagename 和 classname 保存好，之后以便恢复的
-    if (!targetPackageName.equals(mContext.getPackageName()) &amp;&amp; mPluginManager.getLoadedPlugin(targetPackageName) != null) {
-        intent.putExtra(Constants.KEY_IS_PLUGIN, true);
-        intent.putExtra(Constants.KEY_TARGET_PACKAGE, targetPackageName);
-        intent.putExtra(Constants.KEY_TARGET_ACTIVITY, targetClassName);
-        // 根据 launchMode 、theme 查找对应类型的 stub activity
-        // 并将 intent 中的目标 activity 替换为 stub activity
-        dispatchStubActivity(intent);
-    }
-}
-</code></pre><h1 id="VAInstrumentation-1"><a href="#VAInstrumentation-1" class="headerlink" title="VAInstrumentation"></a>VAInstrumentation</h1><h2 id="newActivity"><a href="#newActivity" class="headerlink" title="newActivity"></a>newActivity</h2><pre><code>@Override
-public Activity newActivity(ClassLoader cl, String className, Intent intent) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-    try {
-        cl.loadClass(className);
-    } catch (ClassNotFoundException e) {
-        // 若出错则说明要启动的是插件里面的classname
-        LoadedPlugin plugin = this.mPluginManager.getLoadedPlugin(intent);
-        String targetClassName = PluginUtil.getTargetActivity(intent);
-
-        Log.i(TAG, String.format(&quot;newActivity[%s : %s]&quot;, className, targetClassName));
-
-        if (targetClassName != null) {
-            Activity activity = mBase.newActivity(plugin.getClassLoader(), targetClassName, intent);
-            activity.setIntent(intent);
-
-            try {
-                // for 4.1+  设置好 resource
-                ReflectUtil.setField(ContextThemeWrapper.class, activity, &quot;mResources&quot;, plugin.getResources());
-            } catch (Exception ignored) {
-                // ignored.
-            }
-
-            return activity;
-        }
-    }
-    // 启动的不是插件中的activity就使用原来的
-    return mBase.newActivity(cl, className, intent);
-}
-</code></pre><h2 id="callActivityOnCreate"><a href="#callActivityOnCreate" class="headerlink" title="callActivityOnCreate"></a>callActivityOnCreate</h2><pre><code>@Override
-public void callActivityOnCreate(Activity activity, Bundle icicle) {
-    final Intent intent = activity.getIntent();
-    // 根据 KEY_IS_PLUGIN 来判断是否是启动插件 activity
-    if (PluginUtil.isIntentFromPlugin(intent)) {
-        Context base = activity.getBaseContext();
-        try {
-            // 将创建出来的插件 activity 中 mResources mBase mApplication 进行替换
-            LoadedPlugin plugin = this.mPluginManager.getLoadedPlugin(intent);
-            ReflectUtil.setField(base.getClass(), base, &quot;mResources&quot;, plugin.getResources());
-            ReflectUtil.setField(ContextWrapper.class, activity, &quot;mBase&quot;, plugin.getPluginContext());
-            ReflectUtil.setField(Activity.class, activity, &quot;mApplication&quot;, plugin.getApplication());
-            ReflectUtil.setFieldNoException(ContextThemeWrapper.class, activity, &quot;mBase&quot;, plugin.getPluginContext());
-
-            // set screenOrientation 设置屏幕方向
-            ActivityInfo activityInfo = plugin.getActivityInfo(PluginUtil.getComponent(intent));
-            if (activityInfo.screenOrientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
-                activity.setRequestedOrientation(activityInfo.screenOrientation);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    mBase.callActivityOnCreate(activity, icicle);
-}
-</code></pre><h1 id="u63D2_u4EF6Service_u52A0_u8F7D_u8FC7_u7A0B"><a href="#u63D2_u4EF6Service_u52A0_u8F7D_u8FC7_u7A0B" class="headerlink" title="插件Service加载过程"></a>插件Service加载过程</h1><h1 id="ActivityManagerProxy"><a href="#ActivityManagerProxy" class="headerlink" title="ActivityManagerProxy"></a>ActivityManagerProxy</h1><h2 id="invoke"><a href="#invoke" class="headerlink" title="invoke"></a>invoke</h2><pre><code>@Override
-public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    if (&quot;startService&quot;.equals(method.getName())) {
-        try {
-            return startService(proxy, method, args);
-        } catch (Throwable e) {
-            Log.e(TAG, &quot;Start service error&quot;, e);
-        }
-    } 
-    ...
-}
-</code></pre><h2 id="startService"><a href="#startService" class="headerlink" title="startService"></a>startService</h2><pre><code>private Object startService(Object proxy, Method method, Object[] args) throws Throwable {
-    IApplicationThread appThread = (IApplicationThread) args[0];
-    Intent target = (Intent) args[1];
-    ResolveInfo resolveInfo = this.mPluginManager.resolveService(target, 0);
-    if (null == resolveInfo || null == resolveInfo.serviceInfo) {
-        // 如果为空的话，不是启动的插件service
-        return method.invoke(this.mActivityManager, args);
-    }
-    // 
-    return startDelegateServiceForTarget(target, resolveInfo.serviceInfo, null, RemoteService.EXTRA_COMMAND_START_SERVICE);
-}
-</code></pre><h2 id="startDelegateServiceForTarget"><a href="#startDelegateServiceForTarget" class="headerlink" title="startDelegateServiceForTarget"></a>startDelegateServiceForTarget</h2><pre><code>private ComponentName startDelegateServiceForTarget(Intent target, ServiceInfo serviceInfo, Bundle extras, int command) {
-    Intent wrapperIntent = wrapperTargetIntent(target, serviceInfo, extras, command);
-    return mPluginManager.getHostContext().startService(wrapperIntent);
-}
-</code></pre><h2 id="wrapperTargetIntent"><a href="#wrapperTargetIntent" class="headerlink" title="wrapperTargetIntent"></a>wrapperTargetIntent</h2><pre><code>private Intent wrapperTargetIntent(Intent target, ServiceInfo serviceInfo, Bundle extras, int command) {
-    // fill in service with ComponentName
-    target.setComponent(new ComponentName(serviceInfo.packageName, serviceInfo.name));
-    String pluginLocation = mPluginManager.getLoadedPlugin(target.getComponent()).getLocation();
-
-    // start delegate service to run plugin service inside
-    // 检查插件 service 是否是本地还是远程，再选择相对应的 delegate service
-    boolean local = PluginUtil.isLocalService(serviceInfo);
-    Class&lt;? extends Service&gt; delegate = local ? LocalService.class : RemoteService.class;
-    // 创建新的 intent ，用来启动 delegate service。intent 中会保存插件 service 的相关信息
-    Intent intent = new Intent();
-    // 设置 class 为对应的 delegate service classname
-    intent.setClass(mPluginManager.getHostContext(), delegate);
-    intent.putExtra(RemoteService.EXTRA_TARGET, target);
-    intent.putExtra(RemoteService.EXTRA_COMMAND, command);
-    intent.putExtra(RemoteService.EXTRA_PLUGIN_LOCATION, pluginLocation);
-    if (extras != null) {
-        intent.putExtras(extras);
-    }
-
-    return intent;
-}
-</code></pre><h1 id="LocalService"><a href="#LocalService" class="headerlink" title="LocalService"></a>LocalService</h1><h2 id="onStartCommand"><a href="#onStartCommand" class="headerlink" title="onStartCommand"></a>onStartCommand</h2><pre><code>@Override
-public int onStartCommand(Intent intent, int flags, int startId) {
-    if (null == intent || !intent.hasExtra(EXTRA_TARGET) || !intent.hasExtra(EXTRA_COMMAND)) {
-        return START_STICKY;
-    }
-
-    Intent target = intent.getParcelableExtra(EXTRA_TARGET);
-    int command = intent.getIntExtra(EXTRA_COMMAND, 0);
-    if (null == target || command &lt;= 0) {
-        return START_STICKY;
-    }
-
-    ComponentName component = target.getComponent();
-    LoadedPlugin plugin = mPluginManager.getLoadedPlugin(component);
-
-    switch (command) {
-        case EXTRA_COMMAND_START_SERVICE: {
-            ActivityThread mainThread = (ActivityThread) ReflectUtil.getActivityThread(getBaseContext());
-            IApplicationThread appThread = mainThread.getApplicationThread();
-            Service service;
-            // 判断该插件的 service 是否已经创建过
-            if (this.mPluginManager.getComponentsHandler().isServiceAvailable(component)) {
-                // 直接从已启动服务 map 中取出该插件的 service
-                service = this.mPluginManager.getComponentsHandler().getService(component);
-            } else {
-                try {
-                    // 创建插件 service 对象
-                    service = (Service) plugin.getClassLoader().loadClass(component.getClassName()).newInstance();
-
-                    // 需要调用 attach
-                    Application app = plugin.getApplication();
-                    IBinder token = appThread.asBinder();
-                    Method attach = service.getClass().getMethod(&quot;attach&quot;, Context.class, ActivityThread.class, String.class, IBinder.class, Application.class, Object.class);
-                    IActivityManager am = mPluginManager.getActivityManager();
-                    attach.invoke(service, plugin.getPluginContext(), mainThread, component.getClassName(), token, app, am);
-                    // oncreate
-                    service.onCreate();
-                    // 放入已启动服务 map 中
-                    this.mPluginManager.getComponentsHandler().rememberService(component, service);
-                } catch (Throwable t) {
-                    return START_STICKY;
-                }
-            }
-            // 调用 onStartCommand
-            service.onStartCommand(target, 0, this.mPluginManager.getComponentsHandler().getServiceCounter(service).getAndIncrement());
-            break;
-        }
-    ...
-}
-</code></pre><h1 id="u63D2_u4EF6BroadcastReceiver_u52A0_u8F7D_u8FC7_u7A0B"><a href="#u63D2_u4EF6BroadcastReceiver_u52A0_u8F7D_u8FC7_u7A0B" class="headerlink" title="插件BroadcastReceiver加载过程"></a>插件BroadcastReceiver加载过程</h1><h1 id="LoadedPlugin-1"><a href="#LoadedPlugin-1" class="headerlink" title="LoadedPlugin"></a>LoadedPlugin</h1><pre><code>Map&lt;ComponentName, ActivityInfo&gt; receivers = new HashMap&lt;ComponentName, ActivityInfo&gt;();
-for (PackageParser.Activity receiver : this.mPackage.receivers) {
-    receivers.put(receiver.getComponentName(), receiver.info);
-
-    try {
-        // 得到插件中的 BroadcastReceiver 的实例
-        BroadcastReceiver br = BroadcastReceiver.class.cast(getClassLoader().loadClass(receiver.getComponentName().getClassName()).newInstance());
-        // 注册广播
-        for (PackageParser.ActivityIntentInfo aii : receiver.intents) {
-            this.mHostContext.registerReceiver(br, aii);
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-</code></pre><h1 id="u63D2_u4EF6ContentProvider_u52A0_u8F7D_u8FC7_u7A0B"><a href="#u63D2_u4EF6ContentProvider_u52A0_u8F7D_u8FC7_u7A0B" class="headerlink" title="插件ContentProvider加载过程"></a>插件ContentProvider加载过程</h1><h1 id="PluginContext"><a href="#PluginContext" class="headerlink" title="PluginContext"></a>PluginContext</h1><pre><code>@Override
-public ContentResolver getContentResolver() {
-    return new PluginContentResolver(getHostContext());
-}
-</code></pre><h1 id="PluginContentResolver"><a href="#PluginContentResolver" class="headerlink" title="PluginContentResolver"></a>PluginContentResolver</h1><pre><code>public PluginContentResolver(Context context) {
-    super(context);
-    mBase = context.getContentResolver();
-    mPluginManager = PluginManager.getInstance(context);
-}
-</code></pre><h2 id="acquireProvider"><a href="#acquireProvider" class="headerlink" title="acquireProvider"></a>acquireProvider</h2><pre><code>protected IContentProvider acquireProvider(Context context, String auth) {
-    try {
-        if (mPluginManager.resolveContentProvider(auth, 0) != null) {
-            return mPluginManager.getIContentProvider();
-        }
-
-        return (IContentProvider) sAcquireProvider.invoke(mBase, context, auth);
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-
-    return null;
-}
-</code></pre><h1 id="PluginManager"><a href="#PluginManager" class="headerlink" title="PluginManager"></a>PluginManager</h1><h2 id="getIContentProvider"><a href="#getIContentProvider" class="headerlink" title="getIContentProvider"></a>getIContentProvider</h2><pre><code>public synchronized IContentProvider getIContentProvider() {
-    if (mIContentProvider == null) {
-        hookIContentProviderAsNeeded();
-    }
-
-    return mIContentProvider;
-}
-</code></pre><h2 id="hookIContentProviderAsNeeded"><a href="#hookIContentProviderAsNeeded" class="headerlink" title="hookIContentProviderAsNeeded"></a>hookIContentProviderAsNeeded</h2><pre><code>private void hookIContentProviderAsNeeded() {
-    Uri uri = Uri.parse(PluginContentResolver.getUri(mContext));
-    mContext.getContentResolver().call(uri, &quot;wakeup&quot;, null, null);
-    try {
-        Field authority = null;
-        Field mProvider = null;
-        ActivityThread activityThread = (ActivityThread) ReflectUtil.getActivityThread(mContext);
-        Map mProviderMap = (Map) ReflectUtil.getField(activityThread.getClass(), activityThread, &quot;mProviderMap&quot;);
-        Iterator iter = mProviderMap.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            Object key = entry.getKey();
-            Object val = entry.getValue();
-            String auth;
-            if (key instanceof String) {
-                auth = (String) key;
-            } else {
-                if (authority == null) {
-                    authority = key.getClass().getDeclaredField(&quot;authority&quot;);
-                    authority.setAccessible(true);
-                }
-                auth = (String) authority.get(key);
-            }
-            if (auth.equals(PluginContentResolver.getAuthority(mContext))) {
-                if (mProvider == null) {
-                    mProvider = val.getClass().getDeclaredField(&quot;mProvider&quot;);
-                    mProvider.setAccessible(true);
-                }
-                IContentProvider rawProvider = (IContentProvider) mProvider.get(val);
-                IContentProvider proxy = IContentProviderProxy.newInstance(mContext, rawProvider);
-                mIContentProvider = proxy;
-                Log.d(TAG, &quot;hookIContentProvider succeed : &quot; + mIContentProvider);
-                break;
-            }
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-</code></pre>]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>VirtualAPK 是滴滴开源的一款 Android 插件化的框架。</p>
-<p>现在市面上，成熟的插件]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
-    
-      <category term="插件化" scheme="http://yuqirong.me/tags/%E6%8F%92%E4%BB%B6%E5%8C%96/"/>
-    
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
-    
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
   </entry>
   
