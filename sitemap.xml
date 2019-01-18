@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yuqirong.me/2019/01/13/%E4%BD%BF%E7%94%A8OpenCV%E5%8E%BB%E7%87%A5%E5%92%8C%E4%BA%8C%E5%80%BC%E5%8C%96%E5%9B%BE%E7%89%87/</loc>
+    <lastmod>2019-01-18T14:10:55.063Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/about/index.html</loc>
+    <lastmod>2019-01-12T14:12:05.606Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://yuqirong.me/2019/01/10/ARouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%BA%94%EF%BC%89/</loc>
     <lastmod>2019-01-10T16:15:42.957Z</lastmod>
   </url>
@@ -39,11 +49,6 @@
   <url>
     <loc>http://yuqirong.me/2018/11/13/Linux%E4%B8%8A%E5%AE%89%E8%A3%85GitLab%E5%92%8CJenkins/</loc>
     <lastmod>2018-11-13T15:01:46.571Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/about/index.html</loc>
-    <lastmod>2018-11-11T12:50:09.032Z</lastmod>
   </url>
   
   <url>

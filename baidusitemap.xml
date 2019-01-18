@@ -4,6 +4,29 @@
 
     
   <url>
+    <loc>http://yuqirong.me/2019/01/13/%E4%BD%BF%E7%94%A8OpenCV%E5%8E%BB%E7%87%A5%E5%92%8C%E4%BA%8C%E5%80%BC%E5%8C%96%E5%9B%BE%E7%89%87/</loc>
+    <lastmod>2019-01-18T14:10:55.063Z</lastmod>
+    <data>
+        <display>
+        <title>使用OpenCV对图片进行二值化和去燥处理</title>
+        <pubTime>2019-01-13T08:33:00.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>OpenCV</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+  <url>
     <loc>http://yuqirong.me/2019/01/10/ARouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%BA%94%EF%BC%89/</loc>
     <lastmod>2019-01-10T16:15:42.957Z</lastmod>
     <data>
@@ -186,7 +209,6 @@
     </data>
     </url>
 
-    
     
   <url>
     <loc>http://yuqirong.me/2018/07/09/Android%20Architecture%20Component%E4%B9%8BViewModel%E8%A7%A3%E6%9E%90/</loc>
