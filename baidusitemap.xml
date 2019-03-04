@@ -4,6 +4,550 @@
 
     
   <url>
+    <loc>http://yuqirong.me/2015/11/24/%E5%88%9D%E6%8E%A2Android%20ORM%E6%A1%86%E6%9E%B6%E4%B9%8BgreenDAO/</loc>
+    <lastmod>2019-03-04T16:32:52.067Z</lastmod>
+    <data>
+        <display>
+        <title>初探Android ORM框架之greenDAO</title>
+        <pubTime>2015-11-24T13:14:30.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>greenDAO</tag>
+         
+        <tag>开源框架</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2016/10/02/%E6%8F%92%E4%BB%B6%E5%8C%96%E6%A1%86%E6%9E%B6android-pluginmgr%E5%85%A8%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2019-03-04T16:32:43.803Z</lastmod>
+    <data>
+        <display>
+        <title>插件化框架android-pluginmgr全解析</title>
+        <pubTime>2016-10-02T02:03:34.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>android-pluginmgr</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>插件化</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2016/11/06/%E7%83%AD%E4%BF%AE%E5%A4%8D%E6%A1%86%E6%9E%B6HotFix%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2019-03-04T16:32:16.752Z</lastmod>
+    <data>
+        <display>
+        <title>热修复框架HotFix源码解析</title>
+        <pubTime>2016-11-06T05:15:59.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>HotFix</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>热修复</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2017/06/25/%E4%B8%80%E8%B5%B7%E6%9D%A5%E5%86%99OkHttp%E7%9A%84%E6%8B%A6%E6%88%AA%E5%99%A8/</loc>
+    <lastmod>2019-03-04T16:31:51.971Z</lastmod>
+    <data>
+        <display>
+        <title>一起来写OkHttp的拦截器</title>
+        <pubTime>2017-06-25T04:37:02.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>OkHttp</tag>
+         
+        <tag>开源框架</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2018/07/22/ActivityRouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2019-03-04T16:31:33.611Z</lastmod>
+    <data>
+        <display>
+        <title>ActivityRouter源码解析</title>
+        <pubTime>2018-07-22T14:32:15.000Z</pubTime>
+        
+        <tag>ActivityRouter</tag>
+         
+        <tag>Android</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>组件化</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2016/10/29/Dynamic-Load-Apk%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2019-03-04T16:31:12.001Z</lastmod>
+    <data>
+        <display>
+        <title>Dynamic-Load-Apk源码解析</title>
+        <pubTime>2016-10-29T13:57:12.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Dynamic-Load-Apk</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>插件化</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2016/12/18/ButterKnife%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2019-03-04T16:30:59.164Z</lastmod>
+    <data>
+        <display>
+        <title>ButterKnife源码分析</title>
+        <pubTime>2016-12-18T15:19:02.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>ButterKnife</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2016/12/20/EventBus%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2019-03-04T16:30:46.549Z</lastmod>
+    <data>
+        <display>
+        <title>EventBus源码解析</title>
+        <pubTime>2016-12-20T15:46:27.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>EventBus</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2017/07/25/OkHttp%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2019-03-04T16:30:14.461Z</lastmod>
+    <data>
+        <display>
+        <title>OkHttp源码解析</title>
+        <pubTime>2017-07-25T12:54:57.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>OkHttp</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2017/08/03/Retrofit%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2019-03-04T16:30:00.873Z</lastmod>
+    <data>
+        <display>
+        <title>Retrofit源码解析</title>
+        <pubTime>2017-08-03T15:19:17.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Retrofit</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2016/11/19/Volley%E6%A1%86%E6%9E%B6%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2019-03-04T16:29:45.097Z</lastmod>
+    <data>
+        <display>
+        <title>Volley框架源码解析</title>
+        <pubTime>2016-11-19T13:19:17.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Volley</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/01/10/ARouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%BA%94%EF%BC%89/</loc>
+    <lastmod>2019-03-04T16:28:45.240Z</lastmod>
+    <data>
+        <display>
+        <title>ARouter源码解析（五）</title>
+        <pubTime>2019-01-10T13:42:23.000Z</pubTime>
+        
+        <tag>ARouter</tag>
+         
+        <tag>Android</tag>
+         
+        <tag>Gradle</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>组件化</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/03/05/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E5%9B%9B)/</loc>
+    <lastmod>2019-03-04T16:27:53.545Z</lastmod>
+    <data>
+        <display>
+        <title>Tinker源码分析(四):加载资源补丁流程</title>
+        <pubTime>2019-03-05T15:54:26.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Tinker</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>热修复</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/02/28/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%89)/</loc>
+    <lastmod>2019-03-04T16:27:49.430Z</lastmod>
+    <data>
+        <display>
+        <title>Tinker源码分析(三):加载dex补丁流程</title>
+        <pubTime>2019-02-28T11:23:19.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Tinker</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>热修复</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/02/27/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%8C)/</loc>
+    <lastmod>2019-03-04T16:27:44.866Z</lastmod>
+    <data>
+        <display>
+        <title>Tinker源码分析(二):加载补丁</title>
+        <pubTime>2019-02-27T13:43:16.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Tinker</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>热修复</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/02/24/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%80)/</loc>
+    <lastmod>2019-03-04T16:27:35.695Z</lastmod>
+    <data>
+        <display>
+        <title>Tinker源码分析(一):TinkerApplication</title>
+        <pubTime>2019-02-24T14:52:16.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Tinker</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>热修复</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/01/02/ARouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%BA%8C%EF%BC%89/</loc>
+    <lastmod>2019-03-04T16:26:49.903Z</lastmod>
+    <data>
+        <display>
+        <title>ARouter源码解析（二）</title>
+        <pubTime>2019-01-02T12:16:40.000Z</pubTime>
+        
+        <tag>ARouter</tag>
+         
+        <tag>Android</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>组件化</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2018/12/24/ARouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/</loc>
+    <lastmod>2019-03-04T16:26:45.373Z</lastmod>
+    <data>
+        <display>
+        <title>ARouter源码解析（一）</title>
+        <pubTime>2018-12-24T13:13:20.000Z</pubTime>
+        
+        <tag>ARouter</tag>
+         
+        <tag>Android</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>组件化</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/01/03/ARouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%B8%89%EF%BC%89/</loc>
+    <lastmod>2019-03-04T16:26:40.192Z</lastmod>
+    <data>
+        <display>
+        <title>ARouter源码解析（三）</title>
+        <pubTime>2019-01-03T13:46:43.000Z</pubTime>
+        
+        <tag>ARouter</tag>
+         
+        <tag>Android</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>组件化</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/01/05/ARouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E5%9B%9B%EF%BC%89/</loc>
+    <lastmod>2019-03-04T16:26:35.735Z</lastmod>
+    <data>
+        <display>
+        <title>ARouter源码解析（四）</title>
+        <pubTime>2019-01-05T14:35:21.000Z</pubTime>
+        
+        <tag>ARouter</tag>
+         
+        <tag>Android</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>组件化</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yuqirong.me/2019/02/23/%E5%88%A9%E7%94%A8AOP%E5%AF%B9%E7%82%B9%E5%87%BB%E4%BA%8B%E4%BB%B6%E4%BD%9C%E9%98%B2%E6%8A%96%E5%A4%84%E7%90%86/</loc>
     <lastmod>2019-02-23T15:21:40.273Z</lastmod>
     <data>
@@ -47,148 +591,6 @@
     </url>
 
     
-    
-  <url>
-    <loc>http://yuqirong.me/2019/01/10/ARouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%BA%94%EF%BC%89/</loc>
-    <lastmod>2019-01-10T16:15:42.957Z</lastmod>
-    <data>
-        <display>
-        <title>ARouter源码解析（五）</title>
-        <pubTime>2019-01-10T13:42:23.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2019/01/05/ARouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E5%9B%9B%EF%BC%89/</loc>
-    <lastmod>2019-01-05T17:18:21.770Z</lastmod>
-    <data>
-        <display>
-        <title>ARouter源码解析（四）</title>
-        <pubTime>2019-01-05T14:35:21.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2018/12/24/ARouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/</loc>
-    <lastmod>2019-01-05T17:10:06.261Z</lastmod>
-    <data>
-        <display>
-        <title>ARouter源码解析（一）</title>
-        <pubTime>2018-12-24T13:13:20.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2019/01/03/ARouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%B8%89%EF%BC%89/</loc>
-    <lastmod>2019-01-03T15:24:07.112Z</lastmod>
-    <data>
-        <display>
-        <title>ARouter源码解析（三）</title>
-        <pubTime>2019-01-03T13:46:43.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2019/01/02/ARouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%BA%8C%EF%BC%89/</loc>
-    <lastmod>2019-01-03T13:47:26.387Z</lastmod>
-    <data>
-        <display>
-        <title>ARouter源码解析（二）</title>
-        <pubTime>2019-01-02T12:16:40.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2018/07/22/ActivityRouter%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2018-12-16T15:40:11.706Z</lastmod>
-    <data>
-        <display>
-        <title>ActivityRouter源码解析</title>
-        <pubTime>2018-07-22T14:32:15.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
     
   <url>
     <loc>http://yuqirong.me/2018/11/15/%E4%BB%8ESVN%E8%BF%81%E7%A7%BB%E5%88%B0GitLab/</loc>
@@ -573,32 +975,6 @@
 
     
   <url>
-    <loc>http://yuqirong.me/2016/11/06/%E7%83%AD%E4%BF%AE%E5%A4%8D%E6%A1%86%E6%9E%B6HotFix%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2018-11-11T12:07:41.498Z</lastmod>
-    <data>
-        <display>
-        <title>热修复框架HotFix源码解析</title>
-        <pubTime>2016-11-06T05:15:59.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>源码解析</tag>
-         
-        <tag>热修复</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://yuqirong.me/2016/04/05/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90Scroller%E6%BB%9A%E5%8A%A8%E5%8E%9F%E7%90%86/</loc>
     <lastmod>2018-11-11T12:07:40.834Z</lastmod>
     <data>
@@ -607,32 +983,6 @@
         <pubTime>2016-04-05T12:21:10.000Z</pubTime>
         
         <tag>Android</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2016/10/02/%E6%8F%92%E4%BB%B6%E5%8C%96%E6%A1%86%E6%9E%B6android-pluginmgr%E5%85%A8%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2018-11-11T12:07:39.410Z</lastmod>
-    <data>
-        <display>
-        <title>插件化框架android-pluginmgr全解析</title>
-        <pubTime>2016-10-02T02:03:34.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>插件化</tag>
          
         <tag>源码解析</tag>
          
@@ -947,28 +1297,6 @@
 
     
   <url>
-    <loc>http://yuqirong.me/2015/11/24/%E5%88%9D%E6%8E%A2Android%20ORM%E6%A1%86%E6%9E%B6%E4%B9%8BgreenDAO/</loc>
-    <lastmod>2018-11-11T12:07:29.165Z</lastmod>
-    <data>
-        <display>
-        <title>初探Android ORM框架之greenDAO</title>
-        <pubTime>2015-11-24T13:14:30.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://yuqirong.me/2017/01/21/%E5%85%B3%E4%BA%8E%E4%BD%BF%E7%94%A8AlarmManager%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</loc>
     <lastmod>2018-11-11T12:07:28.438Z</lastmod>
     <data>
@@ -1233,30 +1561,6 @@
 
     
   <url>
-    <loc>http://yuqirong.me/2016/11/19/Volley%E6%A1%86%E6%9E%B6%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2018-11-11T12:07:19.239Z</lastmod>
-    <data>
-        <display>
-        <title>Volley框架源码解析</title>
-        <pubTime>2016-11-19T13:19:17.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://yuqirong.me/2017/09/18/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</loc>
     <lastmod>2018-11-11T12:07:18.431Z</lastmod>
     <data>
@@ -1291,30 +1595,6 @@
         <tag>Android</tag>
          
         <tag>RecyclerView</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2017/07/25/OkHttp%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2018-11-11T12:07:16.962Z</lastmod>
-    <data>
-        <display>
-        <title>OkHttp源码解析</title>
-        <pubTime>2017-07-25T12:54:57.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>源码解析</tag>
          
          
            
@@ -1428,80 +1708,6 @@
            
              
               <breadCrumb title="Android Tips" url="http://yuqirong.me/categories/Android-Tips/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2016/12/20/EventBus%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2018-11-11T12:07:12.138Z</lastmod>
-    <data>
-        <display>
-        <title>EventBus源码解析</title>
-        <pubTime>2016-12-20T15:46:27.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2016/10/29/Dynamic-Load-Apk%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2018-11-11T12:07:10.951Z</lastmod>
-    <data>
-        <display>
-        <title>Dynamic-Load-Apk源码解析</title>
-        <pubTime>2016-10-29T13:57:12.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>插件化</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2016/12/18/ButterKnife%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2018-11-11T12:07:09.750Z</lastmod>
-    <data>
-        <display>
-        <title>ButterKnife源码分析</title>
-        <pubTime>2016-12-18T15:19:02.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
           
         </display>
     </data>
@@ -1904,52 +2110,6 @@
         <tag>Window</tag>
          
         <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2017/08/03/Retrofit%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
-    <lastmod>2017-08-05T11:47:36.360Z</lastmod>
-    <data>
-        <display>
-        <title>Retrofit源码解析</title>
-        <pubTime>2017-08-03T15:19:17.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>源码解析</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2017/06/25/%E4%B8%80%E8%B5%B7%E6%9D%A5%E5%86%99OkHttp%E7%9A%84%E6%8B%A6%E6%88%AA%E5%99%A8/</loc>
-    <lastmod>2017-07-22T08:23:55.849Z</lastmod>
-    <data>
-        <display>
-        <title>一起来写OkHttp的拦截器</title>
-        <pubTime>2017-06-25T04:37:02.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>开源框架</tag>
          
          
            

@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="自动生成TinkerApplication接入 Tinker 第一步就是改造 Application 。官方推荐是利用 @DefaultLifeCycle 动态生成 Application
+12345@DefaultLifeCycle(application = &quot;tinker.sample.android.app.SampleApplication&quot;,                  flag">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tinker源码分析(一):TinkerApplication">
+<meta property="og:url" content="http://yuqirong.me/2019/02/24/Tinker源码分析(一)/index.html">
+<meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
+<meta property="og:description" content="自动生成TinkerApplication接入 Tinker 第一步就是改造 Application 。官方推荐是利用 @DefaultLifeCycle 动态生成 Application
+12345@DefaultLifeCycle(application = &quot;tinker.sample.android.app.SampleApplication&quot;,                  flag">
+<meta property="og:updated_time" content="2019-03-04T16:27:35.695Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tinker源码分析(一):TinkerApplication">
+<meta name="twitter:description" content="自动生成TinkerApplication接入 Tinker 第一步就是改造 Application 。官方推荐是利用 @DefaultLifeCycle 动态生成 Application
+12345@DefaultLifeCycle(application = &quot;tinker.sample.android.app.SampleApplication&quot;,                  flag">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="俞其荣的博客 | Qirong Yu's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yuqirong.me/2019/02/24/Tinker源码分析(一)/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Tinker源码分析(一):TinkerApplication | 俞其荣的博客 | Qirong Yu's Blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cb7fb9301d60e7ca4f45f2361955bd8f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" rel="start" class="brand">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title" style="opacity: 1; top: 0px;">Colourful Day</span>
+        <!--<img src="/uploads/avatar/1529736707_477636.png" style="background:#222222"/>-->
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">我需要，最狂的风，和最静的海。</h1>
+        <h1 class="site-subtitle" itemprop="description" style="margin-top:0px;">——顾城《第八个早晨》</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-guestbook">
+    <a href="/guestbook/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-comment"></i> <br />留言</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/yuqirong" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2019/02/24/Tinker源码分析(一)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="俞其荣">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="俞其荣的博客 | Qirong Yu's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Tinker源码分析(一):TinkerApplication
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-02-24 22:52:16" itemprop="dateCreated datePublished" datetime="2019-02-24T22:52:16+08:00">2019-02-24</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-03-05 00:27:35" itemprop="dateModified" datetime="2019-03-05T00:27:35+08:00">2019-03-05</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/02/24/Tinker源码分析(一)/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/02/24/Tinker源码分析(一)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="u81EA_u52A8_u751F_u6210TinkerApplication"><a href="#u81EA_u52A8_u751F_u6210TinkerApplication" class="headerlink" title="自动生成TinkerApplication"></a>自动生成TinkerApplication</h1><p>接入 Tinker 第一步就是改造 Application 。官方推荐是利用 @DefaultLifeCycle 动态生成 Application</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@DefaultLifeCycle</span>(application = <span class="string">"tinker.sample.android.app.SampleApplication"</span>,</span><br><span class="line">                  flags = ShareConstants.TINKER_ENABLE_ALL,</span><br><span class="line">                  loadVerifyFlag = <span class="keyword">false</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SampleApplicationLike</span> <span class="keyword">extends</span> <span class="title">DefaultApplicationLike</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那我们来解析一下 Tinker 是如何生成 Application 以及在 Application 中做了什么事？</p>
+<p>看到 @DefaultLifeCycle 注解，我们可想而知应该是经过 processor 处理后动态生成了 Application 。</p>
+<p>查看 Tinker 工程可以发现在 tinker-android-anno 下面有一个 AnnotationProcessor </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Set&lt;String&gt; <span class="title">getSupportedAnnotationTypes</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Set&lt;String&gt; supportedAnnotationTypes = <span class="keyword">new</span> LinkedHashSet&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    supportedAnnotationTypes.add(DefaultLifeCycle.class.getName());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> supportedAnnotationTypes;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">process</span><span class="params">(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv)</span> </span>&#123;</span><br><span class="line">    processDefaultLifeCycle(roundEnv.getElementsAnnotatedWith(DefaultLifeCycle.class));</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>发现它正是处理 @DefaultLifeCycle 的。</p>
+<p>下面重要看 processDefaultLifeCycle 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processDefaultLifeCycle</span><span class="params">(Set&lt;? extends Element&gt; elements)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// DefaultLifeCycle</span></span><br><span class="line">    <span class="keyword">for</span> (Element e : elements) &#123;</span><br><span class="line">        DefaultLifeCycle ca = e.getAnnotation(DefaultLifeCycle.class);</span><br><span class="line"></span><br><span class="line">        String lifeCycleClassName = ((TypeElement) e).getQualifiedName().toString();</span><br><span class="line">        String lifeCyclePackageName = lifeCycleClassName.substring(<span class="number">0</span>, lifeCycleClassName.lastIndexOf(<span class="string">'.'</span>));</span><br><span class="line">        lifeCycleClassName = lifeCycleClassName.substring(lifeCycleClassName.lastIndexOf(<span class="string">'.'</span>) + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        String applicationClassName = ca.application();</span><br><span class="line">        <span class="keyword">if</span> (applicationClassName.startsWith(<span class="string">"."</span>)) &#123;</span><br><span class="line">            applicationClassName = lifeCyclePackageName + applicationClassName;</span><br><span class="line">        &#125;</span><br><span class="line">        String applicationPackageName = applicationClassName.substring(<span class="number">0</span>, applicationClassName.lastIndexOf(<span class="string">'.'</span>));</span><br><span class="line">        applicationClassName = applicationClassName.substring(applicationClassName.lastIndexOf(<span class="string">'.'</span>) + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        String loaderClassName = ca.loaderClass();</span><br><span class="line">        <span class="keyword">if</span> (loaderClassName.startsWith(<span class="string">"."</span>)) &#123;</span><br><span class="line">            loaderClassName = lifeCyclePackageName + loaderClassName;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"*"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> InputStream is = AnnotationProcessor.class.getResourceAsStream(APPLICATION_TEMPLATE_PATH);</span><br><span class="line">        <span class="keyword">final</span> Scanner scanner = <span class="keyword">new</span> Scanner(is);</span><br><span class="line">        <span class="keyword">final</span> String template = scanner.useDelimiter(<span class="string">"\\A"</span>).next();</span><br><span class="line">        <span class="keyword">final</span> String fileContent = template</span><br><span class="line">            .replaceAll(<span class="string">"%PACKAGE%"</span>, applicationPackageName)</span><br><span class="line">            .replaceAll(<span class="string">"%APPLICATION%"</span>, applicationClassName)</span><br><span class="line">            .replaceAll(<span class="string">"%APPLICATION_LIFE_CYCLE%"</span>, lifeCyclePackageName + <span class="string">"."</span> + lifeCycleClassName)</span><br><span class="line">            .replaceAll(<span class="string">"%TINKER_FLAGS%"</span>, <span class="string">""</span> + ca.flags())</span><br><span class="line">            .replaceAll(<span class="string">"%TINKER_LOADER_CLASS%"</span>, <span class="string">""</span> + loaderClassName)</span><br><span class="line">            .replaceAll(<span class="string">"%TINKER_LOAD_VERIFY_FLAG%"</span>, <span class="string">""</span> + ca.loadVerifyFlag());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            JavaFileObject fileObject = processingEnv.getFiler().createSourceFile(applicationPackageName + <span class="string">"."</span> + applicationClassName);</span><br><span class="line">            processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, <span class="string">"Creating "</span> + fileObject.toUri());</span><br><span class="line">            Writer writer = fileObject.openWriter();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                PrintWriter pw = <span class="keyword">new</span> PrintWriter(writer);</span><br><span class="line">                pw.print(fileContent);</span><br><span class="line">                pw.flush();</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                writer.close();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException x) &#123;</span><br><span class="line">            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, x.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>整个 processDefaultLifeCycle 方法看下来，其实主要在做的就是去读取一份模版，然后用注解中设置的值替换里面的一些占位符。这个模版就是 resouces/TinkerAnnoApplication.tmpl </p>
+<pre><code>package %PACKAGE%;
+
+import com.tencent.tinker.loader.app.TinkerApplication;
+
+/**
+ *
+ * Generated application for tinker life cycle
+ *
+ */
+public class %APPLICATION% extends TinkerApplication {
+
+    public %APPLICATION%() {
+        super(%TINKER_FLAGS%, &quot;%APPLICATION_LIFE_CYCLE%&quot;, &quot;%TINKER_LOADER_CLASS%&quot;, %TINKER_LOAD_VERIFY_FLAG%);
+    }
+
+}
+</code></pre><p>最终生成的 SampleApplication 效果：</p>
+<pre><code>/**
+ *
+ * Generated application for tinker life cycle
+ *
+ */
+public class SampleApplication extends TinkerApplication {
+
+    public SampleApplication() {
+        super(7, &quot;tinker.sample.android.app.SampleApplicationLike&quot;, &quot;com.tencent.tinker.loader.TinkerLoader&quot;, false);
+    }
+
+}
+</code></pre><h1 id="u89E3_u6790_TinkerApplication"><a href="#u89E3_u6790_TinkerApplication" class="headerlink" title="解析 TinkerApplication"></a>解析 TinkerApplication</h1><p>想要知道 TinkerApplication 里面干了什么？</p>
+<p>一起看看 TinkerApplication.onCreate </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ensureDelegate();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ComponentHotplug.ensureComponentHotplugInstalled(<span class="keyword">this</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (UnsupportedEnvironmentException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> TinkerRuntimeException(<span class="string">"failed to make sure that ComponentHotplug logic is fine."</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">        invokeAppLikeOnCreate(applicationLike);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (TinkerRuntimeException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> e;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable thr) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> TinkerRuntimeException(thr.getMessage(), thr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第一步，调用 ensureDelegate 创建 application 代理，即 applicationLike</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">ensureDelegate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (applicationLike == <span class="keyword">null</span>) &#123;</span><br><span class="line">        applicationLike = createDelegate();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> Object <span class="title">createDelegate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// Use reflection to create the delegate so it doesn't need to go into the primary dex.</span></span><br><span class="line">        <span class="comment">// And we can also patch it</span></span><br><span class="line">        Class&lt;?&gt; delegateClass = Class.forName(delegateClassName, <span class="keyword">false</span>, getClassLoader());</span><br><span class="line">        Constructor&lt;?&gt; constructor = delegateClass.getConstructor(Application.class, <span class="keyword">int</span>.class, <span class="keyword">boolean</span>.class,</span><br><span class="line">            <span class="keyword">long</span>.class, <span class="keyword">long</span>.class, Intent.class);</span><br><span class="line">        <span class="keyword">return</span> constructor.newInstance(<span class="keyword">this</span>, tinkerFlags, tinkerLoadVerifyFlag,</span><br><span class="line">            applicationStartElapsedTime, applicationStartMillisTime, tinkerResultIntent);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> TinkerRuntimeException(<span class="string">"createDelegate failed"</span>, e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后调用 invokeAppLikeOnCreate(applicationLike) 去回调 applicationLike 的 onCreate 方法。这样，applicationLike 和 application 的生命周期方法就做到同步了。另外，其余的生命周期方法也是如此来实现同步的，这里就不详细讲解了。</p>
+<p>那么 Tinker 是什么时候加载的呢？</p>
+<p>答案就在 attachBaseContext 中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">attachBaseContext</span><span class="params">(Context base)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.attachBaseContext(base);</span><br><span class="line">    Thread.setDefaultUncaughtExceptionHandler(<span class="keyword">new</span> TinkerUncaughtHandler(<span class="keyword">this</span>));</span><br><span class="line">    onBaseContextAttached(base);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">onBaseContextAttached</span><span class="params">(Context base)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        applicationStartElapsedTime = SystemClock.elapsedRealtime();</span><br><span class="line">        applicationStartMillisTime = System.currentTimeMillis();</span><br><span class="line">        loadTinker();</span><br><span class="line">        ensureDelegate();</span><br><span class="line">        invokeAppLikeOnBaseContextAttached(applicationLike, base);</span><br><span class="line">        <span class="comment">//reset save mode</span></span><br><span class="line">        <span class="keyword">if</span> (useSafeMode) &#123;</span><br><span class="line">            ShareTinkerInternals.setSafeModeCount(<span class="keyword">this</span>, <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (TinkerRuntimeException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> e;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable thr) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> TinkerRuntimeException(thr.getMessage(), thr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到调用了 loadTinker 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">loadTinker</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">//reflect tinker loader, because loaderClass may be define by user!</span></span><br><span class="line">        Class&lt;?&gt; tinkerLoadClass = Class.forName(loaderClassName, <span class="keyword">false</span>, getClassLoader());</span><br><span class="line">        Method loadMethod = tinkerLoadClass.getMethod(TINKER_LOADER_METHOD, TinkerApplication.class);</span><br><span class="line">        Constructor&lt;?&gt; constructor = tinkerLoadClass.getConstructor();</span><br><span class="line">        tinkerResultIntent = (Intent) loadMethod.invoke(constructor.newInstance(), <span class="keyword">this</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">        <span class="comment">//has exception, put exception error code</span></span><br><span class="line">        tinkerResultIntent = <span class="keyword">new</span> Intent();</span><br><span class="line">        ShareIntentUtil.setIntentReturnCode(tinkerResultIntent, ShareConstants.ERROR_LOAD_PATCH_UNKNOWN_EXCEPTION);</span><br><span class="line">        tinkerResultIntent.putExtra(INTENT_PATCH_EXCEPTION, e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的 loaderClassName 就是上面 @DefaultLifeCycle 中定义的 loaderClass 。默认的是 com.tencent.tinker.loader.TinkerLoader ，也支持用户自定义 TinkerLoader 。</p>
+<p>所以 loadTinker 中干的事就是利用反射执行了 TinkerLoader.tryLoad 方法。</p>
+<p>至于在 tryLoad 方法中到底做了什么事，我们等到下一篇再讲吧。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/avatar/20170523142951.jpg" alt="俞其荣 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号来获取我的动态！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/avatar/20161001102756.png" alt="俞其荣 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/avatar/20160428221107.jpg" alt="俞其荣 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>俞其荣</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yuqirong.me/2019/02/24/Tinker源码分析(一)/" title="Tinker源码分析(一):TinkerApplication">http://yuqirong.me/2019/02/24/Tinker源码分析(一)/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/Tinker/" rel="tag"># Tinker</a>
+          
+            <a href="/tags/开源框架/" rel="tag"># 开源框架</a>
+          
+            <a href="/tags/源码解析/" rel="tag"># 源码解析</a>
+          
+            <a href="/tags/热修复/" rel="tag"># 热修复</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/23/利用AOP对点击事件作防抖处理/" rel="next" title="利用AOP对点击事件作防抖处理">
+                <i class="fa fa-chevron-left"></i> 利用AOP对点击事件作防抖处理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/27/Tinker源码分析(二)/" rel="prev" title="Tinker源码分析(二):加载补丁">
+                Tinker源码分析(二):加载补丁 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar/27073358153.jpg"
+                alt="俞其荣" />
+            
+              <p class="site-author-name" itemprop="name">俞其荣</p>
+              <p class="site-description motion-element" itemprop="description">向前跑 迎着冷眼和嘲笑</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">104</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/yuqirong" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/yyyuqirong" target="_blank" title="Twitter" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Twitter</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.instagram.com/yyyuqirong" target="_blank" title="Instagram" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Instagram</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://plus.google.com/116756215081118586533" target="_blank" title="Google+" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Google+</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://cn.linkedin.com/in/yuqirong" target="_blank" title="LinkedIn" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>LinkedIn</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://www.jianshu.com/users/1291f6690ea0" target="_blank" title="简书" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/yyyuqirong" target="_blank" title="Weibo" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/yuqirong" target="_blank" title="知乎" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:yqr271228943@gmail.com" target="_blank" title="Email" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>Email</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank" rel="external nofollow">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u81EA_u52A8_u751F_u6210TinkerApplication"><span class="nav-number">1.</span> <span class="nav-text">自动生成TinkerApplication</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u89E3_u6790_TinkerApplication"><span class="nav-number">2.</span> <span class="nav-text">解析 TinkerApplication</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俞其荣</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" rel="external nofollow" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" rel="external nofollow" href="https://github.com/theme-next/hexo-theme-next">NexT.Muse</a></div>
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" rel="external nofollow" href="https://pages.coding.me"><b>Coding Pages</b></a></div>
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: '1BEieMGlw7Jvs6XNGYKgEd1N-gzGzoHsz',
+        appKey: '8wsALSDVgUj1zAfN9m3hpYoU',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "box";
+      
+          flOptions.boxForm = "horizontal";
+      
+          flOptions.position = "middleRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
