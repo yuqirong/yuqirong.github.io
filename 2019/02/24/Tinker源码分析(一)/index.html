@@ -112,19 +112,22 @@
 
 
 
-  <meta name="description" content="自动生成TinkerApplication接入 Tinker 第一步就是改造 Application 。官方推荐是利用 @DefaultLifeCycle 动态生成 Application
-12345@DefaultLifeCycle(application = &quot;tinker.sample.android.app.SampleApplication&quot;,                  flag">
+  <meta name="description" content="本系列 Tinker 源码解析基于 Tinker v1.9.12
+自动生成TinkerApplication接入 Tinker 第一步就是改造 Application 。官方推荐是利用 @DefaultLifeCycle 动态生成 Application
+12345@DefaultLifeCycle(application = &quot;tinker.sample.android.app.SampleAp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Tinker源码分析(一):TinkerApplication">
 <meta property="og:url" content="http://yuqirong.me/2019/02/24/Tinker源码分析(一)/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
-<meta property="og:description" content="自动生成TinkerApplication接入 Tinker 第一步就是改造 Application 。官方推荐是利用 @DefaultLifeCycle 动态生成 Application
-12345@DefaultLifeCycle(application = &quot;tinker.sample.android.app.SampleApplication&quot;,                  flag">
-<meta property="og:updated_time" content="2019-03-04T16:27:35.695Z">
+<meta property="og:description" content="本系列 Tinker 源码解析基于 Tinker v1.9.12
+自动生成TinkerApplication接入 Tinker 第一步就是改造 Application 。官方推荐是利用 @DefaultLifeCycle 动态生成 Application
+12345@DefaultLifeCycle(application = &quot;tinker.sample.android.app.SampleAp">
+<meta property="og:updated_time" content="2019-03-09T17:25:02.046Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tinker源码分析(一):TinkerApplication">
-<meta name="twitter:description" content="自动生成TinkerApplication接入 Tinker 第一步就是改造 Application 。官方推荐是利用 @DefaultLifeCycle 动态生成 Application
-12345@DefaultLifeCycle(application = &quot;tinker.sample.android.app.SampleApplication&quot;,                  flag">
+<meta name="twitter:description" content="本系列 Tinker 源码解析基于 Tinker v1.9.12
+自动生成TinkerApplication接入 Tinker 第一步就是改造 Application 。官方推荐是利用 @DefaultLifeCycle 动态生成 Application
+12345@DefaultLifeCycle(application = &quot;tinker.sample.android.app.SampleAp">
 
 
 
@@ -404,7 +407,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-03-05 00:27:35" itemprop="dateModified" datetime="2019-03-05T00:27:35+08:00">2019-03-05</time>
+                <time title="修改时间：2019-03-10 01:25:02" itemprop="dateModified" datetime="2019-03-10T01:25:02+08:00">2019-03-10</time>
               
             
           </span>
@@ -465,7 +468,8 @@
       
 
       
-        <h1 id="u81EA_u52A8_u751F_u6210TinkerApplication"><a href="#u81EA_u52A8_u751F_u6210TinkerApplication" class="headerlink" title="自动生成TinkerApplication"></a>自动生成TinkerApplication</h1><p>接入 Tinker 第一步就是改造 Application 。官方推荐是利用 @DefaultLifeCycle 动态生成 Application</p>
+        <p>本系列 Tinker 源码解析基于 Tinker v1.9.12</p>
+<h1 id="u81EA_u52A8_u751F_u6210TinkerApplication"><a href="#u81EA_u52A8_u751F_u6210TinkerApplication" class="headerlink" title="自动生成TinkerApplication"></a>自动生成TinkerApplication</h1><p>接入 Tinker 第一步就是改造 Application 。官方推荐是利用 @DefaultLifeCycle 动态生成 Application</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@DefaultLifeCycle</span>(application = <span class="string">"tinker.sample.android.app.SampleApplication"</span>,</span><br><span class="line">                  flags = ShareConstants.TINKER_ENABLE_ALL,</span><br><span class="line">                  loadVerifyFlag = <span class="keyword">false</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SampleApplicationLike</span> <span class="keyword">extends</span> <span class="title">DefaultApplicationLike</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>那我们来解析一下 Tinker 是如何生成 Application 以及在 Application 中做了什么事？</p>
 <p>看到 @DefaultLifeCycle 注解，我们可想而知应该是经过 processor 处理后动态生成了 Application 。</p>
@@ -703,7 +707,7 @@ public class SampleApplication extends TinkerApplication {
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">104</span>
+                    <span class="site-state-item-count">105</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

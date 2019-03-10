@@ -4,12 +4,124 @@
 
     
   <url>
+    <loc>http://yuqirong.me/2019/03/10/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%94)/</loc>
+    <lastmod>2019-03-10T15:41:47.224Z</lastmod>
+    <data>
+        <display>
+        <title>Tinker源码分析(五):加载so补丁流程</title>
+        <pubTime>2019-03-10T14:50:22.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Tinker</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>热修复</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/02/27/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%8C)/</loc>
+    <lastmod>2019-03-09T17:25:18.721Z</lastmod>
+    <data>
+        <display>
+        <title>Tinker源码分析(二):加载补丁</title>
+        <pubTime>2019-02-27T13:43:16.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Tinker</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>热修复</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/02/28/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%89)/</loc>
+    <lastmod>2019-03-09T17:25:13.488Z</lastmod>
+    <data>
+        <display>
+        <title>Tinker源码分析(三):加载dex补丁流程</title>
+        <pubTime>2019-02-28T11:23:19.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Tinker</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>热修复</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yuqirong.me/2019/03/05/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E5%9B%9B)/</loc>
-    <lastmod>2019-03-09T16:39:44.066Z</lastmod>
+    <lastmod>2019-03-09T17:25:07.915Z</lastmod>
     <data>
         <display>
         <title>Tinker源码分析(四):加载资源补丁流程</title>
         <pubTime>2019-03-05T15:54:26.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Tinker</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+        <tag>热修复</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/02/24/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%80)/</loc>
+    <lastmod>2019-03-09T17:25:02.046Z</lastmod>
+    <data>
+        <display>
+        <title>Tinker源码分析(一):TinkerApplication</title>
+        <pubTime>2019-02-24T14:52:16.000Z</pubTime>
         
         <tag>Android</tag>
          
@@ -340,90 +452,6 @@
         <tag>源码解析</tag>
          
         <tag>组件化</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2019/02/28/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%89)/</loc>
-    <lastmod>2019-03-04T16:27:49.430Z</lastmod>
-    <data>
-        <display>
-        <title>Tinker源码分析(三):加载dex补丁流程</title>
-        <pubTime>2019-02-28T11:23:19.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>Tinker</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>源码解析</tag>
-         
-        <tag>热修复</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2019/02/27/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%8C)/</loc>
-    <lastmod>2019-03-04T16:27:44.866Z</lastmod>
-    <data>
-        <display>
-        <title>Tinker源码分析(二):加载补丁</title>
-        <pubTime>2019-02-27T13:43:16.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>Tinker</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>源码解析</tag>
-         
-        <tag>热修复</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2019/02/24/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%80)/</loc>
-    <lastmod>2019-03-04T16:27:35.695Z</lastmod>
-    <data>
-        <display>
-        <title>Tinker源码分析(一):TinkerApplication</title>
-        <pubTime>2019-02-24T14:52:16.000Z</pubTime>
-        
-        <tag>Android</tag>
-         
-        <tag>Tinker</tag>
-         
-        <tag>开源框架</tag>
-         
-        <tag>源码解析</tag>
-         
-        <tag>热修复</tag>
          
          
            

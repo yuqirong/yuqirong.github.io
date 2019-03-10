@@ -112,22 +112,25 @@
 
 
 
-  <meta name="description" content="加载资源补丁流程将到资源补丁的加载，首先还要回过头来先看资源补丁的校验和检查。
+  <meta name="description" content="本系列 Tinker 源码解析基于 Tinker v1.9.12
+加载资源补丁流程将到资源补丁的加载，首先还要回过头来先看资源补丁的校验和检查。
 我们回到 TinkerLoader.tryLoadPatchFilesInternal 方法中来看。
-tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledForResource = ShareTinkerInterna">
+tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnable">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Tinker源码分析(四):加载资源补丁流程">
 <meta property="og:url" content="http://yuqirong.me/2019/03/05/Tinker源码分析(四)/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
-<meta property="og:description" content="加载资源补丁流程将到资源补丁的加载，首先还要回过头来先看资源补丁的校验和检查。
+<meta property="og:description" content="本系列 Tinker 源码解析基于 Tinker v1.9.12
+加载资源补丁流程将到资源补丁的加载，首先还要回过头来先看资源补丁的校验和检查。
 我们回到 TinkerLoader.tryLoadPatchFilesInternal 方法中来看。
-tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledForResource = ShareTinkerInterna">
-<meta property="og:updated_time" content="2019-03-09T16:39:44.066Z">
+tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnable">
+<meta property="og:updated_time" content="2019-03-09T17:25:07.915Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tinker源码分析(四):加载资源补丁流程">
-<meta name="twitter:description" content="加载资源补丁流程将到资源补丁的加载，首先还要回过头来先看资源补丁的校验和检查。
+<meta name="twitter:description" content="本系列 Tinker 源码解析基于 Tinker v1.9.12
+加载资源补丁流程将到资源补丁的加载，首先还要回过头来先看资源补丁的校验和检查。
 我们回到 TinkerLoader.tryLoadPatchFilesInternal 方法中来看。
-tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledForResource = ShareTinkerInterna">
+tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnable">
 
 
 
@@ -407,7 +410,7 @@ tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledFor
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-03-10 00:39:44" itemprop="dateModified" datetime="2019-03-10T00:39:44+08:00">2019-03-10</time>
+                <time title="修改时间：2019-03-10 01:25:07" itemprop="dateModified" datetime="2019-03-10T01:25:07+08:00">2019-03-10</time>
               
             
           </span>
@@ -468,7 +471,8 @@ tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledFor
       
 
       
-        <h1 id="u52A0_u8F7D_u8D44_u6E90_u8865_u4E01_u6D41_u7A0B"><a href="#u52A0_u8F7D_u8D44_u6E90_u8865_u4E01_u6D41_u7A0B" class="headerlink" title="加载资源补丁流程"></a>加载资源补丁流程</h1><p>将到资源补丁的加载，首先还要回过头来先看资源补丁的校验和检查。</p>
+        <p>本系列 Tinker 源码解析基于 Tinker v1.9.12</p>
+<h1 id="u52A0_u8F7D_u8D44_u6E90_u8865_u4E01_u6D41_u7A0B"><a href="#u52A0_u8F7D_u8D44_u6E90_u8865_u4E01_u6D41_u7A0B" class="headerlink" title="加载资源补丁流程"></a>加载资源补丁流程</h1><p>将到资源补丁的加载，首先还要回过头来先看资源补丁的校验和检查。</p>
 <p>我们回到 TinkerLoader.tryLoadPatchFilesInternal 方法中来看。</p>
 <h2 id="tryLoadPatchFilesInternal"><a href="#tryLoadPatchFilesInternal" class="headerlink" title="tryLoadPatchFilesInternal"></a>tryLoadPatchFilesInternal</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//check resource</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">boolean</span> isEnabledForResource = ShareTinkerInternals.isTinkerEnabledForResource(tinkerFlag);</span><br><span class="line">Log.w(TAG, <span class="string">"tryLoadPatchFiles:isEnabledForResource:"</span> + isEnabledForResource);</span><br><span class="line"><span class="keyword">if</span> (isEnabledForResource) &#123;</span><br><span class="line">    <span class="keyword">boolean</span> resourceCheck = TinkerResourceLoader.checkComplete(app, patchVersionDirectory, securityCheck, resultIntent);</span><br><span class="line">    <span class="keyword">if</span> (!resourceCheck) &#123;</span><br><span class="line">        <span class="comment">//file not found, do not load patch</span></span><br><span class="line">        Log.w(TAG, <span class="string">"tryLoadPatchFiles:resource check fail"</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>具体的校验是在 TinkerResourceLoader.checkComplete 中完成的。这里为了校验的速度，所以只会校验资源补丁存不存在。</p>
@@ -610,6 +614,10 @@ tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledFor
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2019/03/10/Tinker源码分析(五)/" rel="prev" title="Tinker源码分析(五):加载so补丁流程">
+                Tinker源码分析(五):加载so补丁流程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -689,7 +697,7 @@ tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledFor
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">104</span>
+                    <span class="site-state-item-count">105</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

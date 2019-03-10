@@ -342,6 +342,184 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2019/03/10/Tinker源码分析(五)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="俞其荣">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="俞其荣的博客 | Qirong Yu's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/10/Tinker源码分析(五)/" itemprop="url">
+                  Tinker源码分析(五):加载so补丁流程
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-03-10 22:50:22 / 修改时间：23:41:47" itemprop="dateCreated datePublished" datetime="2019-03-10T22:50:22+08:00">2019-03-10</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/10/Tinker源码分析(五)/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/03/10/Tinker源码分析(五)/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          本系列 Tinker 源码解析基于 Tinker v1.9.12
+校验so补丁流程与加载资源补丁类似，加载so补丁也要先从校验开始看起。
+其实总体来说，Tinker 中加载 so 补丁文件的关键代码就一句：
+System.load(String filePath)
+tryLoadPatchFilesInternal1234567891011final boolean isEnabledForNativeLib = ShareTinkerInternals.isTinkerEnabledForNativeLib(tinkerFlag);if (isEnabledForNativeLib) &#1
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/03/10/Tinker源码分析(五)/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2019/03/05/Tinker源码分析(四)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -405,7 +583,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-03-10 00:39:44" itemprop="dateModified" datetime="2019-03-10T00:39:44+08:00">2019-03-10</time>
+                <time title="修改时间：2019-03-10 01:25:07" itemprop="dateModified" datetime="2019-03-10T01:25:07+08:00">2019-03-10</time>
               
             
           </span>
@@ -468,9 +646,10 @@
       
         
           
-          加载资源补丁流程将到资源补丁的加载，首先还要回过头来先看资源补丁的校验和检查。
+          本系列 Tinker 源码解析基于 Tinker v1.9.12
+加载资源补丁流程将到资源补丁的加载，首先还要回过头来先看资源补丁的校验和检查。
 我们回到 TinkerLoader.tryLoadPatchFilesInternal 方法中来看。
-tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledForResource = ShareTinkerInternals.isTinkerEnabledForResource(tinkerFlag);Log.w(TAG, "tryLoadPatchFiles:isEnabledForResource:" + isE
+tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledForResource = ShareTinkerInternals.isTinkerEnabledForResource(tinkerFlag);Log.w(TAG, "tryLoadPatchF
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -593,7 +772,7 @@ tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledFor
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-03-05 00:27:49" itemprop="dateModified" datetime="2019-03-05T00:27:49+08:00">2019-03-05</time>
+                <time title="修改时间：2019-03-10 01:25:13" itemprop="dateModified" datetime="2019-03-10T01:25:13+08:00">2019-03-10</time>
               
             
           </span>
@@ -656,8 +835,9 @@ tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledFor
       
         
           
-          加载dex补丁流程TinkerDexLoader.loadTinkerJars判断一下 dexList 和 classLoader
-12345678910111213if (loadDexList.isEmpty() &amp;&amp; classNDexInfo.isEmpty()) &#123;    Log.w(TAG, "there is no dex to load");    return true;&#125;PathClassLoader classLoader = (PathClassLoader) TinkerDexLoader.class.getClassLoader(
+          本系列 Tinker 源码解析基于 Tinker v1.9.12
+加载dex补丁流程TinkerDexLoader.loadTinkerJars判断一下 dexList 和 classLoader
+12345678910111213if (loadDexList.isEmpty() &amp;&amp; classNDexInfo.isEmpty()) &#123;    Log.w(TAG, "there is no dex to load");    return true;&#125;PathClassLoader classLoader = (PathClassLoader) Tink
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -780,7 +960,7 @@ tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledFor
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-03-05 00:27:44" itemprop="dateModified" datetime="2019-03-05T00:27:44+08:00">2019-03-05</time>
+                <time title="修改时间：2019-03-10 01:25:18" itemprop="dateModified" datetime="2019-03-10T01:25:18+08:00">2019-03-10</time>
               
             
           </span>
@@ -843,8 +1023,9 @@ tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledFor
       
         
           
-          前一篇讲到了利用反射执行的是 TinkerLoader.tryLoad 方法
-tryLoad12345678910@Overridepublic Intent tryLoad(TinkerApplication app) &#123;    Intent resultIntent = new Intent();    long begin = SystemClock.elapsedRealtime();    tryLoadPatchFilesInternal(app, resultIntent);    long cost = SystemClock.elapsedRealtime() - 
+          本系列 Tinker 源码解析基于 Tinker v1.9.12
+前一篇讲到了利用反射执行的是 TinkerLoader.tryLoad 方法
+tryLoad12345678910@Overridepublic Intent tryLoad(TinkerApplication app) &#123;    Intent resultIntent = new Intent();    long begin = SystemClock.elapsedRealtime();    tryLoadPatchFilesInternal(app, resultIntent);    long cost =
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -967,7 +1148,7 @@ tryLoad12345678910@Overridepublic Intent tryLoad(TinkerApplication app) &#123;  
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-03-05 00:27:35" itemprop="dateModified" datetime="2019-03-05T00:27:35+08:00">2019-03-05</time>
+                <time title="修改时间：2019-03-10 01:25:02" itemprop="dateModified" datetime="2019-03-10T01:25:02+08:00">2019-03-10</time>
               
             
           </span>
@@ -1030,8 +1211,9 @@ tryLoad12345678910@Overridepublic Intent tryLoad(TinkerApplication app) &#123;  
       
         
           
-          自动生成TinkerApplication接入 Tinker 第一步就是改造 Application 。官方推荐是利用 @DefaultLifeCycle 动态生成 Application
-12345@DefaultLifeCycle(application = "tinker.sample.android.app.SampleApplication",                  flags = ShareConstants.TINKER_ENABLE_ALL,                  loadVerifyFlag = false)public class SampleApp
+          本系列 Tinker 源码解析基于 Tinker v1.9.12
+自动生成TinkerApplication接入 Tinker 第一步就是改造 Application 。官方推荐是利用 @DefaultLifeCycle 动态生成 Application
+12345@DefaultLifeCycle(application = "tinker.sample.android.app.SampleApplication",                  flags = ShareConstants.TINKER_ENABLE_ALL,                  loadVerifyFl
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -2014,196 +2196,6 @@ A
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2019/01/02/ARouter源码解析（二）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="俞其荣的博客 | Qirong Yu's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/02/ARouter源码解析（二）/" itemprop="url">
-                  ARouter源码解析（二）
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-01-02 20:16:40" itemprop="dateCreated datePublished" datetime="2019-01-02T20:16:40+08:00">2019-01-02</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-03-05 00:26:49" itemprop="dateModified" datetime="2019-03-05T00:26:49+08:00">2019-03-05</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/01/02/ARouter源码解析（二）/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/01/02/ARouter源码解析（二）/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          arouter-api version : 1.4.1
-前言前几天对 ARouter 的页面跳转源码进行了分析，趁着今天有空，就讲讲 ARouter 里面的拦截器吧。
-ARouter 拦截器的使用方法在这就不多说了，不了解的同学可以去 GitHub 上看看。那就直接进入正题了。
-拦截器解析把视线转移回 ARouter 的 init 方法
-12345678910111213public static void init(Application application) &#123;    if (!hasInit) &#123;        logger = _ARouter.logger; 
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/02/ARouter源码解析（二）/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2255,7 +2247,7 @@ ARouter 拦截器的使用方法在这就不多说了，不了解的同学可以
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">104</span>
+                    <span class="site-state-item-count">105</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

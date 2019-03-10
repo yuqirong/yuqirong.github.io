@@ -112,19 +112,22 @@
 
 
 
-  <meta name="description" content="加载dex补丁流程TinkerDexLoader.loadTinkerJars判断一下 dexList 和 classLoader
-12345678910111213if (loadDexList.isEmpty() &amp;amp;&amp;amp; classNDexInfo.isEmpty()) &amp;#123;    Log.w(TAG, &quot;there is no dex to load&quot;);    ret">
+  <meta name="description" content="本系列 Tinker 源码解析基于 Tinker v1.9.12
+加载dex补丁流程TinkerDexLoader.loadTinkerJars判断一下 dexList 和 classLoader
+12345678910111213if (loadDexList.isEmpty() &amp;amp;&amp;amp; classNDexInfo.isEmpty()) &amp;#123;    Log.w(TAG, &quot;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Tinker源码分析(三):加载dex补丁流程">
 <meta property="og:url" content="http://yuqirong.me/2019/02/28/Tinker源码分析(三)/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
-<meta property="og:description" content="加载dex补丁流程TinkerDexLoader.loadTinkerJars判断一下 dexList 和 classLoader
-12345678910111213if (loadDexList.isEmpty() &amp;amp;&amp;amp; classNDexInfo.isEmpty()) &amp;#123;    Log.w(TAG, &quot;there is no dex to load&quot;);    ret">
-<meta property="og:updated_time" content="2019-03-04T16:27:49.430Z">
+<meta property="og:description" content="本系列 Tinker 源码解析基于 Tinker v1.9.12
+加载dex补丁流程TinkerDexLoader.loadTinkerJars判断一下 dexList 和 classLoader
+12345678910111213if (loadDexList.isEmpty() &amp;amp;&amp;amp; classNDexInfo.isEmpty()) &amp;#123;    Log.w(TAG, &quot;">
+<meta property="og:updated_time" content="2019-03-09T17:25:13.488Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tinker源码分析(三):加载dex补丁流程">
-<meta name="twitter:description" content="加载dex补丁流程TinkerDexLoader.loadTinkerJars判断一下 dexList 和 classLoader
-12345678910111213if (loadDexList.isEmpty() &amp;amp;&amp;amp; classNDexInfo.isEmpty()) &amp;#123;    Log.w(TAG, &quot;there is no dex to load&quot;);    ret">
+<meta name="twitter:description" content="本系列 Tinker 源码解析基于 Tinker v1.9.12
+加载dex补丁流程TinkerDexLoader.loadTinkerJars判断一下 dexList 和 classLoader
+12345678910111213if (loadDexList.isEmpty() &amp;amp;&amp;amp; classNDexInfo.isEmpty()) &amp;#123;    Log.w(TAG, &quot;">
 
 
 
@@ -404,7 +407,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-03-05 00:27:49" itemprop="dateModified" datetime="2019-03-05T00:27:49+08:00">2019-03-05</time>
+                <time title="修改时间：2019-03-10 01:25:13" itemprop="dateModified" datetime="2019-03-10T01:25:13+08:00">2019-03-10</time>
               
             
           </span>
@@ -465,7 +468,8 @@
       
 
       
-        <h1 id="u52A0_u8F7Ddex_u8865_u4E01_u6D41_u7A0B"><a href="#u52A0_u8F7Ddex_u8865_u4E01_u6D41_u7A0B" class="headerlink" title="加载dex补丁流程"></a>加载dex补丁流程</h1><h2 id="TinkerDexLoader-loadTinkerJars"><a href="#TinkerDexLoader-loadTinkerJars" class="headerlink" title="TinkerDexLoader.loadTinkerJars"></a>TinkerDexLoader.loadTinkerJars</h2><p>判断一下 dexList 和 classLoader</p>
+        <p>本系列 Tinker 源码解析基于 Tinker v1.9.12</p>
+<h1 id="u52A0_u8F7Ddex_u8865_u4E01_u6D41_u7A0B"><a href="#u52A0_u8F7Ddex_u8865_u4E01_u6D41_u7A0B" class="headerlink" title="加载dex补丁流程"></a>加载dex补丁流程</h1><h2 id="TinkerDexLoader-loadTinkerJars"><a href="#TinkerDexLoader-loadTinkerJars" class="headerlink" title="TinkerDexLoader.loadTinkerJars"></a>TinkerDexLoader.loadTinkerJars</h2><p>判断一下 dexList 和 classLoader</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (loadDexList.isEmpty() &amp;&amp; classNDexInfo.isEmpty()) &#123;</span><br><span class="line">    Log.w(TAG, <span class="string">"there is no dex to load"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PathClassLoader classLoader = (PathClassLoader) TinkerDexLoader.class.getClassLoader();</span><br><span class="line"><span class="keyword">if</span> (classLoader != <span class="keyword">null</span>) &#123;</span><br><span class="line">    Log.i(TAG, <span class="string">"classloader: "</span> + classLoader.toString());</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    Log.e(TAG, <span class="string">"classloader is null"</span>);</span><br><span class="line">    ShareIntentUtil.setIntentReturnCode(intentResult, ShareConstants.ERROR_LOAD_PATCH_VERSION_DEX_CLASSLOADER_NULL);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果 TinkerLoadVerifyFlag 为 true 的话，会对每个 dex 进行 md5 校验</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">String dexPath = directory + <span class="string">"/"</span> + DEX_PATH + <span class="string">"/"</span>;</span><br><span class="line"></span><br><span class="line">ArrayList&lt;File&gt; legalFiles = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (ShareDexDiffPatchInfo info : loadDexList) &#123;</span><br><span class="line">    <span class="comment">//for dalvik, ignore art support dex</span></span><br><span class="line">    <span class="comment">// 对于 dalvik 虚拟机，忽略 art support dex</span></span><br><span class="line">    <span class="keyword">if</span> (isJustArtSupportDex(info)) &#123;</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    String path = dexPath + info.realName;</span><br><span class="line">    File file = <span class="keyword">new</span> File(path);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (application.isTinkerLoadVerifyFlag()) &#123;</span><br><span class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">        String checkMd5 = getInfoMd5(info);</span><br><span class="line">        <span class="comment">// 校验dex文件的 md5 值</span></span><br><span class="line">        <span class="keyword">if</span> (!SharePatchFileUtil.verifyDexFileMd5(file, checkMd5)) &#123;</span><br><span class="line">            <span class="comment">//it is good to delete the mismatch file</span></span><br><span class="line">            ShareIntentUtil.setIntentReturnCode(intentResult, ShareConstants.ERROR_LOAD_PATCH_VERSION_DEX_MD5_MISMATCH);</span><br><span class="line">            intentResult.putExtra(ShareIntentUtil.INTENT_PATCH_MISMATCH_DEX_PATH,</span><br><span class="line">                file.getAbsolutePath());</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        Log.i(TAG, <span class="string">"verify dex file:"</span> + file.getPath() + <span class="string">" md5, use time: "</span> + (System.currentTimeMillis() - start));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// dex文件都通过的话，加入到 legalFiles 集合中 </span></span><br><span class="line">    legalFiles.add(file);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -495,6 +499,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">uninstallPatchDex</span><span class="params">(ClassLoader classLoader)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (sPatchDexCount &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= <span class="number">14</span>) &#123;</span><br><span class="line">        Field pathListField = ShareReflectUtil.findField(classLoader, <span class="string">"pathList"</span>);</span><br><span class="line">        Object dexPathList = pathListField.get(classLoader);</span><br><span class="line">        ShareReflectUtil.reduceFieldArray(dexPathList, <span class="string">"dexElements"</span>, sPatchDexCount);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ShareReflectUtil.reduceFieldArray(classLoader, <span class="string">"mPaths"</span>, sPatchDexCount);</span><br><span class="line">        ShareReflectUtil.reduceFieldArray(classLoader, <span class="string">"mFiles"</span>, sPatchDexCount);</span><br><span class="line">        ShareReflectUtil.reduceFieldArray(classLoader, <span class="string">"mZips"</span>, sPatchDexCount);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ShareReflectUtil.reduceFieldArray(classLoader, <span class="string">"mDexs"</span>, sPatchDexCount);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>卸载补丁可以说是加载补丁的逆向操作，具体操作可以分成 v4 和 v14 两个版本</p>
 <p>具体的内容就是把 dexElements 中的头部 element 去除了。</p>
+<p>到这，dex 补丁加载的流程结束了。</p>
 
       
     </div>
@@ -680,7 +685,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">104</span>
+                    <span class="site-state-item-count">105</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
