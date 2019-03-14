@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2019-03-10T16:33:02.144Z</updated>
+  <updated>2019-03-14T15:41:53.172Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -13,6 +13,73 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Tinker源码分析(六):补丁合成流程]]></title>
+    <link href="http://yuqirong.me/2019/03/14/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E5%85%AD)/"/>
+    <id>http://yuqirong.me/2019/03/14/Tinker源码分析(六)/</id>
+    <published>2019-03-14T15:05:56.000Z</published>
+    <updated>2019-03-14T15:41:53.172Z</updated>
+    <content type="html"><![CDATA[<p>本系列 Tinker 源码解析基于 Tinker v1.9.12</p>
+<h1 id="u8865_u4E01_u5408_u6210_u6D41_u7A0B"><a href="#u8865_u4E01_u5408_u6210_u6D41_u7A0B" class="headerlink" title="补丁合成流程"></a>补丁合成流程</h1><p>下发的补丁包其实并不能直接加载，因为补丁包只是差异包，需要和本地的 dex 、资源等进行合成后，得到全量的 dex 才能被完整地使用。这样也就避免了热修复中 dex 的 pre-verify 问题，也减少了补丁包的体积，方便用户下载。</p>
+<p>补丁合成的入口在 TinkerInstaller.onReceiveUpgradePatch 方法</p>
+<h1 id="TinkerInstaller-onReceiveUpgradePatch"><a href="#TinkerInstaller-onReceiveUpgradePatch" class="headerlink" title="TinkerInstaller.onReceiveUpgradePatch"></a>TinkerInstaller.onReceiveUpgradePatch</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onReceiveUpgradePatch</span><span class="params">(Context context, String patchLocation)</span> </span>&#123;</span><br><span class="line">    Tinker.with(context).getPatchListener().onPatchReceived(patchLocation);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的 PatchListener 有默认实现类，即 DefaultPatchListener 。</p>
+<h1 id="DefaultPatchListener-onPatchReceived"><a href="#DefaultPatchListener-onPatchReceived" class="headerlink" title="DefaultPatchListener.onPatchReceived"></a>DefaultPatchListener.onPatchReceived</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">onPatchReceived</span><span class="params">(String path)</span> </span>&#123;</span><br><span class="line">    File patchFile = <span class="keyword">new</span> File(path);</span><br><span class="line">    <span class="comment">// 对补丁进行校验</span></span><br><span class="line">    <span class="keyword">int</span> returnCode = patchCheck(path, SharePatchFileUtil.getMD5(patchFile));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (returnCode == ShareConstants.ERROR_PATCH_OK) &#123;</span><br><span class="line">        <span class="comment">// 通过的话就启动 :process 进程进行补丁合成    </span></span><br><span class="line">        TinkerPatchService.runPatchService(context, path);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 校验失败就回调 onLoadPatchListenerReceiveFail</span></span><br><span class="line">        Tinker.with(context).getLoadReporter().onLoadPatchListenerReceiveFail(<span class="keyword">new</span> File(path), returnCode);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> returnCode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们直接来看 TinkerPatchService.runPatchService 方法</p>
+<h1 id="TinkerPatchService-runPatchService"><a href="#TinkerPatchService-runPatchService" class="headerlink" title="TinkerPatchService.runPatchService"></a>TinkerPatchService.runPatchService</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">runPatchService</span><span class="params">(<span class="keyword">final</span> Context context, <span class="keyword">final</span> String path)</span> </span>&#123;</span><br><span class="line">    TinkerLog.i(TAG, <span class="string">"run patch service..."</span>);</span><br><span class="line">    Intent intent = <span class="keyword">new</span> Intent(context, TinkerPatchService.class);</span><br><span class="line">    <span class="comment">// path 就是补丁的路径</span></span><br><span class="line">    intent.putExtra(PATCH_PATH_EXTRA, path);</span><br><span class="line">    <span class="comment">// RESULT_CLASS_EXTRA 一般默认就是 DefaultTinkerResultService</span></span><br><span class="line">    intent.putExtra(RESULT_CLASS_EXTRA, resultServiceClass.getName());</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        enqueueWork(context, TinkerPatchService.class, JOB_ID, intent);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable thr) &#123;</span><br><span class="line">        TinkerLog.e(TAG, <span class="string">"run patch service fail, exception:"</span> + thr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 runPatchService 中去启动了 TinkerPatchService 。TinkerPatchService 是跑在 :patch<br> 进程中的。</p>
+<p>TinkerPatchService 主要做的事情都在 onHandleWork 中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onHandleWork</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 提高优先级</span></span><br><span class="line">    increasingPriority();</span><br><span class="line">    <span class="comment">// 合成补丁</span></span><br><span class="line">    doApplyPatch(<span class="keyword">this</span>, intent);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先是 increasingPriority 方法，目的就是提高 service 的优先级，具体的方案就是设置为前台服务</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">increasingPriority</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= <span class="number">26</span>) &#123;</span><br><span class="line">        TinkerLog.i(TAG, <span class="string">"for system version &gt;= Android O, we just ignore increasingPriority "</span></span><br><span class="line">                + <span class="string">"job to avoid crash or toasts."</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="string">"ZUK"</span>.equals(Build.MANUFACTURER)) &#123;</span><br><span class="line">        TinkerLog.i(TAG, <span class="string">"for ZUK device, we just ignore increasingPriority "</span></span><br><span class="line">                + <span class="string">"job to avoid crash."</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    TinkerLog.i(TAG, <span class="string">"try to increase patch process priority"</span>);</span><br><span class="line">    <span class="comment">// 设置为前台服务，提高优先级</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Notification notification = <span class="keyword">new</span> Notification();</span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &lt; <span class="number">18</span>) &#123;</span><br><span class="line">            startForeground(notificationId, notification);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            startForeground(notificationId, notification);</span><br><span class="line">            <span class="comment">// start InnerService</span></span><br><span class="line">            startService(<span class="keyword">new</span> Intent(<span class="keyword">this</span>, InnerService.class));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">        TinkerLog.i(TAG, <span class="string">"try to increase patch process priority error:"</span> + e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接着是 doApplyPatch 方法，在这里做补丁合成的事</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">doApplyPatch</span><span class="params">(Context context, Intent intent)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Since we may retry with IntentService, we should prevent</span></span><br><span class="line">    <span class="comment">// racing here again.</span></span><br><span class="line">    <span class="keyword">if</span> (!sIsPatchApplying.compareAndSet(<span class="keyword">false</span>, <span class="keyword">true</span>)) &#123;</span><br><span class="line">        TinkerLog.w(TAG, <span class="string">"TinkerPatchService doApplyPatch is running by another runner."</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Tinker tinker = Tinker.with(context);</span><br><span class="line">    tinker.getPatchReporter().onPatchServiceStart(intent);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (intent == <span class="keyword">null</span>) &#123;</span><br><span class="line">        TinkerLog.e(TAG, <span class="string">"TinkerPatchService received a null intent, ignoring."</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 获取补丁文件的路径</span></span><br><span class="line">    String path = getPatchPathExtra(intent);</span><br><span class="line">    <span class="keyword">if</span> (path == <span class="keyword">null</span>) &#123;</span><br><span class="line">        TinkerLog.e(TAG, <span class="string">"TinkerPatchService can't get the path extra, ignoring."</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    File patchFile = <span class="keyword">new</span> File(path);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">long</span> begin = SystemClock.elapsedRealtime();</span><br><span class="line">    <span class="keyword">boolean</span> result;</span><br><span class="line">    <span class="keyword">long</span> cost;</span><br><span class="line">    Throwable e = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    PatchResult patchResult = <span class="keyword">new</span> PatchResult();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (upgradePatchProcessor == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> TinkerRuntimeException(<span class="string">"upgradePatchProcessor is null."</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 处理补丁合成</span></span><br><span class="line">        result = upgradePatchProcessor.tryPatch(context, path, patchResult);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable throwable) &#123;</span><br><span class="line">        e = throwable;</span><br><span class="line">        result = <span class="keyword">false</span>;</span><br><span class="line">        tinker.getPatchReporter().onPatchException(patchFile, e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cost = SystemClock.elapsedRealtime() - begin;</span><br><span class="line">    tinker.getPatchReporter().</span><br><span class="line">        onPatchResult(patchFile, result, cost);</span><br><span class="line"></span><br><span class="line">    patchResult.isSuccess = result;</span><br><span class="line">    patchResult.rawPatchFilePath = path;</span><br><span class="line">    patchResult.costTime = cost;</span><br><span class="line">    patchResult.e = e;</span><br><span class="line">    <span class="comment">// 补丁合成的结果回调给 DefaultResultService</span></span><br><span class="line">    AbstractResultService.runResultService(context, patchResult, getPatchResultExtra(intent));</span><br><span class="line"></span><br><span class="line">    sIsPatchApplying.set(<span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>upgradePatchProcessor 是一个接口，具体的实现类是 UpgradePatch 。</p>
+<h1 id="UpgradePatch-tryPatch"><a href="#UpgradePatch-tryPatch" class="headerlink" title="UpgradePatch.tryPatch"></a>UpgradePatch.tryPatch</h1><p>那么来看看 UpgradePatch.tryPatch ，方法比较长，分段来看吧。</p>
+<p>首先是对 Tinker 自身开关的校验，然后对补丁文件的合法性进行校验。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">tryPatch</span><span class="params">(Context context, String tempPatchPath, PatchResult patchResult)</span> </span>&#123;</span><br><span class="line">    Tinker manager = Tinker.with(context);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> File patchFile = <span class="keyword">new</span> File(tempPatchPath);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!manager.isTinkerEnabled() || !ShareTinkerInternals.isTinkerEnableWithSharedPreferences(context)) &#123;</span><br><span class="line">        TinkerLog.e(TAG, <span class="string">"UpgradePatch tryPatch:patch is disabled, just return"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!SharePatchFileUtil.isLegalFile(patchFile)) &#123;</span><br><span class="line">        TinkerLog.e(TAG, <span class="string">"UpgradePatch tryPatch:patch file is not found, just return"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>然后检查补丁包的签名以及 tinkerId , 这里的操作和加载补丁是一样的。</p>
+<p>然后就是获取补丁文件的 md5 值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//check the signature, we should create a new checker</span></span><br><span class="line">ShareSecurityCheck signatureCheck = <span class="keyword">new</span> ShareSecurityCheck(context);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> returnCode = ShareTinkerInternals.checkTinkerPackage(context, manager.getTinkerFlags(), patchFile, signatureCheck);</span><br><span class="line"><span class="keyword">if</span> (returnCode != ShareConstants.ERROR_PACKAGE_CHECK_OK) &#123;</span><br><span class="line">    TinkerLog.e(TAG, <span class="string">"UpgradePatch tryPatch:onPatchPackageCheckFail"</span>);</span><br><span class="line">    manager.getPatchReporter().onPatchPackageCheckFail(patchFile, returnCode);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取补丁文件的 md5</span></span><br><span class="line">String patchMd5 = SharePatchFileUtil.getMD5(patchFile);</span><br><span class="line"><span class="keyword">if</span> (patchMd5 == <span class="keyword">null</span>) &#123;</span><br><span class="line">    TinkerLog.e(TAG, <span class="string">"UpgradePatch tryPatch:patch md5 is null, just return"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//use md5 as version</span></span><br><span class="line"><span class="comment">// 用 md5 做版本号</span></span><br><span class="line">patchResult.patchVersion = patchMd5;</span><br><span class="line"></span><br><span class="line">TinkerLog.i(TAG, <span class="string">"UpgradePatch tryPatch:patchMd5:%s"</span>, patchMd5);</span><br></pre></td></tr></table></figure>
+<p>接着，校验完成后，我们就来构造一个新的 patch.info 文件了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//check ok, we can real recover a new patch</span></span><br><span class="line"><span class="keyword">final</span> String patchDirectory = manager.getPatchDirectory().getAbsolutePath();</span><br><span class="line"></span><br><span class="line"><span class="comment">// info.lock 文件</span></span><br><span class="line">File patchInfoLockFile = SharePatchFileUtil.getPatchInfoLockFile(patchDirectory);</span><br><span class="line"><span class="comment">// patch.info 文件</span></span><br><span class="line">File patchInfoFile = SharePatchFileUtil.getPatchInfoFile(patchDirectory);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取出老的 patch.info 文件，可能存在 可能不存在</span></span><br><span class="line">SharePatchInfo oldInfo = SharePatchInfo.readAndCheckPropertyWithLock(patchInfoFile, patchInfoLockFile);</span><br><span class="line"></span><br><span class="line"><span class="comment">//it is a new patch, so we should not find a exist</span></span><br><span class="line">SharePatchInfo newInfo;</span><br><span class="line"></span><br><span class="line"><span class="comment">//如果有老的 patch.info 文件</span></span><br><span class="line"><span class="keyword">if</span> (oldInfo != <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (oldInfo.oldVersion == <span class="keyword">null</span> || oldInfo.newVersion == <span class="keyword">null</span> || oldInfo.oatDir == <span class="keyword">null</span>) &#123;</span><br><span class="line">        TinkerLog.e(TAG, <span class="string">"UpgradePatch tryPatch:onPatchInfoCorrupted"</span>);</span><br><span class="line">        manager.getPatchReporter().onPatchInfoCorrupted(patchFile, oldInfo.oldVersion, oldInfo.newVersion);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!SharePatchFileUtil.checkIfMd5Valid(patchMd5)) &#123;</span><br><span class="line">        TinkerLog.e(TAG, <span class="string">"UpgradePatch tryPatch:onPatchVersionCheckFail md5 %s is valid"</span>, patchMd5);</span><br><span class="line">        manager.getPatchReporter().onPatchVersionCheckFail(patchFile, oldInfo, patchMd5);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// if it is interpret now, use changing flag to wait main process</span></span><br><span class="line">    <span class="keyword">final</span> String finalOatDir = oldInfo.oatDir.equals(ShareConstants.INTERPRET_DEX_OPTIMIZE_PATH)</span><br><span class="line">        ? ShareConstants.CHANING_DEX_OPTIMIZE_PATH : oldInfo.oatDir;</span><br><span class="line">    <span class="comment">// 构造新的 patch.info </span></span><br><span class="line">    newInfo = <span class="keyword">new</span> SharePatchInfo(oldInfo.oldVersion, patchMd5, <span class="keyword">false</span>, Build.FINGERPRINT, finalOatDir);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 构造新的 patch.info </span></span><br><span class="line">    newInfo = <span class="keyword">new</span> SharePatchInfo(<span class="string">""</span>, patchMd5, <span class="keyword">false</span>, Build.FINGERPRINT, ShareConstants.DEFAULT_DEX_OPTIMIZE_PATH);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再接下来，就是把补丁包复制到私有目录中</p>
+<p>具体的路径也就是之前在加载补丁中遇到的 /data/data/应用包名/tinker/patch-xxxxxx/patch-xxxxxx.apk</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//it is a new patch, we first delete if there is any files</span></span><br><span class="line"><span class="comment">//don't delete dir for faster retry</span></span><br><span class="line"><span class="comment">//        SharePatchFileUtil.deleteDir(patchVersionDirectory);</span></span><br><span class="line"><span class="keyword">final</span> String patchName = SharePatchFileUtil.getPatchVersionDirectory(patchMd5);</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> String patchVersionDirectory = patchDirectory + <span class="string">"/"</span> + patchName;</span><br><span class="line"></span><br><span class="line">TinkerLog.i(TAG, <span class="string">"UpgradePatch tryPatch:patchVersionDirectory:%s"</span>, patchVersionDirectory);</span><br><span class="line"></span><br><span class="line"><span class="comment">//copy file</span></span><br><span class="line">File destPatchFile = <span class="keyword">new</span> File(patchVersionDirectory + <span class="string">"/"</span> + SharePatchFileUtil.getPatchVersionFile(patchMd5));</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="comment">// check md5 first</span></span><br><span class="line">  <span class="keyword">if</span> (!patchMd5.equals(SharePatchFileUtil.getMD5(destPatchFile))) &#123;</span><br><span class="line">      <span class="comment">// 复制补丁包到 /data/data/ 中</span></span><br><span class="line">      SharePatchFileUtil.copyFileUsingStream(patchFile, destPatchFile);</span><br><span class="line">      TinkerLog.w(TAG, <span class="string">"UpgradePatch copy patch file, src file: %s size: %d, dest file: %s size:%d"</span>, patchFile.getAbsolutePath(), patchFile.length(),</span><br><span class="line">          destPatchFile.getAbsolutePath(), destPatchFile.length());</span><br><span class="line">  &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line"><span class="comment">//            e.printStackTrace();</span></span><br><span class="line">  TinkerLog.e(TAG, <span class="string">"UpgradePatch tryPatch:copy patch file fail from %s to %s"</span>, patchFile.getPath(), destPatchFile.getPath());</span><br><span class="line">  manager.getPatchReporter().onPatchTypeExtractFail(patchFile, destPatchFile, patchFile.getName(), ShareConstants.TYPE_PATCH_FILE);</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制好之后，就是把补丁包和基准包进行整合了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//we use destPatchFile instead of patchFile, because patchFile may be deleted during the patch process</span></span><br><span class="line"><span class="comment">// 合成 dex</span></span><br><span class="line"><span class="keyword">if</span> (!DexDiffPatchInternal.tryRecoverDexFiles(manager, signatureCheck, context, patchVersionDirectory, destPatchFile)) &#123;</span><br><span class="line">    TinkerLog.e(TAG, <span class="string">"UpgradePatch tryPatch:new patch recover, try patch dex failed"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 合成 so 文件</span></span><br><span class="line"><span class="keyword">if</span> (!BsDiffPatchInternal.tryRecoverLibraryFiles(manager, signatureCheck, context, patchVersionDirectory, destPatchFile)) &#123;</span><br><span class="line">    TinkerLog.e(TAG, <span class="string">"UpgradePatch tryPatch:new patch recover, try patch library failed"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 合成资源文件</span></span><br><span class="line"><span class="keyword">if</span> (!ResDiffPatchInternal.tryRecoverResourceFiles(manager, signatureCheck, context, patchVersionDirectory, destPatchFile)) &#123;</span><br><span class="line">    TinkerLog.e(TAG, <span class="string">"UpgradePatch tryPatch:new patch recover, try patch resource failed"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里面的三个合成代码我们到后面的章节再分析，这里先跳过了。</p>
+<p>合成完后，还要对 dex 进行opt优化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// check dex opt file at last, some phone such as VIVO/OPPO like to change dex2oat to interpreted</span></span><br><span class="line"><span class="keyword">if</span> (!DexDiffPatchInternal.waitAndCheckDexOptFile(patchFile, manager)) &#123;</span><br><span class="line">    TinkerLog.e(TAG, <span class="string">"UpgradePatch tryPatch:new patch recover, check dex opt file failed"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后，就是把结果重新写入到 patch.info ，这样在加载补丁的流程中就能加载新补丁了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!SharePatchInfo.rewritePatchInfoFileWithLock(patchInfoFile, newInfo, patchInfoLockFile)) &#123;</span><br><span class="line">    TinkerLog.e(TAG, <span class="string">"UpgradePatch tryPatch:new patch recover, rewrite patch info failed"</span>);</span><br><span class="line">    manager.getPatchReporter().onPatchInfoCorrupted(patchFile, newInfo.oldVersion, newInfo.newVersion);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TinkerLog.w(TAG, <span class="string">"UpgradePatch tryPatch: done, it is ok"</span>);</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">true</span>;</span><br></pre></td></tr></table></figure>
+<p>over ，整个合成补丁的流程讲完了，这里还留了三个坑：</p>
+<ul>
+<li>dex 文件的合成</li>
+<li>so 文件的合成</li>
+<li>资源文件的合成</li>
+</ul>
+<p>到后面再讲吧。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>本系列 Tinker 源码解析基于 Tinker v1.9.12</p>
+<h1 id="u8865_u4E01_u5408_u6210_u6D41_u7A0B"><a href="#u8865_u4E01_u5408_u6210_u6D41_u7A0B" class="h]]>
+    </summary>
+    
+      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+    
+      <category term="Tinker" scheme="http://yuqirong.me/tags/Tinker/"/>
+    
+      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+    
+      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+    
+      <category term="热修复" scheme="http://yuqirong.me/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
+    
+      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Tinker源码分析(五):加载so补丁流程]]></title>
@@ -784,7 +851,7 @@ public class SampleApplication extends TinkerApplication {
 </code></pre><p>再然后我们就要对这个记录做一些处理，能让 Git 识别这些代码提交者</p>
 <pre><code>vi svn-history.txt
 </code></pre><p>把内容改成如下：</p>
-<p>xiaoming = xiaoming  <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#x78;&#x69;&#97;&#x6f;&#x6d;&#x69;&#110;&#x67;&#x40;&#x31;&#54;&#x33;&#x2e;&#x63;&#x6f;&#x6d;">&#x78;&#x69;&#97;&#x6f;&#x6d;&#x69;&#110;&#x67;&#x40;&#x31;&#54;&#x33;&#x2e;&#x63;&#x6f;&#x6d;</a><br>xiaowang = xiaowang  <a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#111;&#58;&#120;&#105;&#97;&#x6f;&#119;&#x61;&#110;&#x67;&#64;&#x71;&#x71;&#46;&#99;&#111;&#x6d;">&#120;&#105;&#97;&#x6f;&#119;&#x61;&#110;&#x67;&#64;&#x71;&#x71;&#46;&#99;&#111;&#x6d;</a><br>xiaohong = xiaohong  <a href="&#x6d;&#97;&#105;&#x6c;&#116;&#111;&#x3a;&#x78;&#x69;&#x61;&#111;&#104;&#x6f;&#110;&#103;&#64;&#113;&#113;&#x2e;&#x63;&#111;&#x6d;">&#x78;&#x69;&#x61;&#111;&#104;&#x6f;&#110;&#103;&#64;&#113;&#113;&#x2e;&#x63;&#111;&#x6d;</a></p>
+<p>xiaoming = xiaoming  <a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x78;&#105;&#97;&#x6f;&#x6d;&#105;&#x6e;&#x67;&#64;&#49;&#54;&#51;&#46;&#x63;&#111;&#109;">&#x78;&#105;&#97;&#x6f;&#x6d;&#105;&#x6e;&#x67;&#64;&#49;&#54;&#51;&#46;&#x63;&#111;&#109;</a><br>xiaowang = xiaowang  <a href="&#109;&#x61;&#x69;&#108;&#x74;&#x6f;&#x3a;&#x78;&#105;&#97;&#x6f;&#119;&#97;&#x6e;&#x67;&#64;&#113;&#113;&#x2e;&#x63;&#111;&#109;">&#x78;&#105;&#97;&#x6f;&#119;&#97;&#x6e;&#x67;&#64;&#113;&#113;&#x2e;&#x63;&#111;&#109;</a><br>xiaohong = xiaohong  <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#111;&#x3a;&#120;&#105;&#x61;&#111;&#x68;&#111;&#110;&#x67;&#x40;&#x71;&#x71;&#x2e;&#x63;&#111;&#x6d;">&#120;&#105;&#x61;&#111;&#x68;&#111;&#110;&#x67;&#x40;&#x71;&#x71;&#x2e;&#x63;&#111;&#x6d;</a></p>
 <p>保存好后，输入命令</p>
 <pre><code>git svn clone  svn://svn.yoursvnaddress.com/XXXX/  --no-metadata  --authors-file=svn-history.txt
 </code></pre><p>这条命令会在当前目录下新建一个 XXXX 项目，这个 XXXX 项目是用 Git 的。</p>
@@ -1317,157 +1384,6 @@ public static void logout(Context context, Bundle bundle) {
     </summary>
     
       <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[记自己2018年三月份的面试经历]]></title>
-    <link href="http://yuqirong.me/2018/04/01/%E8%AE%B0%E8%87%AA%E5%B7%B12018%E5%B9%B4%E4%B8%89%E6%9C%88%E4%BB%BD%E7%9A%84%E9%9D%A2%E8%AF%95%E7%BB%8F%E5%8E%86/"/>
-    <id>http://yuqirong.me/2018/04/01/记自己2018年三月份的面试经历/</id>
-    <published>2018-04-01T15:03:24.000Z</published>
-    <updated>2018-04-10T13:23:42.422Z</updated>
-    <content type="html"><![CDATA[<h1 id="u70E6_u70E6_u70E6_u70E6"><a href="#u70E6_u70E6_u70E6_u70E6" class="headerlink" title="烦烦烦烦"></a>烦烦烦烦</h1><p>过完年后，又是一波招聘热季，各种好公司、好岗位都在拼命招揽人才。自己也考虑到以后的发展和更好的工作还有未来，整天处于焦虑和烦恼的状态，看看自己现在拿到的工资，不多。所以为了改变这局面，打算下海试试水。</p>
-<p>先讲一下自己的情况，2016 年本科毕业，在目前这家公司基本上已经在职一年半多了。而最近大半年在公司都是做 Java 开发，处于大白阶段，会写代码，但是没有深入到框架源码。</p>
-<p>所以想要去市场上应聘 Android 岗位，还需要好好复习一番，因为半年没有碰 Android 了。结果还是发现有些知识点在面试的过程中已经记不清了，生疏了。</p>
-<p>由于自己是在职，考虑更好的发展机会，所以并没有疯狂海投简历，而是先找了自己的同学朋友内推了一波，之后投了几家自己喜欢的公司。下面我就开始讲讲自己的经历。</p>
-<h1 id="u9762_u8BD5_u7684_u51E0_u5BB6_u516C_u53F8"><a href="#u9762_u8BD5_u7684_u51E0_u5BB6_u516C_u53F8" class="headerlink" title="面试的几家公司"></a>面试的几家公司</h1><h2 id="u4EBF_u5496_u901A"><a href="#u4EBF_u5496_u901A" class="headerlink" title="亿咖通"></a>亿咖通</h2><p>先联系了自己的同学 A ，正好他们公司也在招 Android 开发，所以先打算试试水。</p>
-<p>面试时了解到，该公司是在车载设备上开发 APP 的，听上去好像很高大上，是由吉利投资的。</p>
-<p>面试一开始，讲了自己现在公司做的是 Java 开发，结果前两个面试官问我的都是一些 Java 问题，有点虚…幸好第三个面试官是 Android 开发，不然真扛不住，哈哈。</p>
-<ul>
-<li>MyBatis 和 Hibernate 的相同和不同处，以及实用场景；</li>
-<li>Redis 存储和数据库存储的区别；</li>
-<li>MVP 架构模式的优点和缺点，与 MVC 的比较；</li>
-<li>Android 多进程通信；</li>
-<li>目前在职公司的产品介绍和自己负责的模块；</li>
-<li>Android 内存泄露，举例几个容易发生内存泄露的场景；</li>
-<li>Android 插件化的原理；</li>
-<li>OKHttp 的源码和原理</li>
-<li>Retrofit 的源码和原理；</li>
-<li>RecyclerView 中的 LayoutManager ;</li>
-<li>剩下的不记得了，时间有点久远。。。</li>
-</ul>
-<p>Android 的问题基本上都回答出来了，但是一些细节上面有些遗忘，因为真的好久没写过 Android 代码了。面试完后，面试官说自己的 Android 技术水平没我好，我方了。</p>
-<p>最后，很遗憾没有拿到该公司的 offer ，好像是因为他们公司 Android 开发招满了，没有名额了。</p>
-<h2 id="u6D77_u5EB7_u5A01_u89C6"><a href="#u6D77_u5EB7_u5A01_u89C6" class="headerlink" title="海康威视"></a>海康威视</h2><p>吸取了之前面试失败的教训，所以又让同学 B 给我内推了海康威视，正好也在招 Android 开发。</p>
-<p>海康威视是做视频监控、安防这一块的，是一家很牛逼的公司，所以自己心里在想要好好复习，把握机会，一块去滨江开拓事业。(/斜眼笑)</p>
-<p>面试的过程和两位面试官聊的很愉快，轻轻松松。面试官问的问题也不难，所以技术面 easy 就过了。以下面试中问到的几个问题，可能记录不全，一部分已经忘了。</p>
-<ul>
-<li>自我介绍，公司产品介绍，负责哪一块；</li>
-<li>写博客的意义，为什么开始写博客，还问了“简书程序员优秀作者”这个 title 怎么搞到的，哈哈哈；</li>
-<li>Kotlin 和 Java 相比，有哪些优点，有没有在实际项目中使用；</li>
-<li>MVC 、MVP 和 MVVM 三种架构的区别和优点；</li>
-<li>Vue.js 数据和视图双向绑定的原理，emmmmmm，这个真的不知道，只知道有个 v-bind 这东东；</li>
-<li>Retrofit 框架的源码以及原理；</li>
-<li>Android 插件化框架的原理；</li>
-<li>热更新框架的原理；</li>
-<li>HTTPS 的原理；</li>
-<li>目前在职公司 Java 开发的架构；</li>
-<li>Android 内存泄露，举例几个容易发生内存泄露的场景；</li>
-<li>Android Native 和 JS 通信有几种方式，有没有用到什么框架之类的；</li>
-<li>Android 布局优化相关的问题，就回答了 include 、 merge 标签和 ViewStub 以及降低 View 层级之类的；</li>
-<li>有没有了解过 React Native 或者 Weex ；</li>
-<li>接不接受大小周，接不接受晚 上加班加的晚，接不接受偶尔出差，那我肯定都说接受啊，哈哈哈哈；</li>
-<li>剩下的也记不清了，反正问的问题不是特别难，和面试官说说笑笑就过了；</li>
-</ul>
-<p>因为和两个面试官聊的比较开心，轻松愉快。所以技术面顺利地通过了。感觉我会的东西比较杂，即会 Android ，又会写 Java ，还自学过 Vue.js 。</p>
-<p>之后就叫我等待 HR 面试，此时此刻，我以为我已经稳了，结果我 GG 了。</p>
-<p>一般来说，能到 HR 面，可以说只要别脑抽犯傻，offer 已经是探囊取物了。</p>
-<p>和 HR 面试也不多说了，就是问到的方面涉及很多很杂，工作、生活和成长等都有，自己也回答得不错。结果到最后掉了链子，当 HR 问到我自己的期望薪资是多少，报了一个较高的数字。结果 HR 一听马上就问我最低能接受多少？我脑抽地回答最低就是这个数字了。结果，emmmmmmmmmm，一首凉凉送给自己。</p>
-<p>现在回想起来，不知道当时自己嗑了什么药，完美地葬送了一个 offer 。</p>
-<h2 id="u5F53_u8D1D_u7F51_u7EDC"><a href="#u5F53_u8D1D_u7F51_u7EDC" class="headerlink" title="当贝网络"></a>当贝网络</h2><p>这家公司是自己在 BOSS 直聘上投的（没有打广告），之后收到面试通知，约在了工作日的晚上，打算下班了赶过去面试。</p>
-<p>之后了解到这家公司专注于智能电视平台的，旗下有为智能电视和安卓电视盒打造的应用市场,就像手机里的应用宝、豌豆荚一样，好像在国内的智能电视市场里很厉害，是处于领先地位。</p>
-<p>好了，讲回面试吧。因为面试的时间比较紧急，所以也没有好好准备，结果被面试官给虐菜了。上面试题：</p>
-<ul>
-<li>单元测试有没有做过，说说熟悉的单元测试框架；</li>
-<li>Retrofit 框架的原，里面使用到的注解是编译时注解还是运行时注解；</li>
-<li>RxJava 操作符，map 和 flatMap 的区别；</li>
-<li>Fragment 在 ViewPager 里面的生命周期，滑动 ViewPager 的页面时 Fragment 的生命周期的变化；</li>
-<li>内存泄漏。举例有哪些情况会发生内存泄漏；</li>
-<li>Gradle 打包；</li>
-<li>AOP IOC 的好处以及在 Android 开发中的应用；</li>
-<li>View 触摸事件分发机制；</li>
-<li>Java基础： static 和 final 关键字的用法；</li>
-<li>ArrayList 和 LinkedList 的区别和使用场景；</li>
-<li>MVC 、MVP 和 MVVM 三种架构的区别和优点；</li>
-<li>Dagger2 框架中 @module 和 @component 的区别；</li>
-<li>Kotlin 特性，和 Java 相比有什么不同的地方；</li>
-<li>MVP 架构中 Presenter 定义为接口有什么好处；</li>
-<li>Jenkins持续集成；</li>
-<li>Android 插件化的原理；</li>
-<li>Handler 、MessageQueue 、Looper三者的关系和原理；</li>
-<li>对于 Android 开发，自己擅长哪方面；</li>
-<li>Java动态代理的使用，InvocationHandler 有什么用；</li>
-<li>为什么 Google 会推出Fragment ，有什么好处和用途？ 直接用 View 代替不行么？</li>
-</ul>
-<p>这次面试有好几题都回答不上来，有些地方不够深入。问了一下面试官，他已经做了六年的 Android 开发了，厉害厉害。</p>
-<p>本来回去的路上感觉这次面试肯定挂了，结果出乎意料地第二天 HR 打给我电话说我的技术面通过了。之后因为路途太遥远，所以 HR 面直接在电话里面试了。</p>
-<p>最后在谈薪资的时候感觉自己对这份 offer 提供的薪资不太满意，所以考虑了几天拒绝了这份 offer 。之后就又开始寻找有没有更好的机会了。</p>
-<h2 id="u6709_u8D5E"><a href="#u6709_u8D5E" class="headerlink" title="有赞"></a>有赞</h2><p>有赞这家公司也是我在 BOSS 上投的（真的没有打广告），投完之后，两三天内一点消息都没有，我以为是看不上我了。结果之后发短信给我说需要电话面试我，那就来吧来吧，没啥好虚的。</p>
-<p>有赞之前还是了解过的，是一家比较注重技术的公司，在杭州也是比较有名气的。所以想好好发挥，拿到 offer 。</p>
-<p>有赞技术面我一共面了三轮，分别是：电话面试、现场面试、Android 组 Leader 面试。那么我就把这三轮的面试题一轮一轮地说。</p>
-<h3 id="u7B2C_u4E00_u8F6E_u7535_u8BDD_u9762_u8BD5"><a href="#u7B2C_u4E00_u8F6E_u7535_u8BDD_u9762_u8BD5" class="headerlink" title="第一轮电话面试"></a>第一轮电话面试</h3><ul>
-<li>项目介绍，自己负责哪些内容；</li>
-<li>安卓安全方面了解过吗，反编译、加壳之类的；</li>
-<li>MVC 、MVP 和 MVVM 三种架构的区别和优点；</li>
-<li>Retrofit框架的原理，感觉这个每次都会被问到。。。；</li>
-<li>HTTPS 握手的步骤和过程；</li>
-<li>Jenkins 自动构建；</li>
-<li>Android Studio 3.0 中 Gradle 的 api 和 implementation 有什么区别；</li>
-<li>HandlerThread 的原理和使用场景；</li>
-<li>AsnycTask 的原理和使用场景；</li>
-<li>Handler 、MessageQueue 、Looper三者的关系和原理；</li>
-<li>Android 插件化的原理；</li>
-<li>热修复的原理；</li>
-<li>应用程序崩溃统计以及数据分析；</li>
-</ul>
-<p>电话面试的内容差不多就这些，面完后又过了三天才给我通知说有下一轮面试，在此期间我以为我电话面试挂了呢。。。</p>
-<h3 id="u7B2C_u4E8C_u8F6E_u73B0_u573A_u9762_u8BD5"><a href="#u7B2C_u4E8C_u8F6E_u73B0_u573A_u9762_u8BD5" class="headerlink" title="第二轮现场面试"></a>第二轮现场面试</h3><ul>
-<li>Android 插件化的原理；</li>
-<li>热修复的原理；</li>
-<li>Java GC 回收，如何判断对象存活；</li>
-<li>Java GC 算法；</li>
-<li>AsyncTask 、HandlerThread 、IntentService 的原理和使用场景；</li>
-<li>会哪些 RxJava 操作符，map 和 flatMap 的区别；</li>
-<li>Retrofit框架的原理，emmmmmm ，又是这个；</li>
-<li>Bitmap 优化；</li>
-<li>RecyclerView 和 ListView 的相同和不同点，在 item 回收上有什么不同；</li>
-<li>View 事件分发机制；</li>
-<li>说说 apk 打包流程；</li>
-<li>有没有做过 apk 多渠道打包；</li>
-<li>Android 组件化的原理，还有一些组件化平时使用的问题；</li>
-<li>Binder 有没有了解过；</li>
-<li>HashMap 的存储原理；</li>
-<li>Kotlin 特性，和 Java 相比有什么不同的地方；</li>
-<li>Android Framework层有没有了解过，说说 Window 窗口添加的过程；</li>
-<li>Window Activity View 三者的关系；</li>
-<li>消息推送有没有做过，推送到达率的问题；</li>
-<li>Android 分享 SDK 有没有做过；</li>
-</ul>
-<p>第二轮的面试也通过了，不过因为约在了晚上，所以 HR 已经下班了，所以跟我说之后会联系我的。</p>
-<h3 id="u7B2C_u4E09_u8F6E_u73B0_u573A_u9762_u8BD5"><a href="#u7B2C_u4E09_u8F6E_u73B0_u573A_u9762_u8BD5" class="headerlink" title="第三轮现场面试"></a>第三轮现场面试</h3><p>过了一天，有人加我微信，说再约一次技术面，是团队里面的 Leader 来面试我。没办法，继续干，又约在了工作日晚上面试。</p>
-<ul>
-<li>项目介绍，负责内容等；</li>
-<li>HTTPS 的原理；</li>
-<li>HTTP 2.0 有没有了解过；</li>
-<li>讨论技术和业务哪个重要；</li>
-<li>Android 热修复原理；</li>
-<li>剩下的记不住了…</li>
-</ul>
-<p>因为技术面之前已经面了一轮，所以这次 Leader 面试技术问题提问比较少，大部分时间都在互相讨论聊天，当然结果也是很愉快地结束了。之后叫我等一下，HR 来面试我。</p>
-<p>因为之前海康 HR 面还让我心有余悸，所以这次 HR 面试也是格外谨慎。幸好，HR 面试没出什么大问题，叫我回去等通知。 </p>
-<p>最后，等了四天这样子，有赞 HR 给我打电话说顺利通过面试了，给我发了 offer ，大功告成了。</p>
-<h1 id="u5199_u5728_u7ED3_u5C3E"><a href="#u5199_u5728_u7ED3_u5C3E" class="headerlink" title="写在结尾"></a>写在结尾</h1><p>现在回头看看，自己面试的公司也只有三四家，不算多，也是因为自己还在职的原因吧。</p>
-<p>至于结果也还算满意，拿到有赞的 offer ，又要开启一段新的征程了。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="u70E6_u70E6_u70E6_u70E6"><a href="#u70E6_u70E6_u70E6_u70E6" class="headerlink" title="烦烦烦烦"></a>烦烦烦烦</h1><p>过完年后，又是一波招聘热季，各种好公司、好岗位都]]>
-    </summary>
-    
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
-    
-      <category term="岁月如歌" scheme="http://yuqirong.me/tags/%E5%B2%81%E6%9C%88%E5%A6%82%E6%AD%8C/"/>
     
       <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
     
