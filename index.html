@@ -342,6 +342,188 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2019/03/18/Apk安全之校验签名/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="俞其荣">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="俞其荣的博客 | Qirong Yu's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/18/Apk安全之校验签名/" itemprop="url">
+                  Apk安全之校验签名
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-03-18 23:17:31 / 修改时间：23:51:43" itemprop="dateCreated datePublished" datetime="2019-03-18T23:17:31+08:00">2019-03-18</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/18/Apk安全之校验签名/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/03/18/Apk安全之校验签名/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          校验签名一般绝大多数的 app 在上线前都会做一层安全防护，比如代码混淆、加固等。
+今天就来讲讲其中的一项：校验签名。
+校验签名可以有效的防止二次打包，避免你的 app 被植入广告甚至破解等。而今天就从两个角度来讲签名的具体校验：
+
+Java 层
+C/C++ 层
+
+那么就先开始讲 java 层好了。
+Java 层123456789101112131415private static boolean validateAppSignature(Context context, String apkSignature) &#123;    try &#123;        PackageManag
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/03/18/Apk安全之校验签名/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2019/03/14/Tinker源码分析(六)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1106,7 +1288,7 @@ tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledFor
           <h2 class="post-title" itemprop="name headline">
                 
                 <a class="post-title-link" href="/2019/02/27/Tinker源码分析(二)/" itemprop="url">
-                  Tinker源码分析(二):加载补丁
+                  Tinker源码分析(二):加载补丁流程
                 </a>
               
             
@@ -1149,7 +1331,7 @@ tryLoadPatchFilesInternal1234567891011//check resourcefinal boolean isEnabledFor
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-03-10 01:25:18" itemprop="dateModified" datetime="2019-03-10T01:25:18+08:00">2019-03-10</time>
+                <time title="修改时间：2019-03-14 23:54:09" itemprop="dateModified" datetime="2019-03-14T23:54:09+08:00">2019-03-14</time>
               
             
           </span>
@@ -2002,196 +2184,6 @@ AutoRegister : https://github.com/luckybilly/AutoRegister
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2019/01/05/ARouter源码解析（四）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="俞其荣的博客 | Qirong Yu's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/05/ARouter源码解析（四）/" itemprop="url">
-                  ARouter源码解析（四）
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-01-05 22:35:21" itemprop="dateCreated datePublished" datetime="2019-01-05T22:35:21+08:00">2019-01-05</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-03-05 00:26:35" itemprop="dateModified" datetime="2019-03-05T00:26:35+08:00">2019-03-05</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/01/05/ARouter源码解析（四）/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/01/05/ARouter源码解析（四）/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          arouter-compiler version : 1.2.2
-前言之前对 arouter-api 做了整个流程的分析，今天来看看 arouter-compiler 。
-arouter-compiler 主要是利用 apt 在编译期自动生成代码的。之前我们看到的 ARouter$$Root$$app 、 ARouter$$Group$$test 和 Test1Activity$$ARouter$$Autowired 等都是 arouter-compiler 生成的。
-那接下来就分析分析 arouter-compiler 是怎么生成这些源码的。
-arouter-compilerarouter-
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/05/ARouter源码解析（四）/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2243,7 +2235,7 @@ arouter-compilerarouter-
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">106</span>
+                    <span class="site-state-item-count">107</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
