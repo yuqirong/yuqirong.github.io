@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yuqirong.me/guestbook/index.html</loc>
+    <lastmod>2019-03-19T16:17:30.792Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://yuqirong.me/2019/03/18/Apk%E5%AE%89%E5%85%A8%E4%B9%8B%E6%A0%A1%E9%AA%8C%E7%AD%BE%E5%90%8D/</loc>
     <lastmod>2019-03-18T15:51:43.149Z</lastmod>
   </url>
@@ -399,11 +404,6 @@
   <url>
     <loc>http://yuqirong.me/2018/06/20/Android%20Architecture%20Component%E4%B9%8BLiveData%E8%A7%A3%E6%9E%90/</loc>
     <lastmod>2018-07-14T16:30:33.283Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/guestbook/index.html</loc>
-    <lastmod>2018-06-23T16:13:49.763Z</lastmod>
   </url>
   
   <url>
