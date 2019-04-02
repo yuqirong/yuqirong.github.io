@@ -4,11 +4,11 @@
 
     
   <url>
-    <loc>http://yuqirong.me/2019/03/24/Activity%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</loc>
-    <lastmod>2019-04-02T16:16:33.997Z</lastmod>
+    <loc>http://yuqirong.me/2019/03/24/startActivity%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</loc>
+    <lastmod>2019-04-02T16:22:18.435Z</lastmod>
     <data>
         <display>
-        <title>Activity启动流程</title>
+        <title>startActivity启动流程</title>
         <pubTime>2019-03-24T13:56:50.000Z</pubTime>
         
         <tag>Activity</tag>
