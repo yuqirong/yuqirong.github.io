@@ -4,12 +4,34 @@
 
     
   <url>
-    <loc>http://yuqirong.me/2019/03/24/startActivity%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</loc>
-    <lastmod>2019-04-02T16:22:18.435Z</lastmod>
+    <loc>http://yuqirong.me/2015/08/26/%E5%85%B3%E4%BA%8EActivity%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E5%B0%8F%E7%BB%93/</loc>
+    <lastmod>2019-04-03T15:06:11.840Z</lastmod>
+    <data>
+        <display>
+        <title>关于Activity生命周期的小结</title>
+        <pubTime>2015-08-26T14:13:31.000Z</pubTime>
+        
+        <tag>Activity</tag>
+         
+        <tag>Android</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/04/03/startActivity%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</loc>
+    <lastmod>2019-04-02T16:24:26.425Z</lastmod>
     <data>
         <display>
         <title>startActivity启动流程</title>
-        <pubTime>2019-03-24T13:56:50.000Z</pubTime>
+        <pubTime>2019-04-03T13:56:50.000Z</pubTime>
         
         <tag>Activity</tag>
          
@@ -1473,28 +1495,6 @@
         <title>关于Android 6.0的运行时权限处理</title>
         <pubTime>2016-06-08T14:12:20.000Z</pubTime>
         
-        <tag>Android</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yuqirong.me/2015/08/26/%E5%85%B3%E4%BA%8EActivity%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E5%B0%8F%E7%BB%93/</loc>
-    <lastmod>2018-11-11T12:07:26.381Z</lastmod>
-    <data>
-        <display>
-        <title>关于Activity生命周期的小结</title>
-        <pubTime>2015-08-26T14:13:31.000Z</pubTime>
-        
-        <tag>Activity</tag>
-         
         <tag>Android</tag>
          
          

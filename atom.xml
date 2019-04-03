@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yuqirong.me/"/>
-  <updated>2019-04-02T16:22:18.435Z</updated>
+  <updated>2019-04-02T16:24:26.425Z</updated>
   <id>http://yuqirong.me/</id>
   
   <author>
@@ -16,10 +16,10 @@
   
   <entry>
     <title><![CDATA[startActivity启动流程]]></title>
-    <link href="http://yuqirong.me/2019/03/24/startActivity%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/"/>
-    <id>http://yuqirong.me/2019/03/24/startActivity启动流程/</id>
-    <published>2019-03-24T13:56:50.000Z</published>
-    <updated>2019-04-02T16:22:18.435Z</updated>
+    <link href="http://yuqirong.me/2019/04/03/startActivity%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/"/>
+    <id>http://yuqirong.me/2019/04/03/startActivity启动流程/</id>
+    <published>2019-04-03T13:56:50.000Z</published>
+    <updated>2019-04-02T16:24:26.425Z</updated>
     <content type="html"><![CDATA[<p>注：源码分析基于 Android SDK API 28</p>
 <p>对于 Activity 大家都已经很熟悉很亲切了吧，在这就不过多介绍了。</p>
 <p>直接进入正题，走起！</p>
@@ -1133,7 +1133,7 @@ public class SampleApplication extends TinkerApplication {
 </code></pre><p>再然后我们就要对这个记录做一些处理，能让 Git 识别这些代码提交者</p>
 <pre><code>vi svn-history.txt
 </code></pre><p>把内容改成如下：</p>
-<p>xiaoming = xiaoming  <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#58;&#120;&#105;&#97;&#x6f;&#109;&#x69;&#x6e;&#103;&#64;&#49;&#54;&#x33;&#x2e;&#x63;&#111;&#109;">&#120;&#105;&#97;&#x6f;&#109;&#x69;&#x6e;&#103;&#64;&#49;&#54;&#x33;&#x2e;&#x63;&#111;&#109;</a><br>xiaowang = xiaowang  <a href="&#x6d;&#97;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x78;&#x69;&#97;&#x6f;&#119;&#x61;&#110;&#x67;&#64;&#x71;&#x71;&#x2e;&#x63;&#x6f;&#109;">&#x78;&#x69;&#97;&#x6f;&#119;&#x61;&#110;&#x67;&#64;&#x71;&#x71;&#x2e;&#x63;&#x6f;&#109;</a><br>xiaohong = xiaohong  <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#120;&#105;&#97;&#111;&#104;&#111;&#110;&#x67;&#64;&#x71;&#x71;&#46;&#x63;&#111;&#x6d;">&#120;&#105;&#97;&#111;&#104;&#111;&#110;&#x67;&#64;&#x71;&#x71;&#46;&#x63;&#111;&#x6d;</a></p>
+<p>xiaoming = xiaoming  <a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#111;&#58;&#120;&#105;&#x61;&#x6f;&#x6d;&#x69;&#110;&#x67;&#x40;&#49;&#x36;&#x33;&#x2e;&#x63;&#x6f;&#109;">&#120;&#105;&#x61;&#x6f;&#x6d;&#x69;&#110;&#x67;&#x40;&#49;&#x36;&#x33;&#x2e;&#x63;&#x6f;&#109;</a><br>xiaowang = xiaowang  <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#111;&#58;&#x78;&#x69;&#97;&#111;&#119;&#x61;&#110;&#103;&#64;&#113;&#113;&#46;&#x63;&#x6f;&#x6d;">&#x78;&#x69;&#97;&#111;&#119;&#x61;&#110;&#103;&#64;&#113;&#113;&#46;&#x63;&#x6f;&#x6d;</a><br>xiaohong = xiaohong  <a href="&#109;&#x61;&#105;&#108;&#x74;&#111;&#x3a;&#120;&#105;&#97;&#x6f;&#x68;&#111;&#110;&#103;&#x40;&#x71;&#x71;&#46;&#x63;&#x6f;&#x6d;">&#120;&#105;&#97;&#x6f;&#x68;&#111;&#110;&#103;&#x40;&#x71;&#x71;&#46;&#x63;&#x6f;&#x6d;</a></p>
 <p>保存好后，输入命令</p>
 <pre><code>git svn clone  svn://svn.yoursvnaddress.com/XXXX/  --no-metadata  --authors-file=svn-history.txt
 </code></pre><p>这条命令会在当前目录下新建一个 XXXX 项目，这个 XXXX 项目是用 Git 的。</p>
