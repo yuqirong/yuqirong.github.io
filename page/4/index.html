@@ -342,6 +342,195 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2018/01/21/ArrayList内部原理解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="俞其荣">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="俞其荣的博客 | Qirong Yu's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/21/ArrayList内部原理解析/" itemprop="url">
+                  ArrayList内部原理解析
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-01-21 18:12:10" itemprop="dateCreated datePublished" datetime="2018-01-21T18:12:10+08:00">2018-01-21</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-01-27 17:06:25" itemprop="dateModified" datetime="2018-01-27T17:06:25+08:00">2018-01-27</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-Blog/" itemprop="url" rel="index"><span itemprop="name">Java Blog</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/21/ArrayList内部原理解析/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/01/21/ArrayList内部原理解析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          注：本文解析的 ArrayList 源代码基于 Java 1.8 。
+Header之前讲了 HashMap 的原理后，今天来看一下 ArrayList 。
+ArrayList 也是非常常用的集合类。它是有序的并且可以存储重复元素的。 ArrayList 底层其实就是一个数组，并且会动态扩容的。
+源码分析构造方法1234567891011121314151617181920212223242526272829public ArrayList(int initialCapacity) &#123;    if (initialCapacity &gt; 0) &#123;        // 创建
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/01/21/ArrayList内部原理解析/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2018/01/13/HashMap内部原理解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2044,195 +2233,6 @@ Window的添加机制上面我们看到了在 makeVisible() 中调用了 wm.addV
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2017/09/28/Window源码解析(一)：与DecorView的那些事/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="俞其荣的博客 | Qirong Yu's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/28/Window源码解析(一)：与DecorView的那些事/" itemprop="url">
-                  Window源码解析(一)：与DecorView的那些事
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-09-28 14:39:03" itemprop="dateCreated datePublished" datetime="2017-09-28T14:39:03+08:00">2017-09-28</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-11-11 20:07:20" itemprop="dateModified" datetime="2018-11-11T20:07:20+08:00">2018-11-11</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/09/28/Window源码解析(一)：与DecorView的那些事/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/09/28/Window源码解析(一)：与DecorView的那些事/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。
-Header今天我们来讲讲 Window ，Window 代表着一个窗口。
-比如在 Activity 中，我们可以设置自定义的视图 View ，其实 View 并不是直接附着在 Activity 上，而是 View 附着在 Window 上，Activity 又持有一个 Window 对象。可见，Window 是一个重要的角色，主要用来负责管理 View 的。而 Window 和 View 又是通过 ViewRootImpl 来建立联系的，这在之前的《View的工作原理》中介绍过。
-所以一个 Window 就
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/28/Window源码解析(一)：与DecorView的那些事/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2284,7 +2284,7 @@ Header今天我们来讲讲 Window ，Window 代表着一个窗口。
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">111</span>
+                    <span class="site-state-item-count">112</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2430,7 +2430,9 @@ Header今天我们来讲讲 Window ，Window 代表着一个窗口。
                     
                       
                     
-                    <span class="site-state-item-count">47</span>
+                      
+                    
+                    <span class="site-state-item-count">48</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
