@@ -403,7 +403,7 @@ PhoneWindow
 
 看到这，我们可以画一张图出来了，把 PhoneWindow 、DecorView 和 mContentParent 都理清楚：
 
-![View层级](http://ofyt9w4c2.bkt.clouddn.com/20170928/20170928102356.jpg) 
+![View层级](/uploads/20170928/20170928102356.jpg) 
 
 然后进行标题设置之类的工作。最后得到并返回 mContentParent 。
 

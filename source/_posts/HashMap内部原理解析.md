@@ -25,7 +25,7 @@ HashMap 必知
 4. threshold：扩容阀值。即 扩容阀值 = HashMap 总容量 * 加载因子。当前 HashMap 的容量大于或等于扩容阀值的时候就会去执行扩容。扩容的容量为当前 HashMap 总容量的两倍。比如，当前 HashMap 的总容量为 16 ，那么扩容之后为 32 。
 5. table：Entry 数组。我们都知道 HashMap 内部存储 key/value 是通过 Entry 这个介质来实现的。而 table 就是 Entry 数组。
 6. 在 Java 1.7 中，HashMap 的实现方法是数组 + 链表的形式。上面的 table 就是数组，而数组中的每个元素，都是链表的第一个结点。即如下图所示：
-	![20180114111559](http://ofyt9w4c2.bkt.clouddn.com/20180114/20180114111559.png)
+	![20180114111559](/uploads/20180114/20180114111559.png)
 
 源码分析
 =======

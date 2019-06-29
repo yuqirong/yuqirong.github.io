@@ -1,7 +1,7 @@
 title: EventBus源码解析
 date: 2016-12-20 23:46:27
 categories: Android Blog
-tags: [Android,开源框架,源码解析]
+tags: [Android,开源框架,源码解析,EventBus]
 ---
 0001B
 =====
@@ -13,11 +13,11 @@ EventBus is a publish/subscribe event bus optimized for Android.
 
 这是官方给的介绍，简洁、明了、霸气。翻译过来就是：[EventBus](https://github.com/greenrobot/EventBus) 是一种为 Android 而优化设计的发布/订阅事件总线。这官方的套词可能有些人看了还是不懂。。。
 
-![???](http://ofyt9w4c2.bkt.clouddn.com/20161226/20161226232951.jpg)
+![???](/uploads/20161226/20161226232951.jpg)
 
 简单地举了栗子，[EventBus](https://github.com/greenrobot/EventBus) 就好像一辆公交车（快上车，老司机要飙车 乀(ˉεˉ乀) ）。相对应的，发布事件就可以类比为乘客，订阅事件就好似接站服务的人。乘客想要到达指定目的地就必须上车乘坐该公交车，公交车会做统一配置管理每位乘客（发布事件流程）。达到目的地后，打开下车门，把乘客交任给接站服务的人做相应的处理（订阅事件流程）。不知道这个栗子你们懂不懂，反正我是懂了(￣ε ￣)。
 
-![快上车](http://ofyt9w4c2.bkt.clouddn.com/20161226/20170107005159.jpg)
+![快上车](/uploads/20161226/20170107005159.jpg)
 
 所以总的来说，对于一个事件，你只要关心发送和接收就行了，而其中的收集、分发等都交给 [EventBus](https://github.com/greenrobot/EventBus) 来处理，你不需要做任何事。不得不说这太方便了，能让代码更见简洁，大大降低了模块之间的耦合性。
 
@@ -62,7 +62,7 @@ EventBus is a publish/subscribe event bus optimized for Android.
 ==============
 在 [GitHub](https://github.com/greenrobot/EventBus) 上对于 [EventBus](https://github.com/greenrobot/EventBus) 整体有一张示意图，很明确地画出了整个框架的设计原理：
 
-![EventBus示意图](http://ofyt9w4c2.bkt.clouddn.com/20161226/20170102003651.png)
+![EventBus示意图](/uploads/20161226/20170102003651.png)
 
 那么依据这张图，我们先从 “Publisher” 开始讲起吧。PS : 本文分析的 [EventBus](https://github.com/greenrobot/EventBus) 源码版本为 3.0.0 。
 
@@ -946,3 +946,4 @@ private void writeIndexLines(BufferedWriter writer, String myPackage) throws IOE
 ================
 * [EventBus 3.0 源码分析](http://www.jianshu.com/p/f057c460c77e)
 * [老司机教你 “飙” EventBus 3](https://segmentfault.com/a/1190000005089229?utm_source=tuicool&utm_medium=referral#articleHeader11)
+

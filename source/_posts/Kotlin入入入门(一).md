@@ -9,11 +9,11 @@ Android Studio 3.0 版本已经默认添加了对 Kotlin 的支持，所以以�
 
 1. 安装 Kotlin 插件
 
-	![Kotlin Plugin](http://ofyt9w4c2.bkt.clouddn.com/20170607/20170607210549.png)
+	![Kotlin Plugin](/uploads/20170607/20170607210549.png)
 
 2. 将 Java 代码转化为 Kotlin 代码
 
-	![Converting Java code to Kotlin](http://ofyt9w4c2.bkt.clouddn.com/20170607/20170607221409.png)
+	![Converting Java code to Kotlin](/uploads/20170607/20170607221409.png)
 
 	之后代码就变成了如下：
 
@@ -29,11 +29,11 @@ Android Studio 3.0 版本已经默认添加了对 Kotlin 的支持，所以以�
 
 3. 将文件编辑之后，会跳出一个配置 Kotlin 的提示：
 
-	![Kotlin Configure](http://ofyt9w4c2.bkt.clouddn.com//20170607/20170607222519.png)
+	![Kotlin Configure](/uploads//20170607/20170607222519.png)
 
 	点击配置后，出现如下弹窗，点击 OK 即可
 
-	![Kotlin Configure Dialog](http://ofyt9w4c2.bkt.clouddn.com//20170607/20170607222730.png)
+	![Kotlin Configure Dialog](/uploads//20170607/20170607222730.png)
 
 4. 配置完成后，可以看到项目的 build.gradle 多了一些：
 
@@ -116,8 +116,8 @@ class MainActivity : AppCompatActivity() {
 
 运行一下，demo的效果图就是这样滴，不加特效！
 
-![Demo效果图](http://ofyt9w4c2.bkt.clouddn.com/20170607/20170607231545.png)
+![Demo效果图](/uploads/20170607/20170607231545.png)
 
 Goodbye ~ ~
 
-Demo下载：[KotlinDemo](http://ofytl4mzu.bkt.clouddn.com/20170607/KotlinDemo.rar)
+Demo下载：[KotlinDemo](/uploads/20170607/KotlinDemo.rar)

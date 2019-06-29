@@ -355,7 +355,7 @@ ViewGroup
 
 上面的 switch/case 代码比较简单，而且容易理解。我们可以整理为一张表格（该表格来自于《Android开发艺术探索》）：
 
-![measurespec](http://ofyt9w4c2.bkt.clouddn.com/20170918/20170821150637571.png)
+![measurespec](/uploads/20170918/20170821150637571.png)
 
 在这里，我们小结一下。对于 DecorView 来说，其 `MeasureSpec` 是由窗口的大小和自身的 `LayoutParams` 来共同决定的；而对于普通的 View 来说，其 `MeasureSpec` 是由父容器的 `MeasureSpec` 和自身的 `LayoutParams` 共同决定的。
 

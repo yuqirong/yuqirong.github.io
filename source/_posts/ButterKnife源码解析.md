@@ -1,13 +1,13 @@
 title: ButterKnife源码分析
 date: 2016-12-18 23:19:02
 categories: Android Blog
-tags: [Android,开源框架,源码解析]
+tags: [Android,开源框架,源码解析,ButterKnife]
 ---
 0x01 前言
 ========
 在程序开发的过程中，总会有一些场景需要去写重复冗余的代码。而程序员一般都是懒惰了（懒惰促使人进步 ^ο^ ），所以就出现了很多可以减少重复工作的框架或者工具。比如今天要分析的主角—— [ButterKnife](https://github.com/JakeWharton/butterknife) ，如果你做 Android 开发却没有听说过 [ButterKnife](https://github.com/JakeWharton/butterknife) 那就 Out 啦。[ButterKnife](https://github.com/JakeWharton/butterknife) 使用依赖注入的方式来减少程序员去编写一堆 `findViewById` 的代码，使用起来很方便。那么接下来就一步步地带你深入理解 [ButterKnife](https://github.com/JakeWharton/butterknife) 框架。PS：最近写的博客篇幅都有点长，请耐心阅读！Logo 图镇楼！
 
-![butterknife_logo](http://ofyt9w4c2.bkt.clouddn.com/20161218/20161208143552.png)
+![butterknife_logo](/uploads/20161218/20161208143552.png)
 
 0x02 ButterKnife 的使用方法
 =========================
@@ -54,7 +54,7 @@ tags: [Android,开源框架,源码解析]
 ================
 我们先来看一下其中的注解部分。[ButterKnife](https://github.com/JakeWharton/butterknife) 的注解都在 butterknife-annotations 模块下：
 
-![butterknife注解](http://ofyt9w4c2.bkt.clouddn.com/20161218/20161210153211.png)
+![butterknife注解](/uploads/20161218/20161210153211.png)
 
 发现我们平时常用的 `@BindView` 、`@OnClick` 和 `@OnItemClick` 都在里面。我们就挑 `@BindView` (路径：butterknife-annotations/butterknife/BindView.java) 来看一下：
 
@@ -697,3 +697,4 @@ Goodbye !~~
 * [深入理解 ButterKnife，让你的程序学会写代码](http://dev.qq.com/topic/578753c0c9da73584b025875#rd)
 * [公共技术点之 Java 注解 Annotation](http://a.codekk.com/detail/Android/Trinea/%E5%85%AC%E5%85%B1%E6%8A%80%E6%9C%AF%E7%82%B9%E4%B9%8B%20Java%20%E6%B3%A8%E8%A7%A3%20Annotation)
 * [javapoet——让你从重复无聊的代码中解放出来](http://www.jianshu.com/p/95f12f72f69a)
+

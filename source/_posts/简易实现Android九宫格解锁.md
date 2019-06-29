@@ -485,12 +485,12 @@ private float getDistance(Point point, Point nextPoint) {
 ====
 `ScreenLockView` 中的代码差不多就是这些了，既然讲解完了那就一起来看看效果吧：
 
-![ScreenShot](http://ofyt9w4c2.bkt.clouddn.com/20160510/20160510151253.gif)
+![ScreenShot](/uploads/20160510/20160510151253.gif)
 
 效果还算不错吧，当然你也可以自己设置喜欢的九宫格图片，只要替换一下就可以了。如果对本篇文章有问题，可以留言。
 
 老规矩，附上源码下载链接：
 
-[ScreenLockView.rar](http://ofytl4mzu.bkt.clouddn.com/20160510/ScreenLockView.rar)
+[ScreenLockView.rar](/uploads/20160510/ScreenLockView.rar)
 
 Goodbye ~~

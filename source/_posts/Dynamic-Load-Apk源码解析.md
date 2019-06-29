@@ -1,7 +1,7 @@
 title: Dynamic-Load-Apk源码解析
 date: 2016-10-29 21:57:12
 categories: Android Blog
-tags: [Android,插件化,开源框架,源码解析]
+tags: [Android,插件化,开源框架,源码解析,Dynamic-Load-Apk]
 ---
 0x00
 ======
@@ -15,7 +15,7 @@ tags: [Android,插件化,开源框架,源码解析]
 
 在分析源码之前，先在这里简单地说一下 [Dynamic-Load-Apk](https://github.com/singwhatiwanna/dynamic-load-apk) 框架的结构：
 
-![dynamic-load-apk的类结构](http://ofyt9w4c2.bkt.clouddn.com/20161029/20161029223619.png)
+![dynamic-load-apk的类结构](/uploads/20161029/20161029223619.png)
 
 从上面的图中大致可以看出来，整个框架中的 Java 类基本可以分为五种类型：
 
@@ -301,3 +301,5 @@ DLBasePluginActivity 实现了 DLPlugin 接口，就有了 `onCreate()` 、`onRe
 Reference：
 
 * [DynamicLoadApk 源码解析](http://a.codekk.com/detail/Android/FFish/DynamicLoadApk%20%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90)
+
+

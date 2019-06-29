@@ -67,6 +67,6 @@ public class MyGridView extends GridView {
 
 下面提供MyListView、MyGridView的源码下载：
 
-[MyListView.java](http://ofytl4mzu.bkt.clouddn.com/20151017/MyListView.java)
+[MyListView.java](/uploads/20151017/MyListView.java)
 
-[MyGridView.java](http://ofytl4mzu.bkt.clouddn.com/20151017/MyGridView.java)
+[MyGridView.java](/uploads/20151017/MyGridView.java)

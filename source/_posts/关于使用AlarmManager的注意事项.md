@@ -42,11 +42,11 @@ SDK API >= 19 && SDK API < 23
 
 What the fuck?
 
-![what the fuck](http://ofyt9w4c2.bkt.clouddn.com/20170122/20170122224816.png)
+![what the fuck](/uploads/20170122/20170122224816.png)
 
 然后你查阅 Android 官网中关于 [Android 4.4 API](https://developer.android.google.cn/about/versions/android-4.4.html) 会看到如下几句话：
 
-![Android 4.4 API](http://ofyt9w4c2.bkt.clouddn.com/20170122/20170122225322.png)
+![Android 4.4 API](/uploads/20170122/20170122225322.png)
 
 恍然大悟！原来是 Google 为了追求系统省电，所以“偷偷加工”了一下唤醒的时间间隔。但也正如上面官网中所说的那样，如果在 Android 4.4 及以上的设备还要追求精准的闹钟定时任务，要使用 `setExact()` 方法。
 
@@ -79,11 +79,11 @@ SDK API >= 23
 =============
 在 Android 4.4 上品尝到胜利的甜头后，你顺便在 Android 6.0 的设备上测试了一下。结果。。。。。。你又 TMD 傻眼了！
 
-![What the fuck](http://ofyt9w4c2.bkt.clouddn.com/20170122/20170122232341.png)
+![What the fuck](/uploads/20170122/20170122232341.png)
 
 发现在设备关屏静止一段时间后， `AlarmManager` 又又又不能正常工作了。相必此时你连日狗的心都有了吧！强忍着泪水，再次打开 Android 官网中关于 [Android 6.0 变更](https://developer.android.google.cn/about/versions/marshmallow/android-6.0-changes.html) ，发现在 Android 6.0 中引入了低电耗模式和应用待机模式。然后接着往下看 [对低电耗模式和应用待机模式进行针对性优化](https://developer.android.google.cn/training/monitoring-device-state/doze-standby.html) ，发现会有下面一段话：
 
-![Android 6.0 API](http://ofyt9w4c2.bkt.clouddn.com/20170122/20170122234141.png)
+![Android 6.0 API](/uploads/20170122/20170122234141.png)
 
 啊啊啊啊啊啊！之前在 Android 4.4 上能用的 `setExact()` 方法在 Android 6.0 上因为低电耗模式又不能正常使用了。但是，Google 又又又提供了新的方法 `setExactAndAllowWhileIdle()` 来解决在低电耗模式下的闹钟触发。
 

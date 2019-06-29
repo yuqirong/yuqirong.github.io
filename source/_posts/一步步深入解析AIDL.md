@@ -294,7 +294,7 @@ Proxy 类是实现了 IMyAidlInterface 接口，把其中的 `addPerson` 方法�
 
 到了这里，大家就会发现 AIDL 底层的实现就是依靠 Binder 来完成的。为了方便大家的理解，这里给出一张 AIDL 机制的原理图( PS :该图来自于《Android开发艺术探索》，感谢任主席)：
 
-![AIDL机制原理图](http://ofyt9w4c2.bkt.clouddn.com/20160728/20160728201234.png)
+![AIDL机制原理图](/uploads/20160728/20160728201234.png)
 
 结尾
 ====
@@ -302,7 +302,7 @@ Proxy 类是实现了 IMyAidlInterface 接口，把其中的 `addPerson` 方法�
 
 好了，最后附上 AIDL 例子的源码：
 
-[AIDLDemo.rar](http://ofytl4mzu.bkt.clouddn.com/20160728/AIDLDemo.rar)
+[AIDLDemo.rar](/uploads/20160728/AIDLDemo.rar)
 
 Goodbye !
 

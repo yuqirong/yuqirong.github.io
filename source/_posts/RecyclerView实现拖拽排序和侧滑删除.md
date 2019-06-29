@@ -126,7 +126,7 @@ public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
 到了这里，大功告成了。那么来看看效果吧：
 
-![效果图](http://ofyt9w4c2.bkt.clouddn.com/20170206/20170206222813.gif)
+![效果图](/uploads/20170206/20170206222813.gif)
 
 改善用户体验
 -----------
@@ -154,8 +154,8 @@ public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHol
 
 好了，来看看改进之后的效果：
 
-![改进效果图](http://ofyt9w4c2.bkt.clouddn.com/20170206/20170203223341.gif)
+![改进效果图](/uploads/20170206/20170203223341.gif)
 
 今天就这样吧，拜拜啦！！
 
-源码下载：[TestRV.rar](http://ofytl4mzu.bkt.clouddn.com/20170206/TestRV.rar)
+源码下载：[TestRV.rar](/uploads/20170206/TestRV.rar)

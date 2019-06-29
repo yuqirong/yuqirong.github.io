@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
 贴完上面的代码之后，我们来看一下该方案实现的效果图：
 
-![setTheme()效果图gif](http://ofyt9w4c2.bkt.clouddn.com/20160908/20160909103512.gif)
+![setTheme()效果图gif](/uploads/20160908/20160909103512.gif)
 
 使用 Android Support Library 中的 UiMode 方法
 -------
@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
 
 我们来看一下 UiMode 方案实现的效果图：
 
-![UiMode的效果图gif](http://ofyt9w4c2.bkt.clouddn.com/20160908/20160910011353.gif)
+![UiMode的效果图gif](/uploads/20160908/20160910011353.gif)
 
 就前两种方法而言，配置比较简单，最后的实现效果也都基本上是一样的。但是缺点就是需要调用 `recreate()` 使之生效。而让 Activity 重新创建就必须涉及到一些状态的保存。这就增加了一些难度。所以，我们一起来看看第三种解决方法。
 
@@ -485,7 +485,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
 
 最后就来看看第三种方法的效果吧：
 
-![动态获取资源id的效果图gif](http://ofyt9w4c2.bkt.clouddn.com/20160908/20160910114556.gif)
+![动态获取资源id的效果图gif](/uploads/20160908/20160910114556.gif)
 
 也许有人会说和前两种方法的效果没什么差异啊，但是仔细看就会发现前面两种方法在切换模式的瞬间会有短暂黑屏现象存在，而第三种方法没有。这是因为前两种方法都要调用 `recreate()` 。而第三种方法不需要 Activity 重新创建，使用回调的方法来实现。
 
@@ -506,11 +506,11 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
 
 Goodbye !
 
-[setTheme方法的Demo下载](http://ofytl4mzu.bkt.clouddn.com/20160908/ThemeDemo_setTheme.rar)
+[setTheme方法的Demo下载](/uploads/20160908/ThemeDemo_setTheme.rar)
 
-[UiMode方法的Demo下载](http://ofytl4mzu.bkt.clouddn.com/20160908/ThemeDemo_UiMode.rar)
+[UiMode方法的Demo下载](/uploads/20160908/ThemeDemo_UiMode.rar)
 
-[动态获取资源id方法的Demo下载](http://ofytl4mzu.bkt.clouddn.com/20160908/ThemeDemo_thememanager.rar)
+[动态获取资源id方法的Demo下载](/uploads/20160908/ThemeDemo_thememanager.rar)
 
 0x0004
 =======

@@ -91,6 +91,6 @@ public class MyScrollView extends ScrollView {
 
 下面提供MyScrollView的源码下载：
 
-[MyScrollView.java(通过computeScroll监听)](http://ofytl4mzu.bkt.clouddn.com/20151019/MyScrollView.java)
+[MyScrollView.java(通过computeScroll监听)](/uploads/20151019/MyScrollView.java)
 
-[MyScrollView.java(通过onScrollChanged监听)](http://ofytl4mzu.bkt.clouddn.com/20151019/MyScrollView2.java)
+[MyScrollView.java(通过onScrollChanged监听)](/uploads/20151019/MyScrollView2.java)

@@ -1,7 +1,7 @@
 title: 一起来写OkHttp的拦截器
 date: 2017-06-25 12:37:02
 categories: Android Blog
-tags: [Android,开源框架]
+tags: [Android,开源框架,OkHttp]
 ---
 00:00
 ======
@@ -278,3 +278,4 @@ Retrofit retrofit = new Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
 **References**
 
 * [如何使用Retrofit请求非Restful API](http://www.jianshu.com/p/2263242fa02d)
+

@@ -1,7 +1,7 @@
 title: 插件化框架android-pluginmgr全解析
 date: 2016-10-02 10:03:34
 categories: Android Blog
-tags: [Android,插件化,开源框架,源码解析]
+tags: [Android,插件化,开源框架,源码解析,android-pluginmgr]
 ---
 0x00 前言：插件化的介绍
 ====
@@ -564,7 +564,7 @@ startActivity
 ---------------
 在加载好插件 apk 之后，就可以使用插件了。和平常无异，我们使用 `PluginManager.startActivity` 来启动插件中的 Activity 。其实 `PluginManager` 有很多 startActivity 的方法：
 
-![startActivity截图](http://ofyt9w4c2.bkt.clouddn.com/20161002/201610041161253.jpg)
+![startActivity截图](/uploads/20161002/201610041161253.jpg)
 
 但是终于都会调用 `startActivity(Context from, PlugInfo plugInfo, ActivityInfo activityInfo, Intent intent)` 这个方法：
 
@@ -810,10 +810,11 @@ private void lookupActivityInPlugin(Activity activity) {
 =========
 上面乱七八糟的流程讲了一遍，可能还有一些童鞋不太懂，所以在这里给出一张 [android-pluginmgr](https://github.com/houkx/android-pluginmgr) 的流程图。不懂的童鞋可以根据这张图再好好看一下源码，相信你会恍然大悟的。
 
-![android-pluginmgr流程图](http://ofyt9w4c2.bkt.clouddn.com/20161002/20161005183404.png)
+![android-pluginmgr流程图](/uploads/20161002/20161005183404.png)
 
 最后，如果对本文哪里有疑问的童鞋，欢迎留言，一起交流。
 
 0x05 References
 =====
 * [包建强：为什么我说Android插件化从入门到放弃？](https://mp.weixin.qq.com/s?__biz=MjM5MDE0Mjc4MA==&mid=2650993300&idx=1&sn=797fa87ef528cff3a50e77806cf9f675&scene=1&srcid=07125lNtkiWhjbu4dp8GhoAf#rd)
+

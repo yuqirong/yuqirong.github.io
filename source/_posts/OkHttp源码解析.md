@@ -1,7 +1,7 @@
 title: OkHttp源码解析
 date: 2017-07-25 20:54:57
 categories: Android Blog
-tags: [Android,开源框架,源码解析]
+tags: [Android,开源框架,源码解析,OkHttp]
 ---
 Header
 ======
@@ -281,7 +281,7 @@ public Response proceed(Request request, StreamAllocation streamAllocation, Http
 
 在代码中是一次次链式调用拦截器，可能有些同学还是看不懂。那么，我就捉急地画了一张示意图：
 
-![interceptors](http://ofyt9w4c2.bkt.clouddn.com/20170725/20170722185657.png)
+![interceptors](/uploads/20170725/20170722185657.png)
 
 有了这张图就好懂多了，如果还没懂的话就只能自己慢慢体会了。
 
@@ -873,3 +873,4 @@ References
 * [OKHttp源码解析](http://www.jianshu.com/p/27c1554b7fee)
 * [拆轮子系列：拆 OkHttp](https://blog.piasy.com/2016/07/11/Understand-OkHttp/)
 * [OkHttp框架的RetryAndFollowUpInterceptor请求重定向源码解析](http://blog.csdn.net/qq_15274383/article/details/73729801)
+

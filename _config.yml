@@ -3,7 +3,7 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Qirong Yu's Blog
+title: 俞其荣的博客 | Qirong Yu's Blog
 subtitle: 
 description: 向前跑 迎着冷眼和嘲笑
 author: 俞其荣
@@ -139,7 +139,7 @@ theme: next
 deploy:
   type: git
   repo: 
-    #github: https://github.com/yuqirong/yuqirong.github.io,master
-    coding: git@git.coding.net:yuqirong/yuqirong.git,master
+    github: https://github.com/yuqirong/yuqirong.github.io.git,master
+    coding: git@git.dev.tencent.com:yuqirong/yuqirong.git,master
   branch: master
   message: Site updated:{{ now("YYYY-MM-DD HH:mm:ss") }}

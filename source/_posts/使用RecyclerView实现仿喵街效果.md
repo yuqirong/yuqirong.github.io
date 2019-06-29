@@ -5,7 +5,7 @@ tags: [Android,自定义View,RecyclerView]
 ---
 又到更新博客的时间了，本次给大家带来的是在RecyclerView的基础上实现喵街的效果。那么喵街是什么效果呢？下面就贴出效果图：
 
-![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160226/20160226205314.gif)
+![这里写图片描述](/uploads/20160226/20160226205314.gif)
 
 值得一提的是，这是旧版本的特效，新版本的喵街已经去掉了这种效果。
 
@@ -136,11 +136,11 @@ public abstract void bindCustomViewHolder(RecyclerView.ViewHolder holder, int po
 ```
 好了，整体的代码就这些了，下面贴出运行效果：
 
-![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160226/20160226210235.gif)
+![这里写图片描述](/uploads/20160226/20160226210235.gif)
 
 源码下载：
 
-[ExpandRecyclerView.rar](http://ofytl4mzu.bkt.clouddn.com/20160226/ExpandRecyclerView.rar)
+[ExpandRecyclerView.rar](/uploads/20160226/ExpandRecyclerView.rar)
 
 Reference
 =====

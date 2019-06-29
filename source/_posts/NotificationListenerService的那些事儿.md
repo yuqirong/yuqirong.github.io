@@ -7,7 +7,7 @@ tags: [Android]
 
 之后在 Github 上看到了 [qianghongbao](https://github.com/lendylongli/qianghongbao) 这个抢红包的项目，发现代码里面有一个 [QHBNotificationService](https://github.com/lendylongli/qianghongbao/blob/master/app/src/main/java/com/codeboy/qianghongbao/QHBNotificationService.java) 继承了 `NotificationListenerService` ，这个 `NotificationListenerService` 极大地引起了我的兴趣。查了一下资料，发现 `NotificationListenerService` 是在 Android 4.3 （API 18）时被加入的，作用就是用来监听通知栏消息。并且官方建议在 Android 4.3 及以上使用 `NotificationListenerService` 来监听通知栏消息，以此取代 `AccessibilityService` 。
 
-![Notification Listener](http://ofyt9w4c2.bkt.clouddn.com/20170209/20170209220914.png)
+![Notification Listener](/uploads/20170209/20170209220914.png)
 
 `NotificationListenerService` 的使用范围也挺广的，比如我们熟知的抢红包，智能手表同步通知，通知栏去广告工具等，都是利用它来完成的。所以，我也想赶时髦地好好利用这把“利器”。最后方案也就出来了：在 Android 4.3 以下（API < 18）使用 `AccessibilityService` 来读取新通知，在 Android 4.3 及以上（API >= 18）使用 `NotificationListenerService` 来满足需求。
 
@@ -300,7 +300,7 @@ public class WeChatAccessibilityService extends AccessibilityService {
 
 今天就到这儿了，拜拜！！
 
-源码下载：[ListenWeChatNotification.rar](http://ofytl4mzu.bkt.clouddn.com/20170209/ListenWeChatNotification.rar)
+源码下载：[ListenWeChatNotification.rar](/uploads/20170209/ListenWeChatNotification.rar)
 
 References
 ==========

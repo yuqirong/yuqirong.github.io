@@ -7,7 +7,7 @@ tags: [Android,自定义View]
 
 那么到底什么是视差效果呢？一起来看效果图就知道了：
 
-![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160419/20160419141952.gif)
+![这里写图片描述](/uploads/20160419/20160419141952.gif)
 
 我们可以看到 ListView 的 HeaderView 会跟随 ListView 的滑动而变大，HeaderView里的图片会有缩放效果。这些可以使用属性动画来实现。接下来我们就来动手吧！
 
@@ -168,6 +168,6 @@ private void startAnim() {
 
 ZoomListView 整体的代码就这些了，很简短。下面附上下载的链接：
 
-[ZoomListView.rar](http://ofytl4mzu.bkt.clouddn.com/20160419/ZoomListView.rar)
+[ZoomListView.rar](/uploads/20160419/ZoomListView.rar)
 
 good luck ! ~~

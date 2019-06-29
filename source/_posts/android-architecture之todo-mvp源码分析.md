@@ -9,7 +9,7 @@ Android 架构一直都是热门话题，从一开始的 MVC ，到目前火爆�
 
 目前已有的架构示例如下图所示：
 
-![stable sample](http://ofyt9w4c2.bkt.clouddn.com/20170222/20170222230352.png)
+![stable sample](/uploads/20170222/20170222230352.png)
 
 而今天给大家带来的就是分析 [todo-mvp](https://github.com/googlesamples/android-architecture/tree/todo-mvp/) 项目的架构。那就快进入正题吧！
 
@@ -17,7 +17,7 @@ todo-mvp
 ========
 先来看看项目包的目录结构：
 
-![目录结构](http://ofyt9w4c2.bkt.clouddn.com/20170222/20170227212108.png)
+![目录结构](/uploads/20170222/20170227212108.png)
 
 基本上目录结构可以分为四种：
 
@@ -28,7 +28,7 @@ todo-mvp
 
 然后是官方给出的 [todo-mvp](https://github.com/googlesamples/android-architecture/tree/todo-mvp/) 架构图：
 
-![MVP](http://ofyt9w4c2.bkt.clouddn.com/20170222/20170228224356.png)
+![MVP](/uploads/20170222/20170228224356.png)
 
 BaseView 和 BasePresenter
 -------------------------
@@ -60,7 +60,7 @@ addedittask、statistics、taskdetail、tasks
 ----------------------------------------
 这四个分包从结构上来讲都是一样的，那么在这里我们就分析 tasks 这个分包吧。下面是该分包下的源码文件：
 
-![task分包的结构](http://ofyt9w4c2.bkt.clouddn.com/20170222/20170227215628.png)
+![task分包的结构](/uploads/20170222/20170227215628.png)
 
 我们以 `TasksContract` 为切入点：
 

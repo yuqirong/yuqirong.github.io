@@ -17,7 +17,7 @@ tags: Vue.js
 
 4. 创建项目，在 cmd 里输入：`vue init webpack vue_test(项目文件夹名)` ，回车，等待一小会儿，依次出现下列选项，输入后创建成功。
 
-	![create vue project](http://ofyt9w4c2.bkt.clouddn.com/20171201/20171201223625.jpg)
+	![create vue project](/uploads/20171201/20171201223625.jpg)
 
 5. 安装依赖，在 cmd 里 
  
@@ -33,7 +33,7 @@ tags: Vue.js
 
 	运行起来后的效果如下图所示：
 
-	![Vue running](http://ofyt9w4c2.bkt.clouddn.com/20171201/20171201223752.jpg)
+	![Vue running](/uploads/20171201/20171201223752.jpg)
 
 
 安装中遇到的问题

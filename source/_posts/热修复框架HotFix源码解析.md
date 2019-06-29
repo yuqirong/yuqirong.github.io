@@ -1,7 +1,7 @@
 title: 热修复框架HotFix源码解析
 date: 2016-11-06 13:15:59
 categories: Android Blog
-tags: [Android,热修复,开源框架,源码解析]
+tags: [Android,热修复,开源框架,源码解析,HotFix]
 ---
 0x00
 ============
@@ -20,7 +20,7 @@ Native Hook 方案有一定的兼容性问题，并且其热修复是基于方�
 =====
 首先来看一下 [HotFix](https://github.com/dodola/HotFix) 项目的结构：
 
-![HotFix项目结构](http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106151939.png)
+![HotFix项目结构](/uploads/20161106/20161106151939.png)
 
 可以看到项目中主要分为四个 module ：
 
@@ -162,11 +162,11 @@ private static Object getField(Object obj, Class cls, String str)
 
 从上面的源码中知道，其实 getPathList 就是获取 BaseDexClassLoader 类的对象中的 pathList 属性。
 
-![BaseDexClassLoader源码](http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106163934.png)
+![BaseDexClassLoader源码](/uploads/20161106/20161106163934.png)
 
 PathClassLoader 类继承自 BaseDexClassLoader：
 
-![PathClassLoader源码](http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106163627.png)
+![PathClassLoader源码](/uploads/20161106/20161106163627.png)
 
 得到了 pathList 之后，调用了 `getDexElements` 。顾名思义，就是获得了 pathList 中的 dexElements 属性。
 
@@ -177,7 +177,7 @@ private static Object getDexElements(Object obj) throws NoSuchFieldException, Il
 }
 ```
 
-![DexPathList源码](http://ofyt9w4c2.bkt.clouddn.com/20161106/20161106164537.png)
+![DexPathList源码](/uploads/20161106/20161106164537.png)
 
 所以在 `combineArray` 方法中传入的参数都是 Elements[] 。一个是当前应用程序中的 dexElements，另一个是 hackdex_dex.jar 中的 dexElements 。
 
@@ -322,3 +322,4 @@ References
 [url]: http://mp.weixin.qq.com/s?__biz=MzI1MTA1MzM2Nw==&mid=400118620&idx=1&sn=b4fdd5055731290eef12ad0d17f39d4a&scene=1&srcid=1031x2ljgSF4xJGlH1xMCJxO&uin=MjAyNzY1NTU%3D&key=04dce534b3b035ef58d8714d714d36bcc6cc7e136bbd64850522b491d143aafceb62c46421c5965e18876433791d16ec&devicetype=iMac+MacBookPro12%2C1+OSX+OSX+10.10.5+build(14F27)&version=11020201&lang=zh_CN&pass_ticket=7O%2FVfztuLjqu23ED2WEkvy1SJstQD4eLRqX%2B%2BbCY3uE%3D
 
 * [Android 热补丁动态修复框架小结](http://blog.csdn.net/lmj623565791/article/details/49883661)
+

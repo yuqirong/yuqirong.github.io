@@ -5,7 +5,7 @@ tags: [Android]
 ---
 又到了更博的时间了，今天给大家带来的就是“导航Tab栏悬浮功能”了。通常大家在玩手机的过程中应该会注意到很多的app都有这种功能，比如说外卖达人常用的“饿了么”。下面就给出了“饿了么”导航Tab栏悬浮的效果图。
 
-![这里填写图片的描述](http://ofyt9w4c2.bkt.clouddn.com/20160112/20160112210653.gif)
+![这里填写图片的描述](/uploads/20160112/20160112210653.gif)
 
 可以看到上图中的“分类”、“排序”、“筛选”会悬浮在app的顶部，状态随着ScrollView(也可能不是ScrollView，在这里姑且把这滑动的UI控件当作ScrollView吧)的滚动而变化。像这种导航Tab栏悬浮的作用相信大家都能体会到，Tab栏不会随着ScrollView等的滚动而被滑出屏幕外，增加了与用户之间的交互性和方便性。
 
@@ -203,7 +203,7 @@ Tab栏的布局，tab_layout.xml：
 
 上面布局中的很多空白LinearLayout主要是拉长ScrollView，效果图就是这样的：
 
-![这里填写图片的描述](http://ofyt9w4c2.bkt.clouddn.com/20160112/20160112201753.png)
+![这里填写图片的描述](/uploads/20160112/20160112201753.png)
 
 然后我们来看看`onCreate(Bundle savedInstanceState)`：
 
@@ -298,12 +298,12 @@ private void showWindow() {
 
 到这里，整体的代码就这些了。一起来看看效果吧：
 
-![这里填写图片的描述](http://ofyt9w4c2.bkt.clouddn.com/20160112/20160112204356.gif)
+![这里填写图片的描述](/uploads/20160112/20160112204356.gif)
 
 但是用这种方法来实现Tab栏悬浮功能有一个缺点，那就是如果该app没有被赋予显示悬浮窗的权限，那么该功能就变成鸡肋了。当然还有第二种方法来实现，不过只能等到下一篇博文再讲了。
 
 本Demo源码下载：
 
-[TabSuspendDemo.rar](http://ofytl4mzu.bkt.clouddn.com/20160112/TabSuspendDemo.rar)
+[TabSuspendDemo.rar](/uploads/20160112/TabSuspendDemo.rar)
 
 have a nice day~

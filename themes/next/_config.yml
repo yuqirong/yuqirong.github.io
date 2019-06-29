@@ -196,7 +196,7 @@ avatar:
   # in theme directory(source/images): /images/avatar.gif
   # in site  directory(source/uploads): /uploads/avatar.gif
   # You can also use other linking images.
-  url: http://ofyt9w4c2.bkt.clouddn.com/avatar/27073358153.jpg
+  url: /uploads/avatar/27073358153.jpg
   # If true, the avatar would be dispalyed in circle. 
   rounded: false
   # The value of opacity should be choose from 0 to 1 to set the opacity of the avatar.
@@ -301,13 +301,13 @@ codeblock:
 # Wechat Subscriber
 wechat_subscriber:
   enabled: true
-  qcode: http://ofyt9w4c2.bkt.clouddn.com/avatar/20170523142951.jpg
+  qcode: /uploads/avatar/20170523142951.jpg
   description: 欢迎订阅我的微信公众号来获取我的动态！
 
 # Reward
 reward_comment: 坚持原创技术分享，您的支持将鼓励我继续创作！
-wechatpay: http://ofyt9w4c2.bkt.clouddn.com/avatar/20161001102756.png
-alipay: http://ofyt9w4c2.bkt.clouddn.com/avatar/20160428221107.jpg
+wechatpay: /uploads/avatar/20161001102756.png
+alipay: /uploads/avatar/20160428221107.jpg
 #bitcoin: /images/bitcoin.png
 
 # Related popular posts
@@ -386,7 +386,7 @@ sidebar_width:
 # Arial | Tahoma | Helvetica | Times New Roman | Courier New | Verdana | Georgia | Palatino | Garamond | Comic Sans MS | Trebuchet MS
 # ---------------------------------------------------------------
 font:
-  enable: true
+  enable: false
 
   # Uri of fonts host. E.g. //fonts.googleapis.com (Default).
   host:
@@ -489,7 +489,7 @@ disqus:
   lazyload: false
 
 # Hypercomments
-hypercomments_id: 94126
+#hypercomments_id: 94126
 
 # changyan
 changyan:
@@ -502,13 +502,13 @@ changyan:
 # You can get your appid and appkey from https://leancloud.cn
 # more info please open https://valine.js.org
 valine:
-  enable: false
-  appid:  # your leancloud application appid
-  appkey:  # your leancloud application appkey
+  enable: true
+  appid: 1BEieMGlw7Jvs6XNGYKgEd1N-gzGzoHsz
+  appkey: 8wsALSDVgUj1zAfN9m3hpYoU
   notify: false # mail notifier , https://github.com/xCss/Valine/wiki
   verify: false # Verification code
-  placeholder: Just go go # comment box placeholder
-  avatar: mm # gravatar style
+  placeholder: 念念不忘，必有回响~~ # comment box placeholder
+  avatar: wavatar # gravatar style
   guest_info: nick,mail,link # custom comment header
   pageSize: 10 # pagination size
 
@@ -541,8 +541,8 @@ gitment:
 # Available value:
 #    button | slide
 # Warning: Baidu Share does not support https.
-baidushare:
-  type: button
+#baidushare:
+#  type: button
 
 # Share
 # This plugin is more useful in China, make sure you known how to use it.
@@ -565,16 +565,16 @@ baidushare:
 #           Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine,
 #           Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru
 needmoreshare2:
-  enable: false
+  enable: true
   postbottom:
     enable: false
     options:
-      iconStyle: box
+      iconStyle: default
       boxForm: horizontal
       position: bottomCenter
       networks: Weibo,Wechat,Douban,QQZone,Twitter,Facebook
   float:
-    enable: false
+    enable: true
     options:
       iconStyle: box
       boxForm: horizontal

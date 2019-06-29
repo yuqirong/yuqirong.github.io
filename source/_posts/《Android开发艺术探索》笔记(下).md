@@ -318,9 +318,9 @@ Executor只是一个接口，真正的线程池是ThreadPoolExecutor。ThreadPoo
 ---------------
 1. 最常用的缓存算法是LRU，核心是当缓存满时，会优先淘汰那些近期最少使用的缓存对象，系统中采用LRU算法的缓存有两种：LruCache(内存缓存)和DiskLruCache(磁盘缓存)。
 2. LruCache是Android 3.1才有的，通过support-v4兼容包可以兼容到早期的Android版本。LruCache类是一个线程安全的泛型类，它内部采用一个LinkedHashMap以强引用的方式存储外界的缓存对象，其提供了get和put方法来完成缓存的获取和添加操作，当缓存满时，LruCache会移除较早使用的缓存对象，然后再添加新的缓存对象。
-3. DiskLruCache磁盘缓存，它不属于Android sdk的一部分，[它的源码可以在这里下载](http://ofytl4mzu.bkt.clouddn.com/20160826/DiskLruCache.java)
+3. DiskLruCache磁盘缓存，它不属于Android sdk的一部分，[它的源码可以在这里下载](/uploads/20160826/DiskLruCache.java)
 DiskLruCache的创建、缓存查找和缓存添加操作
-4. ImageLoader的实现 具体内容看源码，[点击下载](http://ofytl4mzu.bkt.clouddn.com/20160826/ImageLoader.java)
+4. ImageLoader的实现 具体内容看源码，[点击下载](/uploads/20160826/ImageLoader.java)
 功能：图片的同步/异步加载，图片压缩，内存缓存，磁盘缓存，网络拉取
 
 12.3 ImageLoader的使用
@@ -344,7 +344,7 @@ public static void setDefaultUncaughtExceptionHandler(UncaughtExceptionHandler h
 }
 ```
 
-这里实现了一个简易版本的UncaughtExceptionHandler类的子类[CrashHandler，点击下载](http://ofytl4mzu.bkt.clouddn.com/20160826/CrashHandler.java)。
+这里实现了一个简易版本的UncaughtExceptionHandler类的子类[CrashHandler，点击下载](/uploads/20160826/CrashHandler.java)。
 
 CrashHandler的使用方式就是在Application的onCreate方法中设置一下即可
 

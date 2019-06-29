@@ -1,7 +1,7 @@
 title: Volley框架源码解析
 date: 2016-11-19 21:19:17
 categories: Android Blog
-tags: [Android,开源框架,源码解析]
+tags: [Android,开源框架,源码解析,Volley]
 ---
 0001B
 =====
@@ -349,7 +349,7 @@ public class CacheDispatcher extends Thread {
 
 CacheDispatcher 类主要的代码就如上面所示了，在主要的 `run()` 方法中都添加了注释，阅读起来应该比较简单。那么在这里就贡献一张 CacheDispatcher 类的流程图：
 
-![CacheDispatcher 类的流程图](http://ofyt9w4c2.bkt.clouddn.com/20161119/20161122231354.png)
+![CacheDispatcher 类的流程图](/uploads/20161119/20161122231354.png)
 
 NetworkDispatcher
 -----------------
@@ -446,7 +446,7 @@ public class NetworkDispatcher extends Thread {
 
 同样的，根据 NetworkDispatcher 我们也可以梳理出一张流程图：
 
-![NetworkDispatcher 类的流程图](http://ofyt9w4c2.bkt.clouddn.com/20161119/20161123222635.png)
+![NetworkDispatcher 类的流程图](/uploads/20161119/20161123222635.png)
 
 Request
 -------
@@ -1475,7 +1475,7 @@ public synchronized void clear() {
 
 在这还给出了一张整个 Volley 框架大致的网络通信流程图，对上面源码没看懂的童鞋可以参考这张图再看一遍：
 
-![Volley网络通信流程图](http://ofyt9w4c2.bkt.clouddn.com/20161119/20161130214351.png)
+![Volley网络通信流程图](/uploads/20161119/20161130214351.png)
 
 最后，只剩下总结了。从头到尾分析了一遍，发现 Volley 真的是一款很优秀的框架，面向接口编程在其中发挥到极致。其中有不少值得我们借鉴的地方，但是 Volley 并不是没有缺点的，对于大文件传输 Volley 就很不擅长，搞不好会 OOM 。另外，在源码中还有不少可以继续优化的地方，有兴趣的同学可以自定义一个属于自己的 Volley 。
 
@@ -1490,3 +1490,4 @@ References
 * [Android Volley完全解析(四)，带你从源码的角度理解Volley  
  ](http://blog.csdn.net/sinyu890807/article/details/17656437)
 * [Etag与HTTP缓存机制](http://blog.csdn.net/kikikind/article/details/6266101)
+

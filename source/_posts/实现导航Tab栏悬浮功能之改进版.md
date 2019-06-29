@@ -256,12 +256,12 @@ public class MainActivity extends AppCompatActivity implements MyScrollView.OnSc
 
 好了，一起来看看效果吧：
 
-![这里填写图片的描述](http://ofyt9w4c2.bkt.clouddn.com/20160114/20160114223247.gif)
+![这里填写图片的描述](/uploads/20160114/20160114223247.gif)
 
 是不是和第一种方法的效果一样呢，相信大家都学会了。如果有问题可以在下面留言。
 
 最后，放出源码：
 
-[TabSuspendDemo.rar](http://ofytl4mzu.bkt.clouddn.com/20160114/TabSuspendDemo.rar)
+[TabSuspendDemo.rar](/uploads/20160114/TabSuspendDemo.rar)
 
 ~have fun!~

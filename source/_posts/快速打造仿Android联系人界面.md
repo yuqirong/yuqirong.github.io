@@ -5,7 +5,7 @@ tags: [Android,自定义View]
 ---
 有段时间没写博客了，趁今天有空就写了一篇。今天的主题就是仿联系人界面。相信大家在平时都见过，就是可以实现快速索引的侧边栏。比如在美团中选择城市的界面：
 
-![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160322/20160322200035.png)
+![这里写图片描述](/uploads/20160322/20160322200035.png)
 
 我们可以看到在右侧有一个支持快速索引的栏。接下来，我们就要实现这种索引栏。
 
@@ -186,13 +186,13 @@ public boolean onTouchEvent(MotionEvent event) {
 
 这样，我们就把`QuickIndexBar`写好了，关于`QuickIndexBar`使用的代码就不贴出来了，太长了。如果有需要，可以下载下面的Demo，里面都有注释。Demo的效果图如下：
 
-![这里写图片描述](http://ofyt9w4c2.bkt.clouddn.com/20160322/20160322211942.gif)
+![这里写图片描述](/uploads/20160322/20160322211942.gif)
 
 好了，今天就到这里了。have fun!
 
 源码下载：
 
-[ContactPicker.rar](http://ofytl4mzu.bkt.clouddn.com/20160322/ContactPicker.rar)
+[ContactPicker.rar](/uploads/20160322/ContactPicker.rar)
 
 GitHub：
 
