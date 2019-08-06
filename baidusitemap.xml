@@ -4,7 +4,59 @@
 
     
   <url>
-    <loc>http://yuqirong.me/2019/07/09/page/</loc>
+    <loc>http://yuqirong.me/2019/08/06/Glide%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%BA%8C)/</loc>
+    <lastmod>2019-08-06T14:29:26.538Z</lastmod>
+    <data>
+        <display>
+        <title>Glide源码解析(二)</title>
+        <pubTime>2019-08-06T13:56:46.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Glide</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/08/04/Glide%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%80)/</loc>
+    <lastmod>2019-08-05T14:25:10.294Z</lastmod>
+    <data>
+        <display>
+        <title>Glide源码解析(一)</title>
+        <pubTime>2019-08-04T08:13:51.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Glide</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/07/09/%E9%97%B2%E8%81%8AMultiDex/</loc>
     <lastmod>2019-07-08T16:15:01.055Z</lastmod>
     <data>
         <display>
