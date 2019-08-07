@@ -5,6 +5,10 @@ tags: [Android,开源框架,源码解析,Glide]
 ---
 之前已经讲过 Glide.with 了，那么今天就来讲讲 load 方法。
 
+Glide : https://github.com/bumptech/glide
+
+version : v4.9.0
+
 源码解析
 ===
 load 重载的方法有很多，这里就挑一个看了。来看看 load(String string) 内部的代码。
