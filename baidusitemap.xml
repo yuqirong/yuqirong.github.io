@@ -4,8 +4,34 @@
 
     
   <url>
+    <loc>http://yuqirong.me/2019/08/07/Glide%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%89)/</loc>
+    <lastmod>2019-08-07T16:36:36.775Z</lastmod>
+    <data>
+        <display>
+        <title>Glide源码解析(三)</title>
+        <pubTime>2019-08-07T09:12:29.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>Glide</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yuqirong.me/2019/08/06/Glide%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%BA%8C)/</loc>
-    <lastmod>2019-08-06T14:29:26.538Z</lastmod>
+    <lastmod>2019-08-07T16:33:49.233Z</lastmod>
     <data>
         <display>
         <title>Glide源码解析(二)</title>
