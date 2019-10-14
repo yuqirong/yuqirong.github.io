@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yuqirong.me/about/index.html</loc>
+    <lastmod>2019-10-14T14:19:59.331Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/guestbook/index.html</loc>
+    <lastmod>2019-10-14T14:15:33.731Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://yuqirong.me/2019/08/07/Glide%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%89)/</loc>
     <lastmod>2019-08-07T16:36:36.775Z</lastmod>
   </url>
@@ -49,11 +59,6 @@
   <url>
     <loc>http://yuqirong.me/2019/04/03/startActivity%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</loc>
     <lastmod>2019-04-02T16:24:26.425Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/guestbook/index.html</loc>
-    <lastmod>2019-03-23T13:12:41.318Z</lastmod>
   </url>
   
   <url>
@@ -184,11 +189,6 @@
   <url>
     <loc>http://yuqirong.me/2019/01/13/%E4%BD%BF%E7%94%A8OpenCV%E5%AF%B9%E5%9B%BE%E7%89%87%E8%BF%9B%E8%A1%8C%E4%BA%8C%E5%80%BC%E5%8C%96%E5%92%8C%E5%8E%BB%E7%87%A5%E5%A4%84%E7%90%86/</loc>
     <lastmod>2019-01-18T14:10:55.063Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yuqirong.me/about/index.html</loc>
-    <lastmod>2019-01-12T14:12:05.606Z</lastmod>
   </url>
   
   <url>
