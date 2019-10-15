@@ -342,6 +342,188 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2019/10/15/DiskLruCache源码解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="俞其荣">
+      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
+      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="俞其荣的博客 | Qirong Yu's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/15/DiskLruCache源码解析/" itemprop="url">
+                  DiskLruCache源码解析
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-15 20:11:24 / 修改时间：22:45:14" itemprop="dateCreated datePublished" datetime="2019-10-15T20:11:24+08:00">2019-10-15</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/15/DiskLruCache源码解析/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/15/DiskLruCache源码解析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          DiskLruCache : https://github.com/JakeWharton/DiskLruCache
+DiskLruCache 在 Android 开发中应用的非常广泛，比较常用的就是图片的三级缓存中。比如在 Glide 中，图片在硬盘上的缓存就是采用了 DiskLruCache 。
+在 DiskLruCache 中有三种文件，
+
+journal 文件，里面是记录着我们的操作日志；
+journal.tmp 文件，这个文件是临时文件；
+journal.bkp 文件，这个文件是备份文件。
+
+在我们操作 DiskLruCache 过程中，在修改内存中的缓存的同时，也会在硬盘中的 jo
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/15/DiskLruCache源码解析/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2019/08/07/Glide源码解析(三)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2005,194 +2187,6 @@ ActivitystartActivity(Intent intent)12345678910111213141516171819@Overridepublic
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2019/03/20/Tinker源码分析(七)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="俞其荣">
-      <meta itemprop="description" content="向前跑 迎着冷眼和嘲笑">
-      <meta itemprop="image" content="/uploads/avatar/27073358153.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="俞其荣的博客 | Qirong Yu's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/20/Tinker源码分析(七)/" itemprop="url">
-                  Tinker源码分析(七):dex合成流程
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-03-20 23:36:31" itemprop="dateCreated datePublished" datetime="2019-03-20T23:36:31+08:00">2019-03-20</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-03-23 21:04:01" itemprop="dateModified" datetime="2019-03-23T21:04:01+08:00">2019-03-23</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android-Blog/" itemprop="url" rel="index"><span itemprop="name">Android Blog</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/03/20/Tinker源码分析(七)/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/03/20/Tinker源码分析(七)/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          本系列 Tinker 源码解析基于 Tinker v1.9.12
-前面讲到了 Tinker 安装补丁的流程，现在就详细地来看下 dex 合成的代码。代码入口就在 DexDiffPatchInternal.tryRecoverDexFiles 中。
-UpgradePatch12345//we use destPatchFile instead of patchFile, because patchFile may be deleted during the patch processif (!DexDiffPatchInternal.tryRecoverDexFiles(manager, sig
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/03/20/Tinker源码分析(七)/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2244,7 +2238,7 @@ UpgradePatch12345//we use destPatchFile instead of patchFile, because patchFile 
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-count">118</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
