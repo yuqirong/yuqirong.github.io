@@ -4,6 +4,54 @@
 
     
   <url>
+    <loc>http://yuqirong.me/2019/11/16/RxJava%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2019-11-16T15:26:48.346Z</lastmod>
+    <data>
+        <display>
+        <title>RxJava源码解析</title>
+        <pubTime>2019-11-16T06:02:25.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>RxJava</tag>
+         
+        <tag>开源框架</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yuqirong.me/2019/11/10/Broadcast%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2019-11-13T14:02:00.372Z</lastmod>
+    <data>
+        <display>
+        <title>Broadcast源码解析</title>
+        <pubTime>2019-11-10T08:13:22.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>源码解析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Blog" url="http://yuqirong.me/categories/Android-Blog/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yuqirong.me/2019/10/15/DiskLruCache%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
     <lastmod>2019-10-15T14:45:14.052Z</lastmod>
     <data>

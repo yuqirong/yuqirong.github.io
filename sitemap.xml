@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yuqirong.me/2019/11/16/RxJava%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2019-11-16T15:26:48.346Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yuqirong.me/2019/11/10/Broadcast%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2019-11-13T14:02:00.372Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://yuqirong.me/2019/10/15/DiskLruCache%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
     <lastmod>2019-10-15T14:45:14.052Z</lastmod>
   </url>
