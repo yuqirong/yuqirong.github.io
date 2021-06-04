@@ -118,13 +118,13 @@ HeaderHashMap 在平时 Java/Android 开发中，是绝大多数开发者都普�
 而对于它的 get/put 使用方法相信大家都已经到了炉火纯青的地步。虽然都会用，却可能没有好好深入探讨过 HashMap 内部的实">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HashMap内部原理解析">
-<meta property="og:url" content="http://yuqirong.me/2018/01/13/HashMap内部原理解析/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2018/01/13/HashMap内部原理解析/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="注：本文解析的 HashMap 源代码基于 Java 1.7 。
 HeaderHashMap 在平时 Java/Android 开发中，是绝大多数开发者都普遍使用的集合类。
 它内部是基于哈希表实现的键值对存储，继承 AbstractMap 并且实现了 Map 接口。
 而对于它的 get/put 使用方法相信大家都已经到了炉火纯青的地步。虽然都会用，却可能没有好好深入探讨过 HashMap 内部的实">
-<meta property="og:image" content="http://yuqirong.me/uploads/20180114/20180114111559.png">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20180114/20180114111559.png">
 <meta property="og:updated_time" content="2018-11-11T12:07:13.872Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HashMap内部原理解析">
@@ -140,7 +140,7 @@ HeaderHashMap 在平时 Java/Android 开发中，是绝大多数开发者都普�
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2018/01/13/HashMap内部原理解析/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2018/01/13/HashMap内部原理解析/"/>
 
 
 
@@ -352,7 +352,7 @@ HeaderHashMap 在平时 Java/Android 开发中，是绝大多数开发者都普�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2018/01/13/HashMap内部原理解析/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2018/01/13/HashMap内部原理解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -437,6 +437,16 @@ HeaderHashMap 在平时 Java/Android 开发中，是绝大多数开发者都普�
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/13/HashMap内部原理解析/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/01/13/HashMap内部原理解析/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -571,7 +581,7 @@ HeaderHashMap 在平时 Java/Android 开发中，是绝大多数开发者都普�
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2018/01/13/HashMap内部原理解析/" title="HashMap内部原理解析">http://yuqirong.me/2018/01/13/HashMap内部原理解析/</a>
+    <a href="http://yuqirong.github.io/2018/01/13/HashMap内部原理解析/" title="HashMap内部原理解析">http://yuqirong.github.io/2018/01/13/HashMap内部原理解析/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -639,6 +649,9 @@ HeaderHashMap 在平时 Java/Android 开发中，是绝大多数开发者都普�
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1097,6 +1110,30 @@ HeaderHashMap 在平时 Java/Android 开发中，是绝大多数开发者都普�
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

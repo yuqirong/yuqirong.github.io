@@ -117,7 +117,7 @@ HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点�
 虽然很早之前也写了一篇关于事件分发的博客《Android onTouch事件">
 <meta property="og:type" content="article">
 <meta property="og:title" content="View事件分发机制源码解析">
-<meta property="og:url" content="http://yuqirong.me/2017/10/31/View事件分发机制源码解析/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2017/10/31/View事件分发机制源码解析/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。
 HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点之一，一般在面试的过程中肯定也有涉及。之前重新梳理了一下 View 事件的分发，所以为了有所记录，下定决心要写一篇关于 View 事件分发的博客。
@@ -136,7 +136,7 @@ HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点�
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2017/10/31/View事件分发机制源码解析/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2017/10/31/View事件分发机制源码解析/"/>
 
 
 
@@ -348,7 +348,7 @@ HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2017/10/31/View事件分发机制源码解析/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2017/10/31/View事件分发机制源码解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -434,6 +434,16 @@ HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点�
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/10/31/View事件分发机制源码解析/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/10/31/View事件分发机制源码解析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -460,7 +470,7 @@ HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点�
       
         <p>注：本文解析的源码基于 API 25，部分内容来自于《Android开发艺术探索》。</p>
 <h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>Android View 事件分发的机制可以说是 Android 开发者必知点之一，一般在面试的过程中肯定也有涉及。之前重新梳理了一下 View 事件的分发，所以为了有所记录，下定决心要写一篇关于 View 事件分发的博客。</p>
-<p>虽然很早之前也写了一篇关于事件分发的博客<a href="http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/">《Android onTouch事件传递机制解析》</a>，但是在这篇中分析不够全面，Activity 和 ViewGroup 没有涉及到。那么就来“再续前缘”吧。</p>
+<p>虽然很早之前也写了一篇关于事件分发的博客<a href="http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/" target="_blank" rel="external">《Android onTouch事件传递机制解析》</a>，但是在这篇中分析不够全面，Activity 和 ViewGroup 没有涉及到。那么就来“再续前缘”吧。</p>
 <p>事件分发可以说分为三个部分，</p>
 <ul>
 <li>一个是 Activity </li>
@@ -468,7 +478,7 @@ HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点�
 <li>最后是 View</li>
 </ul>
 <p>我们在分析事件分发时，也会依次按照这三个部分来入手。</p>
-<p>因为最后的 View 部分在之前已经分析过了（也就是<a href="http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/">《Android onTouch事件传递机制解析》</a>），所以今天的内容里关于 View 部分的就不再讲了，大家可以自己去这篇博客中接着看下去。</p>
+<p>因为最后的 View 部分在之前已经分析过了（也就是<a href="http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/" target="_blank" rel="external">《Android onTouch事件传递机制解析》</a>），所以今天的内容里关于 View 部分的就不再讲了，大家可以自己去这篇博客中接着看下去。</p>
 <p>好咯，下面就是我们的 show time ！</p>
 <h1 id="Activity"><a href="#Activity" class="headerlink" title="Activity"></a>Activity</h1><p>先入手第一部分：Activity 。</p>
 <h2 id="Activity-1"><a href="#Activity-1" class="headerlink" title="Activity"></a>Activity</h2><h3 id="dispatchTouchEvent_28MotionEvent_ev_29"><a href="#dispatchTouchEvent_28MotionEvent_ev_29" class="headerlink" title="dispatchTouchEvent(MotionEvent ev)"></a>dispatchTouchEvent(MotionEvent ev)</h3><p>在 Activity 的扎堆代码中，我们先从 <code>dispatchTouchEvent(MotionEvent ev)</code> 看起。</p>
@@ -514,7 +524,7 @@ HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点�
 <p>这样，以后的事件就完全移交给 ViewGroup 了，没子 View 什么事了。</p>
 <p>最后就是对 ACTION_CANCEL 和 ACTION_UP 事件的一些状态重置。</p>
 <p>在这，基本上把 ViewGroup 这部分讲完了。</p>
-<h1 id="View"><a href="#View" class="headerlink" title="View"></a>View</h1><p>View 部分的事件分发就参考一下<a href="http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/">《Android onTouch事件传递机制解析》</a>，这里面讲的还是挺清楚的，很早以前写的，不多讲了。</p>
+<h1 id="View"><a href="#View" class="headerlink" title="View"></a>View</h1><p>View 部分的事件分发就参考一下<a href="http://yuqirong.me/2015/10/29/Android%20onTouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90/" target="_blank" rel="external">《Android onTouch事件传递机制解析》</a>，这里面讲的还是挺清楚的，很早以前写的，不多讲了。</p>
 <h1 id="Footer"><a href="#Footer" class="headerlink" title="Footer"></a>Footer</h1><p>今天的内容都讲的差不多了，也把事件分发的机制又整理了一遍。当然也有一些不完善的地方，比如事件是怎样传递给 Activity 的在本文中没有涉及到，想了解的同学可以看下这篇<a href="http://blog.csdn.net/singwhatiwanna/article/details/50775201" target="_blank" rel="external">《Android中MotionEvent的来源和ViewRootImpl》</a>，任大神的作品。</p>
 <p>好了，要说再见了。如果有问题的同学可以在下面留言。</p>
 <p>Goodbye …</p>
@@ -580,7 +590,7 @@ HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点�
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2017/10/31/View事件分发机制源码解析/" title="View事件分发机制源码解析">http://yuqirong.me/2017/10/31/View事件分发机制源码解析/</a>
+    <a href="http://yuqirong.github.io/2017/10/31/View事件分发机制源码解析/" title="View事件分发机制源码解析">http://yuqirong.github.io/2017/10/31/View事件分发机制源码解析/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -648,6 +658,9 @@ HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点�
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1106,6 +1119,30 @@ HeaderAndroid View 事件分发的机制可以说是 Android 开发者必知点�
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

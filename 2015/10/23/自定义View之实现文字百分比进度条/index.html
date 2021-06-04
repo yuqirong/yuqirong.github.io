@@ -124,7 +124,7 @@
 下面就来实现第一步：先在values文件夹中新建at">
 <meta property="og:type" content="article">
 <meta property="og:title" content="自定义View之实现文字百分比进度条">
-<meta property="og:url" content="http://yuqirong.me/2015/10/23/自定义View之实现文字百分比进度条/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2015/10/23/自定义View之实现文字百分比进度条/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="之前在学习自定义View的时候看到鸿洋_的 《Android 打造形形色色的进度条 实现可以如此简单》 中自带百分比的进度条，于是照着例子自己实现了一下。下面是View的样子：
 
@@ -136,8 +136,8 @@
 重写onDraw()方法  
 
 下面就来实现第一步：先在values文件夹中新建at">
-<meta property="og:image" content="http://yuqirong.me/uploads/20151023/20151023211913.gif">
-<meta property="og:image" content="http://yuqirong.me/uploads/20151023/20151023214750.png">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20151023/20151023211913.gif">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20151023/20151023214750.png">
 <meta property="og:updated_time" content="2018-11-11T12:07:46.641Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自定义View之实现文字百分比进度条">
@@ -159,7 +159,7 @@
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2015/10/23/自定义View之实现文字百分比进度条/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2015/10/23/自定义View之实现文字百分比进度条/"/>
 
 
 
@@ -371,7 +371,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2015/10/23/自定义View之实现文字百分比进度条/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2015/10/23/自定义View之实现文字百分比进度条/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -456,6 +456,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/10/23/自定义View之实现文字百分比进度条/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/10/23/自定义View之实现文字百分比进度条/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -558,7 +568,7 @@
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2015/10/23/自定义View之实现文字百分比进度条/" title="自定义View之实现文字百分比进度条">http://yuqirong.me/2015/10/23/自定义View之实现文字百分比进度条/</a>
+    <a href="http://yuqirong.github.io/2015/10/23/自定义View之实现文字百分比进度条/" title="自定义View之实现文字百分比进度条">http://yuqirong.github.io/2015/10/23/自定义View之实现文字百分比进度条/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -624,6 +634,9 @@
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1057,6 +1070,30 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

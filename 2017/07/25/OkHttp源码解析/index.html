@@ -119,14 +119,14 @@ OkHttp in GitHub：https://github.com/square/okhttp
 An HTTP &amp;amp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OkHttp源码解析">
-<meta property="og:url" content="http://yuqirong.me/2017/07/25/OkHttp源码解析/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2017/07/25/OkHttp源码解析/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="Header注：本文 OkHttp 源码解析基于 v3.8.1 。
 OkHttp in GitHub：https://github.com/square/okhttp
 现如今，在 Android 开发领域大多数都是选择以 OkHttp 作为网络框架。
 然而，简单地会使用 OkHttp 并不能让我们得到满足。更深层次的，我们需要阅读框架的源码，才能用起来得心应手，融会贯通。
 An HTTP &amp;amp">
-<meta property="og:image" content="http://yuqirong.me/uploads/20170725/20170722185657.png">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20170725/20170722185657.png">
 <meta property="og:updated_time" content="2019-03-04T16:30:14.461Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp源码解析">
@@ -143,7 +143,7 @@ An HTTP &amp;amp">
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2017/07/25/OkHttp源码解析/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2017/07/25/OkHttp源码解析/"/>
 
 
 
@@ -355,7 +355,7 @@ An HTTP &amp;amp">
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2017/07/25/OkHttp源码解析/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2017/07/25/OkHttp源码解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -441,6 +441,16 @@ An HTTP &amp;amp">
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/07/25/OkHttp源码解析/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/07/25/OkHttp源码解析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -497,7 +507,7 @@ An HTTP &amp;amp">
 <p>那就继续深入吧：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Response <span class="title">getResponseWithInterceptorChain</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    <span class="comment">// Build a full stack of interceptors.</span></span><br><span class="line">    List&lt;Interceptor&gt; interceptors = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    interceptors.addAll(client.interceptors()); <span class="comment">// 加入用户自定义的拦截器</span></span><br><span class="line">    interceptors.add(retryAndFollowUpInterceptor); <span class="comment">// 重试和重定向拦截器</span></span><br><span class="line">    interceptors.add(<span class="keyword">new</span> BridgeInterceptor(client.cookieJar())); <span class="comment">// 加入转化请求响应的拦截器</span></span><br><span class="line">    interceptors.add(<span class="keyword">new</span> CacheInterceptor(client.internalCache())); <span class="comment">// 加入缓存拦截器</span></span><br><span class="line">    interceptors.add(<span class="keyword">new</span> ConnectInterceptor(client)); <span class="comment">// 加入连接拦截器</span></span><br><span class="line">    <span class="keyword">if</span> (!forWebSocket) &#123;</span><br><span class="line">        interceptors.addAll(client.networkInterceptors()); <span class="comment">// 加入用户自定义的网络拦截器</span></span><br><span class="line">    &#125;</span><br><span class="line">    interceptors.add(<span class="keyword">new</span> CallServerInterceptor(forWebSocket)); <span class="comment">// 加入发出请求和读取响应的拦截器</span></span><br><span class="line">    </span><br><span class="line">    Interceptor.Chain chain = <span class="keyword">new</span> RealInterceptorChain(interceptors, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="number">0</span>,</span><br><span class="line">            originalRequest, <span class="keyword">this</span>, eventListener, client.readTimeoutMillis());</span><br><span class="line">    <span class="comment">// 利用 chain 来链式调用拦截器，最后的返回结果就是 Response 对象</span></span><br><span class="line">    <span class="keyword">return</span> chain.proceed(originalRequest);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在 <code>getResponseWithInterceptorChain()</code> 方法中有一堆的拦截器！！！</p>
-<p>关于拦截器，之前在 <a href="http://yuqirong.me/2017/06/25/%E4%B8%80%E8%B5%B7%E6%9D%A5%E5%86%99OKHttp%E7%9A%84%E6%8B%A6%E6%88%AA%E5%99%A8/">一起来写OKHttp的拦截器</a> 这篇博客中有讲过，若不了解的同学可以先看下。</p>
+<p>关于拦截器，之前在 <a href="http://yuqirong.me/2017/06/25/%E4%B8%80%E8%B5%B7%E6%9D%A5%E5%86%99OKHttp%E7%9A%84%E6%8B%A6%E6%88%AA%E5%99%A8/" target="_blank" rel="external">一起来写OKHttp的拦截器</a> 这篇博客中有讲过，若不了解的同学可以先看下。</p>
 <p>我们都知道，拦截器是 OkHttp 的精髓。</p>
 <ol>
 <li><code>client.interceptors()</code> ，首先加入 <code>interceptors</code> 的是用户自定义的拦截器，比如修改请求头的拦截器等；</li>
@@ -615,7 +625,7 @@ An HTTP &amp;amp">
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2017/07/25/OkHttp源码解析/" title="OkHttp源码解析">http://yuqirong.me/2017/07/25/OkHttp源码解析/</a>
+    <a href="http://yuqirong.github.io/2017/07/25/OkHttp源码解析/" title="OkHttp源码解析">http://yuqirong.github.io/2017/07/25/OkHttp源码解析/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -685,6 +695,9 @@ An HTTP &amp;amp">
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1143,6 +1156,30 @@ An HTTP &amp;amp">
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

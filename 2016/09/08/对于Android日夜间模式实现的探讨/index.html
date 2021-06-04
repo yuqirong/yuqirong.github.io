@@ -119,16 +119,16 @@
 设">
 <meta property="og:type" content="article">
 <meta property="og:title" content="对于Android日夜间模式实现的探讨">
-<meta property="og:url" content="http://yuqirong.me/2016/09/08/对于Android日夜间模式实现的探讨/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2016/09/08/对于Android日夜间模式实现的探讨/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="0x0001关于 Android 的日间/夜间模式切换相信大家在平时使用 APP 的过程中都遇到过，比如知乎、简书中就有相关的模式切换。实现日间/夜间模式切换的方案也有许多种，趁着今天有空来讲一下日间/夜间模式切换的几种实现方案，也可以做一个横向的对比来看看哪种方案最好。
 在本篇文章中给出了三种实现日间/夜间模式切换的方案：
 
 使用 setTheme 的方法让 Activity 重新设置主题；
 设">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160908/20160909103512.gif">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160908/20160910011353.gif">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160908/20160910114556.gif">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20160908/20160909103512.gif">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20160908/20160910011353.gif">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20160908/20160910114556.gif">
 <meta property="og:updated_time" content="2018-11-11T12:07:35.962Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="对于Android日夜间模式实现的探讨">
@@ -145,7 +145,7 @@
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2016/09/08/对于Android日夜间模式实现的探讨/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2016/09/08/对于Android日夜间模式实现的探讨/"/>
 
 
 
@@ -357,7 +357,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/09/08/对于Android日夜间模式实现的探讨/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2016/09/08/对于Android日夜间模式实现的探讨/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -442,6 +442,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/09/08/对于Android日夜间模式实现的探讨/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016/09/08/对于Android日夜间模式实现的探讨/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -614,7 +624,7 @@
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2016/09/08/对于Android日夜间模式实现的探讨/" title="对于Android日夜间模式实现的探讨">http://yuqirong.me/2016/09/08/对于Android日夜间模式实现的探讨/</a>
+    <a href="http://yuqirong.github.io/2016/09/08/对于Android日夜间模式实现的探讨/" title="对于Android日夜间模式实现的探讨">http://yuqirong.github.io/2016/09/08/对于Android日夜间模式实现的探讨/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -678,6 +688,9 @@
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1136,6 +1149,30 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

@@ -117,7 +117,7 @@
 arouter-compiler 主要是利用 apt 在编译期自动生成代码的。之前我们看到的 ARouter$$Root$$app 、 ARouter$$Group$$test 和 Test1Activity$$ARouter$">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ARouter源码解析（四）">
-<meta property="og:url" content="http://yuqirong.me/2019/01/05/ARouter源码解析（四）/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2019/01/05/ARouter源码解析（四）/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="arouter-compiler version : 1.2.2
 前言之前对 arouter-api 做了整个流程的分析，今天来看看 arouter-compiler 。
@@ -136,7 +136,7 @@ arouter-compiler 主要是利用 apt 在编译期自动生成代码的。之前�
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2019/01/05/ARouter源码解析（四）/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2019/01/05/ARouter源码解析（四）/"/>
 
 
 
@@ -348,7 +348,7 @@ arouter-compiler 主要是利用 apt 在编译期自动生成代码的。之前�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2019/01/05/ARouter源码解析（四）/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2019/01/05/ARouter源码解析（四）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -433,6 +433,16 @@ arouter-compiler 主要是利用 apt 在编译期自动生成代码的。之前�
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/01/05/ARouter源码解析（四）/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/01/05/ARouter源码解析（四）/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -557,7 +567,7 @@ arouter-compiler 主要是利用 apt 在编译期自动生成代码的。之前�
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2019/01/05/ARouter源码解析（四）/" title="ARouter源码解析（四）">http://yuqirong.me/2019/01/05/ARouter源码解析（四）/</a>
+    <a href="http://yuqirong.github.io/2019/01/05/ARouter源码解析（四）/" title="ARouter源码解析（四）">http://yuqirong.github.io/2019/01/05/ARouter源码解析（四）/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -629,6 +639,9 @@ arouter-compiler 主要是利用 apt 在编译期自动生成代码的。之前�
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1087,6 +1100,30 @@ arouter-compiler 主要是利用 apt 在编译期自动生成代码的。之前�
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

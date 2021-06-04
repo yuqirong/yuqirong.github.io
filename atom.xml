@@ -3,9 +3,9 @@
   <title><![CDATA[俞其荣的博客 | Qirong Yu's Blog]]></title>
   
   <link href="/atom.xml" rel="self"/>
-  <link href="http://yuqirong.me/"/>
+  <link href="http://yuqirong.github.io/"/>
   <updated>2019-11-16T15:26:48.346Z</updated>
-  <id>http://yuqirong.me/</id>
+  <id>http://yuqirong.github.io/</id>
   
   <author>
     <name><![CDATA[俞其荣]]></name>
@@ -16,8 +16,8 @@
   
   <entry>
     <title><![CDATA[RxJava源码解析]]></title>
-    <link href="http://yuqirong.me/2019/11/16/RxJava%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
-    <id>http://yuqirong.me/2019/11/16/RxJava源码解析/</id>
+    <link href="http://yuqirong.github.io/2019/11/16/RxJava%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+    <id>http://yuqirong.github.io/2019/11/16/RxJava源码解析/</id>
     <published>2019-11-16T06:02:25.000Z</published>
     <updated>2019-11-16T15:26:48.346Z</updated>
     <content type="html"><![CDATA[<p>本文中的源码基于 RxJava1<br>RxJava : io.reactivex:rxjava:1.3.4</p>
@@ -135,22 +135,22 @@
 <li>Part 1: Observable, Observable.OnSubscrib]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="RxJava" scheme="http://yuqirong.me/tags/RxJava/"/>
+      <category term="RxJava" scheme="http://yuqirong.github.io/tags/RxJava/"/>
     
-      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+      <category term="开源框架" scheme="http://yuqirong.github.io/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <category term="源码解析" scheme="http://yuqirong.github.io/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Broadcast源码解析]]></title>
-    <link href="http://yuqirong.me/2019/11/10/Broadcast%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
-    <id>http://yuqirong.me/2019/11/10/Broadcast源码解析/</id>
+    <link href="http://yuqirong.github.io/2019/11/10/Broadcast%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+    <id>http://yuqirong.github.io/2019/11/10/Broadcast源码解析/</id>
     <published>2019-11-10T08:13:22.000Z</published>
     <updated>2019-11-13T14:02:00.372Z</updated>
     <content type="html"><![CDATA[<h1 id="u6CE8_u518C_u5E7F_u64AD"><a href="#u6CE8_u518C_u5E7F_u64AD" class="headerlink" title="注册广播"></a>注册广播</h1><h2 id="ContextImpl"><a href="#ContextImpl" class="headerlink" title="ContextImpl"></a>ContextImpl</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Intent <span class="title">registerReceiver</span><span class="params">(BroadcastReceiver receiver, IntentFilter filter)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> registerReceiver(receiver, filter, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Intent <span class="title">registerReceiver</span><span class="params">(BroadcastReceiver receiver, IntentFilter filter,</span><br><span class="line">        String broadcastPermission, Handler scheduler)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> registerReceiverInternal(receiver, getUserId(),</span><br><span class="line">            filter, broadcastPermission, scheduler, getOuterContext());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> Intent <span class="title">registerReceiverInternal</span><span class="params">(BroadcastReceiver receiver, <span class="keyword">int</span> userId,</span><br><span class="line">        IntentFilter filter, String broadcastPermission,</span><br><span class="line">        Handler scheduler, Context context)</span> </span>&#123;</span><br><span class="line">    IIntentReceiver rd = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (receiver != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mPackageInfo != <span class="keyword">null</span> &amp;&amp; context != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (scheduler == <span class="keyword">null</span>) &#123;</span><br><span class="line">            		<span class="comment">// 如果没指定广播接收在哪个线程的handler，就默认主线程的handler</span></span><br><span class="line">                scheduler = mMainThread.getHandler();</span><br><span class="line">            &#125;</span><br><span class="line">            rd = mPackageInfo.getReceiverDispatcher(</span><br><span class="line">                receiver, context, scheduler,</span><br><span class="line">                mMainThread.getInstrumentation(), <span class="keyword">true</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (scheduler == <span class="keyword">null</span>) &#123;</span><br><span class="line">                scheduler = mMainThread.getHandler();</span><br><span class="line">            &#125;</span><br><span class="line">            rd = <span class="keyword">new</span> LoadedApk.ReceiverDispatcher(</span><br><span class="line">                    receiver, context, scheduler, <span class="keyword">null</span>, <span class="keyword">true</span>).getIIntentReceiver();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> ActivityManagerNative.getDefault().registerReceiver(</span><br><span class="line">                mMainThread.getApplicationThread(), mBasePackageName,</span><br><span class="line">                rd, filter, broadcastPermission, userId);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -172,18 +172,18 @@
     <![CDATA[<h1 id="u6CE8_u518C_u5E7F_u64AD"><a href="#u6CE8_u518C_u5E7F_u64AD" class="headerlink" title="注册广播"></a>注册广播</h1><h2 id="ContextImpl"><a hre]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <category term="源码解析" scheme="http://yuqirong.github.io/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[DiskLruCache源码解析]]></title>
-    <link href="http://yuqirong.me/2019/10/15/DiskLruCache%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
-    <id>http://yuqirong.me/2019/10/15/DiskLruCache源码解析/</id>
+    <link href="http://yuqirong.github.io/2019/10/15/DiskLruCache%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+    <id>http://yuqirong.github.io/2019/10/15/DiskLruCache源码解析/</id>
     <published>2019-10-15T12:11:24.000Z</published>
     <updated>2019-10-15T14:45:14.052Z</updated>
     <content type="html"><![CDATA[<p>DiskLruCache : <a href="https://github.com/JakeWharton/DiskLruCache" target="_blank" rel="external">https://github.com/JakeWharton/DiskLruCache</a></p>
@@ -272,22 +272,22 @@ READ 335c4c6028171cfddfbaae1a9c313c52
     <![CDATA[<p>DiskLruCache : <a href="https://github.com/JakeWharton/DiskLruCache" target="_blank" rel="external">https://github.com/JakeWharton/DiskLr]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+      <category term="开源框架" scheme="http://yuqirong.github.io/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <category term="源码解析" scheme="http://yuqirong.github.io/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="算法" scheme="http://yuqirong.me/tags/%E7%AE%97%E6%B3%95/"/>
+      <category term="算法" scheme="http://yuqirong.github.io/tags/%E7%AE%97%E6%B3%95/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Glide源码解析(三)]]></title>
-    <link href="http://yuqirong.me/2019/08/07/Glide%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%89)/"/>
-    <id>http://yuqirong.me/2019/08/07/Glide源码解析(三)/</id>
+    <link href="http://yuqirong.github.io/2019/08/07/Glide%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%89)/"/>
+    <id>http://yuqirong.github.io/2019/08/07/Glide源码解析(三)/</id>
     <published>2019-08-07T09:12:29.000Z</published>
     <updated>2019-08-07T16:36:36.775Z</updated>
     <content type="html"><![CDATA[<p>本篇是 Glide 系列的最后一篇，主要讲一下 into 方法里面的逻辑。into 的逻辑也是最多最复杂的，可能需要反复阅读源码才能搞清楚。</p>
@@ -421,22 +421,22 @@ READ 335c4c6028171cfddfbaae1a9c313c52
 <p>Glide : <a href="https://github.com/bumptech/glide" target=]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="Glide" scheme="http://yuqirong.me/tags/Glide/"/>
+      <category term="Glide" scheme="http://yuqirong.github.io/tags/Glide/"/>
     
-      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+      <category term="开源框架" scheme="http://yuqirong.github.io/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <category term="源码解析" scheme="http://yuqirong.github.io/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Glide源码解析(二)]]></title>
-    <link href="http://yuqirong.me/2019/08/06/Glide%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%BA%8C)/"/>
-    <id>http://yuqirong.me/2019/08/06/Glide源码解析(二)/</id>
+    <link href="http://yuqirong.github.io/2019/08/06/Glide%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%BA%8C)/"/>
+    <id>http://yuqirong.github.io/2019/08/06/Glide源码解析(二)/</id>
     <published>2019-08-06T13:56:46.000Z</published>
     <updated>2019-08-07T16:33:49.233Z</updated>
     <content type="html"><![CDATA[<p>之前已经讲过 Glide.with 了，那么今天就来讲讲 load 方法。</p>
@@ -475,22 +475,22 @@ READ 335c4c6028171cfddfbaae1a9c313c52
 <p>Glide : <a href="https://github.com/bumptech/glide" target="_blank" rel="external">https://g]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="Glide" scheme="http://yuqirong.me/tags/Glide/"/>
+      <category term="Glide" scheme="http://yuqirong.github.io/tags/Glide/"/>
     
-      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+      <category term="开源框架" scheme="http://yuqirong.github.io/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <category term="源码解析" scheme="http://yuqirong.github.io/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Glide源码解析(一)]]></title>
-    <link href="http://yuqirong.me/2019/08/04/Glide%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%80)/"/>
-    <id>http://yuqirong.me/2019/08/04/Glide源码解析(一)/</id>
+    <link href="http://yuqirong.github.io/2019/08/04/Glide%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%80)/"/>
+    <id>http://yuqirong.github.io/2019/08/04/Glide源码解析(一)/</id>
     <published>2019-08-04T08:13:51.000Z</published>
     <updated>2019-08-05T14:25:10.294Z</updated>
     <content type="html"><![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>Glide是一个快速高效的Android图片加载库，注重于平滑的滚动。Glide提供了易用的API，高性能、可扩展的图片解码管道（decode pipeline），以及自动的资源池技术。</p>
@@ -553,22 +553,22 @@ READ 335c4c6028171cfddfbaae1a9c313c52
     <![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>Glide是一个快速高效的Android图片加载库，注重于平滑的滚动。Glide提供了易用的API，高性]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="Glide" scheme="http://yuqirong.me/tags/Glide/"/>
+      <category term="Glide" scheme="http://yuqirong.github.io/tags/Glide/"/>
     
-      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+      <category term="开源框架" scheme="http://yuqirong.github.io/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <category term="源码解析" scheme="http://yuqirong.github.io/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[闲聊MultiDex]]></title>
-    <link href="http://yuqirong.me/2019/07/09/%E9%97%B2%E8%81%8AMultiDex/"/>
-    <id>http://yuqirong.me/2019/07/09/闲聊MultiDex/</id>
+    <link href="http://yuqirong.github.io/2019/07/09/%E9%97%B2%E8%81%8AMultiDex/"/>
+    <id>http://yuqirong.github.io/2019/07/09/闲聊MultiDex/</id>
     <published>2019-07-08T16:14:20.000Z</published>
     <updated>2019-07-08T16:15:01.055Z</updated>
     <content type="html"><![CDATA[<h1 id="MultiDex__u662F_u4EC0_u4E48_uFF1F"><a href="#MultiDex__u662F_u4EC0_u4E48_uFF1F" class="headerlink" title="MultiDex 是什么？"></a>MultiDex 是什么？</h1><p>当Android系统安装一个应用的时候，有一步是对Dex进行优化，这个过程有一个专门的工具来处理，叫DexOpt。DexOpt的执行过程是在第一次加载Dex文件的时候执行的。这个过程会生成一个ODEX文件，即Optimised Dex。执行ODex的效率会比直接执行Dex文件的效率要高很多。</p>
@@ -653,18 +653,18 @@ protected void attachBaseContext(Context base) {
     <![CDATA[<h1 id="MultiDex__u662F_u4EC0_u4E48_uFF1F"><a href="#MultiDex__u662F_u4EC0_u4E48_uFF1F" class="headerlink" title="MultiDex 是什么？"></a>MultiDe]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="multiDex" scheme="http://yuqirong.me/tags/multiDex/"/>
+      <category term="multiDex" scheme="http://yuqirong.github.io/tags/multiDex/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[LeakCanary源码解析]]></title>
-    <link href="http://yuqirong.me/2019/07/06/LeakCanary%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
-    <id>http://yuqirong.me/2019/07/06/LeakCanary源码解析/</id>
+    <link href="http://yuqirong.github.io/2019/07/06/LeakCanary%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+    <id>http://yuqirong.github.io/2019/07/06/LeakCanary源码解析/</id>
     <published>2019-07-06T07:35:25.000Z</published>
     <updated>2019-07-06T09:40:34.012Z</updated>
     <content type="html"><![CDATA[<p>LeakCanary : <a href="https://github.com/square/leakcanary" target="_blank" rel="external">https://github.com/square/leakcanary</a></p>
@@ -733,22 +733,22 @@ protected void attachBaseContext(Context base) {
 <]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="内存泄漏" scheme="http://yuqirong.me/tags/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"/>
+      <category term="内存泄漏" scheme="http://yuqirong.github.io/tags/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"/>
     
-      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+      <category term="开源框架" scheme="http://yuqirong.github.io/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <category term="源码解析" scheme="http://yuqirong.github.io/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[闲谈Android中的内存泄漏]]></title>
-    <link href="http://yuqirong.me/2019/06/28/%E9%97%B2%E8%B0%88Android%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"/>
-    <id>http://yuqirong.me/2019/06/28/闲谈Android中的内存泄漏/</id>
+    <link href="http://yuqirong.github.io/2019/06/28/%E9%97%B2%E8%B0%88Android%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"/>
+    <id>http://yuqirong.github.io/2019/06/28/闲谈Android中的内存泄漏/</id>
     <published>2019-06-28T15:42:44.000Z</published>
     <updated>2019-06-29T06:05:09.225Z</updated>
     <content type="html"><![CDATA[<h1 id="Part_1"><a href="#Part_1" class="headerlink" title="Part 1"></a>Part 1</h1><p>在长久以来的 Android 开发过程中，内存泄漏一直是一个比较头疼的问题。内存泄漏会导致应用卡顿，用户体验不佳，甚至会造成应用崩溃的严重后果。所以如何科学地进行内存管理一直是大家探讨的话题，从一开始主动使用 MAT 分析 hprof 文件，到后来 LeakCanary “被动”的接收内存泄漏消息。应用中发现内存泄漏的手段越来越多了，操作也越来越便捷，但内存泄漏的问题还是不能轻易忽视的，提高应用的体验和质量也是迫在眉睫。</p>
@@ -811,18 +811,18 @@ protected void attachBaseContext(Context base) {
     <![CDATA[<h1 id="Part_1"><a href="#Part_1" class="headerlink" title="Part 1"></a>Part 1</h1><p>在长久以来的 Android 开发过程中，内存泄漏一直是一个比较头疼的问题。内存泄漏会导致应用卡顿，用户体验]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="内存泄漏" scheme="http://yuqirong.me/tags/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"/>
+      <category term="内存泄漏" scheme="http://yuqirong.github.io/tags/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[深入理解Binder]]></title>
-    <link href="http://yuqirong.me/2019/05/21/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder/"/>
-    <id>http://yuqirong.me/2019/05/21/深入理解Binder/</id>
+    <link href="http://yuqirong.github.io/2019/05/21/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder/"/>
+    <id>http://yuqirong.github.io/2019/05/21/深入理解Binder/</id>
     <published>2019-05-21T15:26:43.000Z</published>
     <updated>2019-06-04T14:42:41.681Z</updated>
     <content type="html"><![CDATA[<p>之前一直对 Binder 理解不够透彻，仅仅知道一些皮毛，所以最近抽空深入理解一下，并在这里做个小结。</p>
@@ -894,20 +894,20 @@ protected void attachBaseContext(Context base) {
 <h1 id="Binder_u662F_u4EC0_u4E48"><a href="#Binder_u662F_u4EC0_u4E48" class="head]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="Binder" scheme="http://yuqirong.me/tags/Binder/"/>
+      <category term="Binder" scheme="http://yuqirong.github.io/tags/Binder/"/>
     
-      <category term="IPC" scheme="http://yuqirong.me/tags/IPC/"/>
+      <category term="IPC" scheme="http://yuqirong.github.io/tags/IPC/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Activity生命周期调用流程]]></title>
-    <link href="http://yuqirong.me/2019/04/09/Activity%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B/"/>
-    <id>http://yuqirong.me/2019/04/09/Activity生命周期调用流程/</id>
+    <link href="http://yuqirong.github.io/2019/04/09/Activity%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B/"/>
+    <id>http://yuqirong.github.io/2019/04/09/Activity生命周期调用流程/</id>
     <published>2019-04-09T14:26:55.000Z</published>
     <updated>2019-04-11T16:08:58.470Z</updated>
     <content type="html"><![CDATA[<p>注：源码分析基于 Android SDK API 28 </p>
@@ -1027,18 +1027,18 @@ for (int i = 0; i &lt; NS; i++) {
 <p>那么就会有一个疑问，其他的生命周期方法是在哪里被调用的呢？今天就来揭开这个]]>
     </summary>
     
-      <category term="Activity" scheme="http://yuqirong.me/tags/Activity/"/>
+      <category term="Activity" scheme="http://yuqirong.github.io/tags/Activity/"/>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[startActivity启动流程]]></title>
-    <link href="http://yuqirong.me/2019/04/03/startActivity%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/"/>
-    <id>http://yuqirong.me/2019/04/03/startActivity启动流程/</id>
+    <link href="http://yuqirong.github.io/2019/04/03/startActivity%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/"/>
+    <id>http://yuqirong.github.io/2019/04/03/startActivity启动流程/</id>
     <published>2019-04-03T13:56:50.000Z</published>
     <updated>2019-04-02T16:24:26.425Z</updated>
     <content type="html"><![CDATA[<p>注：源码分析基于 Android SDK API 28</p>
@@ -1192,18 +1192,18 @@ mService.getLifecycleManager().scheduleTransaction(clientTransaction);
 <p>一般我们启动 Activity 的入口都是 startActivity ，所以这]]>
     </summary>
     
-      <category term="Activity" scheme="http://yuqirong.me/tags/Activity/"/>
+      <category term="Activity" scheme="http://yuqirong.github.io/tags/Activity/"/>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Tinker源码分析(七):dex合成流程]]></title>
-    <link href="http://yuqirong.me/2019/03/20/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%83)/"/>
-    <id>http://yuqirong.me/2019/03/20/Tinker源码分析(七)/</id>
+    <link href="http://yuqirong.github.io/2019/03/20/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%83)/"/>
+    <id>http://yuqirong.github.io/2019/03/20/Tinker源码分析(七)/</id>
     <published>2019-03-20T15:36:31.000Z</published>
     <updated>2019-03-23T13:04:01.781Z</updated>
     <content type="html"><![CDATA[<p>本系列 Tinker 源码解析基于 Tinker v1.9.12</p>
@@ -1257,24 +1257,24 @@ mService.getLifecycleManager().scheduleTransaction(clientTransaction);
 <h]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="Tinker" scheme="http://yuqirong.me/tags/Tinker/"/>
+      <category term="Tinker" scheme="http://yuqirong.github.io/tags/Tinker/"/>
     
-      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+      <category term="开源框架" scheme="http://yuqirong.github.io/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <category term="源码解析" scheme="http://yuqirong.github.io/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="热修复" scheme="http://yuqirong.me/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
+      <category term="热修复" scheme="http://yuqirong.github.io/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Apk安全之校验签名]]></title>
-    <link href="http://yuqirong.me/2019/03/18/Apk%E5%AE%89%E5%85%A8%E4%B9%8B%E6%A0%A1%E9%AA%8C%E7%AD%BE%E5%90%8D/"/>
-    <id>http://yuqirong.me/2019/03/18/Apk安全之校验签名/</id>
+    <link href="http://yuqirong.github.io/2019/03/18/Apk%E5%AE%89%E5%85%A8%E4%B9%8B%E6%A0%A1%E9%AA%8C%E7%AD%BE%E5%90%8D/"/>
+    <id>http://yuqirong.github.io/2019/03/18/Apk安全之校验签名/</id>
     <published>2019-03-18T15:17:31.000Z</published>
     <updated>2019-03-18T15:51:43.149Z</updated>
     <content type="html"><![CDATA[<h1 id="u6821_u9A8C_u7B7E_u540D"><a href="#u6821_u9A8C_u7B7E_u540D" class="headerlink" title="校验签名"></a>校验签名</h1><p>一般绝大多数的 app 在上线前都会做一层安全防护，比如代码混淆、加固等。</p>
@@ -1311,16 +1311,16 @@ mService.getLifecycleManager().scheduleTransaction(clientTransaction);
     <![CDATA[<h1 id="u6821_u9A8C_u7B7E_u540D"><a href="#u6821_u9A8C_u7B7E_u540D" class="headerlink" title="校验签名"></a>校验签名</h1><p>一般绝大多数的 app 在上线前都会做一层安全防]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Tinker源码分析(六):补丁合成流程]]></title>
-    <link href="http://yuqirong.me/2019/03/14/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E5%85%AD)/"/>
-    <id>http://yuqirong.me/2019/03/14/Tinker源码分析(六)/</id>
+    <link href="http://yuqirong.github.io/2019/03/14/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E5%85%AD)/"/>
+    <id>http://yuqirong.github.io/2019/03/14/Tinker源码分析(六)/</id>
     <published>2019-03-14T15:05:56.000Z</published>
     <updated>2019-03-14T15:41:53.172Z</updated>
     <content type="html"><![CDATA[<p>本系列 Tinker 源码解析基于 Tinker v1.9.12</p>
@@ -1370,24 +1370,24 @@ mService.getLifecycleManager().scheduleTransaction(clientTransaction);
 <h1 id="u8865_u4E01_u5408_u6210_u6D41_u7A0B"><a href="#u8865_u4E01_u5408_u6210_u6D41_u7A0B" class="h]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="Tinker" scheme="http://yuqirong.me/tags/Tinker/"/>
+      <category term="Tinker" scheme="http://yuqirong.github.io/tags/Tinker/"/>
     
-      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+      <category term="开源框架" scheme="http://yuqirong.github.io/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <category term="源码解析" scheme="http://yuqirong.github.io/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="热修复" scheme="http://yuqirong.me/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
+      <category term="热修复" scheme="http://yuqirong.github.io/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Tinker源码分析(五):加载so补丁流程]]></title>
-    <link href="http://yuqirong.me/2019/03/10/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%94)/"/>
-    <id>http://yuqirong.me/2019/03/10/Tinker源码分析(五)/</id>
+    <link href="http://yuqirong.github.io/2019/03/10/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%94)/"/>
+    <id>http://yuqirong.github.io/2019/03/10/Tinker源码分析(五)/</id>
     <published>2019-03-10T14:50:22.000Z</published>
     <updated>2019-03-10T16:33:02.144Z</updated>
     <content type="html"><![CDATA[<p>本系列 Tinker 源码解析基于 Tinker v1.9.12</p>
@@ -1429,24 +1429,24 @@ mService.getLifecycleManager().scheduleTransaction(clientTransaction);
 <h1 id="u6821_u9A8Cso_u8865_u4E01_u6D41_u7A0B"><a href="#u6821_u9A8Cso_u8865_u4E01_u6D41_u7A0B" clas]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="Tinker" scheme="http://yuqirong.me/tags/Tinker/"/>
+      <category term="Tinker" scheme="http://yuqirong.github.io/tags/Tinker/"/>
     
-      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+      <category term="开源框架" scheme="http://yuqirong.github.io/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <category term="源码解析" scheme="http://yuqirong.github.io/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="热修复" scheme="http://yuqirong.me/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
+      <category term="热修复" scheme="http://yuqirong.github.io/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Tinker源码分析(四):加载资源补丁流程]]></title>
-    <link href="http://yuqirong.me/2019/03/05/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E5%9B%9B)/"/>
-    <id>http://yuqirong.me/2019/03/05/Tinker源码分析(四)/</id>
+    <link href="http://yuqirong.github.io/2019/03/05/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E5%9B%9B)/"/>
+    <id>http://yuqirong.github.io/2019/03/05/Tinker源码分析(四)/</id>
     <published>2019-03-05T15:54:26.000Z</published>
     <updated>2019-03-09T17:25:07.915Z</updated>
     <content type="html"><![CDATA[<p>本系列 Tinker 源码解析基于 Tinker v1.9.12</p>
@@ -1496,24 +1496,24 @@ mService.getLifecycleManager().scheduleTransaction(clientTransaction);
 <h1 id="u52A0_u8F7D_u8D44_u6E90_u8865_u4E01_u6D41_u7A0B"><a href="#u52A0_u8F7D_u8D44_u6E90_u8865_u4E]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="Tinker" scheme="http://yuqirong.me/tags/Tinker/"/>
+      <category term="Tinker" scheme="http://yuqirong.github.io/tags/Tinker/"/>
     
-      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+      <category term="开源框架" scheme="http://yuqirong.github.io/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <category term="源码解析" scheme="http://yuqirong.github.io/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="热修复" scheme="http://yuqirong.me/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
+      <category term="热修复" scheme="http://yuqirong.github.io/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Tinker源码分析(三):加载dex补丁流程]]></title>
-    <link href="http://yuqirong.me/2019/02/28/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%89)/"/>
-    <id>http://yuqirong.me/2019/02/28/Tinker源码分析(三)/</id>
+    <link href="http://yuqirong.github.io/2019/02/28/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%89)/"/>
+    <id>http://yuqirong.github.io/2019/02/28/Tinker源码分析(三)/</id>
     <published>2019-02-28T11:23:19.000Z</published>
     <updated>2019-03-09T17:25:13.488Z</updated>
     <content type="html"><![CDATA[<p>本系列 Tinker 源码解析基于 Tinker v1.9.12</p>
@@ -1554,24 +1554,24 @@ mService.getLifecycleManager().scheduleTransaction(clientTransaction);
 <h1 id="u52A0_u8F7Ddex_u8865_u4E01_u6D41_u7A0B"><a href="#u52A0_u8F7Ddex_u8865_u4E01_u6D41_u7A0B" cl]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="Tinker" scheme="http://yuqirong.me/tags/Tinker/"/>
+      <category term="Tinker" scheme="http://yuqirong.github.io/tags/Tinker/"/>
     
-      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+      <category term="开源框架" scheme="http://yuqirong.github.io/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <category term="源码解析" scheme="http://yuqirong.github.io/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="热修复" scheme="http://yuqirong.me/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
+      <category term="热修复" scheme="http://yuqirong.github.io/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Tinker源码分析(二):加载补丁流程]]></title>
-    <link href="http://yuqirong.me/2019/02/27/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%8C)/"/>
-    <id>http://yuqirong.me/2019/02/27/Tinker源码分析(二)/</id>
+    <link href="http://yuqirong.github.io/2019/02/27/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%8C)/"/>
+    <id>http://yuqirong.github.io/2019/02/27/Tinker源码分析(二)/</id>
     <published>2019-02-27T13:43:16.000Z</published>
     <updated>2019-03-14T15:54:09.840Z</updated>
     <content type="html"><![CDATA[<p>本系列 Tinker 源码解析基于 Tinker v1.9.12</p>
@@ -1635,24 +1635,24 @@ mService.getLifecycleManager().scheduleTransaction(clientTransaction);
 <h2 id="tryLoad"><a href="#tryLoad" class="headerlink"]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="Tinker" scheme="http://yuqirong.me/tags/Tinker/"/>
+      <category term="Tinker" scheme="http://yuqirong.github.io/tags/Tinker/"/>
     
-      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+      <category term="开源框架" scheme="http://yuqirong.github.io/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <category term="源码解析" scheme="http://yuqirong.github.io/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="热修复" scheme="http://yuqirong.me/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
+      <category term="热修复" scheme="http://yuqirong.github.io/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Tinker源码分析(一):TinkerApplication]]></title>
-    <link href="http://yuqirong.me/2019/02/24/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%80)/"/>
-    <id>http://yuqirong.me/2019/02/24/Tinker源码分析(一)/</id>
+    <link href="http://yuqirong.github.io/2019/02/24/Tinker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%80)/"/>
+    <id>http://yuqirong.github.io/2019/02/24/Tinker源码分析(一)/</id>
     <published>2019-02-24T14:52:16.000Z</published>
     <updated>2019-03-09T17:25:02.046Z</updated>
     <content type="html"><![CDATA[<p>本系列 Tinker 源码解析基于 Tinker v1.9.12</p>
@@ -1715,17 +1715,17 @@ public class SampleApplication extends TinkerApplication {
 <h1 id="u81EA_u52A8_u751F_u6210TinkerApplication"><a href="#u81EA_u52A8_u751F_u6210TinkerApplication]]>
     </summary>
     
-      <category term="Android" scheme="http://yuqirong.me/tags/Android/"/>
+      <category term="Android" scheme="http://yuqirong.github.io/tags/Android/"/>
     
-      <category term="Tinker" scheme="http://yuqirong.me/tags/Tinker/"/>
+      <category term="Tinker" scheme="http://yuqirong.github.io/tags/Tinker/"/>
     
-      <category term="开源框架" scheme="http://yuqirong.me/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+      <category term="开源框架" scheme="http://yuqirong.github.io/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
-      <category term="源码解析" scheme="http://yuqirong.me/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <category term="源码解析" scheme="http://yuqirong.github.io/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
-      <category term="热修复" scheme="http://yuqirong.me/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
+      <category term="热修复" scheme="http://yuqirong.github.io/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/"/>
     
-      <category term="Android Blog" scheme="http://yuqirong.me/categories/Android-Blog/"/>
+      <category term="Android Blog" scheme="http://yuqirong.github.io/categories/Android-Blog/"/>
     
   </entry>
   

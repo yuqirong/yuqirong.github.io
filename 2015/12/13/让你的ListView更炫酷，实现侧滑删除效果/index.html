@@ -115,10 +115,10 @@
   <meta name="description" content="又到了更新博客的时间了，今天给大家带来的是ListView侧滑出现删除等按钮的效果。相信大家在平时玩app的时候都接触过这种效果吧。比如说QQ聊天列表侧滑就会出现“置顶”、“标为已读”、“删除”等按钮。这篇博文将用ViewDragHelper这个神器来实现侧滑效果。友情链接一下之前写的博文使用ViewDragHelper来实现侧滑菜单的，点击此处跳转。如果你对ViewDragHelper不熟悉，你">
 <meta property="og:type" content="article">
 <meta property="og:title" content="让你的ListView更炫酷，实现侧滑删除效果">
-<meta property="og:url" content="http://yuqirong.me/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="又到了更新博客的时间了，今天给大家带来的是ListView侧滑出现删除等按钮的效果。相信大家在平时玩app的时候都接触过这种效果吧。比如说QQ聊天列表侧滑就会出现“置顶”、“标为已读”、“删除”等按钮。这篇博文将用ViewDragHelper这个神器来实现侧滑效果。友情链接一下之前写的博文使用ViewDragHelper来实现侧滑菜单的，点击此处跳转。如果你对ViewDragHelper不熟悉，你">
-<meta property="og:image" content="http://yuqirong.me/uploads/20151213/20151213140251.gif">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20151213/20151213140251.gif">
 <meta property="og:updated_time" content="2018-11-11T12:07:47.798Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="让你的ListView更炫酷，实现侧滑删除效果">
@@ -131,7 +131,7 @@
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/"/>
 
 
 
@@ -343,7 +343,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -428,6 +428,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -533,7 +543,7 @@ Released(View releasedChild, float xvel, float yvel)</code>也是判断了当手
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/" title="让你的ListView更炫酷，实现侧滑删除效果">http://yuqirong.me/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/</a>
+    <a href="http://yuqirong.github.io/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/" title="让你的ListView更炫酷，实现侧滑删除效果">http://yuqirong.github.io/2015/12/13/让你的ListView更炫酷，实现侧滑删除效果/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -599,6 +609,9 @@ Released(View releasedChild, float xvel, float yvel)</code>也是判断了当手
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1032,6 +1045,30 @@ Released(View releasedChild, float xvel, float yvel)</code>也是判断了当手
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

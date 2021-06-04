@@ -115,10 +115,10 @@
   <meta name="description" content="Part 1在长久以来的 Android 开发过程中，内存泄漏一直是一个比较头疼的问题。内存泄漏会导致应用卡顿，用户体验不佳，甚至会造成应用崩溃的严重后果。所以如何科学地进行内存管理一直是大家探讨的话题，从一开始主动使用 MAT 分析 hprof 文件，到后来 LeakCanary “被动”的接收内存泄漏消息。应用中发现内存泄漏的手段越来越多了，操作也越来越便捷，但内存泄漏的问题还是不能轻易忽视的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="闲谈Android中的内存泄漏">
-<meta property="og:url" content="http://yuqirong.me/2019/06/28/闲谈Android中的内存泄漏/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2019/06/28/闲谈Android中的内存泄漏/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="Part 1在长久以来的 Android 开发过程中，内存泄漏一直是一个比较头疼的问题。内存泄漏会导致应用卡顿，用户体验不佳，甚至会造成应用崩溃的严重后果。所以如何科学地进行内存管理一直是大家探讨的话题，从一开始主动使用 MAT 分析 hprof 文件，到后来 LeakCanary “被动”的接收内存泄漏消息。应用中发现内存泄漏的手段越来越多了，操作也越来越便捷，但内存泄漏的问题还是不能轻易忽视的">
-<meta property="og:image" content="http://yuqirong.me/uploads/20190629/20190629134830.png">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20190629/20190629134830.png">
 <meta property="og:updated_time" content="2019-06-29T06:05:09.225Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="闲谈Android中的内存泄漏">
@@ -131,7 +131,7 @@
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2019/06/28/闲谈Android中的内存泄漏/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2019/06/28/闲谈Android中的内存泄漏/"/>
 
 
 
@@ -343,7 +343,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2019/06/28/闲谈Android中的内存泄漏/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2019/06/28/闲谈Android中的内存泄漏/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -428,6 +428,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/06/28/闲谈Android中的内存泄漏/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/06/28/闲谈Android中的内存泄漏/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -566,7 +576,7 @@
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2019/06/28/闲谈Android中的内存泄漏/" title="闲谈Android中的内存泄漏">http://yuqirong.me/2019/06/28/闲谈Android中的内存泄漏/</a>
+    <a href="http://yuqirong.github.io/2019/06/28/闲谈Android中的内存泄漏/" title="闲谈Android中的内存泄漏">http://yuqirong.github.io/2019/06/28/闲谈Android中的内存泄漏/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -632,6 +642,9 @@
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1090,6 +1103,30 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

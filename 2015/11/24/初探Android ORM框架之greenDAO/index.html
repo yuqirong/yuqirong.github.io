@@ -115,10 +115,10 @@
   <meta name="description" content="在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&amp;gt;﹏&amp;lt;)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、Ac">
 <meta property="og:type" content="article">
 <meta property="og:title" content="初探Android ORM框架之greenDAO">
-<meta property="og:url" content="http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2015/11/24/初探Android ORM框架之greenDAO/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="在Android开发中，我们都不可避免地要使用SQLite数据库来存储数据。但是Android提供给我们的API在操作数据库中并不简洁，而且更重要的一点是，在读取数据时无法把读到的字段直接映射成对象，需要我们手动去写代码↖(&amp;gt;﹏&amp;lt;)↗。于是在这种情况下，产生了许多ORM (对象关系映射 英语：Object Relational Mapping) 的第三方框架，比如greenDAO、Ac">
-<meta property="og:image" content="http://yuqirong.me/uploads/20151124/20151124235609.png">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20151124/20151124235609.png">
 <meta property="og:updated_time" content="2019-03-04T16:32:52.067Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="初探Android ORM框架之greenDAO">
@@ -131,7 +131,7 @@
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2015/11/24/初探Android ORM框架之greenDAO/"/>
 
 
 
@@ -343,7 +343,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2015/11/24/初探Android ORM框架之greenDAO/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -428,6 +428,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/11/24/初探Android ORM框架之greenDAO/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/11/24/初探Android ORM框架之greenDAO/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -586,7 +596,7 @@ locationDao.insert(local);
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/" title="初探Android ORM框架之greenDAO">http://yuqirong.me/2015/11/24/初探Android ORM框架之greenDAO/</a>
+    <a href="http://yuqirong.github.io/2015/11/24/初探Android ORM框架之greenDAO/" title="初探Android ORM框架之greenDAO">http://yuqirong.github.io/2015/11/24/初探Android ORM框架之greenDAO/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -654,6 +664,9 @@ locationDao.insert(local);
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1087,6 +1100,30 @@ locationDao.insert(local);
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

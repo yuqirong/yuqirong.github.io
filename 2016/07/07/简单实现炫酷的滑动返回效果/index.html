@@ -116,12 +116,12 @@
 在GitHub上有实现该效果的开源库 SwipeBackLayout ，可以看到该库发展得已经非常成熟了。仔细看源码你会惊奇地发现其中的奥">
 <meta property="og:type" content="article">
 <meta property="og:title" content="简单实现炫酷的滑动返回效果">
-<meta property="og:url" content="http://yuqirong.me/2016/07/07/简单实现炫酷的滑动返回效果/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2016/07/07/简单实现炫酷的滑动返回效果/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="前言在如今 app 泛滥的年代里，越来越多的开发者注重用户体验这个方面了。其中，有很多的 app 都有一种功能，那就是滑动返回。比如知乎、百度贴吧等，用户在使用这一类的 app 都可以滑动返回上一个页面。不得不说这个设计很赞，是不是心动了呢？那就继续往下看吧！
 在GitHub上有实现该效果的开源库 SwipeBackLayout ，可以看到该库发展得已经非常成熟了。仔细看源码你会惊奇地发现其中的奥">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160707/20160707211516.png">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160707/20160707212521.gif">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20160707/20160707211516.png">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20160707/20160707212521.gif">
 <meta property="og:updated_time" content="2018-11-11T12:07:44.199Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简单实现炫酷的滑动返回效果">
@@ -135,7 +135,7 @@
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2016/07/07/简单实现炫酷的滑动返回效果/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2016/07/07/简单实现炫酷的滑动返回效果/"/>
 
 
 
@@ -347,7 +347,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/07/07/简单实现炫酷的滑动返回效果/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2016/07/07/简单实现炫酷的滑动返回效果/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -432,6 +432,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/07/07/简单实现炫酷的滑动返回效果/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016/07/07/简单实现炫酷的滑动返回效果/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -604,7 +614,7 @@
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2016/07/07/简单实现炫酷的滑动返回效果/" title="简单实现炫酷的滑动返回效果">http://yuqirong.me/2016/07/07/简单实现炫酷的滑动返回效果/</a>
+    <a href="http://yuqirong.github.io/2016/07/07/简单实现炫酷的滑动返回效果/" title="简单实现炫酷的滑动返回效果">http://yuqirong.github.io/2016/07/07/简单实现炫酷的滑动返回效果/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -670,6 +680,9 @@
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1128,6 +1141,30 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

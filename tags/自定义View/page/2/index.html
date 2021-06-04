@@ -115,7 +115,7 @@
   <meta name="description" content="向前跑 迎着冷眼和嘲笑">
 <meta property="og:type" content="website">
 <meta property="og:title" content="俞其荣的博客 | Qirong Yu's Blog">
-<meta property="og:url" content="http://yuqirong.me/tags/自定义View/page/2/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/tags/自定义View/page/2/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="向前跑 迎着冷眼和嘲笑">
 <meta name="twitter:card" content="summary">
@@ -129,7 +129,7 @@
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/tags/自定义View/page/2/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/tags/自定义View/page/2/"/>
 
 
 
@@ -1000,6 +1000,30 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

@@ -120,7 +120,7 @@
 安装全局 vue-cli 脚手架,用于帮助搭建所需的模板框架，在 cmd 里">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Vue.js安装教程">
-<meta property="og:url" content="http://yuqirong.me/2017/12/01/Vue.js安装教程/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2017/12/01/Vue.js安装教程/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="安装步骤
 安装 node.js (网址：https://nodejs.org/en/)。
@@ -128,8 +128,8 @@
 基于 node.js ,利用淘宝 npm 镜像安装相关依赖。在 cmd 里直接输入：npm install -g cnpm –registry=https://registry.npm.taobao.org，回车，等待安装。
 
 安装全局 vue-cli 脚手架,用于帮助搭建所需的模板框架，在 cmd 里">
-<meta property="og:image" content="http://yuqirong.me/uploads/20171201/20171201223625.jpg">
-<meta property="og:image" content="http://yuqirong.me/uploads/20171201/20171201223752.jpg">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20171201/20171201223625.jpg">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20171201/20171201223752.jpg">
 <meta property="og:updated_time" content="2018-11-11T12:07:19.969Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vue.js安装教程">
@@ -147,7 +147,7 @@
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2017/12/01/Vue.js安装教程/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2017/12/01/Vue.js安装教程/"/>
 
 
 
@@ -359,7 +359,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2017/12/01/Vue.js安装教程/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2017/12/01/Vue.js安装教程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -444,6 +444,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/01/Vue.js安装教程/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/12/01/Vue.js安装教程/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -608,7 +618,7 @@ npm ERR!     C:\Users\h\AppData\Roaming\npm-cache\_logs\2017-11-25T07_25_19_228Z
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2017/12/01/Vue.js安装教程/" title="Vue.js安装教程">http://yuqirong.me/2017/12/01/Vue.js安装教程/</a>
+    <a href="http://yuqirong.github.io/2017/12/01/Vue.js安装教程/" title="Vue.js安装教程">http://yuqirong.github.io/2017/12/01/Vue.js安装教程/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -672,6 +682,9 @@ npm ERR!     C:\Users\h\AppData\Roaming\npm-cache\_logs\2017-11-25T07_25_19_228Z
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1130,6 +1143,30 @@ npm ERR!     C:\Users\h\AppData\Roaming\npm-cache\_logs\2017-11-25T07_25_19_228Z
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

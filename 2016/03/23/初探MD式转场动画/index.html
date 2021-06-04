@@ -120,7 +120,7 @@ layout_item.xml(ListView的item布局)：
 12345">
 <meta property="og:type" content="article">
 <meta property="og:title" content="初探MD式转场动画">
-<meta property="og:url" content="http://yuqirong.me/2016/03/23/初探MD式转场动画/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2016/03/23/初探MD式转场动画/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="最近在做MD设计风格的APP，所以在转场动画上当然也得符合MD了。下面就是效果图：
 
@@ -128,7 +128,7 @@ layout_item.xml(ListView的item布局)：
 下面我们就来看看吧：
 layout_item.xml(ListView的item布局)：
 12345">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160323/20160323165423.gif">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20160323/20160323165423.gif">
 <meta property="og:updated_time" content="2018-11-11T12:07:29.817Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="初探MD式转场动画">
@@ -146,7 +146,7 @@ layout_item.xml(ListView的item布局)：
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2016/03/23/初探MD式转场动画/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2016/03/23/初探MD式转场动画/"/>
 
 
 
@@ -358,7 +358,7 @@ layout_item.xml(ListView的item布局)：
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/03/23/初探MD式转场动画/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2016/03/23/初探MD式转场动画/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -443,6 +443,16 @@ layout_item.xml(ListView的item布局)：
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/03/23/初探MD式转场动画/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016/03/23/初探MD式转场动画/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -543,7 +553,7 @@ layout_item.xml(ListView的item布局)：
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2016/03/23/初探MD式转场动画/" title="初探MD式转场动画">http://yuqirong.me/2016/03/23/初探MD式转场动画/</a>
+    <a href="http://yuqirong.github.io/2016/03/23/初探MD式转场动画/" title="初探MD式转场动画">http://yuqirong.github.io/2016/03/23/初探MD式转场动画/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -609,6 +619,9 @@ layout_item.xml(ListView的item布局)：
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1067,6 +1080,30 @@ layout_item.xml(ListView的item布局)：
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

@@ -119,7 +119,7 @@ ARouter 拦截器的使用方法在这就不多说了，不了解的同学可以
 12345678910111213public static">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ARouter源码解析（二）">
-<meta property="og:url" content="http://yuqirong.me/2019/01/02/ARouter源码解析（二）/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2019/01/02/ARouter源码解析（二）/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="arouter-api version : 1.4.1
 前言前几天对 ARouter 的页面跳转源码进行了分析，趁着今天有空，就讲讲 ARouter 里面的拦截器吧。
@@ -142,7 +142,7 @@ ARouter 拦截器的使用方法在这就不多说了，不了解的同学可以
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2019/01/02/ARouter源码解析（二）/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2019/01/02/ARouter源码解析（二）/"/>
 
 
 
@@ -354,7 +354,7 @@ ARouter 拦截器的使用方法在这就不多说了，不了解的同学可以
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2019/01/02/ARouter源码解析（二）/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2019/01/02/ARouter源码解析（二）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -439,6 +439,16 @@ ARouter 拦截器的使用方法在这就不多说了，不了解的同学可以
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/01/02/ARouter源码解析（二）/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/01/02/ARouter源码解析（二）/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -546,7 +556,7 @@ ARouter 拦截器的使用方法在这就不多说了，不了解的同学可以
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2019/01/02/ARouter源码解析（二）/" title="ARouter源码解析（二）">http://yuqirong.me/2019/01/02/ARouter源码解析（二）/</a>
+    <a href="http://yuqirong.github.io/2019/01/02/ARouter源码解析（二）/" title="ARouter源码解析（二）">http://yuqirong.github.io/2019/01/02/ARouter源码解析（二）/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -618,6 +628,9 @@ ARouter 拦截器的使用方法在这就不多说了，不了解的同学可以
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1076,6 +1089,30 @@ ARouter 拦截器的使用方法在这就不多说了，不了解的同学可以
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

@@ -116,14 +116,14 @@
 自从 2015 下半年来，MVP 渐渐崛起成为了现在普遍流行的架构模式。但是各种不同实现方式的 MVP 架构层出不穷，也让新手不知所措。而 Google 作">
 <meta property="og:type" content="article">
 <meta property="og:title" content="android-architecture之todo-mvp源码分析">
-<meta property="og:url" content="http://yuqirong.me/2017/02/22/android-architecture之todo-mvp源码分析/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2017/02/22/android-architecture之todo-mvp源码分析/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="Android 架构一直都是热门话题，从一开始的 MVC ，到目前火爆的 MVP ，再到方兴未艾的 MVVM 。并不能说哪一种架构最好，因为这些架构都顺应了当时开发的趋势。在这里就不对这三个架构一一解释了，如果想要了解更多的同学可以自行搜索。
 自从 2015 下半年来，MVP 渐渐崛起成为了现在普遍流行的架构模式。但是各种不同实现方式的 MVP 架构层出不穷，也让新手不知所措。而 Google 作">
-<meta property="og:image" content="http://yuqirong.me/uploads/20170222/20170222230352.png">
-<meta property="og:image" content="http://yuqirong.me/uploads/20170222/20170227212108.png">
-<meta property="og:image" content="http://yuqirong.me/uploads/20170222/20170228224356.png">
-<meta property="og:image" content="http://yuqirong.me/uploads/20170222/20170227215628.png">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20170222/20170222230352.png">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20170222/20170227212108.png">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20170222/20170228224356.png">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20170222/20170227215628.png">
 <meta property="og:updated_time" content="2018-11-11T12:07:50.820Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android-architecture之todo-mvp源码分析">
@@ -137,7 +137,7 @@
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2017/02/22/android-architecture之todo-mvp源码分析/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2017/02/22/android-architecture之todo-mvp源码分析/"/>
 
 
 
@@ -349,7 +349,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2017/02/22/android-architecture之todo-mvp源码分析/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2017/02/22/android-architecture之todo-mvp源码分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -434,6 +434,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/02/22/android-architecture之todo-mvp源码分析/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/02/22/android-architecture之todo-mvp源码分析/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -551,7 +561,7 @@
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2017/02/22/android-architecture之todo-mvp源码分析/" title="android-architecture之todo-mvp源码分析">http://yuqirong.me/2017/02/22/android-architecture之todo-mvp源码分析/</a>
+    <a href="http://yuqirong.github.io/2017/02/22/android-architecture之todo-mvp源码分析/" title="android-architecture之todo-mvp源码分析">http://yuqirong.github.io/2017/02/22/android-architecture之todo-mvp源码分析/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -619,6 +629,9 @@
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1077,6 +1090,30 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

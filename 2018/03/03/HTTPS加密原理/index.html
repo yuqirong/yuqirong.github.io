@@ -116,7 +116,7 @@
 我们也都知道，一般 Android 应用开发，在请求 API 网络接口的时候，很多使用的都是 HTTP 协议；使用浏览器打开网页，也是利用 HTTP 协议。看来 HTTP 真是使用广泛啊，但是，HTTP 是不安全的。利用网络抓包工具就可以知道传输中的内容，一览无余。比如我经常会使用 Fiddler 来抓包，搜集一些有趣的 API">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HTTPS加密原理">
-<meta property="og:url" content="http://yuqirong.me/2018/03/03/HTTPS加密原理/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2018/03/03/HTTPS加密原理/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="HeaderHTTP、HTTPS在我们日常开发中是经常会接触到的。
 我们也都知道，一般 Android 应用开发，在请求 API 网络接口的时候，很多使用的都是 HTTP 协议；使用浏览器打开网页，也是利用 HTTP 协议。看来 HTTP 真是使用广泛啊，但是，HTTP 是不安全的。利用网络抓包工具就可以知道传输中的内容，一览无余。比如我经常会使用 Fiddler 来抓包，搜集一些有趣的 API">
@@ -133,7 +133,7 @@
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2018/03/03/HTTPS加密原理/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2018/03/03/HTTPS加密原理/"/>
 
 
 
@@ -345,7 +345,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2018/03/03/HTTPS加密原理/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2018/03/03/HTTPS加密原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -418,6 +418,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/03/HTTPS加密原理/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/03/03/HTTPS加密原理/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -559,7 +569,7 @@
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2018/03/03/HTTPS加密原理/" title="HTTPS加密原理">http://yuqirong.me/2018/03/03/HTTPS加密原理/</a>
+    <a href="http://yuqirong.github.io/2018/03/03/HTTPS加密原理/" title="HTTPS加密原理">http://yuqirong.github.io/2018/03/03/HTTPS加密原理/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -625,6 +635,9 @@
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1083,6 +1096,30 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

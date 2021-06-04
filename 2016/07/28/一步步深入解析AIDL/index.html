@@ -115,10 +115,10 @@
   <meta name="description" content="前言在 Android 系统中，进程间通信 (IPC) 是一种很重要的机制。IPC 产生的原因是某些情况下需要在两个进程之间进行一些数据的交换。而在深入学习 Android 的过程中难免会遇到 IPC 的相关问题，比如常见的有在自己的应用程序中读取手机联系人的信息，这就涉及到 IPC 了。因为自己的应用程序是一个进程，通讯录也是一个进程，只不过获取通讯录的数据信息是通过 Content Provi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一步步深入解析AIDL">
-<meta property="og:url" content="http://yuqirong.me/2016/07/28/一步步深入解析AIDL/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2016/07/28/一步步深入解析AIDL/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="前言在 Android 系统中，进程间通信 (IPC) 是一种很重要的机制。IPC 产生的原因是某些情况下需要在两个进程之间进行一些数据的交换。而在深入学习 Android 的过程中难免会遇到 IPC 的相关问题，比如常见的有在自己的应用程序中读取手机联系人的信息，这就涉及到 IPC 了。因为自己的应用程序是一个进程，通讯录也是一个进程，只不过获取通讯录的数据信息是通过 Content Provi">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160728/20160728201234.png">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20160728/20160728201234.png">
 <meta property="og:updated_time" content="2018-11-11T12:07:24.480Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一步步深入解析AIDL">
@@ -131,7 +131,7 @@
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2016/07/28/一步步深入解析AIDL/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2016/07/28/一步步深入解析AIDL/"/>
 
 
 
@@ -343,7 +343,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/07/28/一步步深入解析AIDL/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2016/07/28/一步步深入解析AIDL/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -428,6 +428,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/07/28/一步步深入解析AIDL/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016/07/28/一步步深入解析AIDL/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -572,7 +582,7 @@
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2016/07/28/一步步深入解析AIDL/" title="一步步深入解析AIDL">http://yuqirong.me/2016/07/28/一步步深入解析AIDL/</a>
+    <a href="http://yuqirong.github.io/2016/07/28/一步步深入解析AIDL/" title="一步步深入解析AIDL">http://yuqirong.github.io/2016/07/28/一步步深入解析AIDL/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -638,6 +648,9 @@
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1096,6 +1109,30 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

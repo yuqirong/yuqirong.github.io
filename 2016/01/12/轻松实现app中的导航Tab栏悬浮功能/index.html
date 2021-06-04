@@ -117,14 +117,14 @@
 可以看到上图中的“分类”、“排序”、“筛选”会悬浮在app的顶部，状态随着ScrollView(也可能不是ScrollView，在这里姑且把这滑动的UI控件当作ScrollView吧)的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="轻松实现app中的导航Tab栏悬浮功能">
-<meta property="og:url" content="http://yuqirong.me/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/index.html">
+<meta property="og:url" content="http://yuqirong.github.io/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/index.html">
 <meta property="og:site_name" content="俞其荣的博客 | Qirong Yu's Blog">
 <meta property="og:description" content="又到了更博的时间了，今天给大家带来的就是“导航Tab栏悬浮功能”了。通常大家在玩手机的过程中应该会注意到很多的app都有这种功能，比如说外卖达人常用的“饿了么”。下面就给出了“饿了么”导航Tab栏悬浮的效果图。
 
 可以看到上图中的“分类”、“排序”、“筛选”会悬浮在app的顶部，状态随着ScrollView(也可能不是ScrollView，在这里姑且把这滑动的UI控件当作ScrollView吧)的">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160112/20160112210653.gif">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160112/20160112201753.png">
-<meta property="og:image" content="http://yuqirong.me/uploads/20160112/20160112204356.gif">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20160112/20160112210653.gif">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20160112/20160112201753.png">
+<meta property="og:image" content="http://yuqirong.github.io/uploads/20160112/20160112204356.gif">
 <meta property="og:updated_time" content="2018-11-11T12:07:48.414Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="轻松实现app中的导航Tab栏悬浮功能">
@@ -139,7 +139,7 @@
 
 
 
-  <link rel="canonical" href="http://yuqirong.me/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/"/>
+  <link rel="canonical" href="http://yuqirong.github.io/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/"/>
 
 
 
@@ -351,7 +351,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yuqirong.me/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/">
+    <link itemprop="mainEntityOfPage" href="http://yuqirong.github.io/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="俞其荣">
@@ -436,6 +436,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -550,7 +560,7 @@
     <strong>本文作者： </strong>俞其荣</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yuqirong.me/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/" title="轻松实现app中的导航Tab栏悬浮功能">http://yuqirong.me/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/</a>
+    <a href="http://yuqirong.github.io/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/" title="轻松实现app中的导航Tab栏悬浮功能">http://yuqirong.github.io/2016/01/12/轻松实现app中的导航Tab栏悬浮功能/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -614,6 +624,9 @@
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
   
 
 
@@ -1047,6 +1060,30 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'GddmFfmUYViyrvKckRHWV3lM-gzGzoHsz',
+        appKey: 'EciRac31Q7O6WPFU7OnoKAzr',
+        placeholder: '念念不忘，必有回响~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 
